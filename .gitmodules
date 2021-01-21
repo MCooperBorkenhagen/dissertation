@@ -1,0 +1,3 @@
+[submodule "models/polysyllabic-proto"]
+	path = models/polysyllabic-proto
+	url = https://github.com/MCooperBorkenhagen/polysyllabic-proto.git
