@@ -1,0 +1,67 @@
+---
+title: "proposal"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+require(Hmisc)
+d %>% 
+  group_by(lemma) %>% 
+  filter(pos %nin% c('PUNCT', 'SPACE') & lemma != '-PRON-') %>% 
+  summarise(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  rownames_to_column() %>% 
+  mutate(rank = as.numeric(rowname)) %>% 
+  filter(rank < 100) %>% 
+  ggplot(aes(rank, n, label = lemma)) +
+  geom_label(size = 1.8, position = position_jitter(height = 150)) +
+  labs(x = 'Rank', y = 'Frequency')
+
+
+
+```
+```{r}
+d %>% 
+  group_by(token) %>% 
+  filter(pos %nin% c('PUNCT', 'SPACE') & lemma != '-PRON-') %>% 
+  summarise(n = n(),
+            aoa = as.numeric(first(aoa))) %>% 
+  select(n, aoa) %>% 
+  cor(method = 'spearman', use = 'pairwise.complete.obs')
+
+```
+
+```{r}
+lbty %>% 
+  group_by(word) %>% 
+  summarise(last_nonzero = first(last_nonzero),
+            first_zero = first(first_zero)) %>% 
+  mutate(relearning = (last_nonzero + 10) - first_zero) %>% 
+  ggplot(aes(relearning)) +
+  geom_histogram(fill = 'goldenrod', color = 'black') +
+  labs(x = 'Amount of relearning (in iterations)', y = 'Count (# of words)')
+  
+
+```
+
+
+
+```{r}
+lbty %>% 
+  group_by(word) %>% 
+  summarise(first_correct = first(first_zero),
+            mastered = first(last_nonzero)+10) %>% 
+  mutate(relearning = mastered - first_correct) %>%
+  write.csv('~/Desktop/learnability.csv', row.names = F)
+  
+  ggplot(aes(relearning, last_nonzero, label = word)) +
+  geom_label(size = 2) +
+  labs(x = 'Amount of relearning (in iterations)', y = 'Iteration when produced without error permanently')
+
+
+```
