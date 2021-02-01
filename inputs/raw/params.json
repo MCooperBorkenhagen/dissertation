@@ -1,0 +1,6 @@
+{
+    "maxorth": 8,
+    "maxphon": 8,
+    "phonreps": "./raw/phonreps.csv",
+    "orthreps": "./raw/orthreps.json"
+}

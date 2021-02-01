@@ -13,6 +13,7 @@
 *.Rproj
 *.RData
 *.Rhistory
+*.npy
 
 #directories
 logs/

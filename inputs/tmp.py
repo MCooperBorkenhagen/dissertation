@@ -1,0 +1,3 @@
+# %%
+from CMUdata import CMUdata
+# %%

@@ -1,3 +1,6 @@
 [submodule "models/polysyllabic-proto"]
 	path = models/polysyllabic-proto
 	url = https://github.com/MCooperBorkenhagen/polysyllabic-proto.git
+[submodule "inputs/CMUdata"]
+	path = inputs/CMUdata
+	url = https://github.com/MCooperBorkenhagen/CMUdata.git
