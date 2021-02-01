@@ -4,6 +4,7 @@
 
 
 #filetypes
+*.pyc
 *.pdf
 *.doc
 *.docx
