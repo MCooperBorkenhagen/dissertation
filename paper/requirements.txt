@@ -1,0 +1,7 @@
+readxl
+Hmisc
+tidytext
+magrittr
+dplyr
+Hmisc
+ggplot2

@@ -1,0 +1,40 @@
+---
+title: "corpus"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+lapply(read.table('requirements.txt', stringsAsFactors = F, header = F)[,1], require, character.only = T)
+```
+
+```{r load}
+source('./load.R')
+source('./clean.R')
+```
+
+A set of common words early in life were used for pre-training the phonological state of the learner, prior to the onset of learning about print. Norms from [@Kuperman2012] were used to establish a relevant set of words that appear in early child language environments.
+
+Long words, either orthographically or phonologically, were removed given their relative frequency to shorter words and the fact that they may cause representational idiosyncracies in learning.
+
+A small number of very short words from the children's corpus were excluded because they were unusual or infrequent. For example, abbreviations like "tv" and "mph", or oddities like "ne" or "aaa". Words of this kind appear in children's books but are not common across books while also displaying unusual orthographic, phonological, or semantic characteristics.
+
+The role of outlier words like those described above represent a potentially fruitful avenue for research given their idiosyncracies and appearance in texts aimed at children. They are likely to be highly salient during book reading, offering opportunities to draw the child's attention to their structure in a similar way that onomatopoetic words do. Nonetheless, their form falls outside the scope of this research and thus were excluded from any selection pool considered for modeling presently.
+
+```{r}
+# see inputs/keys-to-exclude.csv for the dataset of excluded words, or
+# any words excluded due to the MAXORTH parameter in inputs/kidwords.py
+# (ie those words that were excluded due to length)
+```
+
+```{r}
+aoa %>% 
+  filter(rank < 100) %>% 
+  ggplot(aes(rank, aoa, label = word)) +
+  geom_text(size = 2)
+
+```
+
+
+  
+  

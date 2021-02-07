@@ -1,0 +1,45 @@
+---
+title: "tuning"
+output: html_document
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tuning = read.csv('../models/1_kinder/tuning.csv')
+```
+
+
+```{r}
+s = tuning %>% 
+  group_by(run_id) %>% 
+  summarise(min_acc = min(acc_train), max_acc = max(acc_train),
+            learntime = first(learntime))
+
+tp =  tuning %>% 
+  group_by(run_id) %>% 
+  summarize(lt = first(learntime), 
+            hlsz = first(hidden_size), 
+            bs = first(batch_size)) %>% 
+  filter(hlsz == 900 & bs == 250) %>% 
+  ungroup() %>% 
+  pull(run_id)
+```
+
+
+A set of network parameters were selected that achieved satisfactory accuracy in training and test, as well as quick convergence on the computational resources utilized for the simulations. Generally speaking, performance didn't vary across a range of values for batch size and size of the hidden layer, where all learners reached an accuracy of at least ```r min(s$max_acc)```, with maximum values achieving ```r max(s$max_acc```. Learning curves for all the manipulated values are found in Figure X. Given the small amount of variability in ultimate performance and that variability of this kind was orthogonal to the ultimate goal of the learning procedures being simulated in this research, values were selected for efficiency purposes. To this end, a batch size of 250 and hidden layer size of 900 units was selected. The lstm learner to be used in the set of studies reported on here exhibited runtimes over approximately 7400 words for a learner of this construction of approximately ```r pull(filter(s, run_id == tp), learntime)``` minutes using keras [ref] in python 3.7 [ref] on an Nvidia Titan V graphical processing unit.
+
+```{r figX}
+
+
+tuning %>% 
+  ggplot(aes(epoch, acc_train, colour = factor(hidden_size))) +
+  geom_smooth(method = 'loess') +
+  facet_grid(~batch_size) +
+  labs(title = 'Accuracy on training set throughout training',
+       x = 'Epoch', y = 'Accuracy', colour = '# hidden units') +
+  theme(plot.title = element_text(hjust = .5, size = 22))
+
+
+```
