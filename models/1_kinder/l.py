@@ -67,9 +67,12 @@ model.compile(loss=cfg['loss'], optimizer="adam",
                 metrics=[tf.keras.metrics.BinaryAccuracy(name = cfg['accuracy'], dtype = None, threshold=0.5)])
 model.summary()
 
+
+# %%
+
 # train the network
 history = model.fit(x_train, y_train, batch_size=cfg['batch_size'], epochs=cfg['epochs'],
-            validation_split=cfg['validation_split'])
+            validation_data=(x_test, y_test))
 
 print("Train loss, acc: ", model.evaluate(x_train, y_train))
 print("Test loss, acc: ", model.evaluate(x_test, y_test))
