@@ -10,7 +10,11 @@ tuning %>%
   filter(hlsz == 900 & bs == 250)
 
 
+
 tuning %>% 
-  filter(run_id == 19) %>% 
-  ggplot(aes(epoch, acc_test)) +
-  geom_smooth(n = 4)
+  ggplot(aes(epoch, acc_test, colour = factor(hidden_size))) +
+  geom_smooth(method = 'loess') +
+  facet_grid(~batch_size) +
+  labs(title = 'Accuracy on test set throughout training',
+       x = 'Epoch', y = 'Accuracy', colour = '# hidden units') +
+  theme(plot.title = element_text(hjust = .5, size = 22))
