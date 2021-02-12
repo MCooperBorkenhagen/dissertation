@@ -1,0 +1,10 @@
+This directory contains code that processes raw data and
+makes it clean. The cleaning scripts sit in this top level 
+along side the clean data files.
+
+While there isn't a perfect 1:1 relationship between datafiles
+and experiment/ learner scripts in model/, it is roughly
+true that a given cleaning script here corresponds to a
+particular learner in model given that data of a particular 
+kind is usually generated for a specific learner in mind.
+Some learners share data of a particular kind.

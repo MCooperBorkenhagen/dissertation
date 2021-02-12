@@ -1,0 +1,6 @@
+
+This directory contains learners of various kinds and
+scripts that train them. The critical learners are:
+
+Lstm2lstm (.py)
+EncoderDecoder (.py)

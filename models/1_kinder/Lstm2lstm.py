@@ -16,7 +16,7 @@ import json
 
 
 # %%
-class Learner():
+class Lstm2lstm():
     def __init__(self, X, Y, labels=None, train_proportion=.9, hidden_layers=1, hidden=900, batch_size=250, epochs=100, transfer_function='sigmoid', optimizer='adam', loss="categorical_crossentropy", monitor=True, seed=451, devices=True):
 
    
@@ -95,4 +95,4 @@ class Learner():
 
 
 if __name__ == "__main__":
-    Learner()
+    Lstm2lstm()
