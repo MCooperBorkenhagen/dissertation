@@ -4,17 +4,15 @@ from Learner import Learner
 import numpy as np
 import pandas as pd
 
-# %%
+import time
 import json
 import pickle
 import os
-# %%
+
 import keras
 from tensorflow.keras import layers
 from scipy.spatial import distance_matrix as dist
 
-
-# %%
 # get representations
 Xr = np.load("../../inputs/orth_pad_right.npy")
 Yr = np.load("../../inputs/phon_pad_right.npy")
@@ -37,46 +35,37 @@ ml = Learner(Xl, Yl, labels=words, train_proportion=(1-cfg['validation_split']),
 
 
 # %%
+layer_index = 2
+
 test_acts = keras.Model(inputs=mr.model.inputs, outputs=[layer.output for layer in mr.model.layers])
-acts_all = test_acts(Xr)
-acts_mr = acts_all[2]
+acts_all_r = test_acts(Xr)
+acts_mr = np.array(acts_all_r[layer_index])
 
+acts_all_l = test_acts(Xl)
+acts_ml = np.array(acts_all_l[layer_index])
+assert acts_ml.shape == acts_mr.shape, 'Activations are different dimensions - something is wrong'
 # %%
-from scipy.spatial import distance_matrix
-from scipy.spatial.distance import cdist as dist
-
-def L2(x, y):
-    return(np.linalg.norm(x-y))
-
-v = Xr.shape[0]
-
-dr = np.zeros([v, v])
-
-tmp = np.array(acts_mr[0:3])
-wrds = mr.labels[0:3]
-
-da = {}
-for e in range(tmp.shape[0]):
-    for o in range(tmp.shape[0]):
-        d1 = []
-        for t in range(tmp[e].shape[0]):
-            d1.append(L2(tmp[e][t], tmp[o][t]))
-        if wrds[e] not in da.keys():        
-            da[wrds[e]] = d1
+d1 = acts_mr.shape[0] # we could take dims from either ml acts or mr acts - should not make a difference
+d2 = acts_mr.shape[1]*acts_mr.shape[2]
 
 
-# %%
-
-for p in range(len(da)):
-    print(p)    
-
+acts_mr = acts_mr.reshape((d1, d2))
+acts_ml = acts_ml.reshape((d1, d2))
 
 
 
 
 # %%
+from scipy.spatial.distance import pdist as dist
+from scipy.spatial.distance import squareform as matrix
+# applying the dist operation to each matrix takes about 2.5 minutes
+
+dmr = dist(acts_mr)
+dml = dist(acts_ml)
 
 
 
-da = np.array(da)
+# %%
+cor = np.corrcoef(dmr, dml)
+# running this on the right versus left added data yielded a correlation of r = .5153
 # %%
