@@ -22,10 +22,10 @@ x = np.load("../../inputs/orth_pad_right.npy")
 y = np.load("../../inputs/phon_pad_right.npy")
 labels = pd.read_csv("../../inputs/syllabics.csv", sep = ",")
 words = labels.orth.tolist()
-ml = Lstm2lstm(x, y, labels=words, epochs=5)
+m1 = Lstm2lstm(x, y, labels=words, epochs=100)
 
 # %%
-model = ml.model
+model = m1.model
 # %%
 
 
@@ -33,11 +33,47 @@ model = ml.model
 ##############
 ### TESTS ####
 ##############
-# in order to determine the effectiveness of the Lstm2lstm architecture
-# on generating representations that are not slot-restricted, 
+
+# how variable are representations of different runs of the same
+# environment? (ie, with different random weights)
+m2 = Lstm2lstm(x, y, labels=words, epochs=100, seed=629)
 # %%
+layer_index = 2
+test_acts_m1 = keras.Model(inputs=m1.model.inputs, outputs=[layer.output for layer in m1.model.layers])
+test_acts_m2 = keras.Model(inputs=m2.model.inputs, outputs=[layer.output for layer in m2.model.layers])
+
+acts_all_m1 = test_acts_m1(x)
+acts_m1 = np.array(acts_all_m1[layer_index])
+
+acts_all_m2 = test_acts_m2(x)
+acts_m2 = np.array(acts_all_m2[layer_index])
+assert acts_m1.shape == acts_m2.shape, 'Activations are different dimensions - something is wrong'
+# %%
+d1 = acts_m1.shape[0] # we could take dims from either ml acts or mr acts - should not make a difference
+d2 = acts_m1.shape[1]*acts_m1.shape[2]
+acts_m1 = acts_m1.reshape((d1, d2))
+acts_m2 = acts_m2.reshape((d1, d2))
+
+# %%
+# applying the dist operation to each matrix takes about 2.5 minutes
+dm1 = dist(acts_m1)
+dm2 = dist(acts_m2)
+# %%
+# pearson's r
+cor = np.corrcoef(dm1, dm2)
+print("Pearson's r= ", cor)
+
+# spearman's rho
+from scipy.stats import spearmanr as cor
+print("Spearman's rho = ", cor(dm1, dm2))
 
 
+
+
+# in order to determine the effectiveness of the Lstm2lstm architecture
+# on generating representations that are not slot-restricted, we can look
+# at models trained at right versus left pads
+# %%
 # get representations
 Xr = np.load("../../inputs/orth_pad_right.npy")
 Yr = np.load("../../inputs/phon_pad_right.npy")
