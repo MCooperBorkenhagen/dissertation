@@ -5,12 +5,21 @@ import pandas as pd
 import json
 
 # %%
-def getreps(PATH):
-    """Binary phonological reps from CSV
+def getreps(PATH, terminals=False):
+    """Binary phonological reps from CSV.
+
     Parameters
     ----------
     PATH : str
         Path to the csv containing phonological representations.
+    terminals : bool
+        Specify whether to add end-of-string and start-of-string
+        features to reps (default is not/ False). If true
+        the character "%" is used for eos, and "#" for sos.
+        Note that if set to true a new key-value pair is created
+        in return dict for each of these characters, and a feature
+        for each is added to every value in the dictionary.
+
     Returns
     -------
     dict
@@ -26,6 +35,13 @@ def getreps(PATH):
     dict = {}
     for index, row in df.iterrows():
         dict[index] = row.tolist()
+
+    if terminals:
+        for k, v in dict.items():
+            dict[k].append(0)
+        dict['#'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+        dict['%'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+
     return(dict)
 
 
