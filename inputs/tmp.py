@@ -4,60 +4,72 @@ import nltk
 from copy import deepcopy as cp
 cmudict = nltk.corpus.cmudict.dict()
 
-pool = ['the', 'and', 'but', 'this']
-r = Reps(pool, outliers=['and'], onehot=True, terminals=True)
+pool = ['the', 'and', 'but', 'this', 'a', 'of', 'in', 'these']
+r = Reps(pool, outliers=['of'], onehot=True, terminals=True)
 
 
-#%%
-pad = 9
-onehot = True
-terminals = True
-phonforms = r.phonforms
-phonreps = r.phonreps
-orthreps = r.orthreps
-cmudict = r.cmudict
-
-# create the pad by assigning to '_'
-if pad != 0:
-    padrep = []
-    for f in phonreps['_']:
-        padrep.append(pad)
-    phonreps['_'] = padrep
-
-
-repd = r.phonforms['the']
-maxlen = 4
-veclengths = set([len(v) for v in phonreps.values()])
-assert(len(veclengths) == 1), 'Phonological feature vectors across phonreps have different lengths.'
-phonemeComplexity = next(iter(veclengths))
-
-if not onehot:
-    veclengths = set([len(v) for v in orthreps.values()])
-    assert(len(veclengths) == 1), 'Orthographic feature vectors across phonreps have different lengths.'
-
-if terminals:
-    cmudictSOS = {}
-    cmudictEOS = {}
-    for word, phonform in cmudict.items():
-        sos = cp(phonform)
-        eos = cp(phonform)
-
-        sos.insert(0, '#')
-        eos.append('%')
-
-        cmudictSOS[word] = sos
-        cmudictEOS[word] = eos
-
-
-
+# %%
+x = r.phonformsSOS_array
+y = r.pool
 
 #%%
-sos = {}
 
-for word in pool:
-    padlen = maxlen-len(phonforms[word])
-    p = cp(phonreps['#'])
-    p.append(phonize(cmudict([word]))
-    for slot in range(padlen):
-        p.append(phonreps['_'])
-    phon_sos_masked_right[word] = p
+def remove_all(x, element):
+    return(list(filter(lambda e: e != element, x)))
+
+
+def key(dict, value):
+    for k, v in dict.items():
+        if value == v:
+            return(k)
+
+
+def reconstruct(x, y, repdict=None, join=True, axis=0):
+
+    """Reconstruct a string representation of a pattern from binary sequence.
+
+    Parameters
+    ----------
+    x : numpy array
+        An array containing binary representations from which the reconstruction
+        will occur.
+    
+    y : list
+        Each element of the list will be the string-based representation of each
+        element in x. The structure of each element will be inferred from reps. For
+        reps='phon', each element will be a list; for reps='orth', each element will
+        be a string.
+
+    reps : str
+        Specify the dictionary containing binary representations for each element
+        within examples in x. (Default is None)
+
+    join :  bool
+        Join the string representatation generated from reconstruction. This is
+        necessary if the elements in r are orthographic wordforms.
+
+    axis : int
+        The axis of x over which iteration should occur. (default is 0)
+
+    Returns
+    -------
+    bool
+        A True value is provided if reconstructed x matches the representations
+        in y. Else, a False value is returned.
+    """
+
+    def reconstruct_(example):
+        return([key(repdict, e) for e in example.tolist()])
+
+    r = []
+
+    for ex in range(x.shape[0]):
+        r.append(reconstruct_(x[ex]))
+
+    r = [remove_all(e, '_') for e in r]
+    
+    if not join:
+        return(r == y)
+    elif join:
+        for e in r:
+        return([''.join(e) for e in r] == y)

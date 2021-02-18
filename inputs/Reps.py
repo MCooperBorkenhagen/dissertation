@@ -12,7 +12,7 @@ from copy import deepcopy as cp
 
 # %%%
 
-def pad(wordform, maxlen):
+def pad_(wordform, maxlen):
     padlen = maxlen - len(wordform)
     return(wordform + ('_'*padlen))
 
@@ -36,7 +36,7 @@ def phontable(PATH):
     return(df)
 
 
-def phondict(PATH, terminals=False):
+def phonemedict(PATH, terminals=False):
     """Binary phonological reps from CSV.
 
     Parameters
@@ -78,8 +78,79 @@ def phondict(PATH, terminals=False):
     return(dict)
 
 # generate binary phonological representation for a wordform (will work for orth or phon)
-def represent(wordform, representations):
-    return([representations[e] for e in wordform])
+def represent(wordform, representations, embed=False):
+    if embed:
+        return([[representations[e]] for e in wordform])
+    elif not embed:
+        return([representations[e] for e in wordform])
+
+
+
+
+def remove_all(x, element):
+    return(list(filter(lambda e: e != element, x)))
+
+
+def key(dict, value):
+    for k, v in dict.items():
+        if value == v:
+            return(k)
+
+
+def reconstruct(x, y, repdict=None, join=True, axis=0):
+
+    """Reconstruct a string representation of a pattern from binary sequence.
+
+    Parameters
+    ----------
+    x : numpy array
+        An array containing binary representations from which the reconstruction
+        will occur.
+    
+    y : list
+        Each element of the list will be the string-based representation of each
+        element in x. The structure of each element will be inferred from reps. For
+        reps='phon', each element will be a list; for reps='orth', each element will
+        be a string.
+
+    reps : str
+        Specify the dictionary containing binary representations for each element
+        within examples in x. (Default is None)
+
+    join :  bool
+        Join the string representatation generated from reconstruction. This is
+        necessary if the elements in r are orthographic wordforms.
+
+    axis : int
+        The axis of x over which iteration should occur. (default is 0)
+
+    Returns
+    -------
+    bool
+        A True value is provided if reconstructed x matches the representations
+        in y. Else, a False value is returned.
+    """
+
+    def reconstruct_(example):
+        return([key(repdict, e) for e in example.tolist()])
+
+    r = []
+
+    for ex in range(x.shape[0]):
+        r.append(reconstruct_(x[ex]))
+
+    r = [remove_all(e, '_') for e in r]
+    
+    if not join:
+        return(r == y)
+    elif join:
+        for e in r:
+            return([''.join(e) for e in r] == y)
+
+
+
+
+
 
 # %%
 class Reps():
@@ -92,7 +163,7 @@ class Reps():
     """
 
 
-    def __init__(self, words, outliers=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, terminals=False, compounds=False, punctuation=False, tolower=True):
+    def __init__(self, words, outliers=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, terminals=False, justify='left', compounds=False, punctuation=False, tolower=True):
         """Initialize Reps with a values that specify representations over words.
         Parameters
         ----------
@@ -135,7 +206,17 @@ class Reps():
 
         terminals : bool
             Whether to construct phonological representations with terminal
-            strings or not. This value is passed to phondict(). (default is False)
+            strings or not. This value is passed to phonemedict(). Note that
+            this determines whether or not to supply two sets of phonological
+            representations, because if terminals is true, it is assumed
+            that phonological inputs and outputs are required (default is False).
+
+        justify : str
+            How to justify the patterns output. This specification is applied to
+            all patterns produced (orthography, phonology, and if terminals is
+            set to True, both input and output phonology). Note that a left justification
+            means that the pad is placed on the right side of the representations,
+            and vice versa for right justification. (Default is left.)
         """
 
         # clean data at initialization (parameters are passed at init)
@@ -199,15 +280,15 @@ class Reps():
                 new = k.lower()
                 cmudict[new] = cmudict.pop(k)
         
-        self.cmudict = cmudict
+        # from here the words in cmudict and pool are set
+        self.cmudict = {word: phonform for word, phonform in cmudict.items() if word in pool}
         self.pool = pool
 
         phonpath = 'https://raw.githubusercontent.com/MCooperBorkenhagen/ARPAbet/master/phonreps.csv'
         self.phonpath = phonpath
         self.phontable = phontable(phonpath)
-
-        phonreps = phondict(phonpath, terminals=terminals)
-        self.phonreps =  phonreps
+        self.phonreps = phonemedict(phonpath, terminals=terminals)
+        
         if onehot:
             orthpath = 'raw/orthreps-onehot.json'
         elif not onehot:
@@ -215,17 +296,148 @@ class Reps():
         with open(orthpath, 'r') as f:
             orthreps = json.load(f)
         self.orthreps = orthreps
-        
-        self.orthforms = {word: represent(word, orthreps) for word in pool}
-        self.phonforms = {word: represent(cmudict[word], phonreps) for word in pool}
-        self.orthlengths = {word: len(phonform) for word, phonform in self.phonform.items()}
-        self.phonlengths = {word: len(orthform), for word, orthform in self.orthform.items())}
         self.outliers = outliers
         self.excluded = excluded
+
+
+        # generate the padded version:
+
+        if phonpad != 0:
+            padrep = []
+            for f in self.phonreps['_']:
+                padrep.append(phonpad)
+            self.phonreps['_'] = padrep
+
+        if orthpad != 0:
+            padrep = []
+            for f in self.orthreps['_']:
+                padrep.append(orthpad)
+            self.orthreps['_'] = padrep
+
+        # test that all the phonological vectors are the same length        
+        veclengths = set([len(v) for v in self.phonreps.values()])
+        assert(len(veclengths) == 1), 'Phonological feature vectors across phonreps have different lengths.'
+        # derive the length of a single phoneme
+        self.phoneme_length = next(iter(veclengths))
+
+
+        if not onehot:
+            veclengths = set([len(v) for v in self.orthreps.values()])
+            assert(len(veclengths) == 1), 'Orthographic feature vectors across phonreps have different lengths.'
+
+        if terminals:
+            cmudictSOS = {}
+            cmudictEOS = {}
+
+        for word, phonform in self.cmudict.items():
+            sos = cp(phonform)
+            eos = cp(phonform)
+
+            sos.insert(0, '#')
+            eos.append('%')
+
+            cmudictSOS[word] = sos
+            cmudictEOS[word] = eos
+
+        self.cmudictSOS = cmudictSOS
+        self.cmudictEOS = cmudictEOS
+        
+        if terminals:
+            self.phonformsSOS = {word: represent(self.cmudictSOS[word], self.phonreps) for word in pool}
+            self.phonformsEOS = {word: represent(self.cmudictEOS[word], self.phonreps) for word in pool}
+        elif not terminals:
+            self.phonforms = {word: represent(self.cmudict[word], self.phonreps) for word in pool}
+
+        self.orthforms = {word: represent(word, self.orthreps, embed=True) for word in pool}
+        self.orthlengths = {word: len(orthform) for word, orthform in self.orthforms.items()}
+
+        if terminals:
+            self.phonlengths = {word: len(phonform) for word, phonform in self.phonformsSOS.items()} # could also use EOS here, would have same result
+        else:
+            self.phonlengths = {word: len(phonform) for word, phonform in self.phonforms.items()}
+
+
+        # maximum phonological length and orthographic length are derived if they aren't specified at class call
+        if maxorth is None:
+            self.maxorth = max(self.orthlengths.values())
+        
+        if maxphon is None:
+            self.maxphon = max(self.phonlengths.values())
+
+        self.pool_with_pad = {}
+        for word in pool:
+            ppl = self.maxphon-self.phonlengths[word]
+            opl = self.maxorth-self.orthlengths[word]
+            orthpad = ''.join(['_' for p in range(opl)])
+            phonpad = ['_' for p in range(ppl)]
+            if not terminals:
+                if justify == 'left':
+                    cmudict[word].extend(phonpad)
+                elif justify == 'right':
+                    phonpad.extend(cmudict[word])
+                    cmudict[word] = phonpad
+            elif terminals:
+                if justify == 'left':
+                    cmudictSOS[word].extend(phonpad)
+                    cmudictEOS[word].extend(phonpad)
+                elif justify == 'right':
+                    sos = cp(phonpad)
+                    eos = cp(phonpad)
+                    sos.extend(cmudictSOS[word])
+                    eos.extend(cmudictEOS[word])
+                    cmudictSOS[word] = sos
+                    cmudictEOS[word] = eos
+            if justify == 'left':
+                self.pool_with_pad[word] = word+orthpad
+            elif justify == 'right':
+                self.pool_with_pad[word] = orthpad+word
+
+        
+        self.orthforms_padded = {word: represent(orthform, self.orthreps, embed=True) for word, orthform in self.pool_with_pad.items()}
+        if terminals:
+            self.phonformsEOS_padded = {word: represent(phonform, self.phonreps) for word, phonform in self.cmudictEOS.items()}
+            self.phonformsSOS_padded = {word: represent(phonform, self.phonreps) for word, phonform in self.cmudictSOS.items()}
+        if not terminals:
+            self.phonforms_padded = {word: represent(phonform, self.phonreps) for word, phonform in self.cmudict.items()}
+
+
+
+
+        # %% Array form
+        self.orthforms_array = []
+        if terminals:
+            self.phonformsSOS_array = []
+            self.phonformsEOS_array = []
+        elif not terminals:
+            self.phonforms_array = []
+        
+        for word in self.pool:
+            self.orthforms_array.append(self.orthforms_padded[word])
+            if terminals:
+                self.phonformsSOS_array.append(self.phonformsSOS_padded[word])
+                self.phonformsEOS_array.append(self.phonformsEOS_padded[word])
+            elif not terminals:
+                self.phonforms_array.append(self.phonforms_padded[word])
+
+        self.orthforms_array = np.array(self.orthforms_array)
+        if terminals:
+            self.phonformsSOS_array = np.array(self.phonformsSOS_array)
+            self.phonformsEOS_array = np.array(self.phonformsEOS_array)
+        elif not terminals:
+            self.phonforms_array = np.array(self.phonforms_array)
+
 
         #########
         # TESTS #
         #########
+        #assert reconstruct(self.orthforms_array, self.pool, repdict=self.orthreps, join=True), 'The padded orthographic representations do not match their string representations'
+        #if terminals:
+        #    assert reconstruct(self.phonformsSOS_array, self.pool, repdict=self.phonreps, join=False), 'SOS phonological representations do not match their string representations'
+        #    assert reconstruct(self.phonformsEOS_array, self.pool, repdict=self.phonreps, join=False), 'EOS phonological representations do not match their string representations'
+        #elif not terminals:
+        #    assert reconstruct(self.phonforms_array, self.pool, repdict=self.phonreps, join=False), 'Phonological representations do not match their string representations'
+
+
         # check that all the phonemes in words in pool are represented in phonreps:
         phones = [phone for word in pool for phone in cmudict[word]]
         assert set(phones).issubset(self.phonreps.keys()), 'Some phonemes are missing in your phonreps'
@@ -239,22 +451,11 @@ class Reps():
 
         # perform a test on all letters, making sure that we have a binary representation for it
         # need to change this to a different dictionary for each
-        assert set(self.orthforms.keys()) == set(self.phonforms.keys()), 'The keys in your orth and phon dictionaries do not match'
+        if terminals:
+            assert set(self.orthforms.keys()) == set(self.phonformsSOS.keys()) == set(self.phonformsEOS.keys()), 'The keys in your orth and phon (SOS/ EOS) dictionaries do not match'    
+        elif not terminals:
+            assert set(self.orthforms.keys()) == set(self.phonforms.keys()), 'The keys in your orth and phon dictionaries do not match'
 
-        # generate the padded version:
-        if maxorth is None:
-            maxorth = max([len(orthform) for orthform in self.orthform.items()])
-
-        
-        padded = {}
-
-        for word in pool:
-            padlen = maxphon-phonlengths[word]
-            p = phonreps['#']
-            p.append(phonize(cmudict([word]))
-            for slot in range(padlen):
-                p.append(phonpad)
-            phon_sos_masked_right[word] = p
 
 
 
