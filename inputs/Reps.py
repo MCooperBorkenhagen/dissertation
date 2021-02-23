@@ -9,6 +9,9 @@ import re
 import random
 import nltk
 from copy import deepcopy as cp
+import string
+
+
 
 # %%%
 
@@ -138,8 +141,11 @@ def reconstruct(x, y, repdict=None, join=True, remove_=False, axis=0):
         return([key(repdict, e) for e in example.tolist()])
 
     r = []
-
-    for ex in range(x.shape[0]):
+    
+    for ex in range(x.shape[axis]):
+        if type(x[ex]) == list:
+            print(ex)
+            print(x[ex])
         r.append(reconstruct_(x[ex]))
 
     if remove_:
@@ -168,7 +174,7 @@ class Reps():
     """
 
 
-    def __init__(self, words, outliers=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, terminals=False, justify='left', compounds=False, punctuation=False, tolower=True, test_reps=True):
+    def __init__(self, words, outliers=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, terminals=False, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True):
         """Initialize Reps with a values that specify representations over words.
         Parameters
         ----------
@@ -229,8 +235,7 @@ class Reps():
 
         pool = cp(words)
 
-        tmp = nltk.corpus.cmudict.dict() # the raw cmudict object
-        cmudict = {word: phonforms[phon_index] for word, phonforms in tmp.items() if word in pool}
+        cmudict = {word: phonforms[phon_index] for word, phonforms in nltk.corpus.cmudict.dict().items() if word in pool}
 
         if outliers is not None:
             if type(outliers) == str:
@@ -240,50 +245,52 @@ class Reps():
         else:
             excluded = {}
 
+
+        notin_cmu = [word for word in pool if word not in cmudict.keys()]
+        pool = [word for word in pool if word not in notin_cmu]
+        for word in notin_cmu:
+            excluded[word] = "missing from cmudict"
+            print(word, 'removed from pool because it is missing in cmudict')
+
         if not oneletter:
             for word in pool:
+                print(word)
                 if len(word) == 1:
                     pool.remove(word)
                     print(word, 'removed from pool because it has one letter')
                     excluded[word] = "one letter word"
 
-        for word in pool:
-            if word not in cmudict.keys():
-                excluded[word] = "missing from cmudict"
-                print(word, 'removed from pool because it is missing in cmudict')
-                pool.remove(word)
-
         if maxorth is not None:
-            for word in pool:
-                if len(word) > maxorth:
-                    excluded[word] = "too many letters"
-                    print(word, 'removed from pool because it has too many letters')
-                    pool.remove(word)
+            toomanyletters = [word for word in pool if len(word) > maxorth]
+            pool = [word for word in pool if word not in toomanyletters]
+            for word in toomanyletters:
+                excluded[word] = "too many letters"
+                print(word, 'removed from pool because it has too many letters')
 
         if maxphon is not None:
-            toomanyphones = []
-            for word in pool:
-                if len(cmudict[word]) > maxphon:
-                    excluded[word] = "too many phonemes"
-                    print(word, 'removed from pool because it has too many phonemes')
-                    pool.remove(word)
-
-
-        # now clean cmudict:
-        if not compounds:
-            cmudict = {word: phonform for word, phonform in cmudict.items() if '-' not in word}
+            toomanyphones = [word for word in pool if len(cmudict[word]) > maxphon]
+            pool = [word for word in pool if word not in toomanyphones]
+            for word in toomanyphones:
+                excluded[word] = "too many phonemes"
+                print(word, 'removed from pool because it has too many phonemes')
 
         if not punctuation:
-            regex = re.compile('[^a-zA-Z]')
-            for k in cmudict.keys(): # you have to convert to list to change key of dict in loop
-                if not k.isalpha():
-                    new = regex.sub('', k)
-                    cmudict[new] = cmudict.pop(k)
+            punct = string.punctuation
+            has_punct = [word for word in pool for ch in word if ch in punct]
+            pool = [word for word in pool if word not in has_punct]
+            for word in has_punct:
+                excluded[word] = "puctuation present"
+                print(word, 'removed because punctuation is present')
+
+        if not numerals:
+            has_numerals = [word for word in pool if any(ch.isdigit() for ch in word)]
+            pool = [word for word in pool if word not in has_numerals]
+            for word in has_numerals:
+                excluded[word] = 'contains numerals'
+                print(word, 'removed because it contains numerals')
 
         if tolower:
-            for k in cmudict.keys():
-                new = k.lower()
-                cmudict[new] = cmudict.pop(k)
+            pool = [word.lower() for word in pool]
         
         # from here the words in cmudict and pool are set
         self.cmudict = {word: phonform for word, phonform in cmudict.items() if word in pool}
@@ -333,9 +340,9 @@ class Reps():
         if terminals:
             cmudictSOS = {}
             cmudictEOS = {}
-            for word, phonform in self.cmudict.items():
-                sos = cp(phonform)
-                eos = cp(phonform)
+            for word in self.pool:
+                sos = cp(self.cmudict[word])
+                eos = cp(self.cmudict[word])
 
                 sos.insert(0, '#')
                 eos.append('%')
@@ -347,12 +354,12 @@ class Reps():
             self.cmudictEOS = cmudictEOS
         
         if terminals:
-            self.phonformsSOS = {word: represent(self.cmudictSOS[word], self.phonreps) for word in pool}
-            self.phonformsEOS = {word: represent(self.cmudictEOS[word], self.phonreps) for word in pool}
+            self.phonformsSOS = {word: represent(self.cmudictSOS[word], self.phonreps) for word in self.pool}
+            self.phonformsEOS = {word: represent(self.cmudictEOS[word], self.phonreps) for word in self.pool}
         elif not terminals:
-            self.phonforms = {word: represent(self.cmudict[word], self.phonreps) for word in pool}
+            self.phonforms = {word: represent(self.cmudict[word], self.phonreps) for word in self.pool}
 
-        self.orthforms = {word: represent(word, self.orthreps) for word in pool}
+        self.orthforms = {word: represent(word, self.orthreps) for word in self.pool}
         self.orthlengths = {word: len(orthform) for word, orthform in self.orthforms.items()}
 
         if terminals:
@@ -364,28 +371,33 @@ class Reps():
         # maximum phonological length and orthographic length are derived if they aren't specified at class call
         if maxorth is None:
             self.maxorth = max(self.orthlengths.values())
+        else:
+            self.maxorth = maxorth
         
         if maxphon is None:
             self.maxphon = max(self.phonlengths.values())
+        else:
+            self.maxphon = maxphon
 
         self.pool_with_pad = {}
-        for word in pool:
-            ppl = self.maxphon-self.phonlengths[word]
+        for word in self.pool:
+
+            if terminals:
+                ppl = (self.maxphon+1)-self.phonlengths[word] # add 1 because maxphon doesn't take into account the terminal character
+            elif not terminals:
+                ppl = self.maxphon-self.phonlengths[word]
+
             opl = self.maxorth-self.orthlengths[word]
             orthpad = ''.join(['_' for p in range(opl)])
             phonpad = ['_' for p in range(ppl)]
+
             if not terminals:
                 if justify == 'left':
                     self.cmudict[word].extend(phonpad)
-                    print(word)
-                    print(phonpad)
                 elif justify == 'right':
                     new = cp(cmudict[word])
                     phonpad.extend(new)
                     self.cmudict[word] = phonpad
-                    print('word:', word)
-                    print('phonpad:', phonpad)
-                    print('new:', new)
             elif terminals:
                 if justify == 'left':
                     self.cmudictSOS[word].extend(phonpad)
@@ -432,9 +444,9 @@ class Reps():
         self.orthforms_array = np.array(self.orthforms_array)
 
         if terminals:
-            self.phonformsSOS_array = np.array(self.phonformsSOS_array)
-            self.phonformsEOS_array = np.array(self.phonformsEOS_array)
-        elif not terminals:
+            self.phonformsSOS_array = np.asarray(self.phonformsSOS_array)
+            self.phonformsEOS_array = np.asarray(self.phonformsEOS_array)
+        if not terminals:
             self.phonforms_array = np.array(self.phonforms_array)
 
 

@@ -1,54 +1,46 @@
 # %%
+from Reps import Reps as data
 import pandas as pd
-import nltk
-import random
 import numpy as np
-import os
-import json
-import re
-import random
-import nltk
-import copy
-from utilities import *
-
-with open('./raw/params.json') as j:
-    cfg = json.load(j)
-
+import csv
+#%%
 # set variables
 WORDPATH = './raw/wcbc-ranked.csv'
-
-
-# get cmu words
-cmudict = nltk.corpus.cmudict.dict() # the raw cmudict object
 wcbc = pd.read_csv(WORDPATH)
 
+# removed by hand: nan,1,8219
 # get outlier short words (ie words that fall within the length threshold that are weird)
 outliers = pd.read_csv('./raw/wcbc-outliers.csv', header=None)[0].tolist()
+#outliers.append('rope')
+
+MAXORTH = 8
+MAXPHON = 8
+
+words = wcbc.orth.tolist()
+#%%
+right = data(words, outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=True, justify='right')
+o = right.orthforms_array
+pI = right.phonformsSOS_array
+pO = right.phonformsEOS_array
+
+np.save('orth-right.npy', right.orthforms_array)
+np.save('phon-sos-right.npy', right.phonformsSOS_array)
+np.save('phon-eos-right.npy', right.phonformsEOS_array)
 
 # %%
-maxorth = 8
-maxphon = 8
+left = data(words, outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=True, justify='left')
 
 
 
-# %% write objects
-syllabics = {'orth': o, 'phon': p, 'syllables': s, 'phon_input': phonInputLabels, 'phon_output': phonOutputLabels}
-syllabics = pd.DataFrame.from_dict(syllabics)
-syllabics.to_csv('syllabics-encoderDecoder.csv', index=False)
+np.save('orth-left.npy', left.orthforms_array)
+np.save('phon-sos-left.npy', left.phonformsSOS_array)
+np.save('phon-eos-left.npy', left.phonformsEOS_array)
+#%%
 
-# write arrays and labels:
-with open('orth-onehot-masked-right.npy', 'wb') as f:
-    np.save(f, orthArrayRight)
-with open('orth-onehot-masked-left.npy', 'wb') as f:
-    np.save(f, orthArrayLeft)
-with open('phon-sos-masked-right.npy', 'wb') as f:
-    np.save(f, phonArrayRight)
-with open('phon-eos-masked-right.npy', 'wb') as f:
-    np.save(f, phonArrayLeft)
-with open('phon-sos-masked-left.npy', 'wb') as f:
-    np.save(f, phonArrayRight)
-with open('phon-eos-masked-left.npy', 'wb') as f:
-    np.save(f, phonArrayLeft)
+with open('encoder-decoder-words.csv', 'w') as f:
+    w = csv.writer(f)
+    for word in words:
+        w.writerow(word)
+f.close()
 
-
-# %%
+#%%

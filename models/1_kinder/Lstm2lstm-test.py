@@ -49,7 +49,7 @@ acts_all_m2 = test_acts_m2(x)
 acts_m2 = np.array(acts_all_m2[layer_index])
 assert acts_m1.shape == acts_m2.shape, 'Activations are different dimensions - something is wrong'
 # %%
-d1 = acts_m1.shape[0] # we could take dims from either ml acts or mr acts - should not make a difference
+d1 = acts_m1.shape[0] 
 d2 = acts_m1.shape[1]*acts_m1.shape[2]
 acts_m1 = acts_m1.reshape((d1, d2))
 acts_m2 = acts_m2.reshape((d1, d2))
