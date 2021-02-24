@@ -4,3 +4,17 @@ scripts that train them. The critical learners are:
 
 Lstm2lstm (.py)
 EncoderDecoder (.py)
+
+
+
+
+###################
+# encoder-decoder #
+###################
+There were initial run issues that were solved by following the suggestion 
+here: https://github.com/tensorflow/tensorflow/issues/36508
+The solution involves setting the device properly at initialization:
+
+import tensorflow as tf
+physical_devices = tf.config.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
