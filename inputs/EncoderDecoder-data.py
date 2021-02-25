@@ -34,9 +34,13 @@ np.save('orth-left.npy', left.orthforms_array)
 np.save('phon-left.npy', left.phonforms_array)
 
 #%%
+assert right.pool == left.pool, 'Pools are different, check call to Reps'
+
+
+#%%
 with open('encoder-decoder-words.csv', 'w') as f:
     w = csv.writer(f)
-    for word in words:
+    for word in left.pool:
         w.writerow([word])
 f.close()
 

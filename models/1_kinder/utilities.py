@@ -34,3 +34,38 @@ def divide(x, y, frac):
     y_train, y_test = y[:train_size], y[train_size:]
 
     return(x_train, y_train, x_test, y_test)
+
+
+
+
+def changepad(X, old=None, new=None):
+    import numpy
+    X[X==old] = new
+    return(X)
+
+
+def test_acts(inputs, model, layer='all'):
+    import keras
+    import numpy
+    acts = keras.Model(inputs=model.input, outputs=[layer.output for layer in model.layers])
+    if layer == 'all':
+        return(acts)
+    else:
+        return(numpy.array(acts[layer]))
+
+
+def key(dict, value):
+    for k, v in dict.items():
+        if value == v:
+            return(k)
+
+
+def decode(x, reps, join=True):
+    d = [key(reps, rep) for rep in x]
+    if join:
+        return(''.join(d))
+    else:
+        return(d)
+    
+
+

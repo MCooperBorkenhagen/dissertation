@@ -78,7 +78,7 @@ class Learner():
         self.summary = model.summary()
 
         t1 = time.time()
-        cb = model.fit([Xe, Xd], Y, batch_size=batch_size, epochs=epochs, validation_split=1-train_proportion)
+        cb = model.fit([Xe, Xd], Y, batch_size=batch_size, epochs=epochs, validation_split=(1-train_proportion))
         cb.history['learntime'] = round((time.time()-t1)/60, 2)
         self.runtime = time.ctime()
         self.history = cb.history
