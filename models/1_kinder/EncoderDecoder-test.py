@@ -2,8 +2,9 @@
 # %%
 from seq2seq import Learner
 import numpy as np
-from utilities import changepad, key, decode, test_acts
+from utilities import changepad, key, decode, test_acts, all_equal, cor_acts
 import pandas as pd
+from tensorflow.keras.utils import plot_model as plot
 
 import keras
 from tensorflow.keras import layers
@@ -30,70 +31,64 @@ _Xp = np.load('../../inputs/phon-right.npy')
 _Y = np.load('../../inputs/phon-right.npy')
 _Y = changepad(_Y, old=9, new=0)
 
-assert not (_Xo==Xo_).all(), 'Your Xo patterns are the same for right and left and should not be'
-assert not (_Xp==Xp_).all(), 'Your Xp patterns are the same for right and left and should not be'
-
+assert not np.array_equal(Xo_, _Xo), 'Your Xo patterns are the same for right and left and should not be'
+assert not np.array_equal(Xp_, _Xp), 'Your Xp patterns are the same for right and left and should not be'
+assert not np.array_equal(Y_, _Y), 'Your Y patterns are equal for right and left padding and shouldn not be'
 
 #%%
 #########
 # LEARN #
 #########
-left = Learner(Xo_, Xp_, Y_, epochs=10, devices=False)
-right = Learner(_Xo, _Xp, _Y, epochs=10, devices=False)
+left = Learner(Xo_, Xp_, Y_, epochs=10, devices=False, monitor=False)
+right = Learner(_Xo, _Xp, Y_, epochs=10, devices=False, monitor=False)
+assert not left == right, 'Your two models are the same and should not be'
 
+#%%
 ########
 # TEST #
 ########
+n = 2000
+left_acts = test_acts([Xo_[:n], Xp_[:n]], left, layer=3)
+right_acts = test_acts([_Xo[:n], _Xp[:n]], right, layer=3)
+assert not np.array_equal(right_acts, left_acts), 'Your activation arrays are equal and that might not be good'
+# %%
+cor_acts(right_acts, left_acts)
+# %%
 
-# %% Test the activations across inputs
-layer_index = 4
-n = 4000 # number of activations to test (ie, words)
-# right
+left_right_left_acts = test_acts([Xo_[:n], _Xp[:n]], left, layer=3)
+cor_acts(left_right_left_acts, left_acts)
+# %%
 
+left_right_right_acts = test_acts([Xo_[:n], _Xp[:n]], right, layer=3)
+cor_acts(left_right_right_acts, left_acts)
+# %%
+# include the SOS and EOS:
+Xp_Sos = np.load('../../inputs/phon-sos-left.npy')
+Yp_Eos = np.load('../../inputs/phon-eos-left.npy')
+_XpSos = np.load('../../inputs/phon-sos-right.npy')
+_YpEos = np.load('../../inputs/phon-eos-right.npy')
 
-#right_acts = keras.Model(inputs=right.model.input, outputs=[layer.output for layer in right.model.layers])
+Yp_Eos = changepad(Yp_Eos, old=9, new=0)
+_YpEos = changepad(_YpEos, old=9, new=0)
 
+assert not np.array_equal(Xp_Sos, _XpSos), 'Your right and left aligned phon inputs are all equal and they should not be'
+# %%
+leftT = Learner(Xo_, Xp_Sos, Yp_Eos, epochs=20, devices=False, monitor=False)
+rightT = Learner(_Xo, Xp_Sos, Yp_Eos, epochs=20, devices=False, monitor=False)
+# %%
+leftT_acts = test_acts([Xo_[:n], Xp_Sos[:n]], leftT, layer=4)
+rightT_acts = test_acts([_Xo[:n], Xp_Sos[:n]], rightT, layer=4)
+assert not np.array_equal(rightT_acts, leftT_acts), 'Your activation arrays are equal and that might not be good (but it might be really good'
+# %%
+cor_acts(rightT_acts, leftT_acts)
+#
 #%%
-#acts_all_r = right_acts([Xo[:n], Xp[:n]])
-#acts_mr = np.array(acts_all_r[layer_index])
+leftT_actsA =test_acts([Xo_[:n], Xp_Sos[:n]], leftT)
+rightT_actsA = test_acts([_Xo[:n], Xp_Sos[:n]], rightT)
 
-#%%
-# left
-#left_acts = keras.Model(inputs=left.model.input, outputs=[layer.output for layer in left.model.layers])
-
-#acts_all_l = left_acts([Xo_[:n], Xp_[:n]])
-#acts_ml = np.array(acts_all_l[layer_index])
-#assert acts_ml.shape == acts_mr.shape, 'Activations are different dimensions - something is wrong'
+for layer in range(len(leftT_actsA)):
+    print(layer, ':')
+    print(cor_acts(np.array(leftT_actsA[layer]), np.array(rightT_actsA[layer])))
 # %%
-right_acts = test_acts([Xo[:n], Xp[:n]])
-
-
-
-d1 = acts_mr.shape[0] # we could take dims from either ml acts or mr acts - should not make a difference
-d2 = acts_mr.shape[1]*acts_mr.shape[2]
-
-
-acts_mr = acts_mr.reshape((d1, d2))
-acts_ml = acts_ml.reshape((d1, d2))
-
-
-
-
-# %%
-
-# applying the dist operation to each matrix takes about 2.5 minutes
-
-dmr = dist(acts_mr)
-dml = dist(acts_ml)
-
-# %%
-# pearson's r
-cor = np.corrcoef(dmr, dml)
-print(cor)
-
-# %%
-# spearman's rho
-from scipy.stats import spearmanr as cor
-print(cor(dmr, dml))
-
+plot(leftT.model, to_file='architecture.png', show_shapes=True)
 # %%

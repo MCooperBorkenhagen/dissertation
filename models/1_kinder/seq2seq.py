@@ -7,7 +7,7 @@ import time
 
 class Learner():
 
-    def __init__(self, Xe, Xd, Y, labels=None, train_proportion=.9, hidden=300, batch_size=100, epochs=20,  transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', monitor=True, seed=886, devices=True, memory_growth=True):
+    def __init__(self, Xe, Xd, Y, labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20,  transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', monitor=True, seed=886, devices=True, memory_growth=True):
 
 
         np.random.seed(seed)
@@ -47,19 +47,28 @@ class Learner():
 
 
         # learner:
-        encoder_inputs = Input(shape=(None, Xe.shape[2]))
+        if op_names:
+            input1_name = 'orth_input'
+            input2_name = 'phon_input'
+            output_name = 'phon_output'
+        else:
+            input1_name = 'input_1'
+            input2_name = 'input_2'
+            output_name = 'output'
+
+        encoder_inputs = Input(shape=(None, Xe.shape[2]), name=input1_name)
         encoder_inputs_masked = Masking(mask_value=9)(encoder_inputs)
         encoder = LSTM(hidden, return_state=True)
         encoder_outputs, state_h, state_c = encoder(encoder_inputs_masked)
         encoder_states = [state_h, state_c]
 
-        decoder_inputs = Input(shape=(None, Xd.shape[2]))
+        decoder_inputs = Input(shape=(None, Xd.shape[2]), name=input2_name)
         decoder_inputs_masked = Masking(mask_value=9)(decoder_inputs)
 
         decoder_lstm = LSTM(hidden, return_sequences=True, return_state=True)
         decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked,
                                             initial_state=encoder_states)
-        decoder_dense = Dense(Xd.shape[2], activation=transfer_function)
+        decoder_dense = Dense(Xd.shape[2], activation=transfer_function, name=output_name)
         decoder_outputs = decoder_dense(decoder_outputs)
 
         model = Model([encoder_inputs, decoder_inputs], decoder_outputs)

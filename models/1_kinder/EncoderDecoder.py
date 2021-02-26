@@ -23,7 +23,7 @@ num_encoder_tokens = X.shape[2]
 num_decoder_tokens = Xphon.shape[2]
 latent_dim = 300
 batch_size = 100
-epochs = 10
+epochs = 1
 #%%
 
 

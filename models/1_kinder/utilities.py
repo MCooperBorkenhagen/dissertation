@@ -43,16 +43,15 @@ def changepad(X, old=None, new=None):
     X[X==old] = new
     return(X)
 
-
-def test_acts(inputs, model, layer='all'):
+def test_acts(inputs, learner, layer='all'):
     import keras
     import numpy
-    acts = keras.Model(inputs=model.input, outputs=[layer.output for layer in model.layers])
+    test = keras.Model(inputs=learner.model.input, outputs=[layer.output for layer in learner.model.layers])
+    acts = test(inputs)
     if layer == 'all':
         return(acts)
     else:
         return(numpy.array(acts[layer]))
-
 
 def key(dict, value):
     for k, v in dict.items():
@@ -69,3 +68,21 @@ def decode(x, reps, join=True):
     
 
 
+def all_equal(X, Y):
+    return((Y == Y).all())
+
+
+def cor_acts(X, Y, method='pearson'):
+    from scipy.spatial.distance import pdist as dist
+    assert X.shape == Y.shape, 'X and Y have different shapes and cannot be correlated'
+    d1 = X.shape[0] # we could take dims from either ml acts or mr acts - should not make a difference
+    d2 = X.shape[1]*X.shape[2]
+
+    dX = dist(X.reshape((d1, d2)))
+    dY = dist(Y.reshape((d1, d2)))
+
+    if method == 'pearson':
+        return(np.corrcoef(dX, dY))
+    elif method == 'spearman':
+        from scipy.stats import spearmanr as cor
+        return(cor(dX, dY))
