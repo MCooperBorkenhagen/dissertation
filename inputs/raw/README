@@ -1,0 +1,30 @@
+This directory contains raw data relevant to 
+specifying words and their forms (representations)
+for modeling in the dissertation project. Some
+(non exhaustive) notes:
+
+----------------------------------
+kidwords-missing-from-cmudict.json
+----------------------------------
+This file was created by Kaycie Barron in winter
+2020-2021 and contains words that are contained
+within WCBC but are not transcribed by nltk's
+implementation of cmudict (ie, they aren't contained
+within cmudict in nltk). The companion file to
+this one is kidwords-missing-from-cmudict.csv. We
+may not ultimately include these words in the
+pool for modeling, but they are here for reference 
+if needed.
+
+---------------------------------
+kidwords-missing-from-cmudict.csv
+---------------------------------
+This CSV contains the missing words mentioned
+above but in tabular form. There are columns
+that indicate additional useful data about
+the words included in these datasets. Note
+that the "sublist" column indicates if a
+word included in the accompanying json file
+is associated with more than one phonological
+wordform in that json file.
+

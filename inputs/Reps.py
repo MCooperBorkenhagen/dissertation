@@ -174,7 +174,7 @@ class Reps():
     """
 
 
-    def __init__(self, words, outliers=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, terminals=False, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True):
+    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, terminals=False, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True):
         """Initialize Reps with a values that specify representations over words.
         Parameters
         ----------
@@ -185,6 +185,11 @@ class Reps():
         outliers : list or None
             A list of words to be excluded from representations of words, or None
             if no excluding is required. (default None)
+
+        cmudict_supplement : str or None
+            A path to a json file to be used to supplement phonological
+            transcriptions contained in cmudict. Keys in the dict object
+            represented in the json file should match words provided.
 
         phonlabel : str
             Label of phoneme to be specified when producing phontable and phonreps.
@@ -245,6 +250,13 @@ class Reps():
         else:
             excluded = {}
 
+        if cmudict_supplement is not None:
+            with open(cmudict_supplement, 'r') as f:
+                supp = json.load(f)
+            for word, phonforms in supp.items():
+                if word in pool:
+                    cmudict[word] = phonforms[phon_index]
+
 
         notin_cmu = [word for word in pool if word not in cmudict.keys()]
         pool = [word for word in pool if word not in notin_cmu]
@@ -296,7 +308,8 @@ class Reps():
         self.cmudict = {word: phonform for word, phonform in cmudict.items() if word in pool}
         self.pool = pool
 
-        phonpath = 'https://raw.githubusercontent.com/MCooperBorkenhagen/ARPAbet/master/phonreps.csv'
+        if phonpath is None:
+            phonpath = 'https://raw.githubusercontent.com/MCooperBorkenhagen/ARPAbet/master/phonreps.csv'
         self.phonpath = phonpath
         self.phontable = phontable(phonpath)
         self.phonreps = phonemedict(phonpath, terminals=terminals)

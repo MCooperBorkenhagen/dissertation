@@ -1,6 +1,6 @@
 
 # %%
-from seq2seq import Learner
+from EncoderDecoder import Learner
 import numpy as np
 from utilities import changepad, key, decode, test_acts, all_equal, cor_acts
 import pandas as pd
@@ -87,8 +87,9 @@ leftT_actsA =test_acts([Xo_[:n], Xp_Sos[:n]], leftT)
 rightT_actsA = test_acts([_Xo[:n], Xp_Sos[:n]], rightT)
 
 for layer in range(len(leftT_actsA)):
-    print(layer, ':')
-    print(cor_acts(np.array(leftT_actsA[layer]), np.array(rightT_actsA[layer])))
+    if layer != 5:
+        print(layer, ':')
+        print(cor_acts(np.array(leftT_actsA[layer]), np.array(rightT_actsA[layer])))
 # %%
 plot(leftT.model, to_file='architecture.png', show_shapes=True)
 # %%

@@ -13,6 +13,7 @@ No SOS-EOS in this one. These data allow for a pure autoencoder in the phonologi
 """
 # get outlier short words (ie words that fall within the length threshold that are weird)
 outliers = pd.read_csv('./raw/wcbc-outliers.csv', header=None)[0].tolist()
+# %%
 #outliers.append('rope')
 
 MAXORTH = 8
@@ -20,13 +21,14 @@ MAXPHON = 8
 
 words = wcbc.orth.tolist()
 #%%
-right = data(words, outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=False, justify='right', onehot=False, orthpad=9)
+right = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=False, justify='right', onehot=False, orthpad=9)
 
+# %%
 np.save('orth-right.npy', right.orthforms_array)
 np.save('phon-right.npy', right.phonforms_array)
 
 # %%
-left = data(words, outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=False, justify='left', onehot=False, orthpad=9)
+left = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=False, justify='left', onehot=False, orthpad=9)
 
 
 
