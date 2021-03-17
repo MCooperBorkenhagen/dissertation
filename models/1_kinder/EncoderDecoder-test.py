@@ -40,7 +40,7 @@ assert not np.array_equal(Y_, _Y), 'Your Y patterns are equal for right and left
 # LEARN #
 #########
 left = Learner(Xo_, Xp_, Y_, epochs=10, devices=False, monitor=False)
-right = Learner(_Xo, _Xp, Y_, epochs=10, devices=False, monitor=False)
+right = Learner(_Xo, _Xp, Y_, epochs=20, devices=False, monitor=False) # more epochs here - harder to learn
 assert not left == right, 'Your two models are the same and should not be'
 
 #%%
@@ -54,7 +54,6 @@ assert not np.array_equal(right_acts, left_acts), 'Your activation arrays are eq
 # %%
 cor_acts(right_acts, left_acts)
 # %%
-
 left_right_left_acts = test_acts([Xo_[:n], _Xp[:n]], left, layer=3)
 cor_acts(left_right_left_acts, left_acts)
 # %%
