@@ -1,53 +1,61 @@
+# %%
+import tensorflow as tf
+import numpy
 
-# %% Test the activations across inputs
-layer_index = 4
-n = 4000 # number of activations to test (ie, words)
-# right
+from Lstm2lstm2 import Learner as l
 
+import numpy as np
+import pandas as pd
+import tensorflow as tf
 
-#right_acts = keras.Model(inputs=right.model.input, outputs=[layer.output for layer in right.model.layers])
+import json
+
+from tensorflow.keras.utils import plot_model as plot
+from utilities import changepad, key, decode, test_acts, all_equal, cor_acts
+
+from keras import predict
+# get words for reference
+words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None) 
+
+############
+# PATTERNS #
+############
+# left justified
+X_ = np.load('../../inputs/orth-left.npy')
+Y_ = np.load('../../inputs/phon-left.npy')
+Y_ = changepad(Y_, old=9, new=0) # take the masked version and turn the mask to zero (ie, add a pad)
+# %%
+
+with open('../../inputs/phonreps.json', 'r') as p:
+    phonreps = json.load(p)
 
 #%%
-#acts_all_r = right_acts([Xo[:n], Xp[:n]])
-#acts_mr = np.array(acts_all_r[layer_index])
+
+l1 = l(X_, Y_, words, batch_size=200, hidden=300, epochs=200)
+
+# %%
+def input(a):
+    shape = (1, a.shape[0], a.shape[1])
+    return(numpy.reshape(a, shape))
+
+out = l1.model.predict(input(X_[0]))
+# %%
+def dists(a, reps):
+    d = {numpy.linalg.norm(a-numpy.array(v)):k for k, v in reps.items()}
+    min_ = min(d.keys())
+    return(d[min_])
+
 
 #%%
-# left
-#left_acts = keras.Model(inputs=left.model.input, outputs=[layer.output for layer in left.model.layers])
+def decode(a, reps, round=True):
+    if a.ndim == 3:
+        a = a[0]
+    a = numpy.around(a)
+    word = []
+    for phoneme in a:
+        print(list(phoneme))
+        word.append(dists(phoneme, reps))
+    return(word)
 
-#acts_all_l = left_acts([Xo_[:n], Xp_[:n]])
-#acts_ml = np.array(acts_all_l[layer_index])
-#assert acts_ml.shape == acts_mr.shape, 'Activations are different dimensions - something is wrong'
-# %%
-right_acts = test_acts([_Xo[:n], _Xp[:n]], right, layer=4)
-left_acts = test_acts([Xo_, Xp_], left, layer=4)
-
-#%%
-d1 = acts_mr.shape[0] # we could take dims from either ml acts or mr acts - should not make a difference
-d2 = acts_mr.shape[1]*acts_mr.shape[2]
-
-
-acts_mr = acts_mr.reshape((d1, d2))
-acts_ml = acts_ml.reshape((d1, d2))
-
-
-
-
-# %%
-
-# applying the dist operation to each matrix takes about 2.5 minutes
-
-dmr = dist(acts_mr)
-dml = dist(acts_ml)
-
-# %%
-# pearson's r
-cor = np.corrcoef(dmr, dml)
-print(cor)
-
-# %%
-# spearman's rho
-from scipy.stats import spearmanr as cor
-print(cor(dmr, dml))
-
+decode(out, phonreps)
 # %%

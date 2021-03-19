@@ -2,6 +2,7 @@
 from Reps import Reps as data
 import pandas as pd
 import numpy as np
+import json
 import csv
 #%%
 # set variables
@@ -15,7 +16,6 @@ No SOS-EOS in this one. These data allow for a pure autoencoder in the phonologi
 # get outlier short words (ie words that fall within the length threshold that are weird)
 outliers = pd.read_csv('./raw/wcbc-outliers.csv', header=None)[0].tolist()
 # %%
-
 MAXORTH = 8
 MAXPHON = 8
 
@@ -33,6 +33,7 @@ right_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidw
 left_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=True, justify='left', onehot=False, orthpad=9)
 assert right_.pool == left_.pool, 'Pools are different, check call to Reps'
 
+#%%
 ##########
 ## SAVE ##
 ##########
@@ -55,5 +56,8 @@ with open('encoder-decoder-words.csv', 'w') as f:
     for word in left.pool:
         w.writerow([word])
 f.close()
+
+with open('phonreps.json', 'w') as p:
+    json.dump(left.phonreps, p)
 
 #%%
