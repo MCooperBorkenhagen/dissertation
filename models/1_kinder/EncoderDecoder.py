@@ -73,6 +73,12 @@ class Learner():
 
         model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
+        self.encoder_inputs = encoder_inputs
+        self.encoder_states = encoder_states
+        self.decoder_lstm = decoder_lstm
+        self.decoder_inputs = decoder_inputs
+        self.decoder_dense = decoder_dense 
+
 
         # train
         if accuracy == 'binary':
@@ -97,6 +103,7 @@ class Learner():
 
     def evaluate(self, X, Y):        
         return(self.model.evaluate(X, Y))
+
 
 
 if __name__ == "__main__":

@@ -1,5 +1,7 @@
 
 import numpy as np
+import json
+
 
 def divide(x, y, frac):
     """Divide data into training and testing sets
@@ -14,8 +16,6 @@ def divide(x, y, frac):
 
     frac : float
         A fraction of x and y to be partitioned as training and test data.
-
-
 
     Returns
     -------
@@ -37,26 +37,24 @@ def divide(x, y, frac):
 
 
 
-
 def changepad(X, old=None, new=None):
-    import numpy
     X[X==old] = new
     return(X)
 
 def test_acts(inputs, learner, layer='all'):
     import keras
-    import numpy
     test = keras.Model(inputs=learner.model.input, outputs=[layer.output for layer in learner.model.layers])
     acts = test(inputs)
     if layer == 'all':
         return(acts)
     else:
-        return(numpy.array(acts[layer]))
+        return(np.array(acts[layer]))
 
 def key(dict, value):
     for k, v in dict.items():
         if value == v:
             return(k)
+
 
 
 def decode(x, reps, join=True):
@@ -66,6 +64,10 @@ def decode(x, reps, join=True):
     else:
         return(d)
     
+def reshape(a):
+    shape = (1, a.shape[0], a.shape[1])
+    return(np.reshape(a, shape))
+
 
 
 def all_equal(X, Y):
@@ -86,3 +88,43 @@ def cor_acts(X, Y, method='pearson'):
     elif method == 'spearman':
         from scipy.stats import spearmanr as cor
         return(cor(dX, dY))
+
+
+
+
+
+def loadreps(PATH, changepad=True):
+    with open(PATH, 'r') as p:
+        phonreps = json.load(p)
+    if changepad:
+        pad = [0 for e in phonreps['_']]
+        phonreps['_'] = pad
+    return(phonreps)
+
+
+def reshape(a):
+    shape = (1, a.shape[0], a.shape[1])
+    return(np.reshape(a, shape))
+
+
+
+def dists(a, reps, ties=True):
+    d = {np.linalg.norm(a-np.array(v)):k for k, v in reps.items()}
+    min_ = min(d.keys())
+
+    if ties:
+        u = [k for k, v in d.items() if k == min_]
+        assert len(u) == 1, 'More than one minumum value for pairwise distances. Ties present.'
+
+    return(d[min_])
+
+
+def decode(a, reps, round=True):
+    if a.ndim == 3:
+        a = a[0]
+    a = np.around(a)
+    word = []
+    for phoneme in a:
+        word.append(dists(phoneme, reps))
+    return(word)
+

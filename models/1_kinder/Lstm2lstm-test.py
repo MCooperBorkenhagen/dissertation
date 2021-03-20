@@ -17,6 +17,8 @@ from scipy.spatial.distance import pdist as dist
 from scipy.spatial.distance import squareform as matrix
 
 
+
+
 # run a single Lstm2lstm learner:
 x = np.load("../../inputs/orth_pad_right.npy")
 y = np.load("../../inputs/phon_pad_right.npy")

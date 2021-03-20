@@ -60,4 +60,8 @@ f.close()
 with open('phonreps.json', 'w') as p:
     json.dump(left.phonreps, p)
 
+# get the phonreps for the data with terminals:
+with open('phonreps-with-terminals.json', 'w') as t:
+    json.dump(left_.phonreps, t)
+
 #%%

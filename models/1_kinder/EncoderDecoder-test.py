@@ -2,7 +2,7 @@
 # %%
 from EncoderDecoder import Learner
 import numpy as np
-from utilities import changepad, key, decode, test_acts, all_equal, cor_acts
+from utilities import changepad, key, decode, reshape, loadreps, test_acts, all_equal, cor_acts
 import pandas as pd
 from tensorflow.keras.utils import plot_model as plot
 
@@ -13,7 +13,7 @@ from scipy.spatial.distance import squareform as matrix
 #%%
 
 # get words for reference
-words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None) 
+words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
 
 ############
 # PATTERNS #
@@ -35,6 +35,10 @@ assert not np.array_equal(Xo_, _Xo), 'Your Xo patterns are the same for right an
 assert not np.array_equal(Xp_, _Xp), 'Your Xp patterns are the same for right and left and should not be'
 assert not np.array_equal(Y_, _Y), 'Your Y patterns are equal for right and left padding and shouldn not be'
 
+phonreps = loadreps('../../inputs/phonreps.json', changepad=True)
+#%%
+phonrepsT = loadreps('../../inputs/phonreps-with-terminals.json', changepad=True)
+
 #%%
 #########
 # LEARN #
@@ -42,6 +46,7 @@ assert not np.array_equal(Y_, _Y), 'Your Y patterns are equal for right and left
 left = Learner(Xo_, Xp_, Y_, epochs=10, devices=False, monitor=False)
 right = Learner(_Xo, _Xp, Y_, epochs=20, devices=False, monitor=False) # more epochs here - harder to learn
 assert not left == right, 'Your two models are the same and should not be'
+
 
 #%%
 ########
@@ -91,4 +96,22 @@ for layer in range(len(leftT_actsA)):
         print(cor_acts(np.array(leftT_actsA[layer]), np.array(rightT_actsA[layer])))
 # %%
 plot(leftT.model, to_file='architecture.png', show_shapes=True)
+# %%
+
+
+############
+## DECODE ##
+############
+dummy = np.zeros((1, Xp_.shape[1], Xp_.shape[2]))
+
+#%%
+i = 1289
+testword = words[i]
+xo = reshape(Xo_[i])
+xp = reshape(Xp_[i])
+out = left.model.predict([xo, dummy])
+# %%
+print(testword)
+print('Predicted: ', decode(out, phonreps))
+print('Actual: ', decode(Y_[i], phonreps))
 # %%
