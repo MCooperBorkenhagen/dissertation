@@ -18,6 +18,7 @@ from utilities import changepad, key, decode, reshape, loadreps
 # get words for reference
 words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None) 
 
+#%%
 ############
 # PATTERNS #
 ############
