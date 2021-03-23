@@ -64,9 +64,14 @@ print('True:', decode(Xp_[i], phonreps))
 
 #%%
 prek = copy.copy(lp.phon_lstm)
+for layer in lp.model.layers:
+    if 'LSTM' in str(layer):
+        weights = layer.get_weights()
+
+
 
 #%%
-l1 = l(X_, Y_, labels=words, pretrained_phon=None, initial_weights=[lp.phon_hidden_state, lp.phon_cell_state], batch_size=100, hidden=300, epochs=2, devices=False, loss='categorical_crossentropy', train_proportion=.8)
+l1 = l(X_, Y_, labels=words, batch_size=100, hidden=300, epochs=2, devices=False, loss='categorical_crossentropy', train_proportion=.8)
 # predict one and see:
 i = 203
 print('word to predict:', words[i])

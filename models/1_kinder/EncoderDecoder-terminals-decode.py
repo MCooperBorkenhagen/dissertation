@@ -2,7 +2,9 @@
 # %%
 from EncoderDecoder import Learner
 import numpy as np
-from utilities import changepad, key, decode, reshape, loadreps, test_acts, all_equal, cor_acts
+#%%
+from utilities import changepad, key, decode, reshape, loadreps, test_acts, all_equal, cor_acts, dists
+#%%
 import pandas as pd
 from tensorflow.keras.utils import plot_model as plot
 
@@ -31,6 +33,8 @@ leftT = Learner(Xo_, Xp_Sos, Yp_Eos, epochs=50, hidden=600, devices=False, monit
 
 #%% decode
 dummy = np.zeros((1, Xp_Sos.shape[1], Xp_Sos.shape[2]))
+dummy[0][0] = phonrepsT['#']
+dummy[0][1] = phonrepsT['HH']
 i = 3
 testword = words[i]
 xo = reshape(Xo_[i])
@@ -54,8 +58,6 @@ decoder_state_input_h = Input(shape=(leftT.hidden_units,))
 decoder_state_input_c = Input(shape=(leftT.hidden_units,))
 decoder_states_inputs = [decoder_state_input_h, decoder_state_input_c]
 
-#%%
-
 decoder_outputs, state_h, state_c = leftT.decoder_lstm(
     leftT.decoder_inputs, initial_state=decoder_states_inputs)
 
@@ -63,21 +65,16 @@ decoder_states = [state_h, state_c]
 decoder_outputs = leftT.decoder_dense(decoder_outputs)
 #%%
 decoder_model = Model([leftT.decoder_inputs] + decoder_states_inputs, [decoder_outputs] + decoder_states)
-
-#%%
-
-max_decoder_seq_length = Yp_Eos.shape[2]
-    
-    # Encode the input as state vectors.
+max_decoder_seq_length = Yp_Eos.shape[1]
+# Encode the input as state vectors.
 states_value = encoder_model.predict(reshape(Xo_[i]))
 
 
 #%%
-
-    # Generate empty target sequence of length 1.
+# Generate empty target sequence of length 1.
 target_seq = np.zeros((1, Yp_Eos.shape[1], Yp_Eos.shape[2]))
 #%%
-    # Populate the first character of target sequence with the start character.
+# Populate the first character of target sequence with the start character.
 target_seq[0][0] = phonrepsT['#']
 
 #%%
@@ -85,16 +82,11 @@ target_seq[0][0] = phonrepsT['#']
 # (to simplify, here we assume a batch of size 1).
 stop_condition = False
 decoded_y = []
-#while not stop_condition:
-for i in range(1):
+while not stop_condition:
     output_tokens, h, c = decoder_model.predict(
         [target_seq] + states_value)
-
-
-
-#%%
     # Sample a token
-    sampled_phoneme = dists(target_seq, phonrepsT)
+    sampled_phoneme = dists(output_tokens, phonrepsT)
     decoded_y.append(sampled_phoneme)
 
     # Exit condition: either hit max length
@@ -102,10 +94,6 @@ for i in range(1):
     if (sampled_phoneme == '%' or
     len(decoded_y) > max_decoder_seq_length):
         stop_condition = True
-
-    # Update the target sequence (of length 1).
-    target_seq = np.zeros((1, 1, Y.shape[2]))
-    target_seq[0, 0, sampled_token_index] = 1.
 
     # Update states
     states_value = [h, c]

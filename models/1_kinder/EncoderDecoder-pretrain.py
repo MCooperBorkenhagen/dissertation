@@ -35,7 +35,7 @@ phonreps = loadreps('../../inputs/phonreps.json', changepad=True)
 orthreps = loadreps('../../inputs/raw/orthreps.json')
 
 # %% pretrain
-leftT = Learner(Xo_dummy, Xp_, Yp_, epochs=10, devices=False, monitor=False)
+leftT = Learner(Xo_, Xp_dummy, Yp_, epochs=25, devices=False, monitor=False)
 
 
 # %% test one

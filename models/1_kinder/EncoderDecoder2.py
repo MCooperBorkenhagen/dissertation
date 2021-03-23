@@ -5,18 +5,27 @@ from keras.layers import Input, LSTM, Dense, Masking
 import numpy as np
 import time
 
+"""
+This learner reverses the state passing scheme used by the traditional
+encoder-decoder architecture, where here the phonological LSTM
+passes its state to the orthographic LSTM. (As of 3/21/21 implementation
+this leads to less-than-perfect performance.
+
+"""
+
+
 class Learner():
 
-    def __init__(self, Xe, Xd, Y, labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20,  transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', monitor=True, seed=886, devices=True, memory_growth=True):
+    def __init__(self, Xp, Xo, Yp, labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20,  transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', monitor=True, seed=886, devices=True, memory_growth=True):
 
 
         np.random.seed(seed)
-        if type(Xe) == str:
-            Xe = np.load(Xe)
-        if type(Xd) == str:
-            Xd = np.load(Xd)
-        if type(Y) == str:
-            Y = np.load(Y)
+        if type(Xp) == str:
+            Xp = np.load(Xp)
+        if type(Xo) == str:
+            Xo = np.load(Xo)
+        if type(Yp) == str:
+            Yp = np.load(Yp)
 
         if devices:
             tf.debugging.set_log_device_placement(True)
@@ -30,9 +39,9 @@ class Learner():
 
         
         self.labels = labels
-        self.Xe = Xe
-        self.Xd = Xd
-        self.Y = Y
+        self.Xp = Xp
+        self.Xo = Xo
+        self.Yp = Yp
 
 
         # set as attrbutes a number of important input parameters to init:
@@ -48,31 +57,29 @@ class Learner():
 
         # learner:
         if op_names:
-            input1_name = 'orth_input'
-            input2_name = 'phon_input'
+            input1_name = 'phon_input'
+            input2_name = 'orth_input'
             output_name = 'phon_output'
         else:
             input1_name = 'input_1'
             input2_name = 'input_2'
             output_name = 'output'
 
-        encoder_inputs = Input(shape=(None, Xe.shape[2]), name=input1_name)
+        encoder_inputs = Input(shape=(None, Xp.shape[2]), name=input1_name)
         encoder_inputs_masked = Masking(mask_value=9)(encoder_inputs)
         encoder = LSTM(hidden, return_state=True)
         encoder_outputs, state_h, state_c = encoder(encoder_inputs_masked)
         encoder_states = [state_h, state_c]
 
-        decoder_inputs = Input(shape=(None, Xd.shape[2]), name=input2_name)
+        decoder_inputs = Input(shape=(None, Xo.shape[2]), name=input2_name)
         decoder_inputs_masked = Masking(mask_value=9)(decoder_inputs)
 
-        
         decoder_lstm = LSTM(hidden, return_sequences=True, return_state=True)
-        decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked, initial_state=encoder_states)
-        deep_lstm = LSTM(200, return_sequences=True, return_state=True)
-        deep_outputs, _, _ = deep_lstm(decoder_outputs)
-        decoder_dense = Dense(Xd.shape[2], activation=transfer_function, name=output_name)
-        #decoder_outputs = decoder_dense(decoder_outputs)
-        decoder_outputs = decoder_dense(deep_outputs)
+        decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked,
+                                            initial_state=encoder_states)
+        decoder_dense = Dense(Xp.shape[2], activation=transfer_function, name=output_name)
+        decoder_outputs = decoder_dense(decoder_outputs)
+
         model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
         self.encoder_inputs = encoder_inputs
@@ -95,7 +102,7 @@ class Learner():
         self.summary = model.summary()
 
         t1 = time.time()
-        cb = model.fit([Xe, Xd], Y, batch_size=batch_size, epochs=epochs, validation_split=(1-train_proportion))
+        cb = model.fit([Xp, Xo], Yp, batch_size=batch_size, epochs=epochs, validation_split=(1-train_proportion))
         cb.history['learntime'] = round((time.time()-t1)/60, 2)
         self.runtime = time.ctime()
         self.history = cb.history
@@ -103,10 +110,10 @@ class Learner():
 
 
 
-    def evaluate(self, X, Y):        
-        return(self.model.evaluate(X, Y))
+    def evaluate(self, X, Yp):        
+        return(self.model.evaluate(X, Yp))
 
 
 
 if __name__ == "__main__":
-    seq2seq()
+    Learner()
