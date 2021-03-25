@@ -1,7 +1,7 @@
 
 import tensorflow as tf
 from keras.models import Model
-from keras.layers import Input, LSTM, Dense, Masking
+from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
 import numpy as np
 import time
 
@@ -16,7 +16,7 @@ this leads to less-than-perfect performance.
 
 class Learner():
 
-    def __init__(self, Xp, Xo, Yp, labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20,  transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', monitor=True, seed=886, devices=True, memory_growth=True):
+    def __init__(self, Xp, Xo, Yp, labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20, time_distributed=False, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
 
 
         np.random.seed(seed)
@@ -77,7 +77,10 @@ class Learner():
         decoder_lstm = LSTM(hidden, return_sequences=True, return_state=True)
         decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked,
                                             initial_state=encoder_states)
-        decoder_dense = Dense(Xp.shape[2], activation=transfer_function, name=output_name)
+        if time_distributed:
+            decoder_dense = TimeDistributed(Dense(Xp.shape[2], activation=transfer_function), name=output_name)
+        else:
+            decoder_dense = Dense(Xp.shape[2], activation=transfer_function, name=output_name)
         decoder_outputs = decoder_dense(decoder_outputs)
 
         model = Model([encoder_inputs, decoder_inputs], decoder_outputs)

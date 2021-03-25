@@ -7,13 +7,14 @@ from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Masking
 import numpy as np
 
+from utilities import reshape
 
 #%%
 
 
 X = np.load('../../inputs/orth-left.npy')
-Xphon = np.load('../../inputs/phon-left.npy')
-Y = np.load('../../inputs/phon-left.npy')
+Xphon = np.load('../../inputs/phon-sos-left.npy')
+Y = np.load('../../inputs/phon-eos-left.npy')
 Y[0][-1] # should be all nines
 #%%
 Y[Y==9] = 0 # change the mask value on the outputs because it messes up the accuracy calculation
@@ -21,9 +22,9 @@ Y[0][-1] # should be all zeros
 #%%
 num_encoder_tokens = X.shape[2]
 num_decoder_tokens = Xphon.shape[2]
-latent_dim = 300
+latent_dim = 400
 batch_size = 100
-epochs = 1
+epochs = 20
 #%%
 
 
@@ -68,3 +69,8 @@ model.fit([X, Xphon], Y,
           epochs=epochs,
           validation_split=0.20)
 #%%
+from tensorflow.keras.utils import plot_model as plot
+inspect = Model(inputs=encoder_inputs, outputs=encoder_outputs)
+plot(inspect)
+out = inspect.predict([reshape(X[0]), reshape(Xphon[0])])
+# %%

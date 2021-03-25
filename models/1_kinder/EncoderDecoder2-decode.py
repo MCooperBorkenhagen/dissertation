@@ -15,7 +15,7 @@ orthreps = loadreps('../../inputs/raw/orthreps.json')
 words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
 
 #%%
-l = Learner(Xp_, Xo_, Yp_, hidden=200)
+l = Learner(Xp_, Xo_, Yp_, hidden=500, epochs=2, time_distributed=True, train_proportion=.8, batch_size=125, devices=False)
 # %%
 plot(l.model)
 # %%
@@ -24,14 +24,11 @@ orthshape = Xo_.shape
 
 Xp_dummy = np.zeros(phonshape)
 Xo_dummy = np.zeros(orthshape)
-# %% train on dummy
-l_phononly = Learner(Xp_, Xo_dummy, Yp_, hidden=200)
-
 
 #%%
-i = 2109
+i = 2
 print('word to predict:', words[i])
-Yhat = l_phononly.model.predict([reshape(Xp_[i]), reshape(Xo_dummy[i])])
+Yhat = l.model.predict([reshape(Xp_[i]), reshape(Xo_dummy[i])])
 print('Predicted:', decode(Yhat, phonreps))
 print('True:', decode(Yp_[i], phonreps))
 

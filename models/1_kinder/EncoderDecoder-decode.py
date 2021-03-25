@@ -20,15 +20,20 @@ words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None)[0].to
 ############
 #%% load
 Xo_ = np.load('../../inputs/orth-left.npy')
-Xp_ = np.load('../../inputs/phon-left.npy')
-Yp_ = np.load('../../inputs/phon-left.npy')
+Xp_ = np.load('../../inputs/phon-sos-left.npy')
+Yp_ = np.load('../../inputs/phon-eos-left.npy')
+
 Yp_ = changepad(Yp_, old=9, new=0)
-phonreps = loadreps('../../inputs/phonreps.json', changepad=True)
+#%%
+phonreps = loadreps('../../inputs/phonreps-with-terminals.json', changepad=True)
+#phonreps = loadreps('../../inputs/phonreps.json', changepad=True)
 orthreps = loadreps('../../inputs/raw/orthreps.json')
 #%%
 # dummy patterns:
 Xo_dummy = np.zeros(Xo_.shape)
 Xp_dummy = np.zeros(Xp_.shape)
+Xo_masked = np.full(Xo_.shape, 9)
+Xp_masked = np.full(Xp_.shape, 9)
 
 def sample(n, Xo, Xp, Xy, labels = None, seed = 123):
     import random
@@ -41,11 +46,11 @@ def sample(n, Xo, Xp, Xy, labels = None, seed = 123):
         return Xo[s], Xp[s], Xy[s]
 
 #%%
-Xo_1, Xp_1, Yp_1, words_1 = sample(300, Xo_, Xp_, Yp_, labels = words)
+Xo_1, Xp_1, Yp_1, words_1 = sample(1000, Xo_, Xp_, Yp_, labels = words)
 Xo_2, Xp_2, Yp_2, words_2 = sample(700, Xo_, Xp_, Yp_, labels = words)
 
 # %% step one: phonological pretraining
-left = Learner(Xo_dummy, Xp_, Yp_, epochs=10, devices=False, monitor=False)
+left = Learner(Xo_, Xp_, Yp_, epochs=50, hidden=300, devices=False)
 
 #%% step two: orth and phon together
 left.model.fit([Xo_, Xp_], Yp_, epochs=5)
@@ -53,16 +58,6 @@ left.model.fit([Xo_, Xp_], Yp_, epochs=5)
 
 #%% step three: just orth to phon
 left.model.fit([Xo_, Xp_dummy], Yp_, epochs=5)
-
-
-#%%
-left.model.fit([Xo_2, Xp_2], Yp_2, epochs=10)
-
-
-#%% 
-# train more:
-left.model.fit([Xo_, Xp_dummy], Yp_, epochs=5)
-
 
 
 #%% decode
@@ -74,12 +69,11 @@ orthshape = (1, Xo_.shape[1], Xo_.shape[2])
 dummyP = np.zeros(phonshape)
 dummyO = np.zeros(orthshape)
 #%%
-i = word1
-p = word2 
+i = 6793
 testword = words[i]
 xo = reshape(Xo_[i])
 xp = reshape(Xp_[i])
-out = left.model.predict([xo, dummyP])
+out = left.model.predict([xo, xp])
 
 
 
@@ -94,3 +88,6 @@ print('Actual: ', decode(Yp_[i], phonreps))
 
 plot(left.model)
 # %%
+
+
+

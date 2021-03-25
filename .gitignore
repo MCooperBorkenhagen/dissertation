@@ -15,6 +15,7 @@
 *.RData
 *.Rhistory
 *.npy
+*.png
 
 #directories
 logs/

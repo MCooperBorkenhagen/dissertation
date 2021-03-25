@@ -1,13 +1,13 @@
 
 import tensorflow as tf
 from keras.models import Model
-from keras.layers import Input, LSTM, Dense, Masking
+from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
 import numpy as np
 import time
 
 class Learner():
 
-    def __init__(self, Xe, Xd, Y, labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20,  transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', monitor=True, seed=886, devices=True, memory_growth=True):
+    def __init__(self, Xe, Xd, Y, labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20,  transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
 
 
         np.random.seed(seed)
@@ -68,11 +68,8 @@ class Learner():
         
         decoder_lstm = LSTM(hidden, return_sequences=True, return_state=True)
         decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked, initial_state=encoder_states)
-        deep_lstm = LSTM(200, return_sequences=True, return_state=True)
-        deep_outputs, _, _ = deep_lstm(decoder_outputs)
         decoder_dense = Dense(Xd.shape[2], activation=transfer_function, name=output_name)
-        #decoder_outputs = decoder_dense(decoder_outputs)
-        decoder_outputs = decoder_dense(deep_outputs)
+        decoder_outputs = decoder_dense(decoder_outputs)
         model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
         self.encoder_inputs = encoder_inputs
@@ -109,4 +106,4 @@ class Learner():
 
 
 if __name__ == "__main__":
-    seq2seq()
+    Learner()
