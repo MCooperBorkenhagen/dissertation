@@ -124,7 +124,7 @@ def decode(a, reps, round=True):
         a = a[0]
     a = np.around(a)
     word = []
-    for phoneme in a:
-        word.append(dists(phoneme, reps))
+    for segment in a:
+        word.append(dists(segment, reps))
     return(word)
 

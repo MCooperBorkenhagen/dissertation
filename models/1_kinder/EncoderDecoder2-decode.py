@@ -11,16 +11,22 @@ Yp_ = np.load('../../inputs/phon-left.npy')
 Yp_ = changepad(Yp_, old=9, new=0)
 phonreps = loadreps('../../inputs/phonreps.json', changepad=True)
 orthreps = loadreps('../../inputs/raw/orthreps.json')
+#%% dummy Xs
+phonshape = Xp_.shape
+orthshape = Xo_.shape
+
+Xo_dummy = np.ones(orthshape)
+Xp_dummy = np.ones(phonshape)
+
 #%%
 words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
 
 #%%
-l = Learner(Xp_, Xo_, Yp_, hidden=500, epochs=2, time_distributed=True, train_proportion=.8, batch_size=125, devices=False)
+l = Learner(Xp_, Xo_dummy, Yp_, hidden=500, epochs=50, time_distributed=True, train_proportion=.8, batch_size=125, devices=False)
 # %%
 plot(l.model)
 # %%
-phonshape = Xp_.shape
-orthshape = Xo_.shape
+
 
 Xp_dummy = np.zeros(phonshape)
 Xo_dummy = np.zeros(orthshape)
