@@ -1,0 +1,9 @@
+
+
+```{r}
+require(tidyverse)
+
+items = read.csv('../models/1_kinder/encoder-decoder-items.csv')
+
+hist(items$loss)
+```

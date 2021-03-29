@@ -128,3 +128,21 @@ def decode(a, reps, round=True):
         word.append(dists(segment, reps))
     return(word)
 
+
+
+def sample(n, Xo, Xp, Xy, labels = None, seed = 123):
+    import random
+    random.seed(seed)
+    s = random.sample(range(Xo.shape[0]), n)
+    if labels is not None:
+        labels_sampled = [labels[i] for i, label in enumerate(labels)]
+        return Xo[s], Xp[s], Xy[s], labels_sampled
+    else:
+        return Xo[s], Xp[s], Xy[s]
+
+
+def pronounce(i, model, Xo, Xp, Y, labels=None, reps=None):
+    print('word to predict:', labels[i])
+    out = model.predict([reshape(Xo[i]), reshape(Xp[i])])
+    print('Predicted:', decode(out, reps))
+    print('True phon:', decode(Y[i], reps))

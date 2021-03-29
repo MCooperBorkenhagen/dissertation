@@ -21,6 +21,9 @@ layer_index = 1
 test_acts = keras.Model(inputs=learner.inputs, outputs=[layer.output for layer in learner.layers])
 
 acts_all = test_acts(X)
+
+
+#%%
 acts = array(acts_all[layer_index])
 
 # %%
