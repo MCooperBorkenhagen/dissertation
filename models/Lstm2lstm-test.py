@@ -12,6 +12,7 @@ import os
 
 import keras
 from tensorflow.keras import layers
+from tensorflow.keras.utils import plot_model as plot
 
 from scipy.spatial.distance import pdist as dist
 from scipy.spatial.distance import squareform as matrix
@@ -20,16 +21,16 @@ from scipy.spatial.distance import squareform as matrix
 
 
 # run a single Lstm2lstm learner:
-x = np.load("../../inputs/orth_pad_right.npy")
-y = np.load("../../inputs/phon_pad_right.npy")
-labels = pd.read_csv("../../inputs/syllabics.csv", sep = ",")
+x = np.load("../inputs/orth_pad_right.npy")
+y = np.load("../inputs/phon_pad_right.npy")
+labels = pd.read_csv("../inputs/syllabics.csv", sep = ",")
 words = labels.orth.tolist()
-m1 = Lstm2lstm(x, y, labels=words, epochs=100)
+m1 = Lstm2lstm(x, y, labels=words, epochs=2)
 
 # %%
 model = m1.model
 # %%
-
+plot(model, to_file='lstm2lstm.png')
 
 
 ##############

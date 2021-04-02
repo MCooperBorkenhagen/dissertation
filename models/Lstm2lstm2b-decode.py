@@ -30,15 +30,15 @@ from utilities import changepad, key, decode, reshape, loadreps
 
 
 # get words for reference
-words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
+words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
 
 ############
 # PATTERNS #
 ############
 # left justified
-X_ = np.load('../../inputs/orth-left.npy')
-Y_ = np.load('../../inputs/phon-left.npy')
-Xp_ = np.load('../../inputs/phon-left.npy')
+X_ = np.load('../inputs/orth-left.npy')
+Y_ = np.load('../inputs/phon-left.npy')
+Xp_ = np.load('../inputs/phon-left.npy')
 Y_ = changepad(Y_, old=9, new=0) # take the masked version and turn the mask to zero (ie, add a pad)
 
 # %%
@@ -53,7 +53,9 @@ words = [word for i, word in enumerate(words) if i in simpler_words]
 #%%
 
 phonreps = loadreps('../../inputs/phonreps.json', changepad=True)
-lp = p(Xp_, labels=words, batch_size=40, hidden=300, epochs=20, devices=False, loss='categorical_crossentropy', train_proportion=.9)
+lp = p(Xp_, labels=words, batch_size=40, hidden=300, epochs=2, devices=False, loss='categorical_crossentropy', train_proportion=.9)
+
+plot(lp.model, to_file='lstm2lstm2.png')
 #%%
 i = 209
 print('word to predict:', words[i])

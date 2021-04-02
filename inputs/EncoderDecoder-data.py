@@ -24,14 +24,19 @@ words = wcbc.orth.tolist()
 
 ## non-terminals
 #%%
-right = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=False, justify='right', onehot=False, orthpad=9)
-left = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=False, justify='left', onehot=False, orthpad=9)
+right = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=False, sos=False, justify='right', onehot=False, orthpad=9)
+left = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=False, sos=False,  justify='left', onehot=False, orthpad=9)
 assert right.pool == left.pool, 'Pools are different, check call to Reps'
 ## Terminals
 #%% SOS and EOS versions:
-right_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=True, justify='right', onehot=False, orthpad=9)
-left_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, terminals=True, justify='left', onehot=False, orthpad=9)
+right_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=True, sos=True, justify='right', onehot=False, orthpad=9)
+left_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=True, sos=True, justify='left', onehot=False, orthpad=9)
 assert right_.pool == left_.pool, 'Pools are different, check call to Reps'
+#%% EOS only versions
+right_eosonly = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=True, sos=False, justify='right', onehot=False, orthpad=9)
+left_eosonly = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=True, sos=False, justify='left', onehot=False, orthpad=9)
+assert right_eosonly.pool == left_eosonly.pool, 'Pools are different, check call to Reps'
+
 
 #%%
 ##########
@@ -41,14 +46,21 @@ assert right_.pool == left_.pool, 'Pools are different, check call to Reps'
 np.save('orth-left.npy', left.orthforms_array)
 np.save('orth-right.npy', right.orthforms_array)
 ## phon for non-terminals ##
-np.save('phon-left.npy', left.phonforms_array)
-np.save('phon-right.npy', right.phonforms_array)
+np.save('phon-left-no-terminals.npy', left.phonforms_array)
+np.save('phon-right-no-terminals.npy', right.phonforms_array)
 
 ## With terminals ##
-np.save('phon-sos-right.npy', right_.phonformsSOS_array)
-np.save('phon-eos-right.npy', right_.phonformsEOS_array)
-np.save('phon-sos-left.npy', left_.phonformsSOS_array)
-np.save('phon-eos-left.npy', left_.phonformsEOS_array)
+np.save('phon-sos-terminals-right.npy', right_.phonformsSOS_array)
+np.save('phon-eos-terminals-right.npy', right_.phonformsEOS_array)
+np.save('phon-sos-terminals-left.npy', left_.phonformsSOS_array)
+np.save('phon-eos-terminals-left.npy', left_.phonformsEOS_array)
+## eos only:
+np.save('phon-for-eos-right.npy', right_eosonly.phonformsX_array)
+np.save('phon-eos-right.npy', right_eosonly.phonformsEOS_array)
+np.save('phon-for-eos-left.npy', left_eosonly.phonformsX_array)
+np.save('phon-eos-left.npy', left_eosonly.phonformsEOS_array)
+
+
 
 ## the string labels/ words
 with open('encoder-decoder-words.csv', 'w') as f:
@@ -63,5 +75,8 @@ with open('phonreps.json', 'w') as p:
 # get the phonreps for the data with terminals:
 with open('phonreps-with-terminals.json', 'w') as t:
     json.dump(left_.phonreps, t)
+
+with open('phonreps-with-sos-only.json', 'w') as t:
+    json.dump(left_eosonly.phonreps, t)
 
 #%%

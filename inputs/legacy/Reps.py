@@ -39,29 +39,20 @@ def phontable(PATH):
     return(df)
 
 
-def phonemedict(PATH, sos=False, eos=False):
+def phonemedict(PATH, terminals=False):
     """Binary phonological reps from CSV.
 
     Parameters
     ----------
     PATH : str
         Path to the csv containing phonological representations.
-    
-    sos : bool
-        Specify whether to add start-of-string
-        feature to reps (default is not/ False). If true
-        the character "#" is used. Note that if set to 
-        true a new key-value pair is created in return 
-        dict for this character, and a feature node is 
-        added to every value in the dictionary.
-
-    eos : bool
-        Specify whether to add end-of-string
-        feature to reps (default is not/ False). If true
-        the character "%" is used. Note that if set to 
-        true a new key-value pair is created in return 
-        dict for this character, and a feature node is 
-        added to every value in the dictionary.
+    terminals : bool
+        Specify whether to add end-of-string and start-of-string
+        features to reps (default is not/ False). If true
+        the character "%" is used for eos, and "#" for sos.
+        Note that if set to true a new key-value pair is created
+        in return dict for each of these characters, and a feature
+        for each is added to every value in the dictionary.
 
     Returns
     -------
@@ -69,22 +60,23 @@ def phonemedict(PATH, sos=False, eos=False):
         A dictionary of phonemes and their binary representations
     """
     df = phontable(PATH)
-
+    """
+    df = pd.read_excel(PATH, engine='openpyxl')
+    df = df[df['phone'].notna()]
+    df = df.rename(columns={'phone': 'phoneme'})
+    df = df.set_index('phoneme')
+    feature_cols = [column for column in df if column.startswith('#')]
+    df = df[feature_cols]
+    df.columns = df.columns.str[1:]"""
     dict = {}
     for index, row in df.iterrows():
         dict[index] = row.tolist()
 
-    if eos and sos:
+    if terminals:
         for k, v in dict.items():
             dict[k].extend([0, 0])
         dict['#'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
         dict['%'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-    elif eos and not sos:
-        for k, v in dict.items():
-            dict[k].append(0)
-        dict['%'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-    elif sos and not eos:
-        raise Exception('You selected sos = True and eos = False -- you probably do not want that')
 
     return(dict)
 
@@ -182,7 +174,7 @@ class Reps():
     """
 
 
-    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, sos=False, eos=False, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True):
+    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, terminals=False, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True):
         """Initialize Reps with a values that specify representations over words.
         Parameters
         ----------
@@ -228,29 +220,16 @@ class Reps():
             The index to use for specifying which phonological representation
             from cmudict to pass for conversion to binary phonological representation.
 
-        sos : bool
-            Whether to construct phonological representations with sos terminal
-            string ('#') or not. This value is passed to phonemedict(). Note that
-            this determines whether or not to supply an extra phonological
-            representation for the sos, because if true, it is assumed
+        terminals : bool
+            Whether to construct phonological representations with terminal
+            strings or not. This value is passed to phonemedict(). Note that
+            this determines whether or not to supply two sets of phonological
+            representations, because if terminals is true, it is assumed
             that phonological inputs and outputs are required (default is False).
-            If this argument is set to True and eos is set to False and exception
-            is raised because it isn't like that this circumstance was intentional.
-            The sos representation is usually only required if eos is set to
-            True (but the opposite is not the case).
-
-        eos : bool
-            Whether to construct phonological representations with eos terminal
-            string ('%') or not. This value is passed to phonemedict(). Note that
-            this determines whether or not to supply an extra phonological
-            representation for the eos, because if true, it is assumed
-            that a different set of phonological inputs and outputs are required 
-            (default is False), where the representations containing the eos
-            (and associated binary rep) are contained in the output representations.
 
         justify : str
             How to justify the patterns output. This specification is applied to
-            all patterns produced (orthography, phonology, and if eos is
+            all patterns produced (orthography, phonology, and if terminals is
             set to True, both input and output phonology). Note that a left justification
             means that the pad is placed on the right side of the representations,
             and vice versa for right justification. (Default is left.)
@@ -333,7 +312,7 @@ class Reps():
             phonpath = 'https://raw.githubusercontent.com/MCooperBorkenhagen/ARPAbet/master/phonreps.csv'
         self.phonpath = phonpath
         self.phontable = phontable(phonpath)
-        self.phonreps = phonemedict(phonpath, sos=sos, eos=eos)
+        self.phonreps = phonemedict(phonpath, terminals=terminals)
         
         if onehot:
             orthpath = 'raw/orthreps-onehot.json'
@@ -371,7 +350,7 @@ class Reps():
             veclengths = set([len(v) for v in self.orthreps.values()])
             assert(len(veclengths) == 1), 'Orthographic feature vectors across phonreps have different lengths.'
 
-        if sos and eos:
+        if terminals:
             cmudictSOS = {}
             cmudictEOS = {}
             for word in self.pool:
@@ -386,44 +365,19 @@ class Reps():
 
             self.cmudictSOS = cmudictSOS
             self.cmudictEOS = cmudictEOS
-
-
-        elif eos and not sos:
-            cmudictX = {}
-            cmudictEOS = {}
-            for word in self.pool:
-                X = cp(self.cmudict[word])
-                eos = cp(self.cmudict[word])
-
-                X.insert(len(X), '_')
-                eos.append('%')
-
-                cmudictX[word] = X
-                cmudictEOS[word] = eos
-
-            self.cmudictX = cmudictX
-            self.cmudictEOS = cmudictEOS
-
-        elif sos and not eos:
-            raise Exception('You selected sos = True and eos = False -- you probably do not want that')
-
-        if eos and sos:
+        
+        if terminals:
             self.phonformsSOS = {word: represent(self.cmudictSOS[word], self.phonreps) for word in self.pool}
             self.phonformsEOS = {word: represent(self.cmudictEOS[word], self.phonreps) for word in self.pool}
-        
-        elif eos and not sos:
-            self.phonformsX = {word: represent(self.cmudictX[word], self.phonreps) for word in self.pool}
-            self.phonformsEOS = {word: represent(self.cmudictEOS[word], self.phonreps) for word in self.pool}
-
-        elif not eos and not sos:
+        elif not terminals:
             self.phonforms = {word: represent(self.cmudict[word], self.phonreps) for word in self.pool}
 
         self.orthforms = {word: represent(word, self.orthreps) for word in self.pool}
         self.orthlengths = {word: len(orthform) for word, orthform in self.orthforms.items()}
 
-        if eos:
-            self.phonlengths = {word: len(phonform) for word, phonform in self.phonformsEOS.items()} # EOS used because SOS is never called without EOS
-        elif not eos:
+        if terminals:
+            self.phonlengths = {word: len(phonform) for word, phonform in self.phonformsSOS.items()} # could also use EOS here, would have same result
+        elif not terminals:
             self.phonlengths = {word: len(phonform) for word, phonform in self.phonforms.items()}
 
 
@@ -441,23 +395,23 @@ class Reps():
         self.pool_with_pad = {}
         for word in self.pool:
 
-            if eos:
+            if terminals:
                 ppl = (self.maxphon+1)-self.phonlengths[word] # add 1 because maxphon doesn't take into account the terminal character
-            elif not eos:
+            elif not terminals:
                 ppl = self.maxphon-self.phonlengths[word]
 
             opl = self.maxorth-self.orthlengths[word]
             orthpad = ''.join(['_' for p in range(opl)])
             phonpad = ['_' for p in range(ppl)]
 
-            if not eos: # note that sos is never called without eos, so not eos is enough here
+            if not terminals:
                 if justify == 'left':
                     self.cmudict[word].extend(phonpad)
                 elif justify == 'right':
                     new = cp(cmudict[word])
                     phonpad.extend(new)
                     self.cmudict[word] = phonpad
-            elif eos and sos:
+            elif terminals:
                 if justify == 'left':
                     self.cmudictSOS[word].extend(phonpad)
                     self.cmudictEOS[word].extend(phonpad)
@@ -468,18 +422,6 @@ class Reps():
                     eos.extend(cmudictEOS[word])
                     self.cmudictSOS[word] = sos
                     self.cmudictEOS[word] = eos
-            elif eos and not sos:
-                if justify == 'left':
-                    self.cmudictX[word].extend(phonpad)
-                    self.cmudictEOS[word].extend(phonpad)
-                elif justify == 'right':
-                    X = cp(phonpad)
-                    eos = cp(phonpad)
-                    X.extend(cmudictX[word])
-                    eos.extend(cmudictEOS[word])
-                    self.cmudictX[word] = X
-                    self.cmudictEOS[word] = eos
-
             if justify == 'left':
                 self.pool_with_pad[word] = word+orthpad
             elif justify == 'right':
@@ -487,13 +429,10 @@ class Reps():
 
         
         self.orthforms_padded = {word: represent(orthform, self.orthreps) for word, orthform in self.pool_with_pad.items()}
-        if eos and sos:
+        if terminals:
             self.phonformsEOS_padded = {word: represent(phonform, self.phonreps) for word, phonform in self.cmudictEOS.items()}
             self.phonformsSOS_padded = {word: represent(phonform, self.phonreps) for word, phonform in self.cmudictSOS.items()}
-        elif eos and not sos:
-            self.phonformsX_padded = {word: represent(phonform, self.phonreps) for word, phonform in self.cmudictX.items()}
-            self.phonformsEOS_padded = {word: represent(phonform, self.phonreps) for word, phonform in self.cmudictEOS.items()}
-        elif not eos:
+        if not terminals:
             self.phonforms_padded = {word: represent(phonform, self.phonreps) for word, phonform in self.cmudict.items()}
 
 
@@ -501,35 +440,26 @@ class Reps():
 
         # %% Array form
         self.orthforms_array = []
-        if eos and sos:
+        if terminals:
             self.phonformsSOS_array = []
             self.phonformsEOS_array = []
-        elif eos and not sos:
-            self.phonformsX_array = []
-            self.phonformsEOS_array = []
-        elif not eos:
+        elif not terminals:
             self.phonforms_array = []
         
         for word in self.pool:
             self.orthforms_array.append(self.orthforms_padded[word])
-            if eos and sos:
+            if terminals:
                 self.phonformsSOS_array.append(self.phonformsSOS_padded[word])
                 self.phonformsEOS_array.append(self.phonformsEOS_padded[word])
-            elif eos and not sos:
-                self.phonformsX_array.append(self.phonformsX_padded[word])
-                self.phonformsEOS_array.append(self.phonformsEOS_padded[word])
-            elif not eos:
+            elif not terminals:
                 self.phonforms_array.append(self.phonforms_padded[word])
 
         self.orthforms_array = np.array(self.orthforms_array)
 
-        if eos and sos:
+        if terminals:
             self.phonformsSOS_array = np.asarray(self.phonformsSOS_array)
             self.phonformsEOS_array = np.asarray(self.phonformsEOS_array)
-        elif eos and not sos:
-            self.phonformsX_array = np.asarray(self.phonformsX_array)
-            self.phonformsEOS_array = np.asarray(self.phonformsEOS_array)
-        if not eos:
+        if not terminals:
             self.phonforms_array = np.array(self.phonforms_array)
 
 
@@ -538,13 +468,10 @@ class Reps():
         #########
         if test_reps:
             assert reconstruct(self.orthforms_array, [self.pool_with_pad[word] for word in self.pool], repdict=self.orthreps, join=True), 'The padded orthographic representations do not match their string representations'
-            if eos:
+            if terminals:
+                assert reconstruct(self.phonformsSOS_array, [self.cmudictSOS[word] for word in self.pool], repdict=self.phonreps, join=False), 'SOS phonological representations do not match their string representations'
                 assert reconstruct(self.phonformsEOS_array, [self.cmudictEOS[word] for word in self.pool], repdict=self.phonreps, join=False), 'EOS phonological representations do not match their string representations'
-            if sos:
-                assert reconstruct(self.phonformsSOS_array, [self.cmudictSOS[word] for word in self.pool], repdict=self.phonreps, join=False), 'SOS phonological representations do not match their string representations' 
-            if eos and not sos:
-                assert reconstruct(self.phonformsX_array, [self.cmudictX[word] for word in self.pool], repdict=self.phonreps, join=False), 'X phonological representations (X values paired with EOS values but lacking SOS) do not match their string representations' 
-            if not eos:
+            elif not terminals:
                 assert reconstruct(self.phonforms_array, [self.cmudict[word] for word in self.pool], repdict=self.phonreps, join=False), 'Phonological representations do not match their string representations'
 
 
@@ -560,13 +487,13 @@ class Reps():
         assert set(letters).issubset(self.orthreps.keys()), 'there are missing binary representations for letters in the set of words'
 
         # perform a test on all letters, making sure that we have a binary representation for it
-        # need to change this to a different dictionary for each?
-        if eos and sos:
+        # need to change this to a different dictionary for each
+        if terminals:
             assert set(self.orthforms.keys()) == set(self.phonformsSOS.keys()) == set(self.phonformsEOS.keys()), 'The keys in your orth and phon (SOS/ EOS) dictionaries do not match'    
-        elif eos and not sos:
-            assert set(self.orthforms.keys()) == set(self.phonformsX.keys()) == set(self.phonformsEOS.keys()), 'The keys in your orth and phon (X/ EOS) dictionaries do not match'    
-        elif not eos:
+        elif not terminals:
             assert set(self.orthforms.keys()) == set(self.phonforms.keys()), 'The keys in your orth and phon dictionaries do not match'
+
+
 
 
 
