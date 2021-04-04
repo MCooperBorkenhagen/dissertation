@@ -42,14 +42,41 @@ plot(left.model, to_file='encoder-decoder1.png')
 left.model.fit([Xo_, Xp_], Yp_, epochs=1, batch_size=100)
 left.model.fit([Xo_, Xp_dummy], Yp_, epochs=60, batch_size=100)
 #%%
-i = 6799
+for i, word in enumerate(words):
+    if word == 'ratio':
+        print(word, i)
+
+def build_input(word, reps, maxlen, padvalue=9):
+    a = [reps[e] for e in word]
+    pad = [padvalue for value in reps['_']]
+    for e in range(maxlen-len(word)):
+        a.append(pad)
+    return np.array(a)
+
+
+def generalize(xo, xp, model, reps, label=None):
+    print('word to predict:', label)
+    out = model.predict([reshape(xo), reshape(xp)])
+    print('Predicted:', decode(out, reps))
+    
+ratio = build_input('ratio', orthreps, max([len(word) for word in words]))
+shrieker = build_input('shrieker', orthreps, max([len(word) for word in words]))
+#%%
+generalize(ratio, Xp_dummy[0], left.model, phonreps, label='ratio')
+
+#%%
+generalize(shrieker, Xp_dummy[0], left.model, phonreps, label='shrieker')
+
+
+#%%
+i = 736
 print('with phon inputs only:')
 pronounce(i, left.model, Xo_dummy, Xp_, Yp_, labels=words, reps=phonreps)
 print('#####################')
 print('with orth and phon inputs:')
 pronounce(i, left.model, Xo_, Xp_, Yp_, labels=words, reps=phonreps)
-print('#####################')
-print('with no phon inputs:')
+#%%
+print('with no phon inputs (orth only):')
 pronounce(i, left.model, Xo_, Xp_dummy, Yp_, labels=words, reps=phonreps)
 
 
