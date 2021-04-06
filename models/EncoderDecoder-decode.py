@@ -59,13 +59,13 @@ def generalize(xo, xp, model, reps, label=None):
     out = model.predict([reshape(xo), reshape(xp)])
     print('Predicted:', decode(out, reps))
     
-ratio = build_input('ratio', orthreps, max([len(word) for word in words]))
-shrieker = build_input('shrieker', orthreps, max([len(word) for word in words]))
+diction = build_input('diction', orthreps, max([len(word) for word in words]))
+hawkride = build_input('hawking', orthreps, max([len(word) for word in words]))
 #%%
-generalize(ratio, Xp_dummy[0], left.model, phonreps, label='ratio')
+generalize(diction, Xp_dummy[0], left.model, phonreps, label='ratio')
 
 #%%
-generalize(shrieker, Xp_dummy[0], left.model, phonreps, label='shrieker')
+generalize(hawking, Xp_dummy[0], left.model, phonreps, label='shrieker')
 
 
 #%%

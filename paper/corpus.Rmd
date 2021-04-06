@@ -19,6 +19,14 @@ Long words, either orthographically or phonologically, were removed given their 
 
 A small number of very short words from the children's corpus were excluded because they were unusual or infrequent. For example, abbreviations like "tv" and "mph", or oddities like "ne" or "aaa". Words of this kind appear in children's books but are not common across books while also displaying unusual orthographic, phonological, or semantic characteristics.
 
+Abbreviations and ontractions were removed. While such words could be accounted for in such a system, the special considerations necessary to do so are outside the scope of this work.
+
+Orthotactically or phonotactically irregular words were also removed if they seemed to present particular challenges to the project here. For example, it is not uncommon for a string like "nnn" or "abcdef" to appear in a children's book, given the relevance of alphabetic information is stories for young children. Such strings need considerable context in order to decode properly, and their structure is more complex than the common words that chilren are typically required to read.
+
+Words that contained apostrophes were removed from the training pool. Uncommon plural words were included (Carols). Such words often originated as possessives (containing an apostrophe) in the source texts that comprise the children's corpus, though they are possible as plurals and were therefore included.
+
+Prefixes were not included as unbounded words despite their presence in the children's book corpus (e.g. "tri").
+
 The role of outlier words like those described above represent a potentially fruitful avenue for research given their idiosyncracies and appearance in texts aimed at children. They are likely to be highly salient during book reading, offering opportunities to draw the child's attention to their structure in a similar way that onomatopoetic words do. Nonetheless, their form falls outside the scope of this research and thus were excluded from any selection pool considered for modeling presently.
 
 ```{r}
