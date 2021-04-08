@@ -259,7 +259,7 @@ class Reps():
         # clean data at initialization (parameters are passed at init)
         # skip words that are one letter long
 
-        pool = cp(words)
+        pool = list(set(words))
 
         cmudict = {word: phonforms[phon_index] for word, phonforms in nltk.corpus.cmudict.dict().items() if word in pool}
 

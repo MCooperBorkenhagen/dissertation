@@ -22,10 +22,17 @@ MAXPHON = 8
 # get the string lebels/words
 words = wcbc.orth.tolist()
 
+#%%
+more = ['ration', 'nation', 'horatio', 'rational', 'shriek']
+words.extend(more)
 ## non-terminals
 #%%
 right = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=False, sos=False, justify='right', onehot=False, orthpad=9)
+
+#%%
 left = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=False, sos=False,  justify='left', onehot=False, orthpad=9)
+
+#%%
 assert right.pool == left.pool, 'Pools are different, check call to Reps'
 ## Terminals
 #%% SOS and EOS versions:

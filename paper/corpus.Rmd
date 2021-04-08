@@ -23,6 +23,8 @@ Abbreviations and ontractions were removed. While such words could be accounted 
 
 Orthotactically or phonotactically irregular words were also removed if they seemed to present particular challenges to the project here. For example, it is not uncommon for a string like "nnn" or "abcdef" to appear in a children's book, given the relevance of alphabetic information is stories for young children. Such strings need considerable context in order to decode properly, and their structure is more complex than the common words that chilren are typically required to read.
 
+Words that had repeated letters ("bluuuuub") were removed, but if their shortened form was acceptable that shortened form was kept (e.g., "blub").
+
 Words that contained apostrophes were removed from the training pool. Uncommon plural words were included (Carols). Such words often originated as possessives (containing an apostrophe) in the source texts that comprise the children's corpus, though they are possible as plurals and were therefore included.
 
 Prefixes were not included as unbounded words despite their presence in the children's book corpus (e.g. "tri").
