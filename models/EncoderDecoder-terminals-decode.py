@@ -36,8 +36,7 @@ plot(left.model, to_file='encoder-decoder1.png')
 left.model.fit([Xo_, Xp_], Yp_, epochs=10, batch_size=100)
 left.model.fit([Xo_, Xp_dummy], Yp_, epochs=50, batch_size=100)
 #%%
-i = 6793
-pronounce(i, left.model, Xo_, Xp_, Yp_, labels=words, reps=phonreps)
+i = 6799
 pronounce(i, left.model, Xo_, Xp_dummy, Yp_, labels=words, reps=phonreps)
 
 

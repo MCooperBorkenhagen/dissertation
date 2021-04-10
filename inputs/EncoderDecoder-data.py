@@ -68,7 +68,7 @@ np.save('phon-for-eos-left.npy', left_eosonly.phonformsX_array)
 np.save('phon-eos-left.npy', left_eosonly.phonformsEOS_array)
 
 
-
+#%%
 ## the string labels/ words
 with open('encoder-decoder-words.csv', 'w') as f:
     w = csv.writer(f)
@@ -83,7 +83,7 @@ with open('phonreps.json', 'w') as p:
 with open('phonreps-with-terminals.json', 'w') as t:
     json.dump(left_.phonreps, t)
 
-with open('phonreps-with-sos-only.json', 'w') as t:
+with open('phonreps-with-eos-only.json', 'w') as t:
     json.dump(left_eosonly.phonreps, t)
 
 #%%

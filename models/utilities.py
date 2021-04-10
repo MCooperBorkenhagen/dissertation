@@ -93,11 +93,11 @@ def cor_acts(X, Y, method='pearson'):
 
 
 
-def loadreps(PATH, changepad=True):
+def loadreps(PATH, changepad=True, newpad=0):
     with open(PATH, 'r') as p:
         phonreps = json.load(p)
     if changepad:
-        pad = [0 for e in phonreps['_']]
+        pad = [newpad for e in phonreps['_']]
         phonreps['_'] = pad
     return(phonreps)
 

@@ -36,44 +36,31 @@ words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolis
 # PATTERNS #
 ############
 # left justified
+#%% load
 X_ = np.load('../inputs/orth-left.npy')
-Y_ = np.load('../inputs/phon-left.npy')
-Xp_ = np.load('../inputs/phon-left.npy')
-Y_ = changepad(Y_, old=9, new=0) # take the masked version and turn the mask to zero (ie, add a pad)
-
-# %%
-simpler_words = [i for i, word in enumerate(words) if len(word) < 5]
-
-#%%
-X_ = X_[simpler_words]
-Y_ = Y_[simpler_words]
-Xp_ = Xp_[simpler_words]
-words = [word for i, word in enumerate(words) if i in simpler_words]
+Y_ = np.load('../inputs/phon-for-eos-left.npy')
+Y_ = changepad(Y_, old=9, new=0)
+phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
+words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
 
 #%%
 
-phonreps = loadreps('../../inputs/phonreps.json', changepad=True)
-lp = p(Xp_, labels=words, batch_size=40, hidden=300, epochs=2, devices=False, loss='categorical_crossentropy', train_proportion=.9)
+#lp = p(Xp_, labels=words, batch_size=40, hidden=300, epochs=2, devices=False, loss='categorical_crossentropy', train_proportion=.9)
 
-plot(lp.model, to_file='lstm2lstm2.png')
+#plot(lp.model, to_file='lstm2lstm2.png')
 #%%
-i = 209
-print('word to predict:', words[i])
-out = lp.model.predict(reshape(Xp_[i]))
-print('Predicted:', decode(out, phonreps))
-print('True:', decode(Xp_[i], phonreps))
-
-
-#%%
-prek = copy.copy(lp.phon_lstm)
-for layer in lp.model.layers:
-    if 'LSTM' in str(layer):
-        weights = layer.get_weights()
-
+#i = 209
+#print('word to predict:', words[i])
+#out = lp.model.predict(reshape(Xp_[i]))
+#print('Predicted:', decode(out, phonreps))
+#print('True:', decode(Xp_[i], phonreps))
 
 
 #%%
 l1 = l(X_, Y_, labels=words, batch_size=100, hidden=300, epochs=2, devices=False, loss='categorical_crossentropy', train_proportion=.8)
+
+
+#%%
 # predict one and see:
 i = 203
 print('word to predict:', words[i])

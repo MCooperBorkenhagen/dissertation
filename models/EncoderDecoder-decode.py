@@ -18,17 +18,17 @@ from keras.layers import Input, LSTM, Dense
 #%% load
 Xo_ = np.load('../inputs/orth-left.npy')
 Xp_ = np.load('../inputs/phon-for-eos-left.npy')
-Yp_ = np.load('../inputs/phon-eos-left.npy')
+Yp_ = np.load('../inputs/phon-for-eos-left.npy')
+
 Yp_ = changepad(Yp_, old=9, new=0)
-phonreps = loadreps('../inputs/phonreps-with-sos-only.json', changepad=True)
+phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
 
 orthreps = loadreps('../inputs/raw/orthreps.json')
 words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
 #%%
-pad = np.array(loadreps('../inputs/phonreps-with-terminals.json', changepad=False)['_'])
+pad = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)['_']
 
 #%%
-
 # dummy patterns:
 Xo_dummy = np.zeros(Xo_.shape)
 Xp_dummy = np.zeros(Xp_.shape)
@@ -60,12 +60,12 @@ def generalize(xo, xp, model, reps, label=None):
     print('Predicted:', decode(out, reps))
     
 diction = build_input('diction', orthreps, max([len(word) for word in words]))
-hawkride = build_input('hawking', orthreps, max([len(word) for word in words]))
+hawking = build_input('hawking', orthreps, max([len(word) for word in words]))
 #%%
-generalize(diction, Xp_dummy[0], left.model, phonreps, label='ratio')
+generalize(diction, Xp_dummy[0], left.model, phonreps, label='diction')
 
 #%%
-generalize(hawking, Xp_dummy[0], left.model, phonreps, label='shrieker')
+generalize(hawking, Xp_dummy[0], left.model, phonreps, label='hawking')
 
 
 #%%

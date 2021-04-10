@@ -17,21 +17,32 @@ from tensorflow.keras.utils import plot_model as plot
 from scipy.spatial.distance import pdist as dist
 from scipy.spatial.distance import squareform as matrix
 
+from utilities import changepad, loadreps
 
 
 
 # run a single Lstm2lstm learner:
-x = np.load("../inputs/orth_pad_right.npy")
-y = np.load("../inputs/phon_pad_right.npy")
-labels = pd.read_csv("../inputs/syllabics.csv", sep = ",")
-words = labels.orth.tolist()
-m1 = Lstm2lstm(x, y, labels=words, epochs=2)
+#x = np.load("../inputs/orth_pad_right.npy")
+#y = np.load("../inputs/phon_pad_right.npy")
+#labels = pd.read_csv("../inputs/syllabics.csv", sep = ",")
+#words = labels.orth.tolist()
+
+#%% load
+x = np.load('../inputs/orth-left.npy')
+y = np.load('../inputs/phon-for-eos-left.npy')
+y = changepad(y, old=9, new=0)
+phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
+words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
+
+
+
+m1 = Lstm2lstm(x, y, labels=words, devices=False)
 
 # %%
 model = m1.model
 # %%
 plot(model, to_file='lstm2lstm.png')
-
+#%%
 
 ##############
 ### TESTS ####

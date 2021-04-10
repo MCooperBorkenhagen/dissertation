@@ -15,9 +15,30 @@ from tensorflow.keras.utils import plot_model as plot
 
 
 #%%
+#%% load
+Xo = np.load('../inputs/orth-left.npy')
+Xp = np.load('../inputs/phon-for-eos-left.npy')
+Yo = changepad(Xo, old=9, new=0)
+Yp = np.load('../inputs/phon-for-eos-left.npy')
+Yp = changepad(Yp, old=9, new=0)
+phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
 
-Xo = np.load('../../inputs/orth-left.npy')
-Xp = np.load('../../inputs/phon-left.npy')
+orthreps = loadreps('../inputs/raw/orthreps.json')
+orthpadX = np.array(loadreps('../inputs/raw/orthreps.json', changepad=True, newpad=9)['_'])
+orthpadY = np.array(orthreps['_'])
+words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
+
+#%%
+def addpad(a, pad):
+    from numpy import reshape as rs
+    from numpy import append as ap
+
+    if a.ndim == 2:
+        return(ap(a, pad))
+
+
+
+
 #%%
 orthshape = Xo.shape
 phonshape = Xp.shape
@@ -28,20 +49,10 @@ Xp_dummy = np.zeros(phonshape)
 
 Xo_mask = np.full(orthshape, 9)
 Xp_mask = np.full(phonshape, 9)
+
+
+
 #%%
-
-Yp = np.load('../../inputs/phon-left.npy')
-Yp = changepad(Yp, old=9, new=0)
-
-Yo = np.load('../../inputs/orth-left.npy')
-Yo = changepad(Yo, old=9, new=0)
-
-words = pd.read_csv('../../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
-phonreps = loadreps('../../inputs/phonreps.json', changepad=True)
-orthreps = loadreps('../../inputs/raw/orthreps.json', changepad=True)
-
-
-
 hidden = 300
 optimizer='rmsprop'
 loss="categorical_crossentropy"
@@ -99,6 +110,8 @@ metric = [tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None
 model.compile(optimizer=optimizer, loss=loss, metrics=metric)
 model.summary()
 
+plot(model, to_file='merge2.png')
+#%%
 t1 = time.time()
 model.fit([Xo, Xp], [Yo, Yp], batch_size=batch_size, epochs=epochs, validation_split=(1-train_proportion))
 
