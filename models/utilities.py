@@ -151,3 +151,23 @@ def generalize(xo, xp, model, reps, label=None):
     print('word to predict:', label)
     out = model.predict([reshape(xo), reshape(xp)])
     print('Predicted:', decode(out, reps))
+
+
+
+def addpad(a, pad):
+    from numpy import reshape as rs
+    from numpy import append as ap
+
+    if a.ndim == 2:
+        axis0 = a.shape[0]+1
+        axis1 = a.shape[1] 
+        return(rs(ap(a, pad), (axis0, axis1)))
+
+    if a.ndim == 3:
+        axis0 = a.shape[0]
+        axis1 = a.shape[1]+1
+        axis2 = a.shape[2]
+        n = np.empty((axis0, axis1, axis2), dtype=a.dtype)
+        for i, a in enumerate(a):
+            n[i] = addpad(a, pad)
+        return(n)

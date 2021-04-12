@@ -3,7 +3,7 @@
 import tensorflow as tf
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Masking, RepeatVector, TimeDistributed, Concatenate, Bidirectional
-from utilities import changepad, loadreps, decode, reshape 
+from utilities import changepad, loadreps, decode, reshape, addpad
 import numpy as np
 import time
 import pandas as pd
@@ -17,25 +17,28 @@ from tensorflow.keras.utils import plot_model as plot
 #%%
 #%% load
 Xo = np.load('../inputs/orth-left.npy')
-Xp = np.load('../inputs/phon-for-eos-left.npy')
-Yo = changepad(Xo, old=9, new=0)
-Yp = np.load('../inputs/phon-for-eos-left.npy')
-Yp = changepad(Yp, old=9, new=0)
-phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
+
+#%%
 
 orthreps = loadreps('../inputs/raw/orthreps.json')
 orthpadX = np.array(loadreps('../inputs/raw/orthreps.json', changepad=True, newpad=9)['_'])
 orthpadY = np.array(orthreps['_'])
+
+Xo = addpad(np.load('../inputs/orth-left.npy'), orthpadX)
+
+Xp = np.load('../inputs/phon-for-eos-left.npy')
+
+Yo = np.load('../inputs/orth-left.npy')
+Yo = changepad(Yo, old=9, new=0)
+Yo = addpad(Yo, orthpadY)
+
+Yp = np.load('../inputs/phon-for-eos-left.npy')
+Yp = changepad(Yp, old=9, new=0)
+phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
+
 words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
 
 #%%
-def addpad(a, pad):
-    from numpy import reshape as rs
-    from numpy import append as ap
-
-    if a.ndim == 2:
-        return(ap(a, pad))
-
 
 
 
@@ -57,7 +60,7 @@ hidden = 300
 optimizer='rmsprop'
 loss="categorical_crossentropy"
 transfer_function = 'sigmoid'
-epochs = 100
+epochs = 30
 batch_size = 100
 train_proportion = .8
 
