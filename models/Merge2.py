@@ -101,8 +101,6 @@ deep_outputs = deep(merge_outputs)
 #%%
 phon_out = TimeDistributed(Dense(Xp.shape[2], activation='sigmoid', name='...'), name='phon_output')
 orth_out = TimeDistributed(Dense(Xo.shape[2], activation='sigmoid', name='...'), name='orth_output')
-
-
 phon_out = phon_out(deep_outputs)
 orth_out = orth_out(deep_outputs)
 

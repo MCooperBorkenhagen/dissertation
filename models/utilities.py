@@ -147,6 +147,14 @@ def pronounce(i, model, Xo, Xp, Y, labels=None, reps=None):
     print('Predicted:', decode(out, reps))
     print('True phon:', decode(Y[i], reps))
 
+
+def pronounce2(i, model, X, Y, labels=None, reps=None):
+    print('word to predict:', labels[i])
+    out = model.predict(reshape(X[i]))
+    print('Predicted:', decode(out, reps))
+    print('True phon:', decode(Y[i], reps))
+
+
 def generalize(xo, xp, model, reps, label=None):
     print('word to predict:', label)
     out = model.predict([reshape(xo), reshape(xp)])
