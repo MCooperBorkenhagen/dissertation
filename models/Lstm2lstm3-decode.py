@@ -1,7 +1,7 @@
 from Lstm2lstm3 import Learner
 import numpy as np
 #%%
-from utilities import changepad, key, decode, reshape, loadreps, test_acts, all_equal, cor_acts, pronounce, dists
+from utilities import changepad, key, decode, reshape, loadreps, test_acts, all_equal, cor_acts, pronounce1, dists
 import pandas as pd
 from tensorflow.keras.utils import plot_model as plot
 #%%
@@ -45,6 +45,6 @@ def pronounce2(i, model, X, Y, labels=None, reps=None):
     print('True phon:', decode(Y[i], reps))
 
 
-pronounce2(7802, left.model, X, Y, labels=words, reps=phonreps)
+pronounce1(7802, left.model, X, Y, labels=words, reps=phonreps)
 
 # %%

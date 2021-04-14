@@ -141,21 +141,29 @@ def sample(n, Xo, Xp, Xy, labels = None, seed = 123):
         return Xo[s], Xp[s], Xy[s]
 
 
-def pronounce(i, model, Xo, Xp, Y, labels=None, reps=None):
+def pronounce2(i, model, xo, xp, yp, labels=None, reps=None):
+    """Pronounce a word from two inputs.
+    """
+
     print('word to predict:', labels[i])
-    out = model.predict([reshape(Xo[i]), reshape(Xp[i])])
+    out = model.predict([reshape(xo[i]), reshape(xp[i])])
     print('Predicted:', decode(out, reps))
-    print('True phon:', decode(Y[i], reps))
+    print('True phon:', decode(yp[i], reps))
 
 
-def pronounce2(i, model, X, Y, labels=None, reps=None):
+def pronounce1(i, model, xo, yp, labels=None, reps=None):
+    """Pronounce a word from one input.
+    """
     print('word to predict:', labels[i])
-    out = model.predict(reshape(X[i]))
+    out = model.predict(reshape(xo[i]))
     print('Predicted:', decode(out, reps))
-    print('True phon:', decode(Y[i], reps))
+    print('True phon:', decode(yp[i], reps))
 
 
 def generalize(xo, xp, model, reps, label=None):
+    """
+    """
+
     print('word to predict:', label)
     out = model.predict([reshape(xo), reshape(xp)])
     print('Predicted:', decode(out, reps))

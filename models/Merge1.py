@@ -1,69 +1,16 @@
 
-#%%
-import tensorflow as tf
-from keras.models import Model
-from keras.layers import Input, LSTM, Dense, Masking, RepeatVector, TimeDistributed, Concatenate, Bidirectional
-from utilities import changepad, loadreps, decode, reshape, addpad, pronounce
-import numpy as np
-import time
-import pandas as pd
 
-physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 #%%
 from tensorflow.keras.utils import plot_model as plot
-
-orthreps = loadreps('../inputs/raw/orthreps.json')
-orthpad = np.array(loadreps('../inputs/raw/orthreps.json', changepad=True, newpad=9)['_'])
-
-Xo = addpad(np.load('../inputs/orth-left.npy'), orthpad)
-
-Xp = np.load('../inputs/phon-for-eos-left.npy')
-
-
-Yp = np.load('../inputs/phon-for-eos-left.npy')
-Yp = changepad(Yp, old=9, new=0)
-phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
-
-words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
-
-#%%
-orthshape = Xo.shape
-phonshape = Xp.shape
-
-
-Xo_dummy = np.zeros(orthshape)
-Xp_dummy = np.zeros(phonshape)
-
-Xo_mask = np.where(Xo==1, 0, Xo)
-Xp_mask = np.where(Xp==1, 0, Xp)
-#%%
-
-
-#%%
-
-# params
-hidden = 300
-optimizer='rmsprop'
-loss="categorical_crossentropy"
-transfer_function = 'sigmoid'
-
-# %% learner
-
-
-
-
-
-
 import tensorflow as tf
 from keras.models import Model
-from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
+from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed, Concatenate, RepeatVector
 import numpy as np
 import time
 
 class Learner():
 
-    def __init__(self, Xo, Xp, Y, labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20, transfer_state=False, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
+    def __init__(self, Xo, Xp, Y, orth_density=500, phon_density=500, output_density=500, modelname='Merge1', labels=None, op_names=True, train_proportion=.9, hidden=300, batch_size=100, epochs=20, transfer_state=False, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
 
         """
         transfer_state : bool
@@ -125,7 +72,7 @@ class Learner():
         orth_outputs, orth_hidden, orth_cell = orth(orth_inputs_masked)
         orth_state = [orth_hidden, orth_cell]
 
-        orth_dense = Dense(500, activation=transfer_function, name='orth_dense')
+        orth_dense = Dense(orth_density, activation=transfer_function, name='orth_dense')
         orth_decomposed = orth_dense(orth_outputs)
 
         phon_inputs = Input(shape=(None, Xp.shape[2]), name='phon_input')
@@ -137,30 +84,33 @@ class Learner():
             phon_outputs, phon_hidden, phon_cell = phon(phon_inputs_masked)
         phon_state = [phon_hidden, phon_cell]
 
-        phon_dense = Dense(500, activation=transfer_function, name='phon_dense')
+        phon_dense = Dense(phon_density, activation=transfer_function, name='phon_dense')
         phon_decomposed = phon_dense(phon_outputs)
 
         # merge outputs of lstms
         merge = Concatenate(name='merge')
         merge_outputs = merge([orth_decomposed, phon_decomposed])
 
-        # merged substrate
+        # merged layer (have toyed with)
         deep = Dense(250, activation='sigmoid', name='deep_layer')
         deep_outputs = deep(merge_outputs)
 
+        repeater = RepeatVector(Y.shape[1])
+        output_input = repeater(deep_outputs)
+
         # output layer
-        phon_output = Dense(Xp.shape[2], activation='sigmoid', name='phon_output')
-        output_layer = phon_output(deep_outputs)
+        phon_output = TimeDistributed(Dense(Xp.shape[2], activation='sigmoid', name='phon_output'))
+        output_layer = phon_output(output_input)
         model = Model([orth_inputs, phon_inputs], output_layer)
 
 
 
 
-        self.orth_lstm = orth_lstm
-        self.phon_lstm = phon_lstm
+        self.orth_lstm = orth
+        self.phon_lstm = phon
         self.orth_dense = orth_dense
         self.phon_dense = phon_dense
-        self.deep_dense = deep
+        #self.deep_dense = deep
 
         # train
         if accuracy == 'binary':
@@ -180,6 +130,7 @@ class Learner():
         self.runtime = time.ctime()
         self.history = cb.history
         self.model = model
+        self.plot = plot(self.model, to_file=modelname+'.png')
 
 
 
