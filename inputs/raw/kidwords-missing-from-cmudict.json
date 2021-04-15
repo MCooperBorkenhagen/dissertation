@@ -1352,5 +1352,9 @@
     "zzzzzzz": [["Z", "IY1"]],
     "zzzzzzzzz": [["Z", "IY1"]],
     "zzzzzzzzzzzzzzzzzz": [["Z", "IY1"]],
-    "zzzzzzzzzzzzzzzzzzz":  [["Z", "IY1"]]
+    "zzzzzzzzzzzzzzzzzzz":  [["Z", "IY1"]],
+    "maria": [["M", "AH0", "R", "IY1", "AH0"]],
+    "marie": [["M", "AH0", "R", "IY1"]],
+    "mit": [["M", "IH1", "T"]],
+    "parade": [["P", "AH0", "R", "EY1", "D"]]
 }

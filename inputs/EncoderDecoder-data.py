@@ -18,6 +18,7 @@ outliers = pd.read_csv('./raw/wcbc-outliers.csv', header=None)[0].tolist()
 # %%
 MAXORTH = 8
 MAXPHON = 8
+MAXSYLL = 3
 
 # get the string lebels/words
 words = wcbc.orth.tolist()
@@ -27,21 +28,21 @@ more = ['ration', 'nation', 'horatio', 'rational', 'shriek']
 words.extend(more)
 ## non-terminals
 #%%
-right = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=False, sos=False, justify='right', onehot=False, orthpad=9)
+right = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, eos=False, sos=False, justify='right', onehot=False, orthpad=9)
 
 #%%
-left = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=False, sos=False,  justify='left', onehot=False, orthpad=9)
+left = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, eos=False, sos=False,  justify='left', onehot=False, orthpad=9)
 
 #%%
 assert right.pool == left.pool, 'Pools are different, check call to Reps'
 ## Terminals
 #%% SOS and EOS versions:
-right_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=True, sos=True, justify='right', onehot=False, orthpad=9)
-left_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=True, sos=True, justify='left', onehot=False, orthpad=9)
+right_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL,  eos=True, sos=True, justify='right', onehot=False, orthpad=9)
+left_ = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL,  eos=True, sos=True, justify='left', onehot=False, orthpad=9)
 assert right_.pool == left_.pool, 'Pools are different, check call to Reps'
 #%% EOS only versions
-right_eosonly = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=True, sos=False, justify='right', onehot=False, orthpad=9)
-left_eosonly = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, eos=True, sos=False, justify='left', onehot=False, orthpad=9)
+right_eosonly = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, eos=True, sos=False, justify='right', onehot=False, orthpad=9)
+left_eosonly = data(words, phonpath='raw/phonreps.csv', cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', outliers=outliers, maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, eos=True, sos=False, justify='left', onehot=False, orthpad=9)
 assert right_eosonly.pool == left_eosonly.pool, 'Pools are different, check call to Reps'
 
 
@@ -62,13 +63,13 @@ np.save('phon-eos-terminals-right.npy', right_.phonformsEOS_array)
 np.save('phon-sos-terminals-left.npy', left_.phonformsSOS_array)
 np.save('phon-eos-terminals-left.npy', left_.phonformsEOS_array)
 ## eos only:
-np.save('phon-for-eos-right.npy', right_eosonly.phonformsX_array)
-np.save('phon-eos-right.npy', right_eosonly.phonformsEOS_array)
-np.save('phon-for-eos-left.npy', left_eosonly.phonformsX_array)
-np.save('phon-eos-left.npy', left_eosonly.phonformsEOS_array)
+np.save('phon-inputs-for-eos-right.npy', right_eosonly.phonformsX_array)
+np.save('phon-with-eos-right.npy', right_eosonly.phonformsEOS_array)
+np.save('phon-inputs-for-eos-left.npy', left_eosonly.phonformsX_array)
+np.save('phon-with-eos-left.npy', left_eosonly.phonformsEOS_array)
 
 
-#%%
+
 ## the string labels/ words
 with open('encoder-decoder-words.csv', 'w') as f:
     w = csv.writer(f)

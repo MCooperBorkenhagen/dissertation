@@ -1,10 +1,16 @@
 #%%
 import pandas as pd
 
-a = pd.read_csv('./raw/wcbc-ranked.csv').orth.tolist()
-outliers = pd.read_csv('./raw/wcbc-outliers.csv', header=None)[0].tolist()
-
-# %%
 import nltk
 c = nltk.corpus.cmudict.dict()
 # %%
+t = c['the'][0]
+
+
+# %%
+def n_syllables(x):
+    count = 0
+    for e in x:
+        if any(ch.isdigit() for ch in e):
+            count += 1
+    return(count)

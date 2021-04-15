@@ -96,7 +96,12 @@ def represent(wordform, representations, embed=False):
         return([representations[e] for e in wordform])
 
 
-
+def n_syllables(x):
+    count = 0
+    for e in x:
+        if any(ch.isdigit() for ch in e):
+            count += 1
+    return(count)
 
 def remove_all(x, element):
     return(list(filter(lambda e: e != element, x)))
@@ -182,7 +187,7 @@ class Reps():
     """
 
 
-    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, sos=False, eos=False, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True):
+    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, maxsyll=None, onehot=True, orthpad=0, phonpad=9, phon_index=0, sos=False, eos=False, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True):
         """Initialize Reps with a values that specify representations over words.
         Parameters
         ----------
@@ -306,6 +311,13 @@ class Reps():
             for word in toomanyphones:
                 excluded[word] = "too many phonemes"
                 print(word, 'removed from pool because it has too many phonemes')
+
+        if maxsyll is not None:
+            toomanysyllables = [word for word in pool if n_syllables(cmudict[word]) > maxsyll]
+            pool = [word for word in pool if word not in toomanysyllables]
+            for word in toomanysyllables:
+                excluded[word] = "too many syllables"
+                print(word, 'removed from pool because it has too many syllables')
 
         if not punctuation:
             punct = string.punctuation

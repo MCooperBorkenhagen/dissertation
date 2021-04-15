@@ -3,7 +3,7 @@
 from EncoderDecoder import Learner
 import numpy as np
 #%%
-from utilities import changepad, key, decode, reshape, loadreps, test_acts, all_equal, cor_acts, pronounce, dists
+from utilities import changepad, key, decode, reshape, loadreps, test_acts, all_equal, cor_acts, pronounce2, dists
 import pandas as pd
 from tensorflow.keras.utils import plot_model as plot
 #%%
@@ -17,8 +17,11 @@ from keras.layers import Input, LSTM, Dense
 ############
 #%% load
 Xo_ = np.load('../inputs/orth-left.npy')
-Xp_ = np.load('../inputs/phon-for-eos-left.npy')
-Yp_ = np.load('../inputs/phon-for-eos-left.npy')
+
+
+#%%
+Xp_ = np.load('../inputs/phon-inputs-for-eos-left.npy')
+Yp_ = np.load('../inputs/phon-with-eos-left.npy')
 
 Yp_ = changepad(Yp_, old=9, new=0)
 phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
@@ -69,21 +72,20 @@ generalize(hawking, Xp_dummy[0], left.model, phonreps, label='hawking')
 
 
 #%%
-i = 736
+def get_index(word, words):
+    return([i for i, w in enumerate(words) if w == word][0])
+
+get_index('mit', words)
+
+#%%
+i = get_index('crabtree', words)
 print('with phon inputs only:')
-pronounce(i, left.model, Xo_dummy, Xp_, Yp_, labels=words, reps=phonreps)
+pronounce2(i, left.model, Xo_dummy, Xp_, Yp_, labels=words, reps=phonreps)
 print('#####################')
 print('with orth and phon inputs:')
-pronounce(i, left.model, Xo_, Xp_, Yp_, labels=words, reps=phonreps)
+pronounce2(i, left.model, Xo_, Xp_, Yp_, labels=words, reps=phonreps)
 #%%
-print('with no phon inputs (orth only):')
-pronounce(i, left.model, Xo_, Xp_dummy, Yp_, labels=words, reps=phonreps)
 
-
-#%% get a single prediction for an input pattern:
-words[i]
-
-out = left.model.predict([reshape(Xo_[i]), reshape(Xp_[i])])
 
 #%%
 
@@ -98,3 +100,13 @@ with open('encoder-decoder-items.csv', 'w') as f:
             acc = acc_,
             loss = loss_))
 # %%
+
+
+with open('encoder-decoder-items.csv', 'w') as f:
+    f.write('word, acc, loss\n')
+    for i, word_ in enumerate(words):
+        loss_, acc_ = left.model.evaluate([reshape(Xo_[i]), reshape(Xp_[i])], reshape(Yp_[i]))
+        f.write('{word:s}, {acc:.8f}, {loss:.8f}\n'.format(
+            word = word_,
+            acc = acc_,
+            loss = loss_))

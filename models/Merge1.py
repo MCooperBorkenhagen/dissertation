@@ -68,7 +68,7 @@ class Learner():
 
         orth_inputs = Input(shape=(None, Xo.shape[2]), name='orth_input')
         orth_inputs_masked = Masking(mask_value=9, name='orth_mask')(orth_inputs)
-        orth = LSTM(hidden, return_sequences=True, return_state=True, name = 'orthographic_lstm') # set return_sequences to True if no RepeatVector
+        orth = LSTM(hidden, return_sequences=False, return_state=True, name = 'orthographic_lstm') # set return_sequences to True if no RepeatVector
         orth_outputs, orth_hidden, orth_cell = orth(orth_inputs_masked)
         orth_state = [orth_hidden, orth_cell]
 
@@ -77,7 +77,7 @@ class Learner():
 
         phon_inputs = Input(shape=(None, Xp.shape[2]), name='phon_input')
         phon_inputs_masked = Masking(mask_value=9, name='phon_mask')(phon_inputs)
-        phon = LSTM(hidden, return_sequences=True, return_state=True, name='phonological_lstm')
+        phon = LSTM(hidden, return_sequences=False, return_state=True, name='phonological_lstm')
         if transfer_state:
             phon_outputs, phon_hidden, phon_cell = phon(phon_inputs_masked, initial_state=orth_state)
         else:
@@ -96,11 +96,14 @@ class Learner():
         deep_outputs = deep(merge_outputs)
 
         repeater = RepeatVector(Y.shape[1])
-        output_input = repeater(deep_outputs)
+        repeater_outputs = repeater(deep_outputs)
+
+        output_lstm = LSTM(hidden, return_sequences=True, name = 'output_lstm')
+        output_inputs = output_lstm(repeater_outputs)
 
         # output layer
         phon_output = TimeDistributed(Dense(Xp.shape[2], activation='sigmoid', name='phon_output'))
-        output_layer = phon_output(output_input)
+        output_layer = phon_output(output_inputs)
         model = Model([orth_inputs, phon_inputs], output_layer)
 
 

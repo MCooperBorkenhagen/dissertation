@@ -23,8 +23,12 @@ Yp = np.load('../inputs/phon-eos-left.npy')
 
 
 Yp = changepad(Yp, old=9, new=0)
+
+
+
 phonreps = loadreps('../inputs/phonreps-with-eos-only.json', changepad=True)
 words = pd.read_csv('../inputs/encoder-decoder-words.csv', header=None)[0].tolist()
+
 
 
 # dummy patterns:
@@ -34,7 +38,7 @@ Xp_dummy = np.zeros(Xp.shape)
 #%%
 
 
-left = Learner(Xo, Xp, Yp, epochs=25, devices=False)
+left = Learner(Xo, Xp, Yp, epochs=50, devices=False)
 # %%
 pronounce2(1, left.model, Xo, Xp, Yp, labels=words, reps=phonreps)
 # %%
