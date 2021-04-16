@@ -1,16 +1,19 @@
 #%%
 import pandas as pd
-
+from Reps2 import Reps
 import nltk
 c = nltk.corpus.cmudict.dict()
 # %%
-t = c['the'][0]
-
+words = ['the', 'and', 'if', 'they']
+lengths = [len(word) for word in words]
+traindata = {}
+for i, e in enumerate(words):
+    length = len(e)
+    w = {}
+    w['i'] = i
+    w['e']
+    traindata[length] = e
 
 # %%
-def n_syllables(x):
-    count = 0
-    for e in x:
-        if any(ch.isdigit() for ch in e):
-            count += 1
-    return(count)
+d = Reps(words, phonpath='raw/phonreps.csv')
+# %%
