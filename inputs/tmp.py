@@ -1,19 +1,18 @@
 #%%
 import pandas as pd
-from Reps2 import Reps
+from Reps2b import Reps
 import nltk
 c = nltk.corpus.cmudict.dict()
 # %%
-words = ['the', 'and', 'if', 'they']
-lengths = [len(word) for word in words]
-traindata = {}
-for i, e in enumerate(words):
-    length = len(e)
-    w = {}
-    w['i'] = i
-    w['e']
-    traindata[length] = e
+words = ['the', 'and', 'if', 'they', 'something', 'hello']
+
 
 # %%
-d = Reps(words, phonpath='raw/phonreps.csv')
+d = Reps(words, phonpath='raw/phonreps.csv', onehot=False, terminals=True, test_reps=True)
+# %%
+d.traindata
+# %%
+import numpy as np
+
+target_seq = np.zeros((1, 2, 3))
 # %%

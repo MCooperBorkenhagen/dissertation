@@ -122,3 +122,8 @@ def reconstruct(x, y, reps='phon', axis=0):
     elif reps == 'orth':
         return([''.join(e) for e in r] == y)
 
+def save(x, PATH):
+    import pickle
+    f = open(PATH, 'wb')
+    pickle.dump(x, f)
+    f.close()

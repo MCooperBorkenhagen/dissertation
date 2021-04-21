@@ -38,12 +38,18 @@ Xp_dummy = np.zeros(Xp_.shape)
 
 # %% step one: PP training
 hidden = 500
-left = Learner(Xo_dummy, Xp_, Yp_, epochs=4, batch_size=100, hidden=hidden, devices=False)
+left = Learner(Xo_dummy, Xp_, Yp_, epochs=1, batch_size=400, hidden=hidden, devices=False)
+
 plot(left.model, to_file='encoder-decoder1.png')
 
 # %% Op together, then O alone
-left.model.fit([Xo_, Xp_], Yp_, epochs=1, batch_size=100)
-left.model.fit([Xo_, Xp_dummy], Yp_, epochs=60, batch_size=100)
+left.model.fit([Xo_, Xp_], Yp_, epochs=1, batch_size=1)
+
+#%%
+left.model.fit([Xo_, Xp_dummy], Yp_, epochs=1, batch_size=1)
+
+
+#%%
 #%%
 for i, word in enumerate(words):
     if word == 'ratio':

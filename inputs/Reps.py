@@ -452,7 +452,6 @@ class Reps():
 
         self.pool_with_pad = {}
         for word in self.pool:
-
             if eos:
                 ppl = (self.maxphon+1)-self.phonlengths[word] # add 1 because maxphon doesn't take into account the terminal character
             elif not eos:

@@ -109,6 +109,10 @@ def reshape(a):
 
 
 def dists(a, reps, ties=True):
+    """This method was renamed to nearest_phoneme() and updated
+    slightly. This versino will remain in here because it is used in 
+    older scripts.
+    """
     d = {np.linalg.norm(a-np.array(v)):k for k, v in reps.items()}
     min_ = min(d.keys())
 
@@ -118,6 +122,42 @@ def dists(a, reps, ties=True):
 
     return(d[min_])
 
+
+def nearest_phoneme(a, phonreps, ties=True):
+    """This is the updated version of dists() and is slightly faster than
+    the previous method.
+
+    Parameters
+    ----------
+    a : arr
+        A numpy array to be compared with each value of phonreps.
+
+    phonreps : dict
+        A dictionary where every key is a string specifying symbolically the
+        phoneme it represents, and each value is a numpy array to be compared
+        with a.
+
+    ties : bool
+        Test to see if ties are present. If a tie is present then an 
+        exception will be raised. If set to False, the pairwise comparison
+        across values of phonreps a random value for the tying distance if
+        ties are present. (default is True)
+
+    Returns
+    -------
+    The phonological representation (array) that is nearest the array a, as
+    determined by pairwise comparisons across all values in phonreps using 
+    the L2 norm for the distance calculation.
+
+    """
+    d = {np.linalg.norm(a-np.array(v)):k for k, v in phonreps.items()}
+    min_ = min(d.keys())
+
+    if ties:
+        u = [k for k, v in d.items() if k == min_]
+        assert len(u) == 1, 'More than one minumum value for pairwise distances. Ties present.'
+
+    return(d[min_])
 
 def decode(a, reps, round=True):
     if a.ndim == 3:
@@ -187,3 +227,9 @@ def addpad(a, pad):
         for i, a in enumerate(a):
             n[i] = addpad(a, pad)
         return(n)
+
+
+def load(PATH):
+    import pickle
+    f = open(PATH, 'rb')
+    return(pickle.load(f))
