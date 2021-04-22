@@ -5,10 +5,11 @@ from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
 import numpy as np
 import time
 from tensorflow.keras.utils import plot_model as plot
+from utilities import printspace
 
 class Learner():
 
-    def __init__(self, input_features, output_features, phon_weights=None, dense_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=300, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
+    def __init__(self, input_features, output_features, traindata=None, phon_weights=None, output_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=300, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
 
 
         np.random.seed(seed)
@@ -27,6 +28,7 @@ class Learner():
         self.loss_function = loss
         self.seed = seed
 
+
         # learner:
         if op_names:
             input1_name = 'orth_input'
@@ -36,6 +38,9 @@ class Learner():
             input1_name = 'input_1'
             input2_name = 'input_2'
             output_name = 'output'
+
+        if traindata is not None:
+            self.traindata = traindata
 
         self.modelname=modelname
         self.input_features = input_features
@@ -63,8 +68,8 @@ class Learner():
         decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked, initial_state=encoder_states)
         decoder_dense = Dense(output_features, activation=transfer_function, name=output_name)
         
-        if dense_weights is not None:
-            decoder_dense.set_weights(dense_weights)
+        if output_weights is not None:
+            decoder_dense.set_weights(output_weights)
         
         decoder_outputs = decoder_dense(decoder_outputs)
         model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
@@ -88,7 +93,7 @@ class Learner():
             self.model.summary()
 
 
-    def fit(self, X, Y, verbose=True, batch_size=100, epochs=10, train_proportion=.9):
+    def fit(self, X, Y, batch_size=100, epochs=10, train_proportion=.9, verbose=True):
         t1 = time.time()
         # remember that X has to be a list of structure [encoder_inputs, decoder_inputs]
         cb = self.model.fit(X, Y, batch_size=batch_size, epochs=epochs, validation_split=(1-train_proportion))
@@ -97,6 +102,39 @@ class Learner():
         if verbose:
             print(learntime, 'minutes elapsed during learning')
         return(cb)
+
+    def fitcycle(self, traindata=None, return_histories=True, cycles=1, batch_size=25, epochs=1, train_proportion=.9, verbose=True):
+
+        if traindata is None:
+            traindata = self.traindata
+        
+        histories = {}
+        cycletime = 0
+        for cycle in range(cycles):
+            printspace(4)
+            print('Training', cycle+1, 'of', cycles, 'cycles')
+            printspace(4)
+            history_ = {}
+            for length, subset in traindata.items():
+                printspace(1, symbol='-')
+                print('Cycling on phonological length', length)
+                printspace(1, symbol='-')
+                Xo = traindata[length]['orth']
+                Xp = traindata[length]['phonSOS']
+                Y = traindata[length]['phonEOS']
+                cb = self.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, train_proportion=train_proportion, verbose=verbose)
+                cycletime += cb.history['learntime']
+                history_[length] = cb.history
+            histories[cycle] = history_
+        
+        self.model.history.history['cycletime'] = cycletime
+        self.model.history.history['epochs_done'] = cycletime*epochs
+
+        if verbose:
+            print(cycletime, 'minutes elapsed since start of the first cycle')
+
+        if return_histories:
+            return(histories)
 
     def summary(self):
         return(self.model.summary())

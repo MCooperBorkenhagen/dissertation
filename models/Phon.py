@@ -10,7 +10,6 @@ class Phon():
 
     def __init__(self, features, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=300, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
 
-
         np.random.seed(seed)
 
         if devices:
@@ -79,7 +78,7 @@ class Phon():
 
     def fit(self, X, Y, verbose=True, batch_size=100, epochs=10, train_proportion=.9):
         t1 = time.time()
-        # remember that X has to be a list of structure [encoder_inputs, decoder_inputs]
+        # this architecture intends X and Y to be the same, or some near variant of each other (autoencoder)
         cb = self.model.fit(X, Y, batch_size=batch_size, epochs=epochs, validation_split=(1-train_proportion))
         learntime = round((time.time()-t1)/60, 2)
         cb.history['learntime'] = learntime
@@ -100,4 +99,4 @@ class Phon():
 
 
 if __name__ == "__main__":
-    Learner()
+    Phon()

@@ -113,6 +113,7 @@ def dists(a, reps, ties=True):
     slightly. This versino will remain in here because it is used in 
     older scripts.
     """
+
     d = {np.linalg.norm(a-np.array(v)):k for k, v in reps.items()}
     min_ = min(d.keys())
 
@@ -233,3 +234,8 @@ def load(PATH):
     import pickle
     f = open(PATH, 'rb')
     return(pickle.load(f))
+
+
+def printspace(lines, symbol='#', repeat=25):
+    for i in range(lines):
+        print(repeat*symbol, '\n')

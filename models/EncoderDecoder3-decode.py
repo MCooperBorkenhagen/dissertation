@@ -29,7 +29,7 @@ learner = Learner(orth_features, phon_features, devices=False)
 
 
 #%%
-E = 100
+E = 40
 for e in range(E):
     print(22*'#')
     print('Training', e, 'of', E, 'cycles')
@@ -43,9 +43,13 @@ for e in range(E):
         Y = left[length]['phonEOS']
 
         learner.fit([Xo, Xp], Y, epochs=5, batch_size=40)
-# %% "inference"
 
-encoder_model = Model(learner.encoder_inputs, learner.encoder_states)
+
+# %% "inference"
+encoder_inputs = learner.encoder_inputs
+encoder_states = learner.encoder_states
+
+encoder_model = Model(encoder_inputs, encoder_states)
 
 decoder_state_input_h = Input(shape=(learner.hidden_units,))
 decoder_state_input_c = Input(shape=(learner.hidden_units,))
@@ -119,17 +123,19 @@ def nearest_phoneme(a, phonreps, round=True, ties=True, return_array=False):
 #%%
 #def decode_sequence(input_seq):
 # Encode the input as state vectors.
-length = 3
+length = 4
 Xo = left[length]['orth']
 Xp = left[length]['phonSOS']
 Y = left[length]['phonEOS']
 
-
-i = 1
+#%%
+i = 25
 target_word = left[length]['wordlist'][i]
 input_seq = reshape(Xo[i])
 states_value = encoder_model.predict(input_seq)
-output_shape = (1, Xp[i].shape[0], Xp[i].shape[1])
+#output_shape = (1, Xp[i].shape[0], Xp[i].shape[1])
+output_shape = (1, 1, Xp[i].shape[1])
+
 # Generate empty target sequence of length 1.
 target_seq = np.zeros((output_shape))
 # Populate the first character of target sequence with the start character.
@@ -142,6 +148,7 @@ decoded_sentence = ''
 max_decoder_seq_length = output_shape[1]
 
 #%%
+"""
 timestep = 1
 while not stop_condition:
     print(timestep)
@@ -169,5 +176,33 @@ while not stop_condition:
     #return decoded_sentence
 
 
-print(decoded_sentence)
+print(decoded_sentence)"""
 # %%
+while not stop_condition:
+    output_tokens, h, c = decoder_model.predict(
+        [target_seq] + states_value)
+
+    # Sample a token
+    #sampled_token_index = np.argmax(output_tokens[0, -1, :])
+    #sampled_char = reverse_target_char_index[sampled_token_index]
+    sampled_char = nearest_phoneme(output_tokens, phonreps)
+    sampled_rep = phonreps[sampled_char]
+    decoded_sentence += sampled_char
+
+    # Exit condition: either hit max length
+    # or find stop character.
+    if (sampled_char == '%' or len(decoded_sentence) > max_decoder_seq_length):
+        stop_condition = True
+    
+    #Update the target sequence.
+    target_seq = np.zeros((output_shape))
+    # Populate the first character of target sequence with the start character.
+    target_seq[0][0] = sampled_rep
+
+    # Update states
+    states_value = [h, c]
+    #timestep += 1
+    #return decoded_sentence
+
+
+print(decoded_sentence)
