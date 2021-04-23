@@ -123,8 +123,7 @@ def dists(a, reps, ties=True):
 
     return(d[min_])
 
-
-def nearest_phoneme(a, phonreps, ties=True):
+def nearest_phoneme(a, phonreps, round=True, ties=True, return_array=False):
     """This is the updated version of dists() and is slightly faster than
     the previous method.
 
@@ -144,6 +143,15 @@ def nearest_phoneme(a, phonreps, ties=True):
         across values of phonreps a random value for the tying distance if
         ties are present. (default is True)
 
+    round : bool
+        Specify whether to round the input array or not prior to calculating
+        the pairwise distances with values in phonreps. (default is True)
+
+    return_array : bool
+        Return an array representing the closest match to a, or return
+        the symbolic string representing that array from phonreps.
+        (default is True)
+
     Returns
     -------
     The phonological representation (array) that is nearest the array a, as
@@ -151,14 +159,22 @@ def nearest_phoneme(a, phonreps, ties=True):
     the L2 norm for the distance calculation.
 
     """
+    if round:
+        a = np.around(a)
+
     d = {np.linalg.norm(a-np.array(v)):k for k, v in phonreps.items()}
-    min_ = min(d.keys())
+    mindist = min(d.keys())
 
     if ties:
-        u = [k for k, v in d.items() if k == min_]
+        u = [k for k, v in d.items() if k == mindist]
         assert len(u) == 1, 'More than one minumum value for pairwise distances. Ties present.'
-
-    return(d[min_])
+    
+    if return_array:
+        return(d[mindist])
+    elif not return_array:
+        for k, v in phonreps.items():
+            if v == d[mindist]:
+                return(k)
 
 def decode(a, reps, round=True):
     if a.ndim == 3:

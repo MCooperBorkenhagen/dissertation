@@ -1,8 +1,13 @@
 #%%
 import numpy as np
+from utilities import nearest_phoneme, load, loadreps
 # %%
-num_decoder_tokens = 99
-sampled_token_index = 42
-target_seq = np.zeros((1, 1, num_decoder_tokens))
-target_seq[0, 0, sampled_token_index] = 1.
+traindata = load('../inputs/right.traindata')
+phonreps = loadreps('../inputs/phonreps-with-terminals.json')
+
+
+# %%
+tmp = traindata[3]['phonSOS'][0][0]
+# %%
+nearest_phoneme(tmp, phonreps, return_array=False, round=False, ties=False)
 # %%

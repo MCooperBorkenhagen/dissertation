@@ -25,8 +25,18 @@ orthreps = loadreps('../inputs/raw/orthreps.json')
 orth_features = left[3]['orth'].shape[2]
 phon_features = left[3]['phonSOS'].shape[2]
 #%%
-learner = Learner(orth_features, phon_features, traindata=left, devices=False)
+learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=left, devices=False)
 
 # %%
-cb = learner.fitcycle(batch_size=1)
+#cb = learner.fitcycle(epochs=1)
+xo = reshape(left[3]['orth'][0])
+xp = reshape(left[3]['phonSOS'][0])
+yp = reshape(left[3]['phonEOS'][0])
+
+learner.model.fit([xo, xp], yp, epochs=1)
+#%%
+learner.read('the', phonreps=phonreps)
+# %%
+
+Xo, Xp, Yp = learner.get_word('the')
 # %%
