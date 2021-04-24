@@ -26,17 +26,24 @@ orth_features = left[3]['orth'].shape[2]
 phon_features = left[3]['phonSOS'].shape[2]
 #%%
 learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=left, devices=False)
-
+learner.fitcycle(batch_size=50, epochs=2, cycles=12)
 # %%
-#cb = learner.fitcycle(epochs=1)
-xo = reshape(left[3]['orth'][0])
-xp = reshape(left[3]['phonSOS'][0])
-yp = reshape(left[3]['phonEOS'][0])
+#cb = learner.fitcycle(batch_size=50, epochs=1, cycles=30)
+#learner.fitcycle(batch_size=5, epochs=1, cycles=20)
 
-learner.model.fit([xo, xp], yp, epochs=1)
 #%%
-learner.read('the', phonreps=phonreps)
+out = []
+for word in learner.words[526:529]:
+    print(word)
+    r = learner.read(word, phonreps=phonreps, ties='sample')
+    out.append(r)
+    print('word read:', r)
+    
+
+# %%
+traindata = left
+
+
 # %%
 
-Xo, Xp, Yp = learner.get_word('the')
-# %%
+def environment(n = 10, ):

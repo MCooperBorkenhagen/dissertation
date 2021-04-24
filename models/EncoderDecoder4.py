@@ -6,10 +6,10 @@ import numpy as np
 import time
 from tensorflow.keras.utils import plot_model as plot
 from utilities import printspace, reshape
+import random
 
 
-
-def nearest_phoneme(a, phonreps, round=True, ties=True, return_array=False):
+def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
     """This is the updated version of dists() and is slightly faster than
     the previous method.
 
@@ -47,23 +47,22 @@ def nearest_phoneme(a, phonreps, round=True, ties=True, return_array=False):
     """
     if round:
         a = np.around(a)
-    print('nearest phoneme value for a:', a)
-    d = {np.linalg.norm(a-np.array(v)):k for k, v in phonreps.items()}
-    mindist = min(d.keys())
 
-    if ties:
-        u = [k for k, v in d.items() if k == mindist]
-        assert len(u) == 1, 'More than one minumum value for pairwise distances. Ties present.'
+    d = {k:np.linalg.norm(a-np.array(v)) for k, v in phonreps.items()}
+    mindist = min(d.values())
     
+    u = [k for k, v in d.items() if v == mindist]
+
+    if ties == 'stop': # selecting stop is equivalent to assuming that you want only a single phoneme to be selected
+        assert len(u) == 1, 'More than one minumum value for pairwise distances for phonemes identified. Ties present.'
+        s = u[0] # if the exception isn't raised then the selected phoneme is the single element of u  
+    elif ties == 'sample':
+        s = random.sample(u, 1)[0]
+
     if return_array:
-        return(d[mindist])
-        print(d[mindist])
+        return(phonreps[s])
     elif not return_array:
-        for k, v in phonreps.items():
-            print('k and v', k, v)
-            if v == d[mindist]:
-                return(k)
-                print(k)
+        return(s)
 
 class Learner():
 
@@ -110,9 +109,9 @@ class Learner():
 
         # input features should be defined as something like Xe.shape[2]
         encoder_inputs = Input(shape=(None, input_features), name=input1_name)
-        encoder_inputs_masked = Masking(mask_value=9)(encoder_inputs)
+        encoder_mask = Masking(mask_value=9)(encoder_inputs)
         encoder = LSTM(hidden, return_state=True)
-        encoder_outputs, state_h, state_c = encoder(encoder_inputs_masked)
+        encoder_outputs, state_h, state_c = encoder(encoder_mask)
         encoder_states = [state_h, state_c]
 
         # output features should be defined as something like Xd.shape[2]
@@ -137,6 +136,8 @@ class Learner():
         model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
         self.encoder_inputs = encoder_inputs
+        self.encoder_mask = encoder_mask
+        self.encoder = encoder
         self.encoder_states = encoder_states
         self.decoder_lstm = decoder_lstm
         self.decoder_inputs = decoder_inputs
@@ -184,7 +185,9 @@ class Learner():
                 Xo = traindata[length]['orth']
                 Xp = traindata[length]['phonSOS']
                 Y = traindata[length]['phonEOS']
-                cb = self.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, train_proportion=train_proportion, verbose=verbose)
+                t1 = time.time()
+                cb = self.model.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, validation_split=1-train_proportion, verbose=verbose)
+                cb.history['learntime'] = round((time.time()-t1)/60, 2)
                 cycletime += cb.history['learntime']
                 history_[length] = cb.history
             histories[cycle] = history_
@@ -219,7 +222,8 @@ class Learner():
 
         for length, traindata_ in traindata.items():
             for i, w in enumerate(traindata_['wordlist']):
-                return traindata_['orth'][i], traindata_['phonSOS'][i], traindata_['phonEOS'][i]
+                if w == word:
+                    return traindata_['orth'][i], traindata_['phonSOS'][i], traindata_['phonEOS'][i]
                     
 
     def reader(self):
@@ -238,20 +242,18 @@ class Learner():
             [decoder_outputs] + decoder_states)
         return encoder_model, decoder_model
 
-    def read(self, word, phonreps=None, verbose=True):
-        
+    def read(self, word, phonreps=None, ties='stop', verbose=True):
+
         if phonreps is None:
             phonreps = self.phonreps
 
         Xo, _, Yp = self.get_word(word)
-
 
         input_seq = reshape(Xo)
 
         e, d = self.reader()
 
         states_value = e.predict(input_seq)
-        
         assert Yp.shape[1] == self.output_features, 'You are attempting to construct a phonological output that fails to match your number of output features'
         output_shape = (1, 1, self.output_features)
 
@@ -259,28 +261,23 @@ class Learner():
         target_seq = np.zeros((output_shape))
         # Populate the first character of target sequence with the start character.
         target_seq[0][0] = phonreps['#']
-        print('target seq', target_seq)
+
         # Sampling loop for a batch of sequences
         # (to simplify, here we assume a batch of size 1).
         done = False
-        word_produced = ''
+        word_produced = []
         maxlen = Yp.shape[0]
 
+        timestep = 1
         while not done:
             output_tokens, h, c = d.predict([target_seq] + states_value)
 
             # produce a phoneme
-            print('output tokens', output_tokens)
-            print('word produced', word_produced)
-            print('max length', maxlen)
-            print('output tokens type', type(output_tokens))
-            print('shape', output_tokens.shape)
-            phoneme_produced = nearest_phoneme(output_tokens[0], phonreps=phonreps, return_array=False)
-            print('phoneme produced', phoneme_produced)
-            sampled_rep = nearest_phoneme(output_tokens, phonreps, return_array=True)
+            phoneme_produced = nearest_phoneme(output_tokens, phonreps=phonreps, ties=ties, return_array=False)
+            sampled_rep = nearest_phoneme(output_tokens, phonreps, ties=ties, return_array=True)
             #sampled_rep = phonreps[phoneme_produced]
-            word_produced += phoneme_produced
-
+            word_produced.append(phoneme_produced)
+            timestep += 1
             # Stop if you find a word boundary or hit maxlen
             if (phoneme_produced == '%' or len(word_produced) > maxlen):
                 done = True
@@ -295,6 +292,7 @@ class Learner():
 
         if verbose:
             print(word_produced)
+
         return(word_produced)
             
 

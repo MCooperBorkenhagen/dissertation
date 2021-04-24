@@ -123,58 +123,6 @@ def dists(a, reps, ties=True):
 
     return(d[min_])
 
-def nearest_phoneme(a, phonreps, round=True, ties=True, return_array=False):
-    """This is the updated version of dists() and is slightly faster than
-    the previous method.
-
-    Parameters
-    ----------
-    a : arr
-        A numpy array to be compared with each value of phonreps.
-
-    phonreps : dict
-        A dictionary where every key is a string specifying symbolically the
-        phoneme it represents, and each value is a numpy array to be compared
-        with a.
-
-    ties : bool
-        Test to see if ties are present. If a tie is present then an 
-        exception will be raised. If set to False, the pairwise comparison
-        across values of phonreps a random value for the tying distance if
-        ties are present. (default is True)
-
-    round : bool
-        Specify whether to round the input array or not prior to calculating
-        the pairwise distances with values in phonreps. (default is True)
-
-    return_array : bool
-        Return an array representing the closest match to a, or return
-        the symbolic string representing that array from phonreps.
-        (default is True)
-
-    Returns
-    -------
-    The phonological representation (array) that is nearest the array a, as
-    determined by pairwise comparisons across all values in phonreps using 
-    the L2 norm for the distance calculation.
-
-    """
-    if round:
-        a = np.around(a)
-
-    d = {np.linalg.norm(a-np.array(v)):k for k, v in phonreps.items()}
-    mindist = min(d.keys())
-
-    if ties:
-        u = [k for k, v in d.items() if k == mindist]
-        assert len(u) == 1, 'More than one minumum value for pairwise distances. Ties present.'
-    
-    if return_array:
-        return(d[mindist])
-    elif not return_array:
-        for k, v in phonreps.items():
-            if v == d[mindist]:
-                return(k)
 
 def decode(a, reps, round=True):
     if a.ndim == 3:
@@ -255,3 +203,62 @@ def load(PATH):
 def printspace(lines, symbol='#', repeat=25):
     for i in range(lines):
         print(repeat*symbol, '\n')
+
+
+def nearest_phoneme(a, phonreps, round=True, ties=True, return_array=False):
+    """This is the updated version of dists() and is slightly faster than
+    the previous method.
+
+    Parameters
+    ----------
+    a : arr
+        A numpy array to be compared with each value of phonreps.
+
+    phonreps : dict
+        A dictionary where every key is a string specifying symbolically the
+        phoneme it represents, and each value is a numpy array to be compared
+        with a.
+
+    ties : bool
+        Test to see if ties are present. If a tie is present then an 
+        exception will be raised. If set to False, the pairwise comparison
+        across values of phonreps a random value for the tying distance if
+        ties are present. (default is True)
+
+    round : bool
+        Specify whether to round the input array or not prior to calculating
+        the pairwise distances with values in phonreps. (default is True)
+
+    return_array : bool
+        Return an array representing the closest match to a, or return
+        the symbolic string representing that array from phonreps.
+        (default is True)
+
+    Returns
+    -------
+    The phonological representation (array) that is nearest the array a, as
+    determined by pairwise comparisons across all values in phonreps using 
+    the L2 norm for the distance calculation.
+
+    """
+    if round:
+        a = np.around(a)
+    print('nearest phoneme value for a:', a)
+    print('type a:', type(a))
+    print('shape of a:', a.shape)
+    d = {np.linalg.norm(a-np.array(v)):k for k, v in phonreps.items()}
+    mindist = min(d.keys())
+
+    if ties:
+        u = [k for k, v in d.items() if k == mindist]
+        assert len(u) == 1, 'More than one minumum value for pairwise distances. Ties present.'
+    
+    if return_array:
+        return(d[mindist])
+        print(d[mindist])
+    elif not return_array:
+        for k, v in phonreps.items():
+            print('k and v', k, v)
+            if v == d[mindist]:
+                return(k)
+                print(k)
