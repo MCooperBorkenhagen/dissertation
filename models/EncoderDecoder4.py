@@ -166,7 +166,7 @@ class Learner():
     #        print(learntime, 'minutes elapsed during learning')
 
 
-    def fitcycle(self, traindata=None, return_histories=True, cycles=1, batch_size=25, epochs=1, train_proportion=.9, verbose=True):
+    def fitcycle(self, traindata=None, return_histories=False, cycles=1, batch_size=25, epochs=1, train_proportion=.9, verbose=True):
 
         if traindata is None:
             traindata = self.traindata
@@ -279,7 +279,7 @@ class Learner():
             word_produced.append(phoneme_produced)
             timestep += 1
             # Stop if you find a word boundary or hit maxlen
-            if (phoneme_produced == '%' or len(word_produced) > maxlen):
+            if (phoneme_produced == '%' or len(word_produced) == maxlen): # changed length to ==
                 done = True
             
             #Update the target sequence.
