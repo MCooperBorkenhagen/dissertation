@@ -1,12 +1,12 @@
 
-import tensorflow as tf
-from keras.models import Model
-from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
 import numpy as np
 import time
-from tensorflow.keras.utils import plot_model as plot
-from utilities import printspace, reshape
 import random
+import tensorflow as tf
+from tensorflow.keras.utils import plot_model as plot
+from keras.models import Model
+from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
+from utilities import printspace, reshape
 
 
 def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
@@ -23,11 +23,12 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
         phoneme it represents, and each value is a numpy array to be compared
         with a.
 
-    ties : bool
+    ties : str
         Test to see if ties are present. If a tie is present then an 
-        exception will be raised. If set to False, the pairwise comparison
-        across values of phonreps a random value for the tying distance if
-        ties are present. (default is True)
+        exception will be raised. If set to 'stop', an exception is raised
+        if the pairwise comparison across representations yields a tie. The
+        alternative is the value 'sample' which yields a random representation
+        selected from the ties if ties are present. (default is 'stop')
 
     round : bool
         Specify whether to round the input array or not prior to calculating
@@ -40,7 +41,7 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
 
     Returns
     -------
-    The phonological representation (array) that is nearest the array a, as
+    The phonological representation (array) that is nearest the array a,
     determined by pairwise comparisons across all values in phonreps using 
     the L2 norm for the distance calculation.
 
@@ -66,8 +67,17 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
 
 class Learner():
 
-    def __init__(self, input_features, output_features, orthreps=None, phonreps=None, traindata=None, phon_weights=None, output_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=300, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
+    def __init__(self, orth_features, phon_features, orthreps=None, phonreps=None, traindata=None, mask_phon=False, phon_weights=None, output_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=300, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
+        
+        """Initialize your Learner() with some values and methods.
 
+        Parameters
+        ----------
+        orth_features : int
+
+
+
+        """
 
         np.random.seed(seed)
 
@@ -103,20 +113,23 @@ class Learner():
         if traindata is not None:
             self.traindata = traindata
 
-        self.modelname=modelname
-        self.input_features = input_features
-        self.output_features = output_features
+
 
         # input features should be defined as something like Xe.shape[2]
-        encoder_inputs = Input(shape=(None, input_features), name=input1_name)
+        encoder_inputs = Input(shape=(None, orth_features), name=input1_name)
         encoder_mask = Masking(mask_value=9)(encoder_inputs)
         encoder = LSTM(hidden, return_state=True)
         encoder_outputs, state_h, state_c = encoder(encoder_mask)
         encoder_states = [state_h, state_c]
 
         # output features should be defined as something like Xd.shape[2]
-        decoder_inputs = Input(shape=(None, output_features), name=input2_name)
-        decoder_inputs_masked = Masking(mask_value=9)(decoder_inputs)
+        decoder_inputs = Input(shape=(None, phon_features), name=input2_name)
+
+        if mask_phon:
+            decoder_inputs_masked = Masking(mask_value=9)(decoder_inputs)
+        elif not mask_phon:
+            print('Note: learner architecture implemented with no phonological mask')
+
 
         decoder_lstm = LSTM(hidden, return_sequences=True, return_state=True)
         
@@ -126,8 +139,12 @@ class Learner():
         if phon_weights is not None:
             decoder_lstm.set_weights(phon_weights)
         
-        decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked, initial_state=encoder_states)
-        decoder_dense = Dense(output_features, activation=transfer_function, name=output_name)
+        if mask_phon:
+            decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked, initial_state=encoder_states)
+        elif not mask_phon:
+            decoder_outputs, _, _ = decoder_lstm(decoder_inputs, initial_state=encoder_states)
+    
+        decoder_dense = Dense(phon_features, activation=transfer_function, name=output_name)
         
         if output_weights is not None:
             decoder_dense.set_weights(output_weights)
@@ -152,18 +169,14 @@ class Learner():
         model.compile(optimizer=optimizer, loss=loss, metrics=metric)
         
         self.model = model
+
+        self.modelname=modelname
+        self.orth_features = orth_features
+        self.phon_features = phon_features
+
+
         if verbose:
             self.model.summary()
-
-
-    #def fit(self, X, Y, batch_size=100, epochs=10, train_proportion=.9, verbose=True):
-    #    t1 = time.time()
-    #    # remember that X has to be a list of structure [encoder_inputs, decoder_inputs]
-    #    self.model.fit(X, Y, batch_size=batch_size, epochs=epochs, validation_split=(1-train_proportion))
-    #    learntime = round((time.time()-t1)/60, 2)
-        #self.model.history.history['learntime'] = learntime
-    #    if verbose:
-    #        print(learntime, 'minutes elapsed during learning')
 
 
     def fitcycle(self, traindata=None, return_histories=False, cycles=1, batch_size=25, epochs=1, train_proportion=.9, verbose=True):
@@ -217,8 +230,11 @@ class Learner():
         if traindata is None:
             traindata = self.traindata
 
+        #assert word in self.words, 'The word you want is not in your reps. To read this word, set construct=True'
+        if word not in self.words:
+            new_word = np.array([self.orthreps[letter] for letter in word])
+            return new_word, None, None
 
-        assert word in self.words, 'The word you want is not in your reps. To read this word, set construct=True'
 
         for length, traindata_ in traindata.items():
             for i, w in enumerate(traindata_['wordlist']):
@@ -227,22 +243,55 @@ class Learner():
                     
 
     def reader(self):
-        encoder_inputs = self.encoder_inputs
-        encoder_states = self.encoder_states
-        encoder_model = Model(encoder_inputs, encoder_states)
-        decoder_state_input_h = Input(shape=(self.hidden_units,))
-        decoder_state_input_c = Input(shape=(self.hidden_units,))
-        decoder_states_inputs = [decoder_state_input_h, decoder_state_input_c]
-        decoder_outputs, state_h, state_c = self.decoder_lstm(
-            self.decoder_inputs, initial_state=decoder_states_inputs)
-        decoder_states = [state_h, state_c]
-        decoder_outputs = self.decoder_dense(decoder_outputs)
-        decoder_model = Model(
-            [self.decoder_inputs] + decoder_states_inputs,
-            [decoder_outputs] + decoder_states)
-        return encoder_model, decoder_model
+
+        orth_reader = Model(self.encoder_inputs, self.encoder_states)
+        phon_state_input_h = Input(shape=(self.hidden_units,))
+        phon_state_input_c = Input(shape=(self.hidden_units,))
+        phon_states_inputs = [phon_state_input_h, phon_state_input_c]
+        phon_outputs, state_h, state_c = self.decoder_lstm(self.decoder_inputs, initial_state=phon_states_inputs)
+        phon_states = [state_h, state_c]
+        phon_outputs = self.decoder_dense(phon_outputs)
+        phon_reader = Model([self.decoder_inputs] + phon_states_inputs, [phon_outputs] + phon_states)
+        return orth_reader, phon_reader
 
     def read(self, word, phonreps=None, ties='stop', verbose=True):
+        """Read a word after the learner has learned.
+
+        Parameters
+        ----------
+        word : str
+            A string of letters to be read. The letters need to be present
+            in orthreps.keys() in order for the word to have a chance to be
+            read. If word is not present in Learner.words, then an array
+            will be generated and passed to the method for reading, in which
+            case the array is constructed within Learner.get_word().
+
+        phonreps : dict
+            A dictionary with symbolic phoneme strings as keys and binary 
+            feature vectors as values. This object can be provided and if 
+            provided will be used in place of the analagous dictionary of
+            representations in Learner.phonreps.
+
+        ties : str
+            Specify the behavior of the method in the presence of ties produced
+            for phonemes (ie, if the most plausible phoneme produced isn't a
+            single phoneme but several different phonemes, none of which can be
+            identified as the least distant phonemes over all phonemes). The value
+            specified is passed to the nearest_phoneme() method. Possible values 
+            are 'stop' and 'sample', where specifying 'stop' halts the execution
+            of the method and 'sample' randomly samples from the alternative
+            phonemes selected. (Default is 'stop')
+
+        verbose : bool
+            If True the resulting sequence of words is printed. (Default is True)
+            
+        Returns
+        -------
+        A list whose elements are the phonemes produced for the orthographic
+        sequence provided as param word.
+
+        """
+
 
         if phonreps is None:
             phonreps = self.phonreps
@@ -254,46 +303,33 @@ class Learner():
         e, d = self.reader()
 
         states_value = e.predict(input_seq)
-        assert Yp.shape[1] == self.output_features, 'You are attempting to construct a phonological output that fails to match your number of output features'
-        output_shape = (1, 1, self.output_features)
+        assert Yp.shape[1] == self.phon_features, 'You are attempting to construct a phonological output that fails to match your number of output features'
+        output_shape = (1, 1, self.phon_features)
 
-        # Generate empty target sequence of length 1.
         target_seq = np.zeros((output_shape))
-        # Populate the first character of target sequence with the start character.
         target_seq[0][0] = phonreps['#']
 
-        # Sampling loop for a batch of sequences
-        # (to simplify, here we assume a batch of size 1).
-        done = False
-        word_produced = []
+        done_reading = False
+        word_read = []
         maxlen = Yp.shape[0]
 
-        timestep = 1
-        while not done:
+        while not done_reading:
             output_tokens, h, c = d.predict([target_seq] + states_value)
-
-            # produce a phoneme
             phoneme_produced = nearest_phoneme(output_tokens, phonreps=phonreps, ties=ties, return_array=False)
             sampled_rep = nearest_phoneme(output_tokens, phonreps, ties=ties, return_array=True)
-            #sampled_rep = phonreps[phoneme_produced]
-            word_produced.append(phoneme_produced)
-            timestep += 1
-            # Stop if you find a word boundary or hit maxlen
-            if (phoneme_produced == '%' or len(word_produced) == maxlen): # changed length to ==
-                done = True
+            word_read.append(phoneme_produced)
             
-            #Update the target sequence.
+            if (phoneme_produced == '%' or len(word_read) == maxlen):
+                done_reading = True
+            
             target_seq = np.zeros((output_shape))
-            # repopulate with the predicted rep
             target_seq[0][0] = sampled_rep
-
-            # Update states
             states_value = [h, c]
 
         if verbose:
-            print(word_produced)
+            print(word_read)
 
-        return(word_produced)
+        return(word_read)
             
 
 
