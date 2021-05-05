@@ -1,0 +1,20 @@
+---
+title: "Chapter 2. History"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Representational units
+
+## Models of multisyllabic word reading
+The CDP++ model from Perry et al. (2010) posits a complex architecture with subcompnents that capture different aspects of the theory from which the computational architecture is based. Said differently, their system lacks architectural homogeneity, a hallmark of connectionist learning systems. Some assumptions of the system violate primitives of learning seen in naturalistic environments. For example, CDP++ requires the prespecification of a graphemic level of representation, based on the assumption that letter sequences map cleanly onto phonemic sequences, and that such representational units contribute to low level operations within the reading system. Graphemes are identified on the input layer based on their frequency,  This violates an important aspect of development of word reading knowledge in that such representations (i.e., the ways that print sequences relate to auditory sequences) are learned and do not preexist in the learner once knowledge about print begins to develop. Perry 
+
+In a connectionist architecture something like a grapheme may well exist, but it is an emergent aspect of the knowledge of the system that develops as the result of the exposure of the learning architecture to the environment.
+
+The selection of representational units is a critical issue of theoretical interest in the development of a learning architecture that learns to read words. A fundamental question will always be: how do such representational units arise in learning? This issue plays even larger in models of word reading that deal in long words given that the longer the words are the more representational units there are to account for. In symbolic approaches this has been taken up historically as an issue of positing rules of identification, as in Rastle and Coltheart (2000). These rules take the form of complex verbal descriptions that specify structured labels for representational units based on the presence or absence of structural elements in a printed or spoken wordform.
+
+
+## Statistical learning
