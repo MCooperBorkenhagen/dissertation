@@ -15,7 +15,7 @@ from utilities import load, loadreps
 left = load('../inputs/left.traindata')
 right = load('../inputs/right.traindata')
 
-t = {k:v for k, v in left.items() if k in [4, 5]}
+t = {k:v for k, v in left.items() if k in [4, 5, 6, 7]}
 
 #%% phonreps and orthreps
 phonreps = loadreps('../inputs/phonreps-with-terminals.json')
@@ -29,7 +29,7 @@ learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orth
 
 #%%
 # bigger batch
-learner.fitcycle(batch_size=50, epochs=2, cycles=2)
+learner.fitcycle(batch_size=50, epochs=2, cycles=10)
 # smaller batch
 #learner.fitcycle(batch_size=5, epochs=2, cycles=10)
 #%%
@@ -47,3 +47,4 @@ for word in learner.words[506:520]:
     out.append(r)
     print('word read:', r)
     
+#%%

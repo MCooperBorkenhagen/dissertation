@@ -1,5 +1,5 @@
 ---
-title: "paper"
+title: "It is time for time in models of word reading: A recurrent model of word naming using explicit temporal processing of orthographic and phonological codes"
 output: html_document
 ---
 

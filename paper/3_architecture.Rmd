@@ -7,22 +7,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+The hallmark of the advance reported on here is the simplicity of the architecture. The computational learner developed in this dissertation takes in a sequence of letters and passes the representation of that sequence to a phonological part of the network with which it shares memory, thus producing a phonological wordform from its corresponding printed version. The printed sequence is a (computer readable) series of letters and the spoken version is a (computer readable) series of speech sounds; that is, the architecture uses veridical representations of print and speech as the learning environment.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# Latency
+Given that computational processing times on a GPU haven't been validated as an analagous method for naming latency in humans, similar to Sibley et al. (2010) a measure of model confidence for processing an orthographic word was designed to measure the latency for reading that word. 
 
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Learning versus reading
+Similar to the CPD++ model in Perry et al. (2010) the network reported on here uses different processes for learning versus reading ("training" and "running" in their language). However, the difference between these routines in the case of our learner is subtle and doesn't represent a substantially different model of cognition across the two activities. 

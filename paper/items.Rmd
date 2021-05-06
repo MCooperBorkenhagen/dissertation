@@ -9,5 +9,5 @@ items = read.csv('../models/encoder-decoder-items.csv')
 
 items %>% 
   ggplot(aes(str_length(word), acc, label = word)) +
-  geom_text(position = position_jitter(height = .002, width = .002))
+  geom_text()
 ```
