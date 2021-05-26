@@ -7,11 +7,39 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The hallmark of the advance reported on here is the simplicity of the architecture. The computational learner developed in this dissertation takes in a sequence of letters and passes the representation of that sequence to a phonological part of the network with which it shares memory, thus producing a phonological wordform from its corresponding printed version. The printed sequence is a (computer readable) series of letters and the spoken version is a (computer readable) series of speech sounds; that is, the architecture uses veridical representations of print and speech as the learning environment.
+In this section, an initial high-level description of the computational learner is provided, and is followed by a more technical description of how the architecture operates functionally and mathematically.
+
+The architecture takes in a time distributed sequence of letters (one timestep per letter) and passes the representation of that sequence to the phonological portion of the network. The representation (termed the _cell state_, described in greater detail later) serves as the initial memory state for learning about the time-distributed phonological sequence corresponding to the visual pattern learned. Importantly, while the nature of the temporal dynamics around how this representation is passed has the potential to be manipulated, in the experiments reported here the representation is built up over an entire orthographic input pattern before being passed to phonology. While the timecourse of how visual information activates phonological information is unclear based on behavioral research, the information flow in this architecture approximates what we believe to be taking place at least in short words, but is used during all learning in the reported experiments.
+
+Once the phonological network receives its initial state from orthography, if begins processing the corresponding phonological pattern to the orthographic input it has just taken in. The time-distributed way in which phonology is processed is very similar to that of orthography. In training trials that take in a phonological input along with the orthographic input (a teaching signal where the visual and auditory inputs are provided on the same learning trial), the phonological input is represented with one phoneme per timestep. Phonemes are used for convenience, and future extensions of the architecture proposed here should experiment with more sophisticated representations of spoken language. The sequence of phonemes builds up a representation and is mapped to the same phonological sequence at the output, having also integrated the orthographic representation passed as the initial cell state of the phonological LSTM layer. 
+
+However, a word's the phonological input and output patterns differ in an important way. The phonological input pattern contains a special representation at the beginning of the word (i.e., as the first timestep) and the corresponding output pattern contains an end of word representation as the final timestep (but not the beginning-of-word representation). For example, the word _breath_, would correspond to the sequence of phonemes `B - R - EH - TH` (using the ARPAbet corresponding the the CMU dictionary representations used). The input pattern for this spoken word would be `# - B - R - EH - TH`, with an output pattern of `B - R - EH - TH - %`. This allows the phonological part of the network to be trained with knowledge of when a word should be initiated during the production of the spoken wordform corresponding the orthographic input provided, and when the production of the phonological form should be terminated (i.e., the production should stop). Functionally, it causes phonological inputs and their corresponding to be offset by one timestep. 
+
+The phonological portion of the network, while being influenced by orthography, operates as a subnetwork that functions in a similar way to an autoencoder, e  part of the network takes in a phonological input and maps the phonological input to itself,  similar to an autoencoder architecture (ref.), but does so
 
 
-# Latency
+thus producing a phonological wordform from its corresponding printed version. The printed sequence is a (computer readable) series of letters and the spoken version is a (computer readable) series of speech sounds; that is, the architecture uses veridical representations of print and speech as the learning environment.
+
+
+
+
+
+
+
+
+## Phonology
+The primacy of phonology and phonological learning in reading is not controversial. There are debates about the processes at play in how spoken language units are assembled during reading as a function of visual processes (rastle2010)
+
+## Latency
 Given that computational processing times on a GPU haven't been validated as an analagous method for naming latency in humans, similar to Sibley et al. (2010) a measure of model confidence for processing an orthographic word was designed to measure the latency for reading that word. 
 
-# Learning versus reading
+## Learning versus reading
 Similar to the CPD++ model in Perry et al. (2010) the network reported on here uses different processes for learning versus reading ("training" and "running" in their language). However, the difference between these routines in the case of our learner is subtle and doesn't represent a substantially different model of cognition across the two activities. 
+
+## Representational virtues
+Readers can process, correctly or not, letter strings of any length. Any model architecture of producing phonology from orthography should, in principle, be able to account for this fact. Past computational architectures have always had to work around this issue one way or another.
+
+Positional information in other proposed models deviates from this assumption.
+
+
+

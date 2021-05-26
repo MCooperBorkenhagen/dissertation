@@ -1,5 +1,5 @@
 ---
-title: "It is time for time in models of word reading: A recurrent model of word naming using explicit temporal processing of orthographic and phonological codes"
+title: "Time for time: In search of a veridical model of time-varying processes in word reading"
 output: html_document
 ---
 

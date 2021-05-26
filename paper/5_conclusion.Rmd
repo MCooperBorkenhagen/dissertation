@@ -6,3 +6,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+
+
+## Future work
+This model architecture could be extended easily, in some cases trivially, to account for representational assumptions that would more realistically approximate 

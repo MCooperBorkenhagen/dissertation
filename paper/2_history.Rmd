@@ -24,6 +24,6 @@ The selection of representational units is a critical issue of theoretical inter
 # Survey of previous architectures
 
 ## Simple recurrent networks
-The most comprehensive application of an SRN to date is Sibley et al. (2010), which used a two-component architecture for orthography and phonology, each with an SRN 
+The most comprehensive application of an SRN to date is Sibley et al. (2010), which used a two-component architecture for orthography and phonology, each with an SRN operating under the hood. This 
 
 ## LSTMs
