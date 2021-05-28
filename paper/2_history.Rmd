@@ -27,3 +27,10 @@ The selection of representational units is a critical issue of theoretical inter
 The most comprehensive application of an SRN to date is Sibley et al. (2010), which used a two-component architecture for orthography and phonology, each with an SRN operating under the hood. This 
 
 ## LSTMs
+
+## "Serial" effects in naming
+The evidence most commonly taken to suggest that there is some type of serial processing operating during naming, particularly for words that contain "irregular" pronunciations, concerns the timecourse of naming processes for such words. 
+
+Such findings are typically identified as evidence for a dual-route process operating during reading. The dual-route theory predicts that 
+
+
