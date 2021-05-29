@@ -11,3 +11,38 @@ rastle2010
 
 lewis2021
 Children's books paper from psych science
+
+kello2003 kello_etal_2003_jml
+
+
+yap2009 yap_etal_2009_jml
+
+Luthra2020 luthra_etal_2020_cognitive-science
+
+@article{Plaut1996,
+abstract = {A connectionist approach to processing in quasi-regular domains, as exemplified by English word reading, is developed. Networks using appropriately structured orthographic and phonological representations were trained to read both regular and exception words, and yet were also able to read pronounceable nonwords as well as skilled readers. A mathematical analysis of a simplified system clarifies the close relationship of word frequency and spelling-sound consistency in influencing naming latencies. These insights were verified in subsequent simulations, including an attractor network that accounted for latency data directly in its time to settle on a response. Further analyses of the ability of networks to reproduce data on acquired surface dyslexia support a view of the reading system that incorporates a graded division of labor between semantic and phonological processes, and contrasts in important ways with the standard dual-route account.},
+author = {Plaut, David C. and McClelland, James L. and Seidenberg, Mark S. and Patterson, Karalyn},
+doi = {10.1037/0033-295X.103.1.56},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Plaut et al. - 1996 - Understanding Normal and Impaired Word Reading Computational Principles in Quasi-Regular Domains.pdf:pdf},
+journal = {Psychological Review},
+number = {1},
+pages = {56--115},
+pmid = {8650300},
+title = {{Understanding Normal and Impaired Word Reading: Computational Principles in Quasi-Regular Domains}},
+volume = {103},
+year = {1996}
+}
+
+
+@article{Rogers2004,
+abstract = {Wernieke (1900, as cited in G. H. Eggert, 1977) suggested that semantic knowledge arises from the interaction of perceptual representations of objects and words. The authors present a parallel distributed processing implementation of this theory, in which semantic representations emerge from mechanisms that acquire the mappings between visual representations of objects and their verbal descriptions. To test the theory, they trained the model to associate names, verbal descriptions, and visual representations of objects. When its inputs and outputs are constructed to capture aspects of structure apparent in attribute-norming experiments, the model provides an intuitive account of semantic task performance. The authors then used the model to understand the structure of impaired performance in patients with selective and progressive impairments of conceptual knowledge. Data from 4 well-known semantic tasks revealed consistent patterns that find a ready explanation in the model. The relationship between the model and related theories of semantic representation is discussed.},
+author = {Rogers, Timothy T. and {Lambon Ralph}, Matthew A. and Garrard, Peter and Bozeat, Sasha and McClelland, James L. and Hodges, John R. and Patterson, Karalyn},
+doi = {10.1037/0033-295X.111.1.205},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Rogers et al. - 2004 - Structure and Deterioration of Semantic Memory A Neuropsychological and Computational Investigation.pdf:pdf},
+journal = {Psychological Review},
+number = {1},
+pages = {205--235},
+title = {{Structure and Deterioration of Semantic Memory: A Neuropsychological and Computational Investigation}},
+volume = {111},
+year = {2004}
+}

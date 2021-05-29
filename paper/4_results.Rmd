@@ -1,0 +1,17 @@
+---
+title: "4. Behavioral experiments"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Benchmarks
+*jared1990: latencies increase with number of syllables, but is moderated by frequency (Experiment)
+*jared1990: exceptional and regular inconsistent words exhibit longer latencies as compared to regular words, but only for low frequency words (see yap2009, top right of p. 503 for discussion of the effect)
+*position of irregularity effects
+
+
+kawamoto1998 showed that words with less predictable pronunciations of the vowel exhibit longer latencies for the consonant in the onset, rather than simply longer overall naming latency of the entire word. This is due to the fact that the vowel pronunciations that are less predictable require more processing time, and this processing manifests in the system dwelling on pre-vocalic consonants, rather than being distributed throughout the naming process for the entire word. Their studies were performed using monosyllabic stimuli that were quite simple, though well established in the word reading literature related to naming and related phenomena.
