@@ -19,6 +19,38 @@ yap2009 yap_etal_2009_jml
 
 Luthra2020 luthra_etal_2020_cognitive-science
 
+@article{Perry2010,
+abstract = {Most words in English have more than one syllable, yet the most influential computational models of reading aloud are restricted to processing monosyllabic words. Here, we present CDP++, a new version of the Connectionist Dual Process model (Perry, Ziegler, & Zorzi, 2007). CDP++ is able to simulate the reading aloud of mono- and disyllabic words and nonwords, and learns to assign stress in exactly the same way as it learns to associate graphemes with phonemes. CDP++ is able to simulate the monosyllabic benchmark effects its predecessor could, and therefore shows full backwards compatibility. CDP++ also accounts for a number of novel effects specific to disyllabic words, including the effects of stress regularity and syllable number. In terms of database performance, CDP++ accounts for over 49% of the reaction time variance on items selected from the English Lexicon Project, a very large database of several thousand of words. With its lexicon of over 32,000 words, CDP++ is therefore a notable example of the successful scaling-up of a connectionist model to a size that more realistically approximates the human lexical system. {\textcopyright} 2010 Elsevier Inc.},
+author = {Perry, Conrad and Ziegler, Johannes C. and Zorzi, Marco},
+doi = {10.1016/j.cogpsych.2010.04.001},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Perry, Ziegler, Zorzi - 2010 - Beyond single syllables Large-scale modeling of reading aloud with the Connectionist Dual Process (CDP) m.pdf:pdf},
+journal = {Cognitive Psychology},
+keywords = {Computational modeling,Disyllables,Reading aloud,Word stress},
+number = {2},
+pages = {106--151},
+publisher = {Elsevier Inc.},
+title = {{Beyond single syllables: Large-scale modeling of reading aloud with the Connectionist Dual Process (CDP++) model}},
+url = {http://dx.doi.org/10.1016/j.cogpsych.2010.04.001},
+volume = {61},
+year = {2010}
+}
+
+
+@article{Perry2019,
+abstract = {Learning to read is foundational for literacy development, yet many children in primary school fail to become efficient readers despite normal intelligence and schooling. This condition, referred to as developmental dyslexia, has been hypothesized to occur because of deficits in vision, attention, auditory and temporal processes, and phonology and language. Here, we used a developmentally plausible computational model of reading acquisition to investigate how the core deficits of dyslexia determined individual learning outcomes for 622 children (388 with dyslexia). We found that individual learning trajectories could be simulated on the basis of three component skills related to orthography, phonology, and vocabulary. In contrast, single-deficit models captured the means but not the distribution of reading scores, and a model with noise added to all representations could not even capture the means. These results show that heterogeneity and individual differences in dyslexia profiles can be simulated only ...},
+author = {Perry, Conrad and Zorzi, Marco and Ziegler, Johannes C.},
+doi = {10.1177/0956797618823540},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Perry, Zorzi, Ziegler - 2019 - Understanding Dyslexia Through Personalized Large-Scale Computational Models.pdf:pdf},
+journal = {Psychological Science},
+keywords = {computer simulation,dyslexia,reading},
+number = {3},
+pages = {386--395},
+title = {{Understanding Dyslexia Through Personalized Large-Scale Computational Models}},
+volume = {30},
+year = {2019}
+}
+
+
 @article{Plaut1996,
 abstract = {A connectionist approach to processing in quasi-regular domains, as exemplified by English word reading, is developed. Networks using appropriately structured orthographic and phonological representations were trained to read both regular and exception words, and yet were also able to read pronounceable nonwords as well as skilled readers. A mathematical analysis of a simplified system clarifies the close relationship of word frequency and spelling-sound consistency in influencing naming latencies. These insights were verified in subsequent simulations, including an attractor network that accounted for latency data directly in its time to settle on a response. Further analyses of the ability of networks to reproduce data on acquired surface dyslexia support a view of the reading system that incorporates a graded division of labor between semantic and phonological processes, and contrasts in important ways with the standard dual-route account.},
 author = {Plaut, David C. and McClelland, James L. and Seidenberg, Mark S. and Patterson, Karalyn},
@@ -46,3 +78,5 @@ title = {{Structure and Deterioration of Semantic Memory: A Neuropsychological a
 volume = {111},
 year = {2004}
 }
+
+
