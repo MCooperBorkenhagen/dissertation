@@ -10,4 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Future work
-This model architecture could be extended easily, in some cases trivially, to account for representational assumptions that would more realistically approximate 
+This model architecture could be extended easily, in some cases trivially, to account for representational assumptions that would more realistically approximate spoken language.
+
+Note that an architecture of this kind can be easily extended to include both a phonological and orthographic output layer despite the more simple version of the architecture adopted for this work. Such an extension would be important to pursue given the role of writing (action) in reading development; the two activities are almost always unavoidably linked in development.
