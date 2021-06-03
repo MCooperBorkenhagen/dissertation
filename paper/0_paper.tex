@@ -1,0 +1,305 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  american,
+  ,man,floatsintext]{apa6}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Time for time: In search of a veridical model of time-varying processes in word reading},
+  pdfauthor={Matt Cooper Borkenhagen1},
+  pdflang={en-US},
+  pdfkeywords={reading, language development},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+% Manuscript styling
+\usepackage{upgreek}
+\captionsetup{font=singlespacing,justification=justified}
+
+% Table formatting
+\usepackage{longtable}
+\usepackage{lscape}
+% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
+
+% Create new environments so endfloat can handle them
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
+\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+
+% Enables adjusting longtable caption width to table width
+% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
+\makeatletter
+\newcommand\LastLTentrywidth{1em}
+\newlength\longtablewidth
+\setlength{\longtablewidth}{1in}
+\newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
+
+% \setlength{\parindent}{0.5in}
+% \setlength{\parskip}{0pt plus 0pt minus 0pt}
+
+% Overwrite redefinition of paragraph and subparagraph by the default LaTeX template
+% See https://github.com/crsh/papaja/issues/292
+\makeatletter
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{\parindent}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries\itshape\typesectitle}}
+
+\renewcommand{\subparagraph}[1]{\@startsection{subparagraph}{5}{1em}%
+  {0\baselineskip \@plus 0.2ex \@minus 0.2ex}%
+  {-\z@\relax}%
+  {\normalfont\normalsize\itshape\hspace{\parindent}{#1}\textit{\addperi}}{\relax}}
+\makeatother
+
+% \usepackage{etoolbox}
+\makeatletter
+\patchcmd{\HyOrg@maketitle}
+  {\section{\normalfont\normalsize\abstractname}}
+  {\section*{\normalfont\normalsize\abstractname}}
+  {}{\typeout{Failed to patch abstract.}}
+\patchcmd{\HyOrg@maketitle}
+  {\section{\protect\normalfont{\@title}}}
+  {\section*{\protect\normalfont{\@title}}}
+  {}{\typeout{Failed to patch title.}}
+\makeatother
+\shorttitle{SHORTTITLE}
+\keywords{reading, language development\newline\indent Word count: XXX}
+\usepackage{lineno}
+
+\linenumbers
+\usepackage{csquotes}
+\usepackage[titles]{tocloft}
+\cftpagenumbersoff{table}
+\renewcommand{\cfttabpresnum}{\itshape\tablename\enspace}
+\renewcommand{\cfttabaftersnum}{.\space}
+\setlength{\cfttabindent}{0pt}
+\setlength{\cftafterloftitleskip}{0pt}
+\settowidth{\cfttabnumwidth}{Table 10.\qquad}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\PassOptionsToPackage{x11names}{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage[normalem]{ulem}
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[variant=american]{english}
+\else
+  \usepackage[shorthands=off,main=american]{babel}
+\fi
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Time for time: In search of a veridical model of time-varying processes in word reading}
+\author{Matt Cooper Borkenhagen\textsuperscript{1}}
+\date{}
+
+
+\authornote{
+
+Correspondence concerning this article should be addressed to Matt Cooper Borkenhagen, 1202 West Johnson Street, Madison, WI 53705. E-mail: \href{mailto:cooperborken@wisc.edu}{\nolinkurl{cooperborken@wisc.edu}}
+
+}
+
+\affiliation{\vspace{0.5cm}\textsuperscript{1} Department of Psychology, University of Wisconsin, Madison}
+
+\abstract{
+Dissertation
+}
+
+
+
+\begin{document}
+\maketitle
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'tidytext'
+\end{verbatim}
+
+\begin{verbatim}
+## [[1]]
+## [1] TRUE
+## 
+## [[2]]
+## [1] FALSE
+## 
+## [[3]]
+## [1] TRUE
+## 
+## [[4]]
+## [1] TRUE
+## 
+## [[5]]
+## [1] TRUE
+## 
+## [[6]]
+## [1] TRUE
+\end{verbatim}
+
+\hypertarget{words-used-for-training-and-testing}{%
+\section{Words used for training and testing}\label{words-used-for-training-and-testing}}
+
+The perceptual span within which letters can be clearly identified on a single fixation is approximately eight letters (ref.). For this reason, words of eight letters or less were compiled from the previously discussed sources for the purposes of training and testing the models developed here.
+
+The timecourse of phonological activation of orthographic input is a debated topic, but little is known about how such processes operate for long words. This issue has primarily been dealt with in the literature using hybrid computational architectures, containing both connectionist and structured, symbolic components of the computational system (\textbf{Perry2019?}). Though some purely connectionist architetures have been proposed (\textbf{Sibley2010?}). While ourside the scope of previous modeling and theorizing, it is likely that a dynamic process where orthographic inputs propagate information to activate phonology, initiating a response, which is modulated by subsequent visual input. Consider, for example, reading the word \emph{architecture}. Phonological activation could well be taking place over the initial visual portion of the word, such that the \emph{\ldots ture} portion isn't processed until after the phonology of the root (\texttt{AA\ -\ R\ -\ K\ -\ AH\ -\ T\ -\ EH\ -\ K\ -\ T}) is initiated. While the dynamics of such processes are interesting and important for developing a model of word reading that accounts for how long words are read, such cases are outside of what is dealt with here. A simpler corpus has been developed for the purposes of this work, built on with assumptions based on perceptual span (some results are provided that demonstrate the ability of the model to produce output for words longer than this span, demonstrating the broader capacity of the model and architecture). A virtue of the architecture developed in this dissertation is that such dynamics are possible given the nature of the computational learner developed, though these dynamics are not accounted for in service of accounting for simpler and more fundamental processes in word reading.
+
+Words were aggregated from a corpus of 250 commonly read children's books for children five years-old and younger in the United States (\textbf{lewis2021?}). This corpus was used given that a word's presence in such a database indicates that a child is likely to be exposed to it early in literacy development, at least in the US. A word was included for training if it was XX letters or less, XX phonemes or less, and XX syllables or less. These constraints were included for the training set in order to avoid length effects that were outside the focus of the analyses presented here. However, the capacity of the model to accommodate longer words than those included for training is demonstrated. Also, training can happen over words (or orthographic/ phonological sequences) of unlimited length, this length was just limited in order to focus the learning process on reasonably lengthed words from this realistic database of child-oriented language.
+
+Practically speaking, this has the effect of including XX\% of the total words from the database, or XX of XX total words from the children's corpus from (\textbf{lewis2021?}). Figure XX depicts this inclusion criteria visually.
+
+A number of outlier words were removed from the set due to their idiosyncratic characteristics. Words removed if they were abbreviations (``Nov'') or initialisms (``bbq''), which constituted XX\% (XX total words) from the child language source data. Additionally, children's books contain language that is quite different from words commonly read in other genres. These words include printed expressions of motherese (``aaaaa''), sing-song (``yipiyuk''), or forms of onomatopoeia (``zoooooom,'' ``wooshee'') that aren't well-suited for modeling the type of word reading attempted here. Single-letter words were removed as well, given that there are relatively few of these words (even though the architecture is equipped to handle such words).
+
+Once collected, all words were transcribed using the CMU pronunciation dictionary implemented in Python with the Natural Language Toolkit (nltk) library (ref.). In order to increase the training set size, an in an effort to do so in a realistic manner, morphological variants were added to the corpus for words that possessed common variants. Sometimes, this applied to words that only appeared in their morphologically complex form in the children's book corpus, like ``adults'' (where the bare form ``adult'' was added), on other times this involved adding a morphologically complex form to the set where the simplex form was present in the children's book corpus (e.g., ``buyers'' for the word ``buyer'').
+
+\hypertarget{architecture}{%
+\section{Architecture}\label{architecture}}
+
+In this section, an initial high-level description of the computational learner is provided, and is followed by a more technical description of how the architecture operates functionally and mathematically.
+
+The architecture takes in a time distributed sequence of letters (one timestep per letter) and passes the representation of that sequence to the phonological portion of the network. This orthographic representation is composed of two separate vectors (the last hidden state of the orthographic pattern learned along with the \emph{cell state}, described in greater detail later), and serves as the initial memory state for learning about the time-distributed phonological sequence corresponding to the visual pattern learned. This should be thought of as the orthographic \emph{context} within which a phonological word is learned. Importantly, while the nature of the temporal dynamics around how this representation is passed has the potential to be manipulated, in the experiments reported here the representation is built up over an entire orthographic input pattern before being passed to phonology. While the timecourse of how visual information activates phonological information is unclear based on behavioral research, the information flow in this architecture approximates what we believe to be taking place at least in shorter words, but is used during all learning in the reported experiments.
+
+Once the phonological network receives its initial state from orthography, it begins processing the corresponding phonological pattern to the orthographic input it has just taken in (i.e., a sequence of phonemes representing the spoken form of a word). The time-varying way in which phonology is processed is very similar to that of orthography. In training trials that take in a phonological input along with the orthographic input (a teaching signal where the visual and auditory inputs are provided on the same learning trial), the phonological input is represented with one phoneme per timestep. The sequence of phonemes builds up a representation and is mapped to the same phonological sequence at the output, having also integrated the orthographic representation passed as the initial cell state of the phonological LSTM layer.
+
+Note that phonemes are used for convenience; future extensions of the architecture proposed here should experiment with more sophisticated representations of spoken language. This could include, for example, higher-definition raw digitized representations of spoken language. This architecture would allow for such representations of speech despite phonemes being used for simplicity here, and such an extension would be vaulable given the known role that learning about print has on spoken language knowledge {[}ref.{]}.
+
+A word's the phonological input and output patterns differ in one important way. The phonological input pattern contains a special representation at the beginning of the word (i.e., as the first timestep) and the corresponding output pattern contains an end of word representation as the final timestep (but not the beginning-of-word representation). For example, the word \emph{breath}, would correspond to the sequence of phonemes \texttt{B\ -\ R\ -\ EH\ -\ TH} (see Appendix XX for the CMU pronunciation dictionary representations used). Though, the input pattern for this spoken word would be \texttt{\#\ -\ B\ -\ R\ -\ EH\ -\ TH}, with an output pattern of \texttt{B\ -\ R\ -\ EH\ -\ TH\ -\ \%}. The word initial representation (\texttt{\#} in the example) allows the phonological portion of the network to be trained with knowledge of when a word should be initiated during the production of the spoken wordform corresponding the orthographic input provided, and when the production of the phonological form should be terminated (i.e., \texttt{\%}, when the production should stop). It also causes the time-varying phonological input pattern and and its corresponding output pattern to be offset by one segment.
+
+\hypertarget{orthographic-representations}{%
+\subsection{Orthographic representations}\label{orthographic-representations}}
+
+A training trial's orthographic input is always straightforward. The input pattern contains a representation for each letter of the word, with the representation for that letter being one timestep. As a result the orthographic LSTM operates over some number of timesteps, defined by the number of letters in the word. Each letter is defined as a binary vector with the ``hot node'' corresponding to the sequential index of that letter in the alphabet, where the vector is 26 units long. So, the vector for the letter \texttt{a} is 26 units long, with the first unit set to \texttt{1} and the 25 units after it set to \texttt{0}. No centering or justification is used because the LSTM functions as a loop, with the loop running over \emph{n} iterations, where \emph{n} is defined by the number of letters in the word\footnote{Another relevant detail here concerns the batched nature of training, which is discussed in the section on batch learning}.
+
+\hypertarget{phonological-representations}{%
+\subsection{Phonological representations}\label{phonological-representations}}
+
+The phonological patterns are distributed representations over articulatory features common to phonetic descriptions found in the linguistic literature on the topic and similar to those used in previous connectionist models of word recognition (e.g., \textbf{Harm2004?}; \textbf{Sibley2010?}). The features and their corresponding phonemes are shown in Appendix XX. In order to account for phonological information relevant to words with more than one syllable, features for primary stress and for secondary stress were included in the the set of representations. Only vowels were eligible for a stress marking, where a given vowel could be designated as primary stress (with the primary stress unit set to \texttt{1}), secondary stress (with the secondary stress unit set to \texttt{1}), or no stress (with both stress units set to \texttt{0}). The distinction only applies in situations where primary and secondary stress are both present in the word, where in most cases where stress is present the distinction between primary stress and no stress is enough to mark the prosodic contour of the word (as in most 2-syllable words). Stress encodings were adopted from the CMU pronouncing dictionary. To illustrate, take the word \emph{squirmy}. The phonological wordform is defined as \texttt{S\ -\ K\ -\ W\ -\ ER1\ -\ M\ -\ IY0}, with the vowel marked with \texttt{1} receiving primary stress, and the vowel marked with \texttt{0} recieving no stress. For comparison, take the 3-syllable word \emph{understand}. The phonological word in this case was defined as \texttt{AH2\ -\ N\ -\ D\ -\ ER0\ -\ S\ -\ T\ -\ AE1\ -\ N\ -\ D}, with a distinction between primary stress (\texttt{AH2}), secondary stress (\texttt{AE1}), and no stress (\texttt{ER0}).
+
+Two additional units were present on each phonological representation in order to represent the start-of-word (i.e., the ``start producing'') and end-of-word (i.e., the ``stop producing'') segments. In each case, when that segment was used, the representation consisted of a vector in which every unit was off except for that critical unit (i.e., the one representing the ``start producing'' or ``stop producing'' feature), which was on (set to \texttt{1}). Training phonological sequences with the start-of-word segment allows for an offline production process, separate from training, where the phonological portion of the network can freely unroll a phonological sequence until it reaches the end of the word, which is marked by the corresponding end-of-word representation. Learning about these terminal points accumulates through training, with the segment occupying a timestep (either the first or last in the phonological wordform) just like any other phoneme. These elements of the training patterns are necessary given that the time-varying type of learning being modeled here benefits from explicit training on the boundaries of the phonological wordform, and is essential for being able to produce a spoken form of the printed word in ``production'' mode, where a spoken form unfolds over timesteps when provided only an orthographic pattern (the ``context'' represented by the cell state and hidden state generated by the orthographic LSTM which is passed to phonology). The production mode of the process is describe more fully belowXX.
+
+\hypertarget{possibilities-of-different-inputs-to-be-present-during-training}{%
+\subsection{Possibilities of different inputs to be present during training}\label{possibilities-of-different-inputs-to-be-present-during-training}}
+
+The training trial process described above corresponds to a teaching signal where the learner is both hearing and and seeing the visual word while receiving feedback about the word that should be produced given the input. This is an important part of any cross modal form of learning; learning is enhanced by experiences in which the information signal for both modalities are present (ref.). However, learning to read (as in other forms of learning) also (in fact, most often) involves the production of spoken language from the visual signal alone.\footnote{Note that the term ``production'' is used throughout this work to mean the generation of a spoken form from some input}
+
+Not surprisingly, a learner trained on simultaneously provided orthographic and phonological input (with an error signal back propagated to orthographic and phonological layers from a phonological output layer) will not become independent in its ability to produce phonology from orthography alone. In such a case, the network comes to rely to heavily on the phonological input given its identity with the word's phonological output (i.e., these mappings are much easier and reliable than those between print and speech). This is what we would expect also for children learning to read. If, during learning, the child isn't required to produce speech from print alone, and if she or he can rely on the paired spoken language input, the task becomes one of repetition rather than the production of speech from print (alone). As a result, an alternative training process is required in a time-varying system like the one proposed here in order to avoid this problem.
+
+Given the dual nature of the input system in the architecture, learning can take place by providing inputs on either input layer, or both. The orthographic part of the network is connected to phonology through the passing of state vectors rather than the traditional information flow associated with feedforward and other canonical model architectures. Feedforward networks implement spatially defined inputs and outputs, and when an architecture implements temporal dynamics, it is typically with respect to these spatially defined inputs and outputs. In an LSTM, other network time-varying input and output sequences, training that involves mapping an orthographic input directly to a phonological output (without an explicit phonological input) requires an alternative specification of the inputs on phonology in order to initiate production of a spoken word from a print input.
+
+When learning to produce phonological output from orthography without phonological input present, the phonological input layer receives an empty sequence, but with the start segment (\texttt{\#}) provided as the first timestep (for notation purposes, the symbol \texttt{\#} is used to denote this segment even though the representation itself is a binary vector, as described previously). The timesteps following the start segment are then empty phonological representations where all units are off (\texttt{0}), where the input proceeds through as many phonemes (timesteps) as there are present on the target output pattern. The result is that the empty input and the target output pattern have the same dimensions, which is always the number of phonemes plus one (to accommodate the terminal segments, either the start segment on input or the end input on output).
+
+The timespan of the phonological input sequence when training in this way is determined by setting some set number of empty timesteps as the null phonological input. This serves as the temporal signal that allows the phonological LSTM to function given its temporal nature. In the architecture used here, the number of empty timesteps is defined as the number of phonemes in the word. For example, in such a training trial using the word \emph{breath}, the phonological input pattern would be \texttt{\#\ -\ \_\ -\ \_\ -\ \_\ -\ \_}, with the same output pattern as before, \texttt{B\ -\ R\ -\ EH\ -\ TH\ -\ \%}. As in other training trials, even when provided with an empty phonological input, the produced phonological output is compared to the target phonological pattern, with error backpropagated to weights within the phonological and orthographic portions of the network. The output pattern is generated by virtue of combining the learned weights in the phonological LSTM, the state vectors (context) passed from the orthographic LSTM, and the temporal dynamics afforded by the null phonological input.
+
+This specification relates to the fact that the network uses no justification (i.e., ``padding''), and that a temporal signal is required to drive the dynamics of the time-varying learning over parameters of the LSTM layer. An alternative method could be used that provided more timesteps than those provided strictly by the length of the phonological form itself (e.g., defined by the longest phonological form in the entire training corpus), but such a process requires padding on the output layer given that the time distribution of the input would then be greater than the number of phonemes in the word (plus the word-edge representation). In fact, a training process like this is adopted in most other machine translation endeavors taken up in the engineering and NLP literatures (see ref. and ref. for examples), but is avoided here due to the fact that ``justification'' of inputs and outputs deviates from the sort of veridical representations this work takes as fundamental to developing a more psychologically plausible architecture of time-distributed word recognition processes. An alternative training method is possible, where null segments (after the start of word segment) are passed to the phonological input one at a time, with a corresponding phonological being generated one segment at a time (rather than the gradual build up of input signal over an entire null input). In such a case the spoken form would need to be terminated somehow, presumably initiated once the end of the phonological sequence is reached as indicated by the computation of error with respect to the target pattern. The implementation here avoids this by
+
+Alternatively, the phonological portion of the network can be trained independent of orthography. This can happen in an analogous way to the method described previously, but with empty orthographic inputs. It can also happen by training the phonological LSTM completely independently from the orthographic LSTM, as in during pre-training when weights are developed to approximate the type of early phonological learning that occurs in children prior to the onset of learning about print. In this case the orthographic portion of the network is simply removed from training alltogether. For our purposes here, the latter is always used, as in pre-training. When this occurs, the phonological network is used, essentially, as an autoencoder that maps speech to speech (except that the terminal segments are used). This process is described more fully in the section on pre-trainingXX. Nonetheless, the technical difference between these two implementations isn't important or psychologically interesting. The method adopted here is computationally straightforward and fits the cognitive model of learning espooused in this work.
+
+\hypertarget{phonological-network}{%
+\subsection{Phonological network}\label{phonological-network}}
+
+The phonological portion of the network, while being influenced by orthography, operates as a subnetwork that functions in a similar way to an autoencoder, mapping phonological inputs to phonological outputs in the process of developing deep knowledge about spoken language. The primacy of phonology and phonological learning in reading is not controversial. There are debates about the processes at play in how spoken language units are assembled during reading as a function of visual processes (rastle2010).
+
+\hypertarget{production-testing-process}{%
+\subsection{Production (testing) process}\label{production-testing-process}}
+
+A different method of production is used for the purposes of testing the network's ability to ``name'' when provided an orthographic input pattern, though the different processes aren't fundamentally different in terms of the information processing that takes place. They only differ procedurally. On production (what we could also think of as ``testing'') trials, an orthographic input pattern is provided, and its activation state builds up over the entire time-varying pattern (for our purposes here this is an entire word). This input process is identical to the one that occurs during training, where each letter is provided as a timestep, and the activation state of the layer is provided as a cell state and hidden state (of the final timestep).
+
+Here, the different training and testing processes are used for two reasons
+
+Other computational models of reading have also used different training and testing processes. For example, the CPD++ model in (\textbf{Perry2010?}) used different procedures, which they termed ``training'' and ``running.'' In their case, the distinction was quite dramatic, involving rather different mechanisms for learning. For example, training involved learning over pre-specified, structured grapheme-phoneme pairs, among other structured experience to support the development of knowledge in the system. The authors hypothesized that the learning mechanism worked in this way by generalizing from well-establish phonics instructional methods in education, rather than by some more fundamental learning mechanism. By contrast, testing involved a separate process of aligning an orthographic input to build a hypothetical phoneme string based on the learned grapheme-phoneme associations. In some cases, entirely different learning mechanisms were introduced in order to learn common tricky orthographic wordforms, like those that show a vowel-consonant-e pattern (e.g., \emph{bite}). In other cases, additional ``backup'' strategies were developed in order to assign letters in the orthographic pattern to slots in the syllabic template operating in the system (see p.~122 for discussion of the nonword example \emph{fanj}). Alternatively, in the proposed architecture here, the difference between training and testing process isn't a mechanistic one, rather simply implements a different (but highly related) temporal process for the purposes of generating a response.
+
+\hypertarget{latency}{%
+\subsection{Latency}\label{latency}}
+
+Given that computational processing times on a GPU haven't been validated as an analagous method for naming latency in humans, similar to Sibley et al.~(2010) a measure of model confidence for processing an orthographic word was designed to measure the latency for reading that word.
+
+\hypertarget{representational-virtues}{%
+\subsection{Representational virtues}\label{representational-virtues}}
+
+Readers can process, correctly or not, letter strings of any length. Any model architecture of producing phonology from orthography should, in principle, be able to account for this fact. Past computational architectures have always had to work around this issue one way or another.
+
+Positional information in other proposed models deviates from this assumption.
+
+\hypertarget{no-justification-for-justification}{%
+\subsection{No justification for justification}\label{no-justification-for-justification}}
+
+All previous connectionist models of word recognition have involved spatial (and in some cases over temporally varying segments) justification of one kind or another, usually implemented as empty slots to the right of an orthographic or phonological pattern (e.g., "breath\_\_\_\_"). When present, this feature of an architecture (and the patterns that are used to train it) represents a deep limitation in its psychological plausibility. While including justification in some form is understandable as an aspect of the engineering problem that computational modelers face in modeling visual (or other) word recognition processes, they assume that the patterns that are used in orienting words, left or right, on their input and/ or output layers (however the justification might be implemented) are an aspect of the learning process, though
+
+
+\clearpage
+\renewcommand{\listtablename}{Table captions}
+
+
+\end{document}

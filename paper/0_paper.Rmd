@@ -1,10 +1,57 @@
 ---
-title: "Time for time: In search of a veridical model of time-varying processes in word reading"
-output: html_document
+title             : "Time for time: In search of a veridical model of time-varying processes in word reading"
+
+author:  
+  - name          : "Matt Cooper Borkenhagen"
+    affiliation   : "1"
+    corresponding : yes
+    email         : "cooperborken@wisc.edu"
+    address       : "1202 West Johnson Street, Madison, WI 53705"
+
+affiliation:
+  - id            : "1"
+    institution   : "Department of Psychology, University of Wisconsin, Madison"
+
+abstract: |
+  Dissertation
+  
+keywords          : "reading, language development"
+wordcount         : "XXX"
+bibliography      : ["references.bib"]
+documentclass     : "apa6"
+class             : "man"
+figsintext        : yes
+figurelist        : no
+tablelist         : yes
+footnotelist      : no
+lineno            : yes
+lang              : "en-US"
+output            : papaja::apa6_pdf
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \PassOptionsToPackage{x11names}{xcolor}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+  - \usepackage[normalem]{ulem}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r global_options, include = FALSE, eval = F}
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE, 
+                      cache = FALSE,
+                      echo = FALSE,
+                      out.extra = "",
+                      fig.pos = "t!",  sanitize = TRUE)
+options(knitr.table.format = "latex")
+options(knitr.kable.NA = '')
+options(scipen = 1000)
 ```
 
 
@@ -13,3 +60,8 @@ knitr::opts_chunk$set(echo = TRUE)
 packages = read.csv('requirements.txt', stringsAsFactors = F)[[1]]
 lapply(packages, require, ch = T)
 ```
+
+```{r child='3_architecture.Rmd'}
+
+```
+
