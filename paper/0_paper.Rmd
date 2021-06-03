@@ -19,12 +19,12 @@ keywords          : "reading, language development"
 wordcount         : "XXX"
 bibliography      : ["references.bib"]
 documentclass     : "apa6"
-class             : "man"
+#class             : "man"
 figsintext        : yes
 figurelist        : no
 tablelist         : yes
 footnotelist      : no
-lineno            : yes
+lineno            : no
 lang              : "en-US"
 output            : papaja::apa6_pdf
 header-includes:
