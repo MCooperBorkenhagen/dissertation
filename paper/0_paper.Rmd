@@ -1,5 +1,6 @@
 ---
 title             : "Time for time: In search of a veridical model of time-varying processes in word reading"
+shorttitle        : no
 
 author:  
   - name          : "Matt Cooper Borkenhagen"
@@ -40,6 +41,7 @@ header-includes:
   - \usepackage{tabu}
   - \usepackage{threeparttable}
   - \usepackage[normalem]{ulem}
+  #- \usepackage{tikz}
 ---
 
 ```{r global_options, include = FALSE, eval = F}
