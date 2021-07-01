@@ -9,6 +9,10 @@ from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
 from utilities import printspace, reshape
 
 
+log_dir = "logs/fit/"
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+
+
 def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
     """This is the updated version of dists() and is slightly faster than
     the previous method.
@@ -199,7 +203,7 @@ class Learner():
                 Xp = traindata[length]['phonSOS']
                 Y = traindata[length]['phonEOS']
                 t1 = time.time()
-                cb = self.model.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, validation_split=1-train_proportion, verbose=verbose)
+                cb = self.model.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, validation_split=1-train_proportion, verbose=verbose, callbacks=[tensorboard_callback])
                 cb.history['learntime'] = round((time.time()-t1)/60, 2)
                 cycletime += cb.history['learntime']
                 history_[length] = cb.history

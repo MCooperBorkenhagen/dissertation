@@ -3,8 +3,9 @@
 #%%
 from Learner import Learner
 import numpy as np
+import tensorboard
 
-
+%load_ext tensorboard
 
 #%%
 from utilities import load, loadreps
@@ -38,6 +39,11 @@ learner.fitcycle(batch_size=50, epochs=2, cycles=10)
 # %%
 #cb = learner.fitcycle(batch_size=50, epochs=1, cycles=30)
 #learner.fitcycle(batch_size=5, epochs=1, cycles=20)
+#%% tensorboard
+import tensorflow as tf
+log_dir = "logs/fit/"
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+#%%
 
 #%%
 out = []
