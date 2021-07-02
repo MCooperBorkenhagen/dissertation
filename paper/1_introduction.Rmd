@@ -3,7 +3,9 @@ title: "introduction"
 output: html_document
 ---
 
-# Overview
+# Chapter 1: Introduction
+
+## Overview
 Words are read by virtue of perceptual and cognitive processes that are distributed across space and time. As a reader engages visually with a word printed on the page, the reader's eyes move by fixation in semi-systematic ways across portions of printed word, tapping her or his knowledge of speech, print, and meaning. Historically, cognitive accounts of word reading have been focused on the simplest of words of English - those with one syllable (perry2010, rastle2000jml, sibley2010, yap2009), especially in the connectionist learning literature (plaut1996, seidenberg1989, sibley2010). This focus results from two primary factors. First, any model of word reading must at the very least account for the development of knowledge of the simplest words in the language given the child develops the ability to read these words first (ref.). Second, accounting for words that are longer than one syllable requires the specification of a learning architecture that accounts for time-varying aspects of learning that must be happening over longer words. This includes but is not limited to variability in prosodic information involved in pronunciation over different syllables (especially of vowels and their associated patterns of stress).
 
 This dissertation reports on a model of word reading (that associates print to speech) that can accommodate words that are not bounded by orthographic or phonological length - that is, of words that are not limited to a single syllable. This is a significant advance from previous models in that the types of words it can recognize (printed and spoken) resemble those that are naturalistic in terms of the word environments that children (and adults) learn within.

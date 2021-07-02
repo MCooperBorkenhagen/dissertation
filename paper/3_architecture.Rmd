@@ -3,6 +3,8 @@ title: "3. Architecture"
 output: html_document
 ---
 
+# Chapter 3: Architecture of a computational learner
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -134,7 +136,7 @@ However, procedures like that require justification of some kind, typically in t
 Positional information in other proposed models deviates from this assumption.
 
 
-Issues around positional representations and dispersionAll previous connectionist models of word recognition have involved spatial (and in some cases over temporally varying segments) justification of one kind or another, usually implemented as empty slots to the right of an orthographic or phonological pattern (e.g., "breath____"). When present, this feature of an architecture (and the patterns that are used to train it) represents a deep limitation in its psychological plausibility. While including justification in some form is understandable as an aspect of the engineering problem that computational modelers face in modeling visual (or other) word recognition processes, they assume that the patterns that are used in orienting words, left or right, on their input and/ or output layers (however the justification might be implemented) are an aspect of the learning process, though
+Issues around positional representations and dispersion All previous connectionist models of word recognition have involved spatial (and in some cases over temporally varying segments) justification of one kind or another, usually implemented as empty slots to the right of an orthographic or phonological pattern (e.g., "breath____"). When present, this feature of an architecture (and the patterns that are used to train it) represents a deep limitation in its psychological plausibility. While including justification in some form is understandable as an aspect of the engineering problem that computational modelers face in modeling visual (or other) word recognition processes, they assume that the patterns that are used in orienting words, left or right, on their input and/ or output layers (however the justification might be implemented) are an aspect of the learning process, though
 
 
 

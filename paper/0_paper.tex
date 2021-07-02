@@ -226,12 +226,83 @@ Dissertation
 ## [1] TRUE
 \end{verbatim}
 
+\hypertarget{chapter-1-introduction}{%
+\section{Chapter 1: Introduction}\label{chapter-1-introduction}}
+
+\hypertarget{overview}{%
+\subsection{Overview}\label{overview}}
+
+Words are read by virtue of perceptual and cognitive processes that are distributed across space and time. As a reader engages visually with a word printed on the page, the reader's eyes move by fixation in semi-systematic ways across portions of printed word, tapping her or his knowledge of speech, print, and meaning. Historically, cognitive accounts of word reading have been focused on the simplest of words of English - those with one syllable (perry2010, rastle2000jml, sibley2010, yap2009), especially in the connectionist learning literature (plaut1996, seidenberg1989, sibley2010). This focus results from two primary factors. First, any model of word reading must at the very least account for the development of knowledge of the simplest words in the language given the child develops the ability to read these words first (ref.). Second, accounting for words that are longer than one syllable requires the specification of a learning architecture that accounts for time-varying aspects of learning that must be happening over longer words. This includes but is not limited to variability in prosodic information involved in pronunciation over different syllables (especially of vowels and their associated patterns of stress).
+
+This dissertation reports on a model of word reading (that associates print to speech) that can accommodate words that are not bounded by orthographic or phonological length - that is, of words that are not limited to a single syllable. This is a significant advance from previous models in that the types of words it can recognize (printed and spoken) resemble those that are naturalistic in terms of the word environments that children (and adults) learn within.
+
+The remaining chapters of this dissertation are organized in the following way. First, in the remaining portion of Chapter 1, I will introduce the central issues in word reading as they relate to the type of sequential processing that is essential to the theory developed in the dissertation. In Chapter 2, a history of models of word recognition will be provided. Chapter 3 will develop the architecture and corresponding theory of naming that represents the core topic of the dissertation. Chapter 4 will provide several experiments using the architecture described in Chapter 3, forming the behavioral support validating the architecture. Chapter 5 will be the conclusion, which will discuss the theory in light of its limitations and future directions.
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+Language comes and goes in a time-contingent fashion. The language that we see and hear is structured by sequential statistics that are processed through processes that happen across time. Among other important perceptual and cognitive aspects of language processing, letters are processed visually according to patterns of fixation that occur in a temporally governed manner, auditory processes take place relative to sound patterns that appear in a fast fading way over time. As a result, our theoretical models should account for the fact that such processing takes place in a sequentially arranged, time-contingent manner. This is especially true of reading given that the activity involves several such processes, each of which is distributed across time.
+
+Prevailing models of word reading have dealt with temporal aspects of processing in three ways: (1) through the use of networks that have a continuous recurrent component to their architecture (harm1999, harm2004), (2) implicit implementations with the use of feedforward networks that possess a component of the architecture dedicated to stress (perry2010), or (3) using simple recurrent networks (sibley2010). How time factors into word reading is typically discussed in the literature as concerning the processing of syllables: models of word reading can either deal with polysyllabic words or not. This distinction makes sense at one level, given that syllables are an important unit of speech. They carry information about vowel stress, and are an organizational category of language, contributing to the understanding of how consonants and vowels cluster within and across words. However, sequential statistics relevant to long words go beyond structure related to syllables. For example, orthotactic patterns exist as a matter of linguistic structure not strictly tied to syllabic structure.
+
+In a separate research tradition, several architectures have been proposed in the engineering literature in order to simulate the relationship between text and speech for technological and commercial ends.
+
+\hypertarget{chapter-2-a-brief-history-of-models-of-word-reading}{%
+\section{Chapter 2: A Brief History of Models of Word Reading}\label{chapter-2-a-brief-history-of-models-of-word-reading}}
+
+\hypertarget{representational-units}{%
+\subsection{Representational units}\label{representational-units}}
+
+\hypertarget{models-of-multisyllabic-word-reading}{%
+\subsection{Models of multisyllabic word reading}\label{models-of-multisyllabic-word-reading}}
+
+The CDP++ model from Perry et al.~(2010) posits a complex architecture with subcompnents that capture different aspects of the theory from which the computational architecture is based. Said differently, their system lacks architectural homogeneity, a hallmark of connectionist learning systems. Some assumptions of the system violate primitives of learning seen in naturalistic environments. For example, CDP++ requires the prespecification of a graphemic level of representation, based on the assumption that letter sequences map cleanly onto phonemic sequences, and that such representational units contribute to low level operations within the reading system. Graphemes are identified on the input layer based on their frequency, This violates an important aspect of development of word reading knowledge in that such representations (i.e., the ways that print sequences relate to auditory sequences) are learned and do not preexist in the learner once knowledge about print begins to develop.
+
+In a connectionist architecture something like a grapheme may well exist, but it is an emergent aspect of the knowledge of the system that develops as the result of the exposure of the learning architecture to the environment.
+
+The selection of representational units is a critical issue of theoretical interest in the development of a learning architecture that learns to read words. A fundamental question will always be: how do such representational units arise in learning? This issue plays even larger in models of word reading that deal in long words given that the longer the words are the more representational units there are to account for. In symbolic approaches this has been taken up historically as an issue of positing rules of identification, as in Rastle and Coltheart (2000). These rules take the form of complex verbal descriptions that specify structured labels for representational units based on the presence or absence of structural elements in a printed or spoken wordform.
+
+\hypertarget{statistical-learning}{%
+\subsection{Statistical learning}\label{statistical-learning}}
+
+\hypertarget{survey-of-previous-architectures}{%
+\section{Survey of previous architectures}\label{survey-of-previous-architectures}}
+
+\hypertarget{simple-recurrent-networks}{%
+\subsection{Simple recurrent networks}\label{simple-recurrent-networks}}
+
+The most comprehensive application of an SRN to date is Sibley et al.~(2010), which used a two-component architecture for orthography and phonology, each with an SRN operating under the hood.
+
+The most recent of these architectures can be found in (\textbf{Luthra2020?}), which they refer to as VOISeR. This model of orthography-to-phonology processing takes in an orthographic sequence (a spatially represented)
+
+\hypertarget{serial-effects-in-naming}{%
+\subsection{``Serial'' effects in naming}\label{serial-effects-in-naming}}
+
+The evidence most commonly taken to suggest that there is some type of serial processing operating during naming, particularly for words that contain ``irregular'' pronunciations, concerns the timecourse of naming processes for such words.
+
+Such findings are typically identified as evidence for a dual-route process operating during reading. The dual-route theory predicts that
+
+\hypertarget{strategic-control}{%
+\subsection{Strategic control}\label{strategic-control}}
+
+There have been a number of studies concerning so-called ``extra-stimulus'' factors that concern processes in naming (see (\textbf{kello2003?}) for a review), which have been described broadly as strategies for cognitive control in word naming. The most important of these for the present work has to do with the time-course of processing printed words.
+
+In behavioral research on aspects of control in word reading, the method of control is typically manipulated by providing special instructions to the participant, or constructing a paradigm to elicit a control-type mechanism when processing a visually presented word. Most research on this topic and using experimental paradigms along these lines has concerned short, or monosyllabic words. This isn't surprising given the rich history of such words in theories of word recognition (discussed elsewhere here), and that characteristics of the stimuli have driven theorizing and experimentation; monosyllabic words offer natural constraints to theory building that are useful to the endeavor, and provide simplifying case-studies of most critical characteristics observed in words more broadly (see (\textbf{yap2009?}) for discussion).
+
+\hypertarget{behavioral-data}{%
+\section{Behavioral data}\label{behavioral-data}}
+
+There are a number of possibilities for the visual span over which visual information is passed in the process of initiating phonology in word reading.
+
+Earlier connectionist models avoided this issue in favor of simplified feedforward networks that typically passed visual information to phonology in a single temporal step. Alternative implementations using recurrent backpropagation through time were also used (ref.) These networks function with a continuous, recurrent component, over temporal intervals (``ticks'' in that literature) where the input pattern (in a feedforward network) is allowed to stay clamped to the input layer, allowing for gradual buildup of the input signal over some time period. During training, error signal is backpropagated over timesteps where inputs are gradually being increased up to their eventual full activation state. However, architectures with recurrent backpropagation along these lines are simulating the timecourse of activation in a way that is different than networks that take time-distributed input patterns, like LSTM architectures and, more specifically, the architecture laid out in the current work. Rather than simulating the ways that sequentially-arranged portions of perceptual information play in cross-modal mappings (where the perceptual information unfolds in a time-distributed manner), these earlier implementations of continuous processes that operate over some time were developed in order to understand the types of disordered behavior seen, for example, in patients with brain injuries that impact lexical or semantic processing (Plaut, McClelland, Seidenberg, and Patterson (1996), Rogers et al. (2004)).
+
+\hypertarget{chapter-3-architecture-of-a-computational-learner}{%
+\section{Chapter 3: Architecture of a computational learner}\label{chapter-3-architecture-of-a-computational-learner}}
+
 \hypertarget{words-used-for-training-and-testing}{%
 \section{Words used for training and testing}\label{words-used-for-training-and-testing}}
 
-The perceptual span within which letters can be clearly identified on a single fixation is approximately eight letters (ref.). For this reason, words of eight letters or less were compiled from the previously discussed sources for the purposes of training and testing the models developed here.
-
-The timecourse of phonological activation of orthographic input is a debated topic, but little is known about how such processes operate for long words. This issue has primarily been dealt with in the literature using hybrid computational architectures, containing both connectionist and structured, symbolic components of the computational system Perry, Zorzi, \& Ziegler (2019). Though some purely connectionist architetures have been proposed (Sibley, Kello, \& Seidenberg, 2010). While outside the scope of previous modeling and theorizing, it is likely that a dynamic process where orthographic inputs propagate information to activate phonology, initiating a response, which is modulated by subsequent visual input. Consider, for example, reading the word \emph{architecture}. Phonological activation could well be taking place over the initial visual portion of the word, such that the \emph{\ldots ture} portion isn't processed until after the phonology of the root (\texttt{AA\ -\ R\ -\ K\ -\ AH\ -\ T\ -\ EH\ -\ K\ -\ T}) is initiated. While the dynamics of such processes are interesting and important for developing a model of word reading that accounts for how long words are read, such cases are outside of what is dealt with here. A simpler corpus has been developed for the purposes of this work, built on with assumptions based on perceptual span (some results are provided that demonstrate the ability of the model to produce output for words longer than this span, demonstrating the broader capacity of the model and architecture). A virtue of the architecture developed in this dissertation is that such dynamics are possible given the nature of the computational learner developed, though these dynamics are not accounted for in service of accounting for simpler and more fundamental processes in word reading.
+The perceptual span within which letters can be clearly identified on a single fixation is approximately eight letters (ref.). For this reason, words of eight letters or less were compiled from the previously discussed sources for the purposes of training and testing the models developed here. It is important to note, however, that the model is capable to processing any word regardless of its length. A demonstration of this capacity is included in the results. This is important given that while a reader - a child, for example - may only have learned words of shorter lengths, the reader nonetheless has the capacity to attempt to read words of longer lengths. This is one of many differences between the time distributed computational process proposed here and other connectionist models proposed elsewhere. Feedforward systems require pre-specification about word length that prohibit generalization to other forms that fall outside the window of what has been specified.
 
 Words were aggregated from a corpus of 250 commonly read children's books for children five years-old and younger in the United States (\textbf{lewis2021?}). This corpus was used given that a word's presence in such a database indicates that a child is likely to be exposed to it early in literacy development, at least in the US. A word was included for training if it was XX letters or less, XX phonemes or less, and XX syllables or less. These constraints were included for the training set in order to avoid length effects that were outside the focus of the analyses presented here. However, the capacity of the model to accommodate longer words than those included for training is demonstrated. Also, training can happen over words (or orthographic/ phonological sequences) of unlimited length, this length was just limited in order to focus the learning process on reasonably lengthed words from this realistic database of child-oriented language.
 
@@ -333,9 +404,9 @@ Their outputs are then combined via multiplication before being added to the cel
 \[
 c_t = f_t \cdot c_{t-1} + \Im_t \cdot \tilde{c}_t
 \]
-The last gate involved in the function of the block is the \emph{output gate}, referenced with the notation \(o\). Its job is to determine what activation gets passed on to the next timestep in the form of a hidden representation. The function of this gate helps to make clear why this vector is termed the \emph{hidden representation}: it is the emergent representation of the current timestep (segment) that combines information from the input, the previous hidden representation, and the cell state of the block. It essentially combines these different, related information sources (external perceptual information and internal memory representations) in the form of a single vector that represents information about that timestep for the next timestep. This vector is different than the cell state itself, which is characterized (albeit in somewhat similar terms) elsewhere here.
+The last gate involved in the function of the block is the \emph{output gate}, referenced with the notation \(o\). Its job is to determine what activation gets passed on to the next timestep in the form of a hidden representation. The function of this gate helps to make clear why this vector is termed the \emph{hidden representation}: it is the emergent representation of the current timestep (segment) that combines information from the input, the previous hidden representation, and the cell state of the block. It essentially combines these different, related information sources (external perceptual information and internal memory representations) in the form of a single vector that represents information about that timestep for the next timestep. This vector is different than the cell state itself, which is characterized elsewhere here.
 
-The output gate internally functions identically to both the forget gate and the input gate\footnote{These three gates only differ internally from the fourth, the cell gate, because of the transfer function used - \(\sigma\) instead of \(\tanh\).}, and its formula is shown in XX.
+The output gate internally functions identically to both the forget gate and the input gate\footnote{These three gates only differ internally from the fourth, the cell gate, because of the transfer function used (i.e., \(\sigma\) instead of \(\tanh\)).}, and its formula is shown in XX.
 \[
 o_t = \sigma(W_ox_t + U_oh_{t-1} + b_o)
 \]
@@ -352,47 +423,141 @@ At this point a few important aspects of the cognitive nature of such a system c
 
 The dynamics specifically play out with respect to the two outputs served up by the block: the cell state and the hidden state. While these two vectors will always bear a relation to one another, most specifically in terms of the combination that occurs on the output gate (shown in XX), they are computationally and functionally distinct. The cell state serves as the memory state that captures statistical dependencies across all timesteps of a learning trial (letters or phonemes across words) -- a distal relationship -- and the hidden state captures the proximal analogue: the emergent representation of the current segment with respect to the cell state.
 
-Without gating mechanisms that allow information to flow into the long term memory of the example, these long term dependencies can't be captured. Likewise, without the ability to combine information about the long term dependencies with information being processed at a given timestep (i.e., the combining function of the output gate and the cell state that creates the hidden state \(h_t\)), proximal information about the segment can't be transferred from one segment to the next.
+Without gating mechanisms that allow information to flow into the long term memory of the example, these long term dependencies can't be captured. Likewise, without the ability to combine information about the long term dependencies with information being processed at a given timestep (i.e., the combining function of the output gate and the cell state that creates the hidden state \(h_t\)), proximal information about the segment can't be transferred from one segment to the next. So, the two internal ``state'' elements of an LSTM have the capacity to capture something long-term (the cell state) and short term (the hidden state) across a training trial.
 
-The dynamics of these various elements of the layer allow for an array of possibilities in terms of analyzing the behavior of the network with respect to any given example word, and is seen as a benefit of the time-distributed learning system being proposed here. Introspection about different representational grain sizes in the perceptual inputs of the learning system should be possible in a system that is concerned with learning that involves segments, and this is the case for the architecture being proposed. This capacity deviates sharply from other models of word reading given the limitations of purely spatial learning systems, and the ways in which representational schemes for letters and sounds further exacerbate the capacity to introspect about segmental properties of the learning they involve. For example, the LSTM architecture captures more closely that the learner has representations for ``sublexical'' units possessed by any given input or output, and that the representational capacity can be observed by observing the model respond to that sublexical unit directly. For example, individual letters, or letter sequences, have pronunciations, which can be directly observed by setting up a testing trial using the network. This isn't possible in feedforward networks due to the abstract ways in which segments are specified and processed in those systems. This virtue of the architecture will be returned to in the results when we look at the dynamics of a training trial and the types of targeted phenomena the network can simulate for segments of language.
+This relates directly to aspects of human behavior in important ways. For example, the debate about the viability of connectionist models of word reading are sometimes pitched in terms of a model's capacity (or lack thereof) to account directly for segmental phenomena found in experimental work with humans (Kawamoto, Liu, \& Kello, 2015). The temporal model developed here is capable of addressing such issues given its ability to simulate phenomena related to segments due to the fact that segments are part of the temporal phenomena related to speech and print. Introspection about different representational grain sizes in the perceptual inputs of the learning system should be possible in a system that is concerned with learning that involves segments, and this is the case for the architecture being proposed. This capacity deviates sharply from other models of word reading given the limitations of purely spatial learning systems, and the ways in which representational schemes for letters and sounds further exacerbate the capacity to introspect about segmental properties of the learning they involve. For example, the LSTM architecture captures more closely that the learner has representations for ``sublexical'' units possessed by any given input or output, and that the representational capacity can be observed by observing the model respond to that sublexical unit directly. For example, individual letters and letter sequences have pronunciations, which can be directly observed by setting up a testing trial using the network. This isn't possible in feedforward networks due to the abstract ways in which segments are specified and processed in those systems. This virtue of the architecture will be returned to in the results when we look at the dynamics of a training trial and the types of targeted phenomena the network can simulate for segments of language.
+
+\hypertarget{representational-virtues}{%
+\subsection{Representational virtues}\label{representational-virtues}}
+
+Readers can process, correctly or not, letter strings of any length. Any model architecture of producing phonology from orthography should be able to account for this fact. Also, this should include the ability to read any word, regardless of the length of its spoken form. There should be a direct relationship between the length of a word's printed or spoken form and its representation used by any computational architecture that consumes it. This relationship is maintained in the current architecture in a very direct way. The representation of the printed form of a word is generated letter-for-letter, where the orthographic representation is as long as there are letters in the printed form. The phonological representation is formed in a similarly veridical way. A spoken form is defined as a sequence of phonemes, which is a well-established level of linguistic representation for the spoken form of words. The output representation for a word is build phoneme-by-phoneme from the word's phonemic form, where each phoneme is defined as a distributed pattern over phonemic features, as described elsewhere here. Therefore, the length of the spoken form of the word is defined by the number of phonemes in the word, and the complexity of the representation can be estimated by the number of features on over an individual or string of phonemes. This representational scheme is intended to represent the structure of the language in a way that is veridical, or at least more veridical than other implementations of similar models.
+
+\hypertarget{justifications-for-justification}{%
+\subsubsection{Justifications for justification}\label{justifications-for-justification}}
+
+A number of alternative schemes have been entertained in other models of word naming. The most common approach involves specifying the orthographic and phonological representations using vowel centered representations (Chang \& Monaghan, 2019; Cox, Borkenhagen, \& Seidenberg, 2019). For models of reading that deal in monosyllabic words this approach captures something appropriate about vision, given that an entire printed word can be taken in on a single fixation if the word is short. Granting this assumption, learning that the centered pattern \texttt{\_\_breath\_\_} maps onto \texttt{\_\ -\ \_\ -\ B\ -\ R\ -\ EH\ -\ TH\ -\ \_\ -\ \_} is a defensible simplifying assumption.
+
+However, procedures like that require justification of some kind, typically in the center with both left and right pads, introduce a computational problem: perceptual segments come to occupy slots in their representational domains. For example, the letter \emph{b} from \texttt{\_\_breath\_\_} comes to be represented in a different way than that same letter in other positions (e.g., \emph{cob}, or \emph{curb}). Some computational architectures have tried had to work around this issue one way or another, usually by abstracting away from positions to higher order linguistic units. For example, Plaut, McClelland, Seidenberg, and Patterson (1996) represented input and output patterns based on the syllabic structure which a given segment is commonly associated. Their method was developed in the wake of other procedures designed to encode just enough of the relative structure of segments in words to be suitable for modeling monosyllabic words. For example, see the discussion in Seidenberg and McClelland (1989) and their use of orthographic and phonological ``triples'' (\textbf{Wikelgren1969?}) to work around this problem, which is thought to be a plausible alternative given that such representations build in contextual information that helps the model abstract away fro position-specific representations in the input and output layers.
+
+Positional information in other proposed models deviates from this assumption.
+
+Issues around positional representations and dispersion All previous connectionist models of word recognition have involved spatial (and in some cases over temporally varying segments) justification of one kind or another, usually implemented as empty slots to the right of an orthographic or phonological pattern (e.g., "breath\_\_\_\_"). When present, this feature of an architecture (and the patterns that are used to train it) represents a deep limitation in its psychological plausibility. While including justification in some form is understandable as an aspect of the engineering problem that computational modelers face in modeling visual (or other) word recognition processes, they assume that the patterns that are used in orienting words, left or right, on their input and/ or output layers (however the justification might be implemented) are an aspect of the learning process, though
+
+\hypertarget{possibilities-in-the-timecourse-of-visual-and-phonological-processing}{%
+\subsection{Possibilities in the timecourse of visual and phonological processing}\label{possibilities-in-the-timecourse-of-visual-and-phonological-processing}}
+
+The timecourse of phonological activation of orthographic input is a debated topic, but little is known about how such processes operate for long words. This issue has primarily been dealt with in the literature using hybrid computational architectures, containing both connectionist and structured, symbolic components of the computational system Perry, Zorzi, \& Ziegler (2019). Though some purely connectionist architetures have been proposed (Sibley, Kello, \& Seidenberg, 2010). While outside the scope of previous modeling and theorizing, it is likely that a dynamic process where orthographic inputs propagate information to activate phonology, initiating a response, which is modulated by subsequent visual input. Consider, for example, reading the word \emph{architecture}. Phonological activation could well be taking place over the initial visual portion of the word, such that the \emph{\ldots ture} portion isn't processed until after the phonology of the root (\texttt{AA\ -\ R\ -\ K\ -\ AH\ -\ T\ -\ EH\ -\ K\ -\ T}) is initiated. While the dynamics of such processes are interesting and important for developing a model of word reading that accounts for how long words are read, such cases are outside of what is dealt with here. A simpler corpus has been developed for the purposes of this work, built on with assumptions based on perceptual span (some results are provided that demonstrate the ability of the model to produce output for words longer than this span, demonstrating the broader capacity of the model and architecture). A virtue of the architecture developed in this dissertation is that such dynamics are possible given the nature of the computational learner developed, though these dynamics are not accounted for in service of accounting for simpler and more fundamental processes in word reading.
+
+\hypertarget{segments}{%
+\subsection{Segments}\label{segments}}
+
+\hypertarget{recurrence}{%
+\subsection{Recurrence}\label{recurrence}}
+
+\hypertarget{chapter-4-experimentation}{%
+\section{Chapter 4: Experimentation}\label{chapter-4-experimentation}}
+
+The purpose of the model developed here is to read printed words aloud. A number of results are presented based on results from behavioral research and similarly oriented models of word reading from elsewhere in the literature.
+
+Results of the model's ability to correctly produce a spoken form of a word can be based on a number of different measures arising from the same computational system. The most common measure of the model's ability is an accuracy score, which itself can be structured in a few different ways - similar to that of a human reader. Given that the goal of the model is to take a sequence of letters and recode them in the form of a sequence of speech sounds, individual sounds can be inspected for their accuracy along with the entire sequence of sounds - that is, the entire word. Both the phoneme-wise and the word-wise accuracy metrics are used in reporting, depending on the purpose of the result shown. They are of course correlated given that a word that is produced correctly is one in which all the phonemes are produced correctly (or at least each phoneme produced is closer to the correct phoneme than all other possible phonemes).
+
+A limited corpus of words has been selected for training purposes here, though the model is capable of attempting to produce phonology from any sequence of letters provided on the input - a feature we see as a virtue of the implementation given that humans are also capable of this.
+
+\hypertarget{training-details}{%
+\subsection{Training details}\label{training-details}}
+
+\hypertarget{testing-trials}{%
+\subsection{Testing trials}\label{testing-trials}}
+
+The model is tested in a way that follows a different procedure than that used in training, allowing for more flexible and deeper introspection about the dynamics at play in the system when operating. When a word is submitted for testing (or ``production'') an orthographic pattern is introduced to the the orthographic input - the model's visual input system. This pattern is structured just like that of the orthographic input during training: it is a two dimensional array with as many letter representations along the first axis as there are letters in the word. This time-varying input pattern is input to the orthographic input, and its representation decomposed into its two critical states for use in phonology: the cell state and the final hidden state. Once these vectors are achieved for the orthographic form of the word, that portion of the model rests and is unchanged for the remainder of the trial.
+
+The states of the orthographic layer are passed to phonology to generate the phonological code output. This process is initiated by the input of the start of word segment (\texttt{\#}), the representation of which was described earlier. The fact that the model has been trained with an explicit start of word marker enables the phonological layer to produce a next phoneme given the current state of the layer and its input pattern. At the start of production this context is provided completely from the orthographic layer. That is, the role of the phonological portion of the model is to produce a phonological code given the orthographic context.
+
+Once the first phonemic pattern is produced it is saved for subsequent phonemes to be appended to it in order to form a full sequence of phonemes (a production). While the weights in the network are frozen at this stage, the state of the phonological LSTM is updated at each timestep following the same processing flow as described in the architecture section. Once a phoneme is output at each timestep, it is fed back to the input of the phonological layer to support subsequent productions. This differs in process from training trials but is the same conceptually given that in training, the entire phonological sequence is processed one segment at a time without the feedback process from the output layer back to the input. Because the output for a given phoneme is never specified as a perfect veridical binary pattern, any phoneme output is compared to all possible phoneme outputs using the L2 norm and the nearest phoneme is selected and recorded as the produced phoneme. The production trial progresses until the phonological output layer produces the ``stop producing'' segment (\texttt{\%}). At this point the word produced is recorded for analysis.
+
+\hypertarget{dispersion}{%
+\subsection{Dispersion}\label{dispersion}}
+
+Sequential approaches to orthography-to-phonology conversion solve this problem by processing discrete speech segments from discrete print segments in a left-to-right, segment-by-segment manner. These solutions always involve some form of justification (sometimes called ``alignment'' in the literature), though the alignment procedure differs across sequential implementations. For example, (\textbf{Sejnowski1987?}) provided orthographic input strings as sequences of letters and mapped them to equal-length sequences of phonemes. This allowed their network to implement a kind of temporal processing over visual and its corresponding spoken pattern, but required architectural specifications that deviate from assumptions about processing in other connectionist networks. Their procedure required inserting null elements in slots where a phoneme wasn't present for the corresponding input letter (or grapheme) given that the input and output sequences were always equal length. So, for the input pattern ``late'' the corresponding output would be \texttt{L\ -\ EY\ -\ T\ -\ \_\_}, with the final phoneme segment \texttt{\_\_} being the null one given the word-final silent ``e'' in ``late.'' This avoids the type of dispersion found in feedforward networks, where knowledge about letters and their corresponding sounds is localized to weighted connections associated with specific slots given the way that input and output patterns are specified during learning, but introduces a different type of knowledge localization that is undesirable: that letters on the input layer become associated too narrowly with phonemic segments on the output given the segment-by-segment processing mechanism (i.e., they lose the context sensitive nature of processing due to the segment-by-segment way that print and speech are associated in the network).
+
+Dual-route models use an assembly method, where a letter or letter segment (e.g., grapheme) is associated with a phonemic segment by rule. Processing speech from print involves assembling the phonology from the pre-specified letter-sound rules, which are derived via an analytic technique that resides outside the scope of the computational architecture itself, specified by the experimenter. The assembly process happens alongside a lexical lookup procedure, which has its own separate timecourse. The relative timecourse of these processes determine whether a word is produced via assembly rules or as a structured lexical object. This is the extreme end of the spectrum of methods that result in knowledge dispersion. Here knowledge about the relationship between visual and spoken elements is dispersed across the symbolic rules that operate over the crossmodal assembly that takes place during learning and performance. This form of knowldge dispersion is different implementationally but related conceptually in that what is known about similar elements in the domain becomes dissociated based on the structure of the architecture, which of course has implications on the learning that takes place given that architecture.
+
+Other approaches handle input strings with the use of slots, but in a different way than in (\textbf{Sejnowski1987?}). Commonly in connectionist feedforward implementations input patterns are specified in a vowel-centered arrangement (see Plaut, McClelland, Seidenberg, and Patterson (1996) for a discussion). A similar solution exists in hybrid connectionist dual route architectures like Perry, Ziegler, and Zorzi (2010). Here the input patterns are fit into a template of sorts, specified by the limits of the structure of the training set.
+
+These issues have not been solved by engineering solutions to text-to-speech technologies either.
+
+\hypertarget{benchmarks}{%
+\subsection{Benchmarks}\label{benchmarks}}
+
+\emph{jared1990: latencies increase with number of syllables, but is moderated by frequency (Experiment)
+}jared1990: exceptional and regular inconsistent words exhibit longer latencies as compared to regular words, but only for low frequency words (see yap2009, top right of p.~503 for discussion of the effect)
+*position of irregularity effects
+
+kawamoto1998 showed that words with less predictable pronunciations of the vowel exhibit longer latencies for the consonant in the onset, rather than simply longer overall naming latency of the entire word. This is due to the fact that the vowel pronunciations that are less predictable require more processing time, and this processing manifests in the system dwelling on pre-vocalic consonants, rather than being distributed throughout the naming process for the entire word. Their studies were performed using monosyllabic stimuli that were quite simple, though well established in the word reading literature related to naming and related phenomena.
+
+\hypertarget{canonical-naming-effects}{%
+\subsection{Canonical naming effects}\label{canonical-naming-effects}}
+
+\hypertarget{frequency}{%
+\subsubsection{Frequency}\label{frequency}}
+
+\hypertarget{regularity}{%
+\subsubsection{Regularity}\label{regularity}}
+
+\hypertarget{frequency-by-regularity}{%
+\subsubsection{Frequency by Regularity}\label{frequency-by-regularity}}
 
 \hypertarget{latency}{%
 \subsection{Latency}\label{latency}}
 
 Given that computational processing times on a GPU haven't been validated as an analogous method for naming latency in humans, similar to Sibley et al.~(2010) a measure of model confidence for processing an orthographic word was designed to measure the latency for reading that word.
 
-\hypertarget{representational-virtues}{%
-\subsection{Representational virtues}\label{representational-virtues}}
+\hypertarget{overall-results}{%
+\subsection{Overall results}\label{overall-results}}
 
-Readers can process, correctly or not, letter strings of any length. Any model architecture of producing phonology from orthography should, in principle, be able to account for this fact. Past computational architectures have always had to work around this issue one way or another.
+*Provide an overall summary of results here before going into the piecemeal results. See Seidenberg \& McClelland (1989) pages 531-532 for examples
 
-Positional information in other proposed models deviates from this assumption.
+\hypertarget{chapter-5-general-discussion}{%
+\section{Chapter 5: General Discussion}\label{chapter-5-general-discussion}}
 
-\hypertarget{no-justification-for-justification}{%
-\subsection{No justification for justification}\label{no-justification-for-justification}}
+\hypertarget{future-work}{%
+\subsection{Future work}\label{future-work}}
 
-All previous connectionist models of word recognition have involved spatial (and in some cases over temporally varying segments) justification of one kind or another, usually implemented as empty slots to the right of an orthographic or phonological pattern (e.g., "breath\_\_\_\_"). When present, this feature of an architecture (and the patterns that are used to train it) represents a deep limitation in its psychological plausibility. While including justification in some form is understandable as an aspect of the engineering problem that computational modelers face in modeling visual (or other) word recognition processes, they assume that the patterns that are used in orienting words, left or right, on their input and/ or output layers (however the justification might be implemented) are an aspect of the learning process, though
+This model architecture could be extended easily, in some cases trivially, to account for representational assumptions that would more realistically approximate spoken language.
 
-\hypertarget{segments}{%
-\subsection{Segments}\label{segments}}
-
-\hypertarget{recurrence}{%
-\subsection*{Recurrence}\label{recurrence}}
-\addcontentsline{toc}{subsection}{Recurrence}
+Note that an architecture of this kind can be easily extended to include both a phonological and orthographic output layer despite the more simple version of the architecture adopted for this work. Such an extension would be important to pursue given the role of writing (action) in reading development; the two activities are almost always unavoidably linked in development.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\hypertarget{ref-Chang2019}{}%
+Chang, Y.-N., \& Monaghan, P. (2019). {Quantity and Diversity of Preliteracy Language Exposure Both Affect Literacy Development: Evidence from a Computational Model of Reading}. \emph{Scientific Studies of Reading}, \emph{23}(3), 235--253. \url{https://doi.org/10.1080/10888438.2018.1529177}
+
+\leavevmode\hypertarget{ref-Cox2019}{}%
+Cox, C. R., Borkenhagen, M. C., \& Seidenberg, M. S. (2019). \emph{{Efficiency of learning in experience-limited domains: Generalization beyond the WUG test}}. 1566--1571.
+
 \leavevmode\hypertarget{ref-Elman1990}{}%
 Elman, J. L. (1990). {Finding Structure in Time}. \emph{Cognitive Science}, \emph{14}(2), 179--211. \url{https://doi.org/10.1207/s15516709cog1402_1}
 
 \leavevmode\hypertarget{ref-Harm2004}{}%
 Harm, M. W., \& Seidenberg, M. S. (2004). {Computing the meanings of words in reading: Cooperative division of labor between visual and phonological processes}. \emph{Psychological Review}, \emph{111}(3), 662--720. \url{https://doi.org/10.1037/0033-295X.111.3.662}
 
+\leavevmode\hypertarget{ref-Kawamoto2015}{}%
+Kawamoto, A. H., Liu, Q., \& Kello, C. T. (2015). {The segment as the minimal planning unit in speech production and reading aloud: Evidence and implications}. \emph{Frontiers in Psychology}, \emph{6}(September), 1--6. \url{https://doi.org/10.3389/fpsyg.2015.01457}
+
 \leavevmode\hypertarget{ref-Perry2010}{}%
 Perry, C., Ziegler, J. C., \& Zorzi, M. (2010). {Beyond single syllables: Large-scale modeling of reading aloud with the Connectionist Dual Process (CDP++) model}. \emph{Cognitive Psychology}, \emph{61}(2), 106--151. \url{https://doi.org/10.1016/j.cogpsych.2010.04.001}
 
 \leavevmode\hypertarget{ref-Perry2019}{}%
 Perry, C., Zorzi, M., \& Ziegler, J. C. (2019). {Understanding Dyslexia Through Personalized Large-Scale Computational Models}. \emph{Psychological Science}, \emph{30}(3), 386--395. \url{https://doi.org/10.1177/0956797618823540}
+
+\leavevmode\hypertarget{ref-Plaut1996}{}%
+Plaut, D. C., McClelland, J. L., Seidenberg, M. S., \& Patterson, K. (1996). {Understanding Normal and Impaired Word Reading: Computational Principles in Quasi-Regular Domains}. \emph{Psychological Review}, \emph{103}(1), 56--115. \url{https://doi.org/10.1037/0033-295X.103.1.56}
+
+\leavevmode\hypertarget{ref-Rogers2004}{}%
+Rogers, T. T., Lambon Ralph, M. A., Garrard, P., Bozeat, S., McClelland, J. L., Hodges, J. R., \& Patterson, K. (2004). {Structure and Deterioration of Semantic Memory: A Neuropsychological and Computational Investigation}. \emph{Psychological Review}, \emph{111}(1), 205--235. \url{https://doi.org/10.1037/0033-295X.111.1.205}
+
+\leavevmode\hypertarget{ref-Seidenberg1989}{}%
+Seidenberg, M. S., \& McClelland, J. L. (1989). {A Distributed, Developmental Model of Word Recognition and Naming}. \emph{Psychological Review}, \emph{96}(4), 523--568. \url{https://doi.org/10.1037//0033-295X.96.4.523}
 
 \leavevmode\hypertarget{ref-Sibley2010}{}%
 Sibley, D. E., Kello, C. T., \& Seidenberg, M. S. (2010). {Learning Orthographic and Phonological Representations in Models of Monosyllabic and Bisyllabic Naming}. \emph{European Journal of Cognitive Psychology}, \emph{22}(5), 650--668. \url{https://doi.org/10.1080/09541440903080583}

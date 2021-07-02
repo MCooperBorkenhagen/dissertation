@@ -63,7 +63,25 @@ packages = read.csv('requirements.txt', stringsAsFactors = F)[[1]]
 lapply(packages, require, ch = T)
 ```
 
+
+
+```{r child='1_introduction.Rmd'}
+
+```
+
+```{r child='2_history.Rmd'}
+
+```
+
 ```{r child='3_architecture.Rmd'}
 
 ```
 
+
+```{r child='4_results.Rmd'}
+
+```
+
+```{r child='5_conclusion.Rmd'}
+
+```
