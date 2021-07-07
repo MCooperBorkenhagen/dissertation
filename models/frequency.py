@@ -13,9 +13,6 @@ from utilities import load, loadreps
 
 # load
 left = load('../inputs/left.traindata')
-right = load('../inputs/right.traindata')
-
-t = {k:v for k, v in left.items() if k in [4, 5, 6, 7]}
 
 #%% phonreps and orthreps
 phonreps = loadreps('../inputs/phonreps-with-terminals.json')
@@ -25,13 +22,12 @@ orthreps = loadreps('../inputs/raw/orthreps.json')
 orth_features = left[3]['orth'].shape[2]
 phon_features = left[3]['phonSOS'].shape[2]
 #%%
-learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=t, mask_phon=False, devices=False)
+learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=left, mask_phon=False, devices=False)
 
 #%%
 # bigger batch
-learner.fitcycle(batch_size=50, epochs=2, cycles=10)
-# smaller batch
-#learner.fitcycle(batch_size=5, epochs=2, cycles=10)
+learner.fitcycle(batch_size=50, epochs=20, cycles=4)
+
 #%%
 # even smaller
 #learner.fitcycle(batch_size=1, epochs=1, cycles=10)
