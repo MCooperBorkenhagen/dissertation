@@ -27,10 +27,9 @@ phon_features = left[3]['phonSOS'].shape[2]
 #%%
 learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=t, hidden=500, mask_phon=False, devices=False)
 #%%
-learner.fitcycle(batch_size=50, epochs=1, cycles=50)
-# %%
-learner.read('porch')
-# %%
-t2 = {k:v for k, v in left.items() if k == 3}
+learner.fitcycle(batch_size=50, epochs=1, cycles=2)
 
-learner.fitcycle(batch_size=50, epochs=1, cycles=2, traindata=t2)
+learner.model.save('base-model')
+
+#%%
+
