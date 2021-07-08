@@ -226,33 +226,40 @@ class Learner():
             pass
         return(plot(self.model, to_file=PATH))
 
+"""
+    def get_word(self, word, traindata=None, construct=True):
+
+        if traindata is None:
+            traindata = self.traindata
+
+        #assert word in self.words, 'The word you want is not in your reps. To read this word, set construct=True'
+        if word not in self.words:
+            new_word = np.array([self.orthreps[letter] for letter in word])
+            return new_word, None, None
+
+
+        for length, traindata_ in traindata.items():
+            for i, w in enumerate(traindata_['wordlist']):
+                if w == word:
+                    return traindata_['orth'][i], traindata_['phonSOS'][i], traindata_['phonEOS'][i]
+
+"""
 
     def get_word(self, word, traindata=None, construct=True):
 
         if traindata is None:
             traindata = self.traindata
 
-        if word in self.words:
-            for length, traindata_ in traindata.items():
-                for i, w in enumerate(traindata_['wordlist']):
-                    if w == word:
-                        Xo = traindata_['orth'][i]
-                        Xp = traindata_['phonSOS'][i]
-                        Yp = traindata_['phonEOS'][i]
-
         #assert word in self.words, 'The word you want is not in your reps. To read this word, set construct=True'
-        if construct:
-            if word not in self.words:
-                new_word = np.array([self.orthreps[letter] for letter in word])
-                return new_word, None, None
-            else:
-                return Xo, Xp, Yp
-                    
-        elif not construct:
-            if word not in self.words:
-                raise Exception('The word is not in your list of words, and you did not tell me to construct it.')
-            else:
-                return Xo, Xp, Yp
+        if word not in self.words:
+            new_word = np.array([self.orthreps[letter] for letter in word])
+            return new_word, None, None
+
+
+        for length, traindata_ in traindata.items():
+            for i, w in enumerate(traindata_['wordlist']):
+                if w == word:
+                    return traindata_['orth'][i], traindata_['phonSOS'][i], traindata_['phonEOS'][i]
 
     def reader(self):
 
@@ -266,7 +273,7 @@ class Learner():
         phon_reader = Model([self.decoder_inputs] + phon_states_inputs, [phon_outputs] + phon_states)
         return orth_reader, phon_reader
 
-    def read(self, word, phonreps=None, ties='stop', verbose=True, construct=True):
+    def read(self, word, phonreps=None, ties='stop', verbose=True):
         """Read a word after the learner has learned.
 
         Parameters
@@ -303,22 +310,19 @@ class Learner():
         sequence provided as param word.
 
         """
+
+
         if phonreps is None:
             phonreps = self.phonreps
 
-        Xo, _, Yp = self.get_word(word, construct=construct)
+        Xo, _, Yp = self.get_word(word)
 
         input_seq = reshape(Xo)
 
         e, d = self.reader()
 
         states_value = e.predict(input_seq)
-        if Yp is None:
-            maxlen = max([v['phonEOS'].shape[1] for k, v in self.traindata.items()])
-        else:
-            assert Yp.shape[1] == self.phon_features, 'You are attempting to construct a phonological output that fails to match your number of output features'
-            maxlen = Yp.shape[0]
-
+        assert Yp.shape[1] == self.phon_features, 'You are attempting to construct a phonological output that fails to match your number of output features'
         output_shape = (1, 1, self.phon_features)
 
         target_seq = np.zeros((output_shape))
@@ -326,7 +330,7 @@ class Learner():
 
         done_reading = False
         word_read = []
-        
+        maxlen = Yp.shape[0]
 
         while not done_reading:
             output_tokens, h, c = d.predict([target_seq] + states_value)

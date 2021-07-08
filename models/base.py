@@ -22,11 +22,15 @@ phonreps = loadreps('../inputs/phonreps-with-terminals.json')
 orthreps = loadreps('../inputs/raw/orthreps.json')
 
 # %%
-orth_features = left[4]['orth'].shape[2]
-phon_features = left[4]['phonSOS'].shape[2]
+orth_features = left[3]['orth'].shape[2]
+phon_features = left[3]['phonSOS'].shape[2]
 #%%
-learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=t, mask_phon=False, devices=False)
+learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=t, hidden=500, mask_phon=False, devices=False)
+#%%
+learner.fitcycle(batch_size=50, epochs=1, cycles=50)
+# %%
+learner.read('porch')
+# %%
+t2 = {k:v for k, v in left.items() if k == 3}
 
-#%%
-learner.fitcycle(batch_size=50, epochs=1, cycles=100)
-#%%
+learner.fitcycle(batch_size=50, epochs=1, cycles=2, traindata=t2)
