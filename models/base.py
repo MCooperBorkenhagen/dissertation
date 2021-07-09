@@ -25,11 +25,31 @@ orthreps = loadreps('../inputs/raw/orthreps.json')
 orth_features = left[3]['orth'].shape[2]
 phon_features = left[3]['phonSOS'].shape[2]
 #%%
-learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=t, hidden=500, mask_phon=False, devices=False)
-#%%
-learner.fitcycle(batch_size=50, epochs=1, cycles=2)
 
+
+
+learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=t, hidden=400, mask_phon=False, devices=False)
+#%%
+
+learner.fitcycle(batch_size=70, epochs=1, cycles=1)
+
+#%%
+
+learner.fitcycle(batch_size=70, epochs=1, cycles=50)
+#%%
+learner.fitcycle(batch_size=10, epochs=1, cycles=10)
+#%%
+#%%
 learner.model.save('base-model')
-
 #%%
+
+# evaluate all examples:
+with open('../outputs/consistency.csv', 'w') as f:
+    for k, v in t.items():
+        for i, word in enumerate(v['wordlist']):
+            acc = learner.model.evaluate(x=v[['orth']])
+
+
+
+
 

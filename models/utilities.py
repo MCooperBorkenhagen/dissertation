@@ -31,3 +31,6 @@ def printspace(lines, symbol='#', repeat=25):
     for i in range(lines):
         print(repeat*symbol, '\n')
 
+
+def L2(a, v):
+    return(np.linalg.norm(a-np.array(v)))

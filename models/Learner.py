@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.utils import plot_model as plot
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
-from utilities import printspace, reshape
+from utilities import printspace, reshape, L2
 
 
 log_dir = "logs/fit/"
@@ -53,7 +53,8 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
     if round:
         a = np.around(a)
 
-    d = {k:np.linalg.norm(a-np.array(v)) for k, v in phonreps.items()}
+    #d = {k:np.linalg.norm(a-np.array(v)) for k, v in phonreps.items()}
+    d = {k:L2(a, v) for k, v in phonreps.items()}
     mindist = min(d.values())
     
     u = [k for k, v in d.items() if v == mindist]
@@ -68,6 +69,9 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
         return(phonreps[s])
     elif not return_array:
         return(s)
+
+
+
 
 class Learner():
 
