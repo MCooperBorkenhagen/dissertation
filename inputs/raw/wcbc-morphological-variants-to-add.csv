@@ -1,0 +1,4802 @@
+new_variant,bare_form
+abandons,FALSE
+abandoning,FALSE
+abandoned,FALSE
+abandonment ,FALSE
+ably ,FALSE
+ability ,FALSE
+abler,FALSE
+ablest ,FALSE
+abuse,TRUE
+abused,FALSE
+abusing ,FALSE
+abuser ,FALSE
+abusive ,FALSE
+accelerate ,TRUE
+accelerates,FALSE
+accelerator ,FALSE
+accept,TRUE
+accepts,FALSE
+acception ,FALSE
+accidentally ,FALSE
+accidental ,FALSE
+accompany,TRUE
+accompanying ,FALSE
+accordion ,TRUE
+accounting ,FALSE
+accounts,FALSE
+accounted ,FALSE
+aching ,FALSE
+achieved ,FALSE
+achieves ,FALSE
+achievement ,FALSE
+achieving ,FALSE
+acorns,FALSE
+acquaintances,FALSE
+acrobat,TRUE
+acrobatic ,FALSE
+acts,FALSE
+actions,FALSE
+actors,FALSE
+ads,FALSE
+addition ,FALSE
+addresses,FALSE
+adjusts,FALSE
+adjusting,FALSE
+adjusted,FALSE
+adjustment ,FALSE
+admirations,FALSE
+admires,FALSE
+admits,FALSE
+admitting ,FALSE
+admission ,FALSE
+adopts ,FALSE
+adopting ,FALSE
+adores,FALSE
+adorable ,FALSE
+adoring ,FALSE
+adult,TRUE
+adulting ,FALSE
+adultery ,FALSE
+adulthood ,FALSE
+advances,FALSE
+advancement ,FALSE
+advancing ,FALSE
+adventured,FALSE
+adventuring ,FALSE
+advertise,TRUE
+advertises ,FALSE
+advertisement ,FALSE
+advises,FALSE
+advisor ,FALSE
+affection,TRUE
+affectionate,FALSE
+aging ,FALSE
+agents,FALSE
+agreement,FALSE
+agreements ,FALSE
+agreeably ,FALSE
+aided,FALSE
+aiding ,FALSE
+aimed ,FALSE
+aims ,FALSE
+aimless ,FALSE
+aiming ,FALSE
+airing ,FALSE
+aisles,FALSE
+alarms,FALSE
+alarming ,FALSE
+alarmed ,FALSE
+aliens,FALSE
+allegiances,FALSE
+allergy ,TRUE
+allergic ,FALSE
+allergen ,FALSE
+allows,FALSE
+allowing ,FALSE
+almanacs ,FALSE
+almonds,FALSE
+alphabets ,FALSE
+alphabetize ,FALSE
+amazement ,FALSE
+amazingly ,FALSE
+amazons ,FALSE
+ambulances,FALSE
+americanized ,FALSE
+amiably,FALSE
+amidst,FALSE
+amnythysts,FALSE
+amounting,FALSE
+amounted ,FALSE
+amuse,TRUE
+amusing ,FALSE
+amusement ,FALSE
+anchors ,FALSE
+anchored ,FALSE
+anchorage ,FALSE
+anchoring ,FALSE
+anesthesiologists,FALSE
+angelic ,FALSE
+anger ,FALSE
+ankylosaurs,FALSE
+announcement,FALSE
+announcing ,FALSE
+antennaes,FALSE
+antiques,FALSE
+antler,TRUE
+apes,FALSE
+apologize,TRUE
+apologizing ,FALSE
+apology ,FALSE
+appears,FALSE
+appetites,FALSE
+appointments,FALSE
+appreciated,FALSE
+appreciates ,FALSE
+appreciation,FALSE
+approach,TRUE
+approaching ,FALSE
+approvals,FALSE
+approving ,FALSE
+aprons,FALSE
+aquariums,FALSE
+arched,FALSE
+arching ,FALSE
+arches ,FALSE
+areas,FALSE
+arenas,FALSE
+argues,FALSE
+argument,FALSE
+arguments,FALSE
+argumental ,FALSE
+arguing ,FALSE
+aristocrat,TRUE
+arithmetics,FALSE
+arks,FALSE
+armed,FALSE
+armadillos,FALSE
+armchairs,FALSE
+armor,TRUE
+armors ,FALSE
+armies ,FALSE
+arranges ,FALSE
+arranging ,FALSE
+arrival ,TRUE
+arts,FALSE
+artists,FALSE
+ash,TRUE
+assign ,TRUE
+assigning ,FALSE
+assort,TRUE
+assortment ,FALSE
+assured,FALSE
+assuring ,FALSE
+astonish ,TRUE
+astonishing ,FALSE
+astoundingly ,FALSE
+astound ,TRUE
+attach,TRUE
+attaching,FALSE
+attachment ,FALSE
+attacks,FALSE
+attends,FALSE
+attending ,FALSE
+attended,FALSE
+attics,FALSE
+attitudes,FALSE
+attitudinal ,FALSE
+authors,FALSE
+authorities,FALSE
+avenues,FALSE
+avoids,FALSE
+avoided,FALSE
+avoiding,FALSE
+awaits,FALSE
+awakening ,FALSE
+awnings,FALSE
+axles ,FALSE
+babbles,FALSE
+babbled,FALSE
+babbling ,FALSE
+baboon,TRUE
+babysits,FALSE
+babysat,FALSE
+bachelors,FALSE
+backing,FALSE
+backgrounds,FALSE
+backpack,TRUE
+backseats,FALSE
+bacterial,FALSE
+badgers,FALSE
+bagged,FALSE
+bagpipes,FALSE
+baits,FALSE
+baited,FALSE
+baiting ,FALSE
+bakeries ,FALSE
+bakeshops,FALSE
+balanced,FALSE
+balled,FALSE
+ballrooms,FALSE
+bananas,FALSE
+banded,FALSE
+banjo,TRUE
+banks,FALSE
+banked,FALSE
+banking ,FALSE
+banners,FALSE
+bannered,FALSE
+barred,FALSE
+barbara,TRUE
+barb,TRUE
+barbershops,FALSE
+barker,TRUE
+barnyards,FALSE
+barreling ,FALSE
+barreled,FALSE
+bases,FALSE
+based,FALSE
+basements,FALSE
+bashing,FALSE
+basks,FALSE
+bate,TRUE
+bated,FALSE
+bating ,FALSE
+baths,FALSE
+bathes,FALSE
+bathrobes,FALSE
+bathrooms,FALSE
+bathtubs,FALSE
+battering,FALSE
+batteries,FALSE
+battled,FALSE
+battling ,FALSE
+bayous,FALSE
+bazooka,TRUE
+beached,FALSE
+beaching ,FALSE
+bead,TRUE
+beading ,FALSE
+beaded ,FALSE
+beaming,FALSE
+beanstalks,FALSE
+beards,FALSE
+beasts,FALSE
+beauties,FALSE
+beckoning,FALSE
+bedbug,TRUE
+bedrooms,FALSE
+beeches,FALSE
+beefed,FALSE
+beefing,FALSE
+beehives,FALSE
+beeped,FALSE
+beers,FALSE
+begs,FALSE
+beginner,TRUE
+begrudge ,TRUE
+begrudged,FALSE
+behave,TRUE
+behaves ,FALSE
+behaviors,FALSE
+belched,FALSE
+belches ,FALSE
+believes,FALSE
+belled,FALSE
+bellow,TRUE
+bellows,FALSE
+belonging,FALSE
+belt,TRUE
+belugas,FALSE
+benched,FALSE
+benching ,FALSE
+bending,FALSE
+bets,FALSE
+betted ,FALSE
+bewilder,TRUE
+bewildering ,FALSE
+bewitch,TRUE
+bewitching ,FALSE
+bibs,FALSE
+bicycling ,FALSE
+bicycled ,FALSE
+bigshots,FALSE
+biked,FALSE
+bills,FALSE
+billed,FALSE
+billing ,FALSE
+billings ,FALSE
+binged,FALSE
+binging ,FALSE
+birding ,FALSE
+births,FALSE
+birthed,FALSE
+birthing ,FALSE
+biscuit,TRUE
+bitch,TRUE
+bitches ,FALSE
+bitching ,FALSE
+blacken,FALSE
+blacks,FALSE
+blacksmiths,FALSE
+bladed,FALSE
+blames,FALSE
+blaming ,FALSE
+blasts,FALSE
+blasting ,FALSE
+blazing ,FALSE
+bleached,FALSE
+bleaches,FALSE
+bleaching ,FALSE
+bleaks,FALSE
+bleat ,TRUE
+bleats,FALSE
+bleating ,FALSE
+bled,FALSE
+bleeds,FALSE
+bleeding,FALSE
+blend,TRUE
+blends,FALSE
+blending ,FALSE
+blessing,TRUE
+blinds,FALSE
+blinded,FALSE
+blinding,FALSE
+blizzards,FALSE
+blonde,TRUE
+blonder,FALSE
+blondest,FALSE
+blondes ,FALSE
+bloody,FALSE
+bloodied ,FALSE
+blooms,FALSE
+blossomed,FALSE
+blossoming ,FALSE
+blotch,FALSE
+blotched,FALSE
+blotching ,FALSE
+blouses,FALSE
+blowed,FALSE
+blowers,FALSE
+blur,TRUE
+blurred,FALSE
+blurs ,FALSE
+blurt,TRUE
+blush,TRUE
+blushes,FALSE
+blushing ,FALSE
+boas,FALSE
+boarding,FALSE
+boasted,FALSE
+boasts,FALSE
+boating ,FALSE
+boater ,FALSE
+bobs,FALSE
+bobbing,FALSE
+bodied,FALSE
+bodyguards,FALSE
+bogged,FALSE
+bogging ,FALSE
+boils,FALSE
+bolded,FALSE
+bolt,TRUE
+bolts,FALSE
+bombed,FALSE
+bombing,FALSE
+bomber,TRUE
+boned,FALSE
+bonfires,FALSE
+bonks,FALSE
+bonked,FALSE
+bonnets,FALSE
+booked,FALSE
+booking,FALSE
+bookshelves,FALSE
+bookshops,FALSE
+bookstores,FALSE
+booming,FALSE
+boons,FALSE
+booths,FALSE
+boot,TRUE
+booted,FALSE
+bops,FALSE
+bopped,FALSE
+bopping,FALSE
+borders,FALSE
+bores,FALSE
+borrows,FALSE
+borrowing,FALSE
+bosses,FALSE
+bossing,FALSE
+bossiest,FALSE
+bothers,FALSE
+bottling ,FALSE
+bounces,FALSE
+bounciest ,FALSE
+bounds,FALSE
+bouquets,FALSE
+boxed,FALSE
+boxing,FALSE
+braid,TRUE
+braided,FALSE
+braiding,FALSE
+braked,FALSE
+branched,FALSE
+branching,FALSE
+brands,FALSE
+branded,FALSE
+branding,FALSE
+bravest,FALSE
+bravery,FALSE
+brays,FALSE
+braying,FALSE
+breads,FALSE
+breading,FALSE
+breasts,FALSE
+breaths,FALSE
+breathes,FALSE
+breech,TRUE
+breeching ,FALSE
+breeched ,FALSE
+breezy,FALSE
+brews,FALSE
+brewing,FALSE
+brides,FALSE
+bridged,FALSE
+briefed,FALSE
+briefing,FALSE
+briefs,FALSE
+brights,FALSE
+brightening,FALSE
+brisk,TRUE
+bristle,TRUE
+bristled ,FALSE
+broads,FALSE
+bruise,TRUE
+bruising ,FALSE
+buckling ,FALSE
+buck,TRUE
+bucked,FALSE
+bucking,FALSE
+budding ,FALSE
+buddies,FALSE
+budged,FALSE
+budging ,FALSE
+buffalos,FALSE
+buffer,TRUE
+buffering ,FALSE
+buffered,FALSE
+bulge,TRUE
+bulged,FALSE
+bulk,TRUE
+bulled,FALSE
+bulldogs,FALSE
+bulldozers,FALSE
+bums,FALSE
+bumble,FALSE
+bumbled,FALSE
+bumping,FALSE
+bumper,TRUE
+bunched,FALSE
+bunching,FALSE
+bunked,FALSE
+bunking,FALSE
+bunt,FALSE
+bunted,FALSE
+bureaus,FALSE
+burials,FALSE
+buries ,FALSE
+burying ,FALSE
+burn,TRUE
+burping,FALSE
+burrowed,FALSE
+burrowing,FALSE
+bursts,FALSE
+bussed,FALSE
+busts,FALSE
+busting,FALSE
+busied,FALSE
+butts,FALSE
+butted,FALSE
+buttoning ,FALSE
+buyers,FALSE
+buzzed,FALSE
+buzzes,FALSE
+cabs,FALSE
+cabbage,FALSE
+cabins,FALSE
+cackled,FALSE
+cackling ,FALSE
+caesar,FALSE
+cafés,FALSE
+caging,FALSE
+calendars,FALSE
+calms,FALSE
+calming,FALSE
+campfires,FALSE
+canned,FALSE
+canal,TRUE
+canaries,FALSE
+candlesticks,FALSE
+canes,FALSE
+cannibal,TRUE
+canoes,FALSE
+canteens,FALSE
+canters,FALSE
+cantered,FALSE
+cantering,FALSE
+canvassing ,FALSE
+canvases ,FALSE
+canvassed,FALSE
+capes,FALSE
+capitals,FALSE
+capped,FALSE
+capping ,FALSE
+captivate,TRUE
+captivating,FALSE
+capture,TRUE
+capturing,FALSE
+captures,FALSE
+carded,FALSE
+carding,FALSE
+careless,TRUE
+carts,FALSE
+cartons,FALSE
+cartoon,TRUE
+carve,TRUE
+carves,FALSE
+cases,FALSE
+casing,FALSE
+casted,FALSE
+casting,FALSE
+caterpillars,FALSE
+cauldrons,FALSE
+causing,FALSE
+cautions,FALSE
+cautioning,FALSE
+cautious,TRUE
+caves,FALSE
+caved,FALSE
+ceases,FALSE
+celebrates,FALSE
+cementing,FALSE
+cemented,FALSE
+ceremonies,FALSE
+ceremonial,FALSE
+chained,FALSE
+chaining,FALSE
+chalked,FALSE
+chalking,FALSE
+chambers,FALSE
+champs,FALSE
+champions,FALSE
+championships,FALSE
+chancing,FALSE
+chandelier,TRUE
+channeled,FALSE
+channeling,FALSE
+chant,TRUE
+chants,FALSE
+chaps,FALSE
+chapped,FALSE
+chapels,FALSE
+characters,FALSE
+charade,TRUE
+charging,FALSE
+charm,TRUE
+charming,FALSE
+charmed,FALSE
+charts,FALSE
+chatted,FALSE
+chauffeurs,FALSE
+cheaper,FALSE
+cheapest,FALSE
+cheats,FALSE
+cheating,FALSE
+cheated,FALSE
+checkerboards,FALSE
+cheers,FALSE
+cheerfully ,FALSE
+cheeses,FALSE
+chefs,FALSE
+cheffing ,FALSE
+cheffed,FALSE
+chemicals,FALSE
+cherishing,FALSE
+chews,FALSE
+chimpanzee,TRUE
+chimp,TRUE
+chins,FALSE
+chipping ,FALSE
+chirps,FALSE
+chirrup,TRUE
+chirruping,FALSE
+chittered,FALSE
+chittering,FALSE
+chocolates,FALSE
+choices,FALSE
+chokes,FALSE
+choked,FALSE
+chomped,FALSE
+chomping,FALSE
+chomps,FALSE
+choppers,FALSE
+christen,TRUE
+christening,FALSE
+christens,FALSE
+chuckle,TRUE
+chuckling ,FALSE
+chuckles,FALSE
+chugged,FALSE
+chunk,FALSE
+churned,FALSE
+chutes,FALSE
+cigars,FALSE
+cinder,TRUE
+circulate,FALSE
+circulating,FALSE
+civilians,FALSE
+clacks,FALSE
+clacking,FALSE
+clacked,FALSE
+claim,TRUE
+claiming,FALSE
+clams,FALSE
+clammed,FALSE
+clamming,FALSE
+clamber,TRUE
+clambering,FALSE
+clambers,FALSE
+clangs,FALSE
+clanging,FALSE
+clanks,FALSE
+claps,FALSE
+clarinet,TRUE
+clasp,TRUE
+clasping,FALSE
+clasps,FALSE
+classes,FALSE
+classify,TRUE
+classmate,TRUE
+classrooms,FALSE
+clatter,TRUE
+clattering,FALSE
+clawing,FALSE
+cleans,FALSE
+cleaners,FALSE
+clerks,FALSE
+clicks,FALSE
+clicked,FALSE
+clicking,FALSE
+cliffs,FALSE
+climbers,FALSE
+clings,FALSE
+clinging,FALSE
+clinks,FALSE
+clip,TRUE
+clips,FALSE
+clipping ,FALSE
+cloaks,FALSE
+clomp,TRUE
+clomps,FALSE
+clomping,FALSE
+cloths,FALSE
+clowning,FALSE
+clowned,FALSE
+clubbing,FALSE
+clucks,FALSE
+clues,FALSE
+clueless,FALSE
+cluelessly,FALSE
+clumped,FALSE
+clumping,FALSE
+clumsily,FALSE
+clutches,FALSE
+clutter,TRUE
+cluttered,FALSE
+cluttering ,FALSE
+coasts,FALSE
+coasted,FALSE
+coating,FALSE
+coax,TRUE
+coaxes,FALSE
+cobbler,TRUE
+cobweb,TRUE
+cockatoo,TRUE
+coconuts,FALSE
+cocoons,FALSE
+codes,FALSE
+coding,FALSE
+coded,FALSE
+coffins,FALSE
+coils,FALSE
+coiled,FALSE
+coiling,FALSE
+coins,FALSE
+coldest,FALSE
+collapse,TRUE
+collars,FALSE
+collects,FALSE
+collections,FALSE
+collectors,FALSE
+colleges,FALSE
+comedian,FALSE
+comets,FALSE
+comforts,FALSE
+comforted,FALSE
+comics,FALSE
+commands,FALSE
+commanding,FALSE
+comments,FALSE
+commented,FALSE
+commenting,FALSE
+commit,TRUE
+commits,FALSE
+committing,FALSE
+commitment,FALSE
+commuters,FALSE
+commute,TRUE
+companies ,FALSE
+compares,FALSE
+comparing,FALSE
+compartments,FALSE
+compel ,TRUE
+compelled,FALSE
+compels,FALSE
+competitions,FALSE
+complains,FALSE
+complaint,FALSE
+complaints,FALSE
+completes,FALSE
+completed,FALSE
+completing,FALSE
+compliments,FALSE
+complimented,FALSE
+complimenting,FALSE
+compose,TRUE
+composing,FALSE
+composes,FALSE
+computers,FALSE
+concerns,FALSE
+concerned,FALSE
+concerning,FALSE
+conclude,TRUE
+concludes,FALSE
+concluding,FALSE
+condition,TRUE
+conditioning,FALSE
+conditioned,FALSE
+confesses,FALSE
+confessed,FALSE
+confessing,FALSE
+confuse,TRUE
+confuses,FALSE
+congratulates,FALSE
+congratulation,TRUE
+consents,FALSE
+consented,FALSE
+consenting,FALSE
+conservatories,FALSE
+considers,FALSE
+consist,TRUE
+consisting,FALSE
+consists,FALSE
+constables,FALSE
+constants,FALSE
+constrict,TRUE
+constricts,FALSE
+constricting,FALSE
+constrictors,FALSE
+constricted,FALSE
+construct,TRUE
+constructs,FALSE
+constructed,FALSE
+constructing,FALSE
+contain,TRUE
+contained,FALSE
+containing,FALSE
+contracts,FALSE
+contrives,FALSE
+contrived,FALSE
+contriving,FALSE
+controllers,FALSE
+conversations,FALSE
+convey,TRUE
+conveyed,FALSE
+conveying ,FALSE
+convince,TRUE
+convinces,FALSE
+convincing,FALSE
+cools,FALSE
+cooling,FALSE
+coops,FALSE
+coordinates,FALSE
+coordinated,FALSE
+coordinating,FALSE
+copied,FALSE
+cop,FALSE
+copped,FALSE
+copping ,FALSE
+cords,FALSE
+cornered,FALSE
+cornering,FALSE
+corrects,FALSE
+corrected,FALSE
+correcting,FALSE
+cots,FALSE
+cottages,FALSE
+couches,FALSE
+counters,FALSE
+countrysides,FALSE
+counties,FALSE
+coupes,FALSE
+couples,FALSE
+coupons,FALSE
+courses,FALSE
+courted,FALSE
+coward,TRUE
+cowboys,FALSE
+cowgirls,FALSE
+cozied,FALSE
+cracking,FALSE
+cracker,TRUE
+crackles,FALSE
+crackled,FALSE
+crackling ,FALSE
+cradles,FALSE
+cradled,FALSE
+cradling ,FALSE
+cram,TRUE
+crams,FALSE
+cramming,FALSE
+cranberries,FALSE
+craned,FALSE
+craning,FALSE
+cranked,FALSE
+cranking,FALSE
+crashing,FALSE
+crawling,FALSE
+crawlers,FALSE
+crazed,FALSE
+creaks,FALSE
+creaked,FALSE
+create,TRUE
+creates,FALSE
+creation,TRUE
+creative,TRUE
+credits,FALSE
+credited,FALSE
+crediting,FALSE
+creeks,FALSE
+crews,FALSE
+cribs,FALSE
+crinkle,TRUE
+crinkled,FALSE
+crinkles,FALSE
+crinkling,FALSE
+cripple,TRUE
+crippling,FALSE
+cripples,FALSE
+croaks,FALSE
+croaking,FALSE
+crooks,FALSE
+croon,TRUE
+croons,FALSE
+crooning,FALSE
+crosstowns,FALSE
+crowing,FALSE
+crowds,FALSE
+crowned,FALSE
+crowning,FALSE
+crudely,FALSE
+crumbles,FALSE
+crumbled,FALSE
+crumbling,FALSE
+crumple,TRUE
+crumples,FALSE
+crumpling,FALSE
+crunches,FALSE
+crunching,FALSE
+crush,TRUE
+crusty,FALSE
+crusted,FALSE
+crusting,FALSE
+cubbies,FALSE
+cuckoos,FALSE
+cuddling,FALSE
+culturally,FALSE
+culture,TRUE
+cunningest,FALSE
+cunninger,FALSE
+cupping,FALSE
+cupcakes,FALSE
+curbs,FALSE
+curbing,FALSE
+curdle,TRUE
+curdles,FALSE
+curdling,FALSE
+curd,TRUE
+cures,FALSE
+curing ,FALSE
+curling,FALSE
+curses,FALSE
+cursing,FALSE
+curving,FALSE
+cushions,FALSE
+customs,FALSE
+customer,TRUE
+cutters,FALSE
+cycles,FALSE
+cycled,FALSE
+cycling ,FALSE
+cymbal,TRUE
+dab,TRUE
+dabs,FALSE
+dabbing ,FALSE
+daffodil,TRUE
+damages,FALSE
+damaging ,FALSE
+dandelions,FALSE
+dangers,FALSE
+dangerously,FALSE
+darken,TRUE
+darkens,FALSE
+dart,TRUE
+darts,FALSE
+darted,FALSE
+dashes,FALSE
+date,TRUE
+dating,FALSE
+dated,FALSE
+daze,TRUE
+dazing,FALSE
+dazes,FALSE
+deafen,TRUE
+deafens,FALSE
+deafened,FALSE
+deals,FALSE
+dealed,FALSE
+dealing,FALSE
+dealers,FALSE
+deaths,FALSE
+decisions,FALSE
+declare,TRUE
+declaring,FALSE
+decorates,FALSE
+decorated,FALSE
+decorating,FALSE
+decoration,TRUE
+dedicates,FALSE
+dedicated,FALSE
+dedicating,FALSE
+deepest,FALSE
+delicates,FALSE
+delightful,FALSE
+delights,FALSE
+delighting,FALSE
+deliveries,FALSE
+delved,FALSE
+delves,FALSE
+delving,FALSE
+demands,FALSE
+demanding,FALSE
+demonstrate,TRUE
+demonstrates,FALSE
+demonstrating,FALSE
+departs,FALSE
+departed,FALSE
+departing,FALSE
+departments,FALSE
+depended,FALSE
+depending,FALSE
+depress,TRUE
+depressed,FALSE
+descend,TRUE
+descends,FALSE
+descending,FALSE
+describing,FALSE
+deserting,FALSE
+deserve,TRUE
+designs,FALSE
+desires,FALSE
+desists,FALSE
+desisted,FALSE
+desisting,FALSE
+despairs,FALSE
+despairing,FALSE
+desserts,FALSE
+destinations,FALSE
+destine,TRUE
+destining,FALSE
+destines,FALSE
+details,FALSE
+detailed,FALSE
+detailing,FALSE
+detectives,FALSE
+detergents,FALSE
+determine,TRUE
+determines,FALSE
+determining,FALSE
+detests,FALSE
+detested,FALSE
+detesting,FALSE
+developed,FALSE
+develops,FALSE
+developing,FALSE
+devil,TRUE
+devour,TRUE
+devours,FALSE
+devouring ,FALSE
+dewdrop,FALSE
+dialing,FALSE
+dibbled,FALSE
+dibbles,FALSE
+dibbling,FALSE
+dicks,FALSE
+dictionaries,FALSE
+diddled,FALSE
+diddles,FALSE
+diddling ,FALSE
+diets,FALSE
+dieted,FALSE
+dieting,FALSE
+differences,FALSE
+difficulty,FALSE
+difficulties,FALSE
+dignify ,TRUE
+dime,TRUE
+dining,FALSE
+dined,FALSE
+diners,FALSE
+dings,FALSE
+dinging,FALSE
+dinged,FALSE
+dipped,FALSE
+dips,FALSE
+dipping ,FALSE
+directs,FALSE
+directing,FALSE
+disability,FALSE
+disappears,FALSE
+disappoint,TRUE
+disappoints,FALSE
+disappointing,FALSE
+disasters,FALSE
+discontent,TRUE
+discontents,FALSE
+discourage,TRUE
+discouraging,FALSE
+discourages,FALSE
+discovers,FALSE
+discovering,FALSE
+discusses,FALSE
+discussing,FALSE
+disguises,FALSE
+disguising ,FALSE
+disgusts,FALSE
+disgusted,FALSE
+dished,FALSE
+dishing,FALSE
+disk,TRUE
+disobey,TRUE
+disobeys,FALSE
+disobeying ,FALSE
+displays,FALSE
+displayed,FALSE
+displaying ,FALSE
+displease,TRUE
+displeases,FALSE
+distanced,FALSE
+distances,FALSE
+distancing ,FALSE
+distinguish,TRUE
+distinguishes,FALSE
+distinguishing,FALSE
+distractions,FALSE
+distributes,FALSE
+distributed,FALSE
+distributing,FALSE
+disturbs,FALSE
+disturbing,FALSE
+ditched,FALSE
+ditching,FALSE
+divas,FALSE
+dives,FALSE
+divide,TRUE
+divides,FALSE
+divisions,FALSE
+docks,FALSE
+docked,FALSE
+docking,FALSE
+dodge,TRUE
+dodges,FALSE
+dodged,FALSE
+doff,TRUE
+doffs,FALSE
+doffing,FALSE
+dollhouses,FALSE
+doll,TRUE
+domes,FALSE
+dongs,FALSE
+donkeys,FALSE
+doodles,FALSE
+doodled,FALSE
+doodling,FALSE
+doorknobs,FALSE
+doorsteps,FALSE
+doorstops,FALSE
+doses,FALSE
+dosed,FALSE
+dosing,FALSE
+dotted,FALSE
+dotting ,FALSE
+doubles,FALSE
+doubled,FALSE
+doubling,FALSE
+doubts,FALSE
+doves,FALSE
+downers,FALSE
+downpours,FALSE
+dozes,FALSE
+drags,FALSE
+dragonfly,TRUE
+drains,FALSE
+drained,FALSE
+draining,FALSE
+drape,TRUE
+draped,FALSE
+draping ,FALSE
+dreads,FALSE
+dreading ,FALSE
+dreamers,FALSE
+drench,TRUE
+drenches,FALSE
+dressing,FALSE
+dressmakers,FALSE
+drill,TRUE
+drilled,FALSE
+drilling ,FALSE
+drip,TRUE
+drips,FALSE
+driveways,FALSE
+drizzles,FALSE
+drizzled,FALSE
+drizzling,FALSE
+drooled,FALSE
+drooling,FALSE
+drools,FALSE
+drowns,FALSE
+drowsy,TRUE
+drugstores,FALSE
+drummed,FALSE
+drummers,FALSE
+drunks,FALSE
+dubbed,FALSE
+dubbing ,FALSE
+ducked,FALSE
+ducking ,FALSE
+duckbills,FALSE
+duets,FALSE
+dullest,FALSE
+dumpers,FALSE
+dungeons,FALSE
+dusts,FALSE
+dustbath,FALSE
+dusters,FALSE
+duties,FALSE
+dwarf,TRUE
+dwelling ,FALSE
+dwelled,FALSE
+dyes,FALSE
+earmuff,TRUE
+earphone,TRUE
+earring,TRUE
+echoed,FALSE
+echoing ,FALSE
+edged,FALSE
+edging ,FALSE
+educations,FALSE
+eels,FALSE
+eerie,TRUE
+egged,FALSE
+egging ,FALSE
+eighties,FALSE
+elder,TRUE
+electrics,FALSE
+electrician,TRUE
+elegantly,FALSE
+elementaries,FALSE
+elevate,TRUE
+elevates,FALSE
+elevating ,FALSE
+elevators,FALSE
+elks,FALSE
+elongate,TRUE
+elongates,FALSE
+elongating ,FALSE
+embarrass,TRUE
+embarrasses,FALSE
+emblems,FALSE
+embrace,TRUE
+embracing ,FALSE
+embracement,FALSE
+embroider,TRUE
+embroiders,FALSE
+embroidering ,FALSE
+embroidery,FALSE
+emeralds,FALSE
+emerged,FALSE
+emerges,FALSE
+emerging ,FALSE
+emergence ,FALSE
+emergencies,FALSE
+emptying ,FALSE
+enchant,TRUE
+enchants,FALSE
+enchanting ,FALSE
+enchantments,FALSE
+encounter,TRUE
+encounters,FALSE
+encountering ,FALSE
+encourage,TRUE
+encourages,FALSE
+encouraging ,FALSE
+encyclopedia,TRUE
+ending ,FALSE
+endlessly ,FALSE
+enemy,TRUE
+engage,TRUE
+engages,FALSE
+engaging ,FALSE
+enjoys,FALSE
+enroll,TRUE
+enrolls,FALSE
+enrolling ,FALSE
+entering ,FALSE
+entertains,FALSE
+entertained,FALSE
+entertaining ,FALSE
+enthusiastic,TRUE
+entirety,FALSE
+entrances,FALSE
+entrancing ,FALSE
+enviously ,FALSE
+environmentally ,FALSE
+envying ,FALSE
+envies ,FALSE
+envied ,FALSE
+epilogues,FALSE
+equalled ,FALSE
+equalling ,FALSE
+erase,TRUE
+erasing,FALSE
+escalators,FALSE
+escapes,FALSE
+espy,TRUE
+espies,FALSE
+espying,FALSE
+europeans,FALSE
+evils,FALSE
+exacts,FALSE
+exacted,FALSE
+exacting,FALSE
+examines,FALSE
+examining,FALSE
+examples,FALSE
+excavators,FALSE
+excepts,FALSE
+excepted,FALSE
+exchanges,FALSE
+exchanging,FALSE
+excite,TRUE
+excites,FALSE
+exclaim,TRUE
+exclaims,FALSE
+exclaiming,FALSE
+exclamation,TRUE
+excuses,FALSE
+excused,FALSE
+excusing,FALSE
+exercised,FALSE
+exerts,FALSE
+exerted,FALSE
+exerting,FALSE
+exhaust,TRUE
+exhausts,FALSE
+exhausting,FALSE
+exhibits,FALSE
+exhibited,FALSE
+exhibiting,FALSE
+exists,FALSE
+existing,FALSE
+exits,FALSE
+exited,FALSE
+exiting,FALSE
+expects,FALSE
+expectants,FALSE
+experiences,FALSE
+experiencing,FALSE
+expert,TRUE
+explaining,FALSE
+explorations,FALSE
+explores,FALSE
+explorer,FALSE
+explosions,FALSE
+expresses,FALSE
+expressing,FALSE
+expressions,FALSE
+extras,FALSE
+extreme,TRUE
+extremes,FALSE
+eyeball,TRUE
+eyebrows,FALSE
+eyelashes,FALSE
+facing,FALSE
+fading,FALSE
+failing,FALSE
+faints,FALSE
+fainting,FALSE
+fans,FALSE
+fanning,FALSE
+fanned,FALSE
+fares,FALSE
+fared,FALSE
+faring,FALSE
+farms,FALSE
+farming,FALSE
+farmed,FALSE
+farmhouse,FALSE
+fascinate,TRUE
+fascinates,FALSE
+fashion,TRUE
+fashions,FALSE
+fashioning ,FALSE
+favored,FALSE
+favoring,FALSE
+fawning,FALSE
+fawns,FALSE
+fawned,FALSE
+fearing,FALSE
+featherleg,TRUE
+fees,FALSE
+fellows,FALSE
+fenced,FALSE
+fencing,FALSE
+fern,TRUE
+ferries,FALSE
+ferrying,FALSE
+ferried,FALSE
+festivals,FALSE
+festivity,TRUE
+fetches,FALSE
+fetching,FALSE
+feverish,TRUE
+fewest,FALSE
+fiction,FALSE
+fiddled,FALSE
+fiddling ,FALSE
+fiddlestick,TRUE
+fielder,TRUE
+fighter,TRUE
+figures,FALSE
+figuring ,FALSE
+figurehead,FALSE
+files,FALSE
+filing ,FALSE
+filth,TRUE
+finals,FALSE
+finches,FALSE
+fines,FALSE
+finely,FALSE
+fingered,FALSE
+fingering ,FALSE
+finishers,FALSE
+firing ,FALSE
+firefighter,TRUE
+firefly,TRUE
+firework,TRUE
+firms,FALSE
+firmed,FALSE
+firming ,FALSE
+fishbowls,FALSE
+fishers,FALSE
+fishermans,FALSE
+fisting ,FALSE
+fisted,FALSE
+fitted,FALSE
+fixes,FALSE
+flagged,FALSE
+flagging ,FALSE
+flaked,FALSE
+flaking ,FALSE
+flamed,FALSE
+flames,FALSE
+flamingos,FALSE
+flannels,FALSE
+flaps,FALSE
+flats,FALSE
+flatted,FALSE
+flatting ,FALSE
+flatbeds,FALSE
+flecks,FALSE
+flecked,FALSE
+flecking ,FALSE
+flees,FALSE
+fleeing ,FALSE
+fleet ,FALSE
+flicker,TRUE
+flickers,FALSE
+flickering ,FALSE
+flips,FALSE
+flipper,TRUE
+flitters,FALSE
+flittering ,FALSE
+flittered,FALSE
+flocks,FALSE
+flocked,FALSE
+flocking ,FALSE
+flood,TRUE
+floods,FALSE
+flooding ,FALSE
+floored,FALSE
+flooring ,FALSE
+flops,FALSE
+flopping ,FALSE
+floss,TRUE
+flossed,FALSE
+flosses,FALSE
+flossing ,FALSE
+flounce,TRUE
+flounces,FALSE
+flouncing ,FALSE
+flows,FALSE
+flowy,FALSE
+fling ,TRUE
+flings,FALSE
+flinging ,FALSE
+flurry ,TRUE
+flush,TRUE
+flushing ,FALSE
+fluster,TRUE
+flusters,FALSE
+flustering ,FALSE
+flutters,FALSE
+fluted,FALSE
+flyers,FALSE
+foals,FALSE
+fogs,FALSE
+fogged,FALSE
+fogging ,FALSE
+folding ,FALSE
+fold,TRUE
+foods,FALSE
+fooled,FALSE
+fooling ,FALSE
+foolishly,FALSE
+footballs,FALSE
+footprint,TRUE
+footstep,TRUE
+forages,FALSE
+foraged,FALSE
+foraging ,FALSE
+force,TRUE
+forces,FALSE
+forcing ,FALSE
+foreheads,FALSE
+forgives,FALSE
+forgiving ,FALSE
+forklifts,FALSE
+forms,FALSE
+forts,FALSE
+fosters,FALSE
+fostered,FALSE
+fostering ,FALSE
+fouls,FALSE
+fouled,FALSE
+fouling,FALSE
+foundations,FALSE
+foundational,FALSE
+framing,FALSE
+frames,FALSE
+frank,TRUE
+frankly,FALSE
+frats,FALSE
+frees,FALSE
+freed,FALSE
+freedoms,FALSE
+freezing,FALSE
+freights,FALSE
+fresheners,FALSE
+frets,FALSE
+fretted,FALSE
+fridges,FALSE
+frights,FALSE
+frightens,FALSE
+fringed,FALSE
+fringes,FALSE
+fringing,FALSE
+frisbees,FALSE
+frisk,TRUE
+frisks,FALSE
+frisked,FALSE
+fritters,FALSE
+frolics,FALSE
+frolicked,FALSE
+frolicking ,FALSE
+frosts,FALSE
+frosted,FALSE
+frowns,FALSE
+frowning,FALSE
+fruiterer,TRUE
+frumps,FALSE
+fryers,FALSE
+fuddle,TRUE
+fuddles,FALSE
+fuddling,FALSE
+fudges,FALSE
+fudged,FALSE
+fudging,FALSE
+fuels,FALSE
+fueled,FALSE
+fueling,FALSE
+funerals,FALSE
+fungi,FALSE
+funnels,FALSE
+furs,FALSE
+furnaces,FALSE
+furrow,TRUE
+furrowed,FALSE
+furrowing,FALSE
+fusses,FALSE
+futons,FALSE
+gag,TRUE
+gags,FALSE
+gagging ,FALSE
+galled,FALSE
+galling,FALSE
+galleys,FALSE
+gallons,FALSE
+gallops,FALSE
+gaming,FALSE
+ganders,FALSE
+gandered,FALSE
+gandering,FALSE
+gangs,FALSE
+gaps,FALSE
+gapped,FALSE
+gapping ,FALSE
+gardened,FALSE
+garments,FALSE
+gasses,FALSE
+gassed,FALSE
+gassing ,FALSE
+gashes,FALSE
+gashed,FALSE
+gashing,FALSE
+gasket,TRUE
+gasps,FALSE
+gasping,FALSE
+gates,FALSE
+gated,FALSE
+gating,FALSE
+gateway,TRUE
+gathers,FALSE
+gatherers,FALSE
+gays,FALSE
+gazes,FALSE
+generation,TRUE
+generators,FALSE
+generously,FALSE
+gentlemens,FALSE
+ghosted,FALSE
+ghosting,FALSE
+giblet,TRUE
+gifted,FALSE
+gifting ,FALSE
+gill,TRUE
+gingers,FALSE
+gizzards,FALSE
+gladly,FALSE
+glancing,FALSE
+glare,TRUE
+glares,FALSE
+glaze,TRUE
+glazing,FALSE
+gleam,TRUE
+gleams,FALSE
+glide,TRUE
+glisten,TRUE
+glistening,FALSE
+glistened,FALSE
+glitter,TRUE
+glitters,FALSE
+globes,FALSE
+glob,TRUE
+gloved,FALSE
+gloving,FALSE
+glues,FALSE
+gluing ,FALSE
+gluers,FALSE
+glugs,FALSE
+glugged,FALSE
+glugging ,FALSE
+glump,TRUE
+glumped,FALSE
+gnarl,TRUE
+gnarled,FALSE
+gnarled,FALSE
+gnash,TRUE
+gnashes,FALSE
+gnashing ,FALSE
+gnats,FALSE
+gnaw,TRUE
+gnaws,FALSE
+gnawing ,FALSE
+gnome,TRUE
+gnus,FALSE
+goals,FALSE
+goalies,FALSE
+gobbling ,FALSE
+gods,FALSE
+goggle,TRUE
+goldfinches,FALSE
+goldfishes,FALSE
+golfs,FALSE
+golfed,FALSE
+golfing ,FALSE
+golfer,TRUE
+goodbyes,FALSE
+googles,FALSE
+googled,FALSE
+googling,FALSE
+goosefeather,TRUE
+gory,FALSE
+gorillas,FALSE
+gossips,FALSE
+gossiped,FALSE
+gossiping ,FALSE
+gourds,FALSE
+grabs,FALSE
+graced,FALSE
+gracing,FALSE
+grades,FALSE
+graded,FALSE
+grading ,FALSE
+graduates,FALSE
+graduating,FALSE
+graffitied,FALSE
+graffitiing ,FALSE
+grains,FALSE
+grained,FALSE
+graining,FALSE
+granddaughters,FALSE
+grandparent,TRUE
+grants,FALSE
+granting ,FALSE
+grape,TRUE
+grapple,TRUE
+grapples,FALSE
+grappled,FALSE
+grappling ,FALSE
+grasps,FALSE
+grasping ,FALSE
+gratefully ,FALSE
+gratify ,TRUE
+gratifies,FALSE
+gratifying ,FALSE
+graves,FALSE
+graved,FALSE
+graving ,FALSE
+grayed,FALSE
+grays,FALSE
+graying ,FALSE
+greases,FALSE
+greased,FALSE
+greasing ,FALSE
+greasers,FALSE
+greenwoods,FALSE
+greeting,FALSE
+greeted,FALSE
+griddles,FALSE
+grieve,TRUE
+grieved,FALSE
+grieving ,FALSE
+grimaces,FALSE
+grimaced,FALSE
+grimacing ,FALSE
+grime,TRUE
+grimed,FALSE
+griming ,FALSE
+grinned,FALSE
+grinning ,FALSE
+grinds,FALSE
+grinding,FALSE
+grinded,FALSE
+gripe,TRUE
+griping,FALSE
+griped,FALSE
+grip,TRUE
+grips,FALSE
+grit,TRUE
+gritting ,FALSE
+groaning ,FALSE
+grocer,TRUE
+groceries,FALSE
+groats,FALSE
+groom,TRUE
+grooms,FALSE
+grooming ,FALSE
+groomer,TRUE
+grooves,FALSE
+grooved,FALSE
+grooving ,FALSE
+grossed,FALSE
+grossing ,FALSE
+grouch,TRUE
+grounded,FALSE
+grounding ,FALSE
+group,TRUE
+grouped,FALSE
+grouping ,FALSE
+grumbling ,FALSE
+grunt,TRUE
+grunted,FALSE
+grunting ,FALSE
+guarantee,TRUE
+guarantees,FALSE
+guaranteeing ,FALSE
+guardian,TRUE
+guesses,FALSE
+guessing,FALSE
+guides,FALSE
+guided,FALSE
+guiding ,FALSE
+guidebooks,FALSE
+guitarists,FALSE
+gull,TRUE
+gulping,FALSE
+gumming ,FALSE
+gurus,FALSE
+gusted,FALSE
+gusting ,FALSE
+hacked,FALSE
+haikus,FALSE
+hail,TRUE
+hails,FALSE
+hailed,FALSE
+haircuts,FALSE
+hairdressers,FALSE
+halfed,FALSE
+halves,FALSE
+halls,FALSE
+hallows,FALSE
+hammered,FALSE
+hammocks,FALSE
+handing,FALSE
+handlebar,TRUE
+handle,TRUE
+handled,FALSE
+handsomest,FALSE
+handstands,FALSE
+hangnails,FALSE
+harbors,FALSE
+harbored,FALSE
+harboring ,FALSE
+hared,FALSE
+haring,FALSE
+harmed,FALSE
+harming,FALSE
+harnessed,FALSE
+harnessing,FALSE
+harped,FALSE
+harping,FALSE
+harrows,FALSE
+harrowed,FALSE
+harrowing,FALSE
+harvests,FALSE
+harvesting,FALSE
+harvesters,FALSE
+hashed,FALSE
+hashing,FALSE
+hashes,FALSE
+hasten,TRUE
+hastens,FALSE
+hastened,FALSE
+hasting,FALSE
+hatches,FALSE
+hatching,FALSE
+hating,FALSE
+hatefully ,FALSE
+hatter,TRUE
+hauls,FALSE
+haunt,TRUE
+haunts,FALSE
+haunted,FALSE
+havens,FALSE
+hawks,FALSE
+haystacks,FALSE
+headaches,FALSE
+headdresses,FALSE
+headland,TRUE
+headquarter,TRUE
+heals,FALSE
+healed,FALSE
+heaps,FALSE
+heaped,FALSE
+heats,FALSE
+heated,FALSE
+heating ,FALSE
+heave,TRUE
+heaves,FALSE
+heaving ,FALSE
+heaviest,FALSE
+hedgehogs,FALSE
+heeds,FALSE
+heeded,FALSE
+heeding ,FALSE
+heeled,FALSE
+heeling ,FALSE
+height,TRUE
+heist,TRUE
+heists,FALSE
+heisting ,FALSE
+helicopters,FALSE
+helmets,FALSE
+helper,TRUE
+helpfully ,FALSE
+helplessly ,FALSE
+hems,FALSE
+hemmed,FALSE
+hemming ,FALSE
+herbs,FALSE
+herbalist,TRUE
+herd,TRUE
+herding ,FALSE
+herded,FALSE
+heritages,FALSE
+herons,FALSE
+herring,TRUE
+hesitate,TRUE
+hesitates,FALSE
+hesitating ,FALSE
+hicks,FALSE
+highchairs,FALSE
+hiking,FALSE
+hikes,FALSE
+hilling ,FALSE
+hillock,TRUE
+hillside,TRUE
+hinds,FALSE
+hinded,FALSE
+hints,FALSE
+hinted,FALSE
+hinting,FALSE
+hires,FALSE
+hiring,FALSE
+hisses,FALSE
+histories,FALSE
+hitting ,FALSE
+hitching,FALSE
+hitches,FALSE
+hitchhikers,FALSE
+hives,FALSE
+hos,FALSE
+hoes,FALSE
+hogged,FALSE
+holing ,FALSE
+hollowed,FALSE
+hollowing ,FALSE
+homelands,FALSE
+honesty,FALSE
+honeysuckles,FALSE
+honks,FALSE
+honors,FALSE
+honoring,FALSE
+hoods,FALSE
+hooded,FALSE
+hooking ,FALSE
+hooped,FALSE
+hooping ,FALSE
+hoots,FALSE
+hopelessly ,FALSE
+horizons,FALSE
+hornpipes,FALSE
+horribly,FALSE
+horrors,FALSE
+horsing ,FALSE
+horsed,FALSE
+horseshoes,FALSE
+hosed,FALSE
+hoses,FALSE
+hosing ,FALSE
+hosts,FALSE
+hosted,FALSE
+hosting ,FALSE
+hotels,FALSE
+hounds,FALSE
+hounding,FALSE
+hounded,FALSE
+houseflies,FALSE
+houseguest,TRUE
+housekeepers,FALSE
+housetops,FALSE
+hovercrafts,FALSE
+hover,TRUE
+hovers,FALSE
+howls ,FALSE
+hubcap,TRUE
+huddle,TRUE
+huddles,FALSE
+huddling ,FALSE
+huffs,FALSE
+humorously ,FALSE
+humped,FALSE
+humping ,FALSE
+humpbacks,FALSE
+hunches,FALSE
+hunching ,FALSE
+hundred,TRUE
+hunts,FALSE
+hunters,FALSE
+hurl,TRUE
+hurls,FALSE
+hurling ,FALSE
+hurricanes,FALSE
+hurtle,TRUE
+hurtled,FALSE
+hurtling ,FALSE
+husbands,FALSE
+hushes,FALSE
+hushed,FALSE
+hushing ,FALSE
+huskies,FALSE
+hustles,FALSE
+hydrants,FALSE
+hyenas,FALSE
+ices,FALSE
+icebergs,FALSE
+iceboxes,FALSE
+icicles,FALSE
+ideally ,FALSE
+ignore,TRUE
+ignores,FALSE
+ills,FALSE
+illness,TRUE
+illustrate,TRUE
+illustrates,FALSE
+illustrating ,FALSE
+illustrators,FALSE
+imaginations,FALSE
+imagines,FALSE
+immediate,TRUE
+impatiently ,FALSE
+imply,TRUE
+implied,FALSE
+implying ,FALSE
+implore,TRUE
+implores,FALSE
+imploring ,FALSE
+impolitely ,FALSE
+impresses,FALSE
+impressing ,FALSE
+impressions,FALSE
+improve,TRUE
+improving ,FALSE
+improves,FALSE
+impulses,FALSE
+inched,FALSE
+inching ,FALSE
+inchworms,FALSE
+incidents,FALSE
+include,TRUE
+includes,FALSE
+indescribably ,FALSE
+indicates,FALSE
+indicated,FALSE
+indicating ,FALSE
+indignant,TRUE
+infants,FALSE
+informs,FALSE
+informing ,FALSE
+ingredients,FALSE
+injure,TRUE
+injures,FALSE
+injuring ,FALSE
+inks,FALSE
+inquire,TRUE
+inquires,FALSE
+inquiring ,FALSE
+insect,TRUE
+inseparably,FALSE
+insists,FALSE
+insisting,FALSE
+inspires,FALSE
+inspiring ,FALSE
+instruction,TRUE
+instrument,TRUE
+insult,TRUE
+insults,FALSE
+insulting ,FALSE
+integrates,FALSE
+integrated,FALSE
+integrating ,FALSE
+intends,FALSE
+intending ,FALSE
+interests,FALSE
+interrupts,FALSE
+intimately ,FALSE
+introduce,TRUE
+introduces,FALSE
+introducing ,FALSE
+introductions,FALSE
+invade,TRUE
+invades,FALSE
+invaded,FALSE
+invent,TRUE
+invents,FALSE
+inventing ,FALSE
+inventions,FALSE
+investigates,FALSE
+investigated,FALSE
+investigating ,FALSE
+irons,FALSE
+isles,FALSE
+itches,FALSE
+itched,FALSE
+itching ,FALSE
+jab,TRUE
+jabs,FALSE
+jabbing ,FALSE
+jacking ,FALSE
+jackrabbits,FALSE
+jades,FALSE
+jaded,FALSE
+jails,FALSE
+jailed,FALSE
+jammed ,FALSE
+janitors,FALSE
+jars,FALSE
+jarred,FALSE
+jarring ,FALSE
+jaundice,TRUE
+jawed,FALSE
+jawing ,FALSE
+jay,TRUE
+jazz,TRUE
+jazzes,FALSE
+jazzing ,FALSE
+jeeps,FALSE
+jellies,FALSE
+jerk,TRUE
+jerks,FALSE
+jerking ,FALSE
+jets,FALSE
+jeweling ,FALSE
+jew,TRUE
+jigs,FALSE
+jiggles,FALSE
+jiggled,FALSE
+jiggling ,FALSE
+jingles,FALSE
+jingled,FALSE
+jingling ,FALSE
+jockeys,FALSE
+jogs,FALSE
+jogging ,FALSE
+joking ,FALSE
+joyful,TRUE
+joyously ,FALSE
+judged,FALSE
+judging ,FALSE
+juggled,FALSE
+juggles,FALSE
+juices,FALSE
+juiced,FALSE
+juicing ,FALSE
+jumbles,FALSE
+jumbled,FALSE
+jumbling ,FALSE
+jumpers,FALSE
+junctions,FALSE
+juniors,FALSE
+kaleidoscopes,FALSE
+kernels,FALSE
+kidnaps,FALSE
+kidnapped,FALSE
+kidnapping ,FALSE
+kills,FALSE
+kimono,FALSE
+kindergartens,FALSE
+kingdoms,FALSE
+kitchens,FALSE
+kit,TRUE
+kneads,FALSE
+kneel,TRUE
+kneels,FALSE
+knits,FALSE
+knob,TRUE
+knotting ,FALSE
+koalas,FALSE
+labs,FALSE
+label,TRUE
+labels,FALSE
+labeled,FALSE
+laced,FALSE
+lacing ,FALSE
+lacks,FALSE
+lacking ,FALSE
+lacked,FALSE
+lads,FALSE
+lagging ,FALSE
+lagged ,FALSE
+lamps,FALSE
+lampposts,FALSE
+landscapes,FALSE
+languages,FALSE
+lantern,TRUE
+laps,FALSE
+lapped,FALSE
+lapping ,FALSE
+lash,TRUE
+lashed,FALSE
+lashing ,FALSE
+lass,TRUE
+lassed,FALSE
+lassing ,FALSE
+lasts,FALSE
+lasting ,FALSE
+latches,FALSE
+latching ,FALSE
+launch,TRUE
+launches,FALSE
+launching ,FALSE
+laundromats,FALSE
+leads,FALSE
+leading ,FALSE
+leaks,FALSE
+leaked,FALSE
+leans,FALSE
+leashes,FALSE
+leashed,FALSE
+leashing ,FALSE
+lease,TRUE
+leased,FALSE
+leases,FALSE
+ledges,FALSE
+leed,TRUE
+legacies,FALSE
+lemons,FALSE
+lends,FALSE
+lengthen,TRUE
+lengthens,FALSE
+lengthened,FALSE
+lentils,FALSE
+leprechauns,FALSE
+levels,FALSE
+leveled,FALSE
+leveling ,FALSE
+liars,FALSE
+librarian,TRUE
+libraries,FALSE
+lids,FALSE
+lifebelts,FALSE
+lifeboats,FALSE
+lifestyle,TRUE
+lightbulbs,FALSE
+liking ,FALSE
+lilacs,FALSE
+limbs,FALSE
+limbers,FALSE
+limbering ,FALSE
+limes,FALSE
+limits,FALSE
+limiting ,FALSE
+limos,FALSE
+limps,FALSE
+limped,FALSE
+limping ,FALSE
+lining ,FALSE
+lineups,FALSE
+link,TRUE
+links,FALSE
+linking ,FALSE
+liquids,FALSE
+loaders,FALSE
+loaves,FALSE
+loafer,TRUE
+loans,FALSE
+loaning ,FALSE
+locking ,FALSE
+lockets,FALSE
+logged,FALSE
+logging ,FALSE
+logpiles,FALSE
+lollipops,FALSE
+longs,FALSE
+lookouts,FALSE
+loop,TRUE
+looping,FALSE
+loops,FALSE
+looting,FALSE
+looted,FALSE
+lords,FALSE
+loses,FALSE
+losers,FALSE
+losses,FALSE
+lows,FALSE
+lowing ,FALSE
+lubricate,TRUE
+lubricates,FALSE
+lubricated,FALSE
+lucks,FALSE
+lucked,FALSE
+lucking ,FALSE
+lumbers,FALSE
+lumbered,FALSE
+lumbering,FALSE
+lumped,FALSE
+lumping ,FALSE
+lunchrooms,FALSE
+lung,TRUE
+lurching ,FALSE
+lurk,TRUE
+lurked,FALSE
+lurking ,FALSE
+mas,FALSE
+madden,FALSE
+maddening ,FALSE
+magazine,TRUE
+magically ,FALSE
+magicians,FALSE
+magnificently ,FALSE
+magnifiques,FALSE
+mailed,FALSE
+mailing ,FALSE
+maintains,FALSE
+maintained,FALSE
+maintaining,FALSE
+majestically,FALSE
+majors,FALSE
+majored,FALSE
+majoring,FALSE
+majesties,FALSE
+majorities,FALSE
+males,FALSE
+malts,FALSE
+malting ,FALSE
+manages,FALSE
+managing ,FALSE
+manager,TRUE
+manes,FALSE
+mangoes,FALSE
+manicures,FALSE
+mansions,FALSE
+maps,FALSE
+mapped,FALSE
+mapping ,FALSE
+marbled,FALSE
+marbling ,FALSE
+marches,FALSE
+mares,FALSE
+marigolds,FALSE
+marking ,FALSE
+markets,FALSE
+marriages,FALSE
+marrying ,FALSE
+marrows,FALSE
+marsh,TRUE
+marvel,TRUE
+marvels,FALSE
+marveling ,FALSE
+marvelously ,FALSE
+mascots,FALSE
+mash,TRUE
+mashes,FALSE
+mashing ,FALSE
+masked,FALSE
+masking ,FALSE
+massage,TRUE
+massages,FALSE
+massaging ,FALSE
+mastered,FALSE
+mastering ,FALSE
+mast,TRUE
+matted,FALSE
+matting ,FALSE
+matched,FALSE
+matching ,FALSE
+maths,FALSE
+mattered,FALSE
+maul,TRUE
+mauls,FALSE
+mauling ,FALSE
+meanest,FALSE
+measures,FALSE
+meats,FALSE
+mechanics,FALSE
+medal,TRUE
+meddle,TRUE
+meddles,FALSE
+meddled,FALSE
+medicines,FALSE
+mediums,FALSE
+megaphones,FALSE
+mends,FALSE
+mentions,FALSE
+mentioned,FALSE
+mentioning,FALSE
+menus,FALSE
+meows,FALSE
+meowing ,FALSE
+mermaids,FALSE
+messed,FALSE
+messing ,FALSE
+messages,FALSE
+messaged,FALSE
+messaging ,FALSE
+messengers,FALSE
+metals,FALSE
+method,TRUE
+microphone,TRUE
+midgets,FALSE
+militaries,FALSE
+milkmans,FALSE
+mills,FALSE
+mingle,TRUE
+mingles,FALSE
+mingling ,FALSE
+minnows,FALSE
+minuses,FALSE
+miracles,FALSE
+miraculously ,FALSE
+mirrors,FALSE
+mirrored,FALSE
+mirroring ,FALSE
+misbehaves,FALSE
+misbehaved,FALSE
+mischiefs,FALSE
+mischievously ,FALSE
+mismatch,TRUE
+mismatches,FALSE
+mismatching ,FALSE
+mists,FALSE
+mistaking ,FALSE
+misters,FALSE
+mistresses,FALSE
+mits,FALSE
+mixes,FALSE
+mixing ,FALSE
+mixers,FALSE
+moaning ,FALSE
+moats,FALSE
+moated,FALSE
+moating ,FALSE
+mobiles,FALSE
+modeled,FALSE
+modeling ,FALSE
+modest,TRUE
+molded,FALSE
+molds,FALSE
+molding ,FALSE
+moles,FALSE
+molts,FALSE
+molted,FALSE
+molting ,FALSE
+monorails,FALSE
+moos,FALSE
+mooed,FALSE
+mooing ,FALSE
+moods,FALSE
+moody,FALSE
+moonflower,TRUE
+mopes,FALSE
+moped,FALSE
+moping ,FALSE
+morals,FALSE
+morsels,FALSE
+moth,TRUE
+motions,FALSE
+motioned,FALSE
+motioning ,FALSE
+motors,FALSE
+motored,FALSE
+motoring ,FALSE
+motorbike,TRUE
+motorcycles,FALSE
+motorcycling,FALSE
+motorcycled,FALSE
+mottos,FALSE
+mounded,FALSE
+mounding ,FALSE
+mounts,FALSE
+mounted,FALSE
+mounting ,FALSE
+mountainsides,FALSE
+mourns,FALSE
+mourned,FALSE
+mourning ,FALSE
+mourners,FALSE
+mouthfuls,FALSE
+movements,FALSE
+mover,TRUE
+mow,TRUE
+mows,FALSE
+muddles,FALSE
+muddling ,FALSE
+muffer,TRUE
+muffers,FALSE
+muffering ,FALSE
+mudglump,TRUE
+muffets,FALSE
+muffinheads,FALSE
+muffle,TRUE
+muffles,FALSE
+muffling ,FALSE
+mufflers,FALSE
+mules,FALSE
+multiply ,TRUE
+multiplies,FALSE
+multiplying ,FALSE
+multiple,FALSE
+mumbles,FALSE
+munches,FALSE
+murmur,TRUE
+murmurs,FALSE
+murmuring ,FALSE
+muse,TRUE
+muses,FALSE
+musing ,FALSE
+mushed,FALSE
+mushes,FALSE
+mushing ,FALSE
+musicals,FALSE
+musically ,FALSE
+musts,FALSE
+mustaches,FALSE
+mustards,FALSE
+mutts,FALSE
+mutter,TRUE
+muzzle,TRUE
+muzzled,FALSE
+muzzling ,FALSE
+mysteriously ,FALSE
+mysteries,FALSE
+nacks,FALSE
+nags,FALSE
+nagged,FALSE
+nagging ,FALSE
+nailed,FALSE
+naming ,FALSE
+nannies,FALSE
+nannied ,FALSE
+nannying ,FALSE
+napped,FALSE
+naptimes,FALSE
+narrators,FALSE
+narrows,FALSE
+narrowed,FALSE
+narrowing ,FALSE
+nationals,FALSE
+natives,FALSE
+naturally,FALSE
+navigates,FALSE
+navigated,FALSE
+navigating ,FALSE
+nears,FALSE
+nearing ,FALSE
+nearest,FALSE
+neats,FALSE
+necessity ,TRUE
+necked,FALSE
+necktie,TRUE
+nectars,FALSE
+neighs,FALSE
+neighing ,FALSE
+neighborhoods,FALSE
+nephews,FALSE
+nesting ,FALSE
+nestle,TRUE
+nestles,FALSE
+nestling ,FALSE
+nets,FALSE
+netted,FALSE
+netting ,FALSE
+neutrals,FALSE
+neutrally ,FALSE
+newborns,FALSE
+newstands,FALSE
+nibbling ,FALSE
+nicer,FALSE
+niche,TRUE
+nieces,FALSE
+nightdresses,FALSE
+nightmares,FALSE
+nightshirts,FALSE
+nines,FALSE
+nineteenth ,FALSE
+nineties ,FALSE
+nips,FALSE
+nipped ,FALSE
+nipping ,FALSE
+nobs,FALSE
+nobles,FALSE
+nods,FALSE
+nodding ,FALSE
+nooks,FALSE
+normally,FALSE
+northwards,FALSE
+nosing ,FALSE
+nosed,FALSE
+nostrils,FALSE
+noting,FALSE
+notebooks,FALSE
+noticing,FALSE
+nougats,FALSE
+nozzles,FALSE
+nudes,FALSE
+numbs,FALSE
+numbed,FALSE
+numbing ,FALSE
+nurses,FALSE
+nursed,FALSE
+nursing ,FALSE
+nutted,FALSE
+nutting ,FALSE
+nutritionist,TRUE
+oaks,FALSE
+oatmeals,FALSE
+oat,TRUE
+obeys,FALSE
+obeying,FALSE
+objects,FALSE
+objecting ,FALSE
+obligate,TRUE
+obligates,FALSE
+obligating ,FALSE
+occasionally,FALSE
+occurs,FALSE
+occurring ,FALSE
+octopuses,FALSE
+odds,FALSE
+offend,TRUE
+offends,FALSE
+offending ,FALSE
+offers,FALSE
+offering ,FALSE
+offerings,FALSE
+offices,FALSE
+officers,FALSE
+oils,FALSE
+oiling ,FALSE
+oinks,FALSE
+oinked,FALSE
+oinking ,FALSE
+ointments,FALSE
+olive,TRUE
+olympic,TRUE
+omelets,FALSE
+onwards,FALSE
+ooze,TRUE
+oozes,FALSE
+oozed,FALSE
+opals,FALSE
+openers,FALSE
+operas,FALSE
+opportunity ,TRUE
+oppose,TRUE
+opposes,FALSE
+opposing ,FALSE
+opposites,FALSE
+orchard,TRUE
+orchestra,TRUE
+orders,FALSE
+ordering ,FALSE
+ordinarily ,FALSE
+organs,FALSE
+organize,TRUE
+organizes,FALSE
+organized,FALSE
+orphans,FALSE
+ostriches,FALSE
+otters,FALSE
+outed,FALSE
+outing ,FALSE
+outgrows,FALSE
+outgrowing ,FALSE
+outlaw,TRUE
+outlines,FALSE
+outlined,FALSE
+outlining ,FALSE
+outskirt,TRUE
+outsmarts,FALSE
+outsmarted,FALSE
+outsmarting ,FALSE
+outstretch,TRUE
+outstretches,FALSE
+outstretching ,FALSE
+ovals,FALSE
+ovens,FALSE
+overcoats,FALSE
+overcoated,FALSE
+overcoating ,FALSE
+overcook,TRUE
+overcooking ,FALSE
+overcooks,FALSE
+overdress,TRUE
+overdresses,FALSE
+overdressing ,FALSE
+overflows,FALSE
+overflowed,FALSE
+overflowing ,FALSE
+overhear,TRUE
+overhears,FALSE
+overhearing ,FALSE
+overlook,TRUE
+overlooks,FALSE
+overlooked,FALSE
+overwhelms,FALSE
+overwhelmed,FALSE
+overwhelming ,FALSE
+overwork,TRUE
+overworks,FALSE
+overworking ,FALSE
+owns,FALSE
+owning ,FALSE
+oxes,FALSE
+paces,FALSE
+pacing ,FALSE
+packs,FALSE
+packaging ,FALSE
+packets,FALSE
+padding ,FALSE
+paged,FALSE
+paging ,FALSE
+paining ,FALSE
+painfully ,FALSE
+palaces,FALSE
+paled,FALSE
+pales,FALSE
+paling ,FALSE
+palms,FALSE
+pane,TRUE
+panick,TRUE
+panicks,FALSE
+panicking ,FALSE
+pant,TRUE
+pantload,TRUE
+pantries,FALSE
+paps,FALSE
+papers,FALSE
+paperweights,FALSE
+parades,FALSE
+paraded,FALSE
+parading ,FALSE
+pardons,FALSE
+pardoned,FALSE
+pardoning ,FALSE
+parent,TRUE
+parlors,FALSE
+parrots,FALSE
+parsons,FALSE
+partridges,FALSE
+passages,FALSE
+paste,TRUE
+pastes,FALSE
+pasting ,FALSE
+pastries ,FALSE
+pastures,FALSE
+pats,FALSE
+patting ,FALSE
+patching ,FALSE
+pathing ,FALSE
+pathetically ,FALSE
+patients,FALSE
+patrols,FALSE
+patrolled,FALSE
+patrolling ,FALSE
+patter,TRUE
+patters,FALSE
+patterned,FALSE
+patterning ,FALSE
+pauses,FALSE
+pausing ,FALSE
+pavements,FALSE
+pave,TRUE
+paves,FALSE
+paved,FALSE
+pawed,FALSE
+pawn,TRUE
+pawned,FALSE
+pawning ,FALSE
+peaches,FALSE
+peacocks,FALSE
+peachy,FALSE
+peaked,FALSE
+peaking ,FALSE
+pecans,FALSE
+pecks,FALSE
+pecked,FALSE
+pecking ,FALSE
+peculiarly ,FALSE
+pedaling ,FALSE
+peddlers,FALSE
+pedestrian,TRUE
+pedlars,FALSE
+peed,FALSE
+peeing,FALSE
+pees,FALSE
+peels,FALSE
+peeling ,FALSE
+peeps,FALSE
+peer,TRUE
+peers,FALSE
+peg,TRUE
+pegged,FALSE
+pens,FALSE
+penalties,FALSE
+peppermints,FALSE
+percents,FALSE
+perches,FALSE
+perching ,FALSE
+performances,FALSE
+performer,TRUE
+perk,TRUE
+perks,FALSE
+perking ,FALSE
+permit,TRUE
+permits,FALSE
+permitting ,FALSE
+perplex,TRUE
+perplexes,FALSE
+perplexing ,FALSE
+persians,FALSE
+persist,TRUE
+persists,FALSE
+persisting ,FALSE
+personally ,FALSE
+petted,FALSE
+petting ,FALSE
+petal,TRUE
+petaled,FALSE
+petaling ,FALSE
+phased,FALSE
+phases,FALSE
+phasing ,FALSE
+phones,FALSE
+phoning ,FALSE
+photographs,FALSE
+photographers,FALSE
+photo,TRUE
+physicians,FALSE
+pianos,FALSE
+pickers,FALSE
+pickets,FALSE
+picketing ,FALSE
+picketed,FALSE
+pickling ,FALSE
+pictured,FALSE
+picturing ,FALSE
+pieced,FALSE
+piecing ,FALSE
+piggies ,FALSE
+piglet,TRUE
+piles,FALSE
+piling ,FALSE
+pileups,FALSE
+pilots,FALSE
+piloting ,FALSE
+pinned,FALSE
+pinches,FALSE
+pinched,FALSE
+pinching ,FALSE
+pincushions,FALSE
+pined,FALSE
+pining,FALSE
+pineapples,FALSE
+pinhead,TRUE
+pinheads,FALSE
+pints,FALSE
+pips,FALSE
+pipped,FALSE
+pipping ,FALSE
+pipelayers,FALSE
+pirouettes,FALSE
+pirouetted,FALSE
+pistachios,FALSE
+pitted,FALSE
+pitting ,FALSE
+pitch,TRUE
+pitches,FALSE
+pitchers,FALSE
+pitters,FALSE
+plaid,TRUE
+plaining ,FALSE
+plained,FALSE
+planed,FALSE
+planing ,FALSE
+planets,FALSE
+planks,FALSE
+planked,FALSE
+planking ,FALSE
+plasters,FALSE
+plastered,FALSE
+plastering ,FALSE
+plastics,FALSE
+plated,FALSE
+plating ,FALSE
+platforms,FALSE
+platters,FALSE
+platypuses,FALSE
+players,FALSE
+playfellow,TRUE
+playgrounds,FALSE
+playmate,TRUE
+plaything,TRUE
+pleads,FALSE
+pleading ,FALSE
+pleases,FALSE
+pleats,FALSE
+pleated,FALSE
+pleating ,FALSE
+pledges,FALSE
+pledged,FALSE
+pledging ,FALSE
+plier,TRUE
+plod,TRUE
+plods,FALSE
+plodded,FALSE
+plops,FALSE
+plopped,FALSE
+plopping,FALSE
+plough,TRUE
+ploughed,FALSE
+ploughing ,FALSE
+plucks,FALSE
+plucking ,FALSE
+plugging ,FALSE
+plumbers,FALSE
+plumps,FALSE
+plumped,FALSE
+plumping ,FALSE
+plunge,TRUE
+plunges,FALSE
+plunging ,FALSE
+plungers,FALSE
+plunks,FALSE
+plunked,FALSE
+plunking ,FALSE
+poaches,FALSE
+poaching,FALSE
+pocketed,FALSE
+pocketing ,FALSE
+pocketfuls,FALSE
+poet,TRUE
+poison,TRUE
+poisons,FALSE
+poisoning ,FALSE
+pokes,FALSE
+poking ,FALSE
+poker,TRUE
+poled,FALSE
+poling ,FALSE
+polishes,FALSE
+polishing ,FALSE
+polls,FALSE
+polled,FALSE
+polling ,FALSE
+ponytails,FALSE
+poos,FALSE
+poofs,FALSE
+poofed,FALSE
+pooled,FALSE
+pooling ,FALSE
+pooping ,FALSE
+popping ,FALSE
+porches,FALSE
+porched,FALSE
+porcupines,FALSE
+porkers,FALSE
+porked,FALSE
+porks,FALSE
+porter,TRUE
+portion,TRUE
+portioned,FALSE
+portioning ,FALSE
+portraits,FALSE
+posy ,TRUE
+possessed,FALSE
+possesses,FALSE
+possessing ,FALSE
+possession,TRUE
+possibility ,TRUE
+possums,FALSE
+posts,FALSE
+posted,FALSE
+posting ,FALSE
+postmasters,FALSE
+potted,FALSE
+potting ,FALSE
+pouches,FALSE
+pouched,FALSE
+pouching ,FALSE
+pounces,FALSE
+pouted,FALSE
+pouting ,FALSE
+powders,FALSE
+powdering ,FALSE
+powering ,FALSE
+practices,FALSE
+prairies,FALSE
+prances,FALSE
+prancers,FALSE
+prays,FALSE
+prayed,FALSE
+precise,TRUE
+predict,TRUE
+predicts,FALSE
+predicting ,FALSE
+predictions,FALSE
+prefers,FALSE
+preferred,FALSE
+preferring ,FALSE
+preference,TRUE
+prepares,FALSE
+presenting ,FALSE
+presses,FALSE
+pretends,FALSE
+pretenders,FALSE
+prettier,FALSE
+prices,FALSE
+priced,FALSE
+pricing ,FALSE
+pricelessly ,FALSE
+pricks,FALSE
+pricking ,FALSE
+prickled,FALSE
+prickling ,FALSE
+pry,TRUE
+prying ,FALSE
+priests,FALSE
+principles,FALSE
+printed,FALSE
+printing ,FALSE
+prisons,FALSE
+prisoners,FALSE
+privates,FALSE
+privately ,FALSE
+prizes,FALSE
+prizing ,FALSE
+proclaims,FALSE
+proclaimed,FALSE
+proclaiming ,FALSE
+prods,FALSE
+prodding ,FALSE
+professionals,FALSE
+professionally ,FALSE
+professors ,FALSE
+program,TRUE
+programmed,FALSE
+programming ,FALSE
+progresses,FALSE
+progressed,FALSE
+progressing ,FALSE
+promenaded,FALSE
+promenades,FALSE
+promenading ,FALSE
+promising ,FALSE
+pronounce,TRUE
+pronounces,FALSE
+pronouncing ,FALSE
+propellers,FALSE
+proposals,FALSE
+prop,TRUE
+propped ,FALSE
+propping ,FALSE
+protects,FALSE
+protected,FALSE
+protecting ,FALSE
+protections,FALSE
+protectors,FALSE
+protest,TRUE
+protests,FALSE
+protesting ,FALSE
+protester,TRUE
+protrude,TRUE
+protrudes,FALSE
+protruded,FALSE
+prouder,FALSE
+proving ,FALSE
+provides,FALSE
+providing ,FALSE
+prowls,FALSE
+prowled,FALSE
+prowling ,FALSE
+pruned,FALSE
+pruning ,FALSE
+psalms,FALSE
+psychic,TRUE
+psychologist,TRUE
+publishers,FALSE
+puddled,FALSE
+puddling ,FALSE
+pulps,FALSE
+pulped,FALSE
+pulping ,FALSE
+pumps,FALSE
+pumpers,FALSE
+punches,FALSE
+punching ,FALSE
+punish,TRUE
+punishes,FALSE
+punishing ,FALSE
+purchase,TRUE
+purchased,FALSE
+purchasing ,FALSE
+purses,FALSE
+pushers,FALSE
+puzzling ,FALSE
+pyramid,TRUE
+pythons,FALSE
+quakers,FALSE
+qualify,TRUE
+qualifies,FALSE
+qualifying ,FALSE
+quality ,TRUE
+quarrels,FALSE
+quarreled,FALSE
+quarts,FALSE
+queers,FALSE
+questioned,FALSE
+questioning ,FALSE
+quiets,FALSE
+quieting ,FALSE
+quilted,FALSE
+quilting ,FALSE
+quits,FALSE
+quitting ,FALSE
+quivers,FALSE
+quivering ,FALSE
+raccoons,FALSE
+racetracks,FALSE
+racks,FALSE
+racked,FALSE
+racking ,FALSE
+rackets,FALSE
+racketed,FALSE
+radars,FALSE
+radios,FALSE
+radish,TRUE
+rafters,FALSE
+raft,TRUE
+rafted,FALSE
+rafting ,FALSE
+rages,FALSE
+raging ,FALSE
+railed,FALSE
+railways,FALSE
+rainbows,FALSE
+raincoats,FALSE
+raindrop,TRUE
+raisin,TRUE
+rakes,FALSE
+raking ,FALSE
+rams,FALSE
+rammed,FALSE
+ramming ,FALSE
+rambles,FALSE
+rambled,FALSE
+rambling ,FALSE
+ranches,FALSE
+ransack,TRUE
+ransacks,FALSE
+ransacking ,FALSE
+raps,FALSE
+rapids,FALSE
+rascals,FALSE
+rashes,FALSE
+raspberries,FALSE
+ratted,FALSE
+ratting ,FALSE
+rate,TRUE
+rates,FALSE
+rating ,FALSE
+rattles,FALSE
+rattlesnakes,FALSE
+razors,FALSE
+reaches,FALSE
+realities,FALSE
+realize,TRUE
+realizing ,FALSE
+reappear,TRUE
+reappeared,FALSE
+reappearing ,FALSE
+reassure,TRUE
+reassured,FALSE
+reassuring ,FALSE
+reassuring,TRUE
+rebuilds,FALSE
+rebuilt,FALSE
+rebuilding ,FALSE
+receiving ,FALSE
+recipes,FALSE
+recites,FALSE
+recited,FALSE
+reciting ,FALSE
+recklessly ,FALSE
+recognized,FALSE
+recognizes,FALSE
+recorded,FALSE
+recording ,FALSE
+rectangles,FALSE
+recycles,FALSE
+recycled,FALSE
+recycling ,FALSE
+reels,FALSE
+reeled,FALSE
+reeling ,FALSE
+refer,TRUE
+refers,FALSE
+referred,FALSE
+reflects,FALSE
+reflected,FALSE
+reflecting ,FALSE
+refresh,TRUE
+refreshes,FALSE
+refreshing ,FALSE
+refreshments,FALSE
+refusals,FALSE
+refuses,FALSE
+refusing ,FALSE
+regenerations,FALSE
+regulars,FALSE
+rehearsals,FALSE
+relates,FALSE
+related,FALSE
+relating ,FALSE
+relations,FALSE
+relative,TRUE
+relaxes,FALSE
+relaxing ,FALSE
+relieve,TRUE
+relieves,FALSE
+relieving ,FALSE
+remaining ,FALSE
+remarkably ,FALSE
+reminds,FALSE
+reminiscence,TRUE
+removes,FALSE
+removing ,FALSE
+repairing ,FALSE
+repeats,FALSE
+repeating ,FALSE
+replace,TRUE
+replaces,FALSE
+replacing ,FALSE
+replacements,FALSE
+replies,FALSE
+replying ,FALSE
+reports,FALSE
+reported,FALSE
+reporting ,FALSE
+representatives,FALSE
+reproachful,TRUE
+reptile,TRUE
+requests,FALSE
+requested,FALSE
+require,TRUE
+requires,FALSE
+requiring ,FALSE
+rescues,FALSE
+researches,FALSE
+researching ,FALSE
+resent,TRUE
+resents,FALSE
+resenting ,FALSE
+resists,FALSE
+resisted,FALSE
+resisting ,FALSE
+resistants,FALSE
+resolve,TRUE
+resolves,FALSE
+resolving ,FALSE
+respectably ,FALSE
+respond,TRUE
+responds,FALSE
+responding ,FALSE
+responses,FALSE
+responsibilities,FALSE
+responsibly ,FALSE
+restaurants,FALSE
+resturants,FALSE
+resurface,TRUE
+resurfaces,FALSE
+resurfacing ,FALSE
+retires,FALSE
+retreat,TRUE
+retreated,FALSE
+retreating,FALSE
+retrieves,FALSE
+retrieved,FALSE
+reveal,TRUE
+reveals,FALSE
+revealed,FALSE
+reverenced,FALSE
+reverences,FALSE
+reverencing ,FALSE
+revive,TRUE
+revives,FALSE
+reviving ,FALSE
+revolts,FALSE
+revolted,FALSE
+revolting ,FALSE
+rhinocerouses,FALSE
+rhinologists,FALSE
+rhymed,FALSE
+riches,FALSE
+richest,FALSE
+rids,FALSE
+ridded,FALSE
+ridding ,FALSE
+riddles,FALSE
+ridiculously ,FALSE
+righting ,FALSE
+rig,TRUE
+rigged,FALSE
+rigging ,FALSE
+rims,FALSE
+rimmed,FALSE
+rimming ,FALSE
+rimes,FALSE
+rimed,FALSE
+riming ,FALSE
+rind,TRUE
+rinks,FALSE
+rinse,TRUE
+rinses,FALSE
+rinsing ,FALSE
+rips,FALSE
+ripens,FALSE
+ripples,FALSE
+rippling ,FALSE
+risks,FALSE
+risking ,FALSE
+riverbanks,FALSE
+riverboats,FALSE
+roadbeds,FALSE
+roadworks,FALSE
+roam,TRUE
+roams,FALSE
+roaming ,FALSE
+roasting ,FALSE
+robbed,FALSE
+robbing ,FALSE
+robberies,FALSE
+robots,FALSE
+rodent,TRUE
+rodeos,FALSE
+rollers,FALSE
+roofing ,FALSE
+roofed,FALSE
+rooftop,TRUE
+rooks,FALSE
+rooked,FALSE
+rooking ,FALSE
+roomed,FALSE
+rooming ,FALSE
+rooted,FALSE
+roping ,FALSE
+rosebushes,FALSE
+rots,FALSE
+rotted,FALSE
+rotting ,FALSE
+rougher,FALSE
+rounding ,FALSE
+roundhouses,FALSE
+routes,FALSE
+routed,FALSE
+routing ,FALSE
+rovers,FALSE
+rows,FALSE
+rowboats,FALSE
+royals,FALSE
+rubbers,FALSE
+ruin,TRUE
+ruins,FALSE
+ruining ,FALSE
+ruling ,FALSE
+russians,FALSE
+rusts,FALSE
+rusted,FALSE
+rusting ,FALSE
+rustles,FALSE
+sackfuls,FALSE
+saddest,FALSE
+saddles,FALSE
+saddled,FALSE
+saddling ,FALSE
+safest,FALSE
+sages,FALSE
+sailboats,FALSE
+saked,FALSE
+salads,FALSE
+sales,FALSE
+salmons,FALSE
+salts,FALSE
+salted,FALSE
+salting ,FALSE
+saltshakers,FALSE
+salutes,FALSE
+saluting ,FALSE
+samaritan,TRUE
+sample,TRUE
+samples,FALSE
+sampling ,FALSE
+sandbanks,FALSE
+sandboxes,FALSE
+sandcastle,TRUE
+saps,FALSE
+sapped,FALSE
+sapping ,FALSE
+sapphire,TRUE
+satisfy,TRUE
+satisfies,FALSE
+satisfying ,FALSE
+sauces,FALSE
+sauced,FALSE
+saucing ,FALSE
+saucers,FALSE
+sausages,FALSE
+saves,FALSE
+saws,FALSE
+sawed,FALSE
+sawing ,FALSE
+sawmills,FALSE
+saxophones,FALSE
+scale,TRUE
+scaled,FALSE
+scaling ,FALSE
+scamper,TRUE
+scampering ,FALSE
+scars,FALSE
+scarred,FALSE
+scarring ,FALSE
+scarecrows,FALSE
+scarers,FALSE
+scarves,FALSE
+scatter,TRUE
+scatters,FALSE
+scattering ,FALSE
+scenes,FALSE
+scents,FALSE
+scented,FALSE
+scholars,FALSE
+scholarly,FALSE
+schoolhouses,FALSE
+schoolrooms,FALSE
+sciences,FALSE
+scolds,FALSE
+scolding ,FALSE
+scoops,FALSE
+scooped,FALSE
+scooted,FALSE
+scooting ,FALSE
+scores,FALSE
+scoring ,FALSE
+scorn,TRUE
+scorns,FALSE
+scorning ,FALSE
+scours,FALSE
+scoured,FALSE
+scouring ,FALSE
+scouts,FALSE
+scouted,FALSE
+scouting ,FALSE
+scowls,FALSE
+scowling ,FALSE
+scrambles,FALSE
+scrambling ,FALSE
+scrapes,FALSE
+scraping ,FALSE
+scrapers,FALSE
+scrap,TRUE
+scrapped,FALSE
+scrapping ,FALSE
+screams,FALSE
+screeches,FALSE
+screeching ,FALSE
+screened,FALSE
+screening ,FALSE
+screw,TRUE
+screwing ,FALSE
+scrubs,FALSE
+scrunches,FALSE
+scrunched,FALSE
+scrunching ,FALSE
+sculptors,FALSE
+scurries,FALSE
+scurried,FALSE
+scutter,TRUE
+scutters,FALSE
+scuttled,FALSE
+scuttling ,FALSE
+seacoasts,FALSE
+seahorses,FALSE
+seals,FALSE
+sealing ,FALSE
+seams,FALSE
+seamed,FALSE
+seaming ,FALSE
+searches,FALSE
+seasonings,FALSE
+season,TRUE
+seasoned,FALSE
+seaters,FALSE
+secretaries,FALSE
+seeded,FALSE
+seeks,FALSE
+seeked,FALSE
+seeming ,FALSE
+selves,FALSE
+semicircles,FALSE
+senators,FALSE
+sends,FALSE
+sensations,FALSE
+sensed,FALSE
+sensing ,FALSE
+sentences,FALSE
+sentenced,FALSE
+sentencing,FALSE
+services,FALSE
+sessions,FALSE
+settles,FALSE
+settling ,FALSE
+severed,FALSE
+severing ,FALSE
+sewers,FALSE
+shaded,FALSE
+shading ,FALSE
+shadowing ,FALSE
+shakers,FALSE
+shallows,FALSE
+shames,FALSE
+shamed,FALSE
+shaming ,FALSE
+shampoo,TRUE
+shampoos,FALSE
+shampooing ,FALSE
+shanks,FALSE
+shanked,FALSE
+shanking ,FALSE
+sharks,FALSE
+shaved,FALSE
+shaves,FALSE
+shawls,FALSE
+shear,TRUE
+shears,FALSE
+sheared,FALSE
+sheds,FALSE
+shelters,FALSE
+sheltered,FALSE
+sheltering ,FALSE
+shift,TRUE
+shifts,FALSE
+shifting ,FALSE
+shilling,TRUE
+shimmers,FALSE
+shimmered,FALSE
+shimmering ,FALSE
+shirkers,FALSE
+shirk,TRUE
+shirks,FALSE
+shirked,FALSE
+shivers,FALSE
+shocks,FALSE
+shocking ,FALSE
+shoelace,TRUE
+shooters,FALSE
+shops,FALSE
+shopped ,FALSE
+shores,FALSE
+shortcakes,FALSE
+shortcuts,FALSE
+shortest,FALSE
+shoves,FALSE
+shred,TRUE
+shredded,FALSE
+shredding,FALSE
+shriek,TRUE
+shrieks,FALSE
+shrills,FALSE
+shrilled,FALSE
+shrilling ,FALSE
+shrimp,TRUE
+shrouds,FALSE
+shrouded,FALSE
+shrouding,FALSE
+shrug,TRUE
+shrugs,FALSE
+shrugging ,FALSE
+shuck,TRUE
+shucked,FALSE
+shucking ,FALSE
+shuffle,TRUE
+shuffled,FALSE
+shunt,TRUE
+shunts,FALSE
+shunted,FALSE
+shutter,TRUE
+sicken,TRUE
+sickens,FALSE
+sickened,FALSE
+sidecars,FALSE
+sieged,FALSE
+sieges,FALSE
+sieging ,FALSE
+sift,TRUE
+sifts,FALSE
+sifting ,FALSE
+sighted,FALSE
+sighting ,FALSE
+signing ,FALSE
+signaling ,FALSE
+silenced,FALSE
+silences,FALSE
+silencing ,FALSE
+silks,FALSE
+sills,FALSE
+silled,FALSE
+sillers,FALSE
+sillyheads,FALSE
+simmers,FALSE
+simmered,FALSE
+simmering ,FALSE
+singles,FALSE
+sinks,FALSE
+sipping ,FALSE
+sirs,FALSE
+sirens,FALSE
+sites,FALSE
+situations,FALSE
+sized,FALSE
+sizing ,FALSE
+sizzles,FALSE
+sizzled,FALSE
+skeletons,FALSE
+skelter,TRUE
+skelters,FALSE
+skeltered,FALSE
+skied,FALSE
+skid,TRUE
+skidders,FALSE
+skiers,FALSE
+skills,FALSE
+skilled,FALSE
+skims,FALSE
+skimming ,FALSE
+skins,FALSE
+skinning ,FALSE
+skips,FALSE
+skirts,FALSE
+skits,FALSE
+skitters,FALSE
+skittered,FALSE
+skittering ,FALSE
+skunks,FALSE
+slams,FALSE
+slamming ,FALSE
+slaps,FALSE
+slapped,FALSE
+slapping ,FALSE
+slash,TRUE
+slashes,FALSE
+slashing ,FALSE
+slate,TRUE
+slates,FALSE
+slating ,FALSE
+slaved,FALSE
+slaving ,FALSE
+sleds,FALSE
+sledded,FALSE
+sleeks,FALSE
+sleeked,FALSE
+sleeking ,FALSE
+sleepovers,FALSE
+sleepyheads,FALSE
+sleighed,FALSE
+sleighing ,FALSE
+sliced,FALSE
+slicing ,FALSE
+slicks,FALSE
+slicked,FALSE
+slicking ,FALSE
+slims,FALSE
+slimmed,FALSE
+slimming,FALSE
+slimes,FALSE
+slimed,FALSE
+sliming,FALSE
+slipper,TRUE
+slithered,FALSE
+slithers,FALSE
+slithering,FALSE
+slooshed,FALSE
+slooshes,FALSE
+slooshing,FALSE
+slopes,FALSE
+sloped,FALSE
+sloping,FALSE
+sloshed,FALSE
+sloshes,FALSE
+sloshing,FALSE
+sloths,FALSE
+slumber,TRUE
+slumbers,FALSE
+slumbered,FALSE
+slumps,FALSE
+sling,TRUE
+slings,FALSE
+slinging ,FALSE
+slink,TRUE
+slinks,FALSE
+slinking ,FALSE
+slurping,FALSE
+smacks,FALSE
+smackers,FALSE
+smashes,FALSE
+smashing,FALSE
+smear,TRUE
+smears,FALSE
+smearing,FALSE
+smogs,FALSE
+smogging,FALSE
+smokes,FALSE
+smoked,FALSE
+smooches,FALSE
+smooched,FALSE
+smooths,FALSE
+smoothing,FALSE
+smoothen,FALSE
+smoothens,FALSE
+smugger,TRUE
+smuggers,FALSE
+smuggering,FALSE
+snacked,FALSE
+snacking,FALSE
+snacker,TRUE
+snaking,FALSE
+snapper,TRUE
+snapshots,FALSE
+snarf,TRUE
+snarfs,FALSE
+snarfed,FALSE
+snargle,TRUE
+snargles,FALSE
+snargling,FALSE
+snarl,TRUE
+snatches,FALSE
+snatching,FALSE
+sneaks,FALSE
+sneaking,FALSE
+sneaker,TRUE
+sneer,TRUE
+sneers,FALSE
+sneering,FALSE
+snickerdoodle,TRUE
+snicker,TRUE
+snickers,FALSE
+snickering,FALSE
+sniffled,FALSE
+sniffling,FALSE
+snipes,FALSE
+sniped,FALSE
+sniping,FALSE
+snip,TRUE
+snips,FALSE
+snipping,FALSE
+snoops,FALSE
+snooped,FALSE
+snooping,FALSE
+snoots,FALSE
+snoozes,FALSE
+snoozed,FALSE
+snorts,FALSE
+snowbank,TRUE
+snowflake,TRUE
+snowmobiles,FALSE
+snowplow,TRUE
+snowplowed,FALSE
+snowshoes,FALSE
+snowstorms,FALSE
+snowsuits,FALSE
+snuffing,FALSE
+snuffling,FALSE
+snuggling,FALSE
+soaks,FALSE
+soaps,FALSE
+soaped,FALSE
+soaping,FALSE
+soapboxes,FALSE
+soars,FALSE
+soared,FALSE
+soaring,FALSE
+sobbed,FALSE
+socked,FALSE
+socking,FALSE
+soils,FALSE
+soiled,FALSE
+soiling,FALSE
+solemnly,FALSE
+solids,FALSE
+somersaults,FALSE
+somersaulted,FALSE
+somersaulting,FALSE
+somedays,FALSE
+sooted,FALSE
+sooting,FALSE
+soothed,FALSE
+soothes,FALSE
+soothing,FALSE
+sopranos,FALSE
+sorcerer,TRUE
+sores,FALSE
+sorted,FALSE
+sorting,FALSE
+souls,FALSE
+soups,FALSE
+sources,FALSE
+sourced,FALSE
+sourcing,FALSE
+sovereigns,FALSE
+sows,FALSE
+sowed,FALSE
+spas,FALSE
+spaces,FALSE
+spaced,FALSE
+spacing,FALSE
+spaceships,FALSE
+spades,FALSE
+spaded,FALSE
+spading,FALSE
+spared,FALSE
+spares,FALSE
+sparing,FALSE
+sparked,FALSE
+sparking,FALSE
+sparkling,FALSE
+spat,TRUE
+spear,TRUE
+speared,FALSE
+spearing,FALSE
+specials,FALSE
+specialist,TRUE
+specks,FALSE
+specked,FALSE
+specking,FALSE
+speckle,TRUE
+speckles,FALSE
+speckling,FALSE
+speeches,FALSE
+spices,FALSE
+spiced,FALSE
+spicing,FALSE
+spiderweb,TRUE
+spies,FALSE
+spiked,FALSE
+spiking,FALSE
+spilling,FALSE
+spines,FALSE
+spirited,FALSE
+spiriting ,FALSE
+spits,FALSE
+spitting,FALSE
+spitball,TRUE
+spites,FALSE
+spited,FALSE
+spiting ,FALSE
+splatters,FALSE
+splattered,FALSE
+splattering,FALSE
+splished,FALSE
+splishing,FALSE
+splints,FALSE
+splinted,FALSE
+splits,FALSE
+splitting ,FALSE
+sponges,FALSE
+spools,FALSE
+spooled,FALSE
+spooling,FALSE
+spoonfuls,FALSE
+spooned,FALSE
+sported,FALSE
+sporting,FALSE
+spotting,FALSE
+spotless,TRUE
+spotlights,FALSE
+spouts,FALSE
+spouted,FALSE
+spouting,FALSE
+sprains,FALSE
+spraining,FALSE
+sprays,FALSE
+sprayed,FALSE
+spreaders,FALSE
+springs,FALSE
+sprung,FALSE
+springing,FALSE
+sprinkling,FALSE
+sprint,TRUE
+sprinted,FALSE
+sprinting,FALSE
+spruce,TRUE
+spruced,FALSE
+spruces,FALSE
+spins,FALSE
+spinning,FALSE
+spinned,FALSE
+sputter,TRUE
+sputters,FALSE
+sputtering,FALSE
+squabble,TRUE
+squabbles,FALSE
+squabbled,FALSE
+squall,TRUE
+squalls,FALSE
+squalling,FALSE
+squared,FALSE
+squaring,FALSE
+squashes,FALSE
+squashing,FALSE
+squashers,FALSE
+squawks,FALSE
+squawking,FALSE
+squeals,FALSE
+squealing,FALSE
+squeezes,FALSE
+squelches,FALSE
+squelched,FALSE
+squelching,FALSE
+squids,FALSE
+squint,TRUE
+squints,FALSE
+squinted,FALSE
+squirms,FALSE
+squirming,FALSE
+squirts,FALSE
+squirted,FALSE
+squirting,FALSE
+squished,FALSE
+squishes,FALSE
+squishing,FALSE
+staffs,FALSE
+staffed,FALSE
+staffing,FALSE
+stages,FALSE
+staged,FALSE
+staging,FALSE
+stain,TRUE
+stains,FALSE
+staining,FALSE
+stairways,FALSE
+stalls,FALSE
+stalled,FALSE
+stalling,FALSE
+stammer,TRUE
+stammers,FALSE
+stammering,FALSE
+stamp,TRUE
+stamps,FALSE
+stamping,FALSE
+stares,FALSE
+starberries,FALSE
+starfruits,FALSE
+starling,TRUE
+startle,TRUE
+startles,FALSE
+starve,TRUE
+starved,FALSE
+starves,FALSE
+stated,FALSE
+stating,FALSE
+stationed,FALSE
+stationing,FALSE
+steadied,FALSE
+steadies,FALSE
+steadying ,FALSE
+steals,FALSE
+steams,FALSE
+steamrollers,FALSE
+steamships,FALSE
+steels,FALSE
+steeps,FALSE
+steeped,FALSE
+steeping,FALSE
+steepers,FALSE
+steeple,TRUE
+steered,FALSE
+steers,FALSE
+stems,FALSE
+stemmed,FALSE
+stemming,FALSE
+stepmothers,FALSE
+steprelative,TRUE
+stepsister,TRUE
+stews,FALSE
+stills,FALSE
+stings,FALSE
+stinging,FALSE
+stung,FALSE
+stingers,FALSE
+stingrays,FALSE
+stirs,FALSE
+stirring,FALSE
+stitched,FALSE
+stoke,TRUE
+stoked,FALSE
+stoking,FALSE
+stomached,FALSE
+stomaching,FALSE
+stomping,FALSE
+stoned,FALSE
+stoning,FALSE
+stools,FALSE
+stoops,FALSE
+stooping,FALSE
+storybook,TRUE
+stoves,FALSE
+straddled,FALSE
+straddles,FALSE
+straddling,FALSE
+straighten,TRUE
+straightens,FALSE
+straightways,FALSE
+strains,FALSE
+straining,FALSE
+strapping,FALSE
+strays,FALSE
+strayed,FALSE
+straying,FALSE
+streaks,FALSE
+streaked,FALSE
+streaking,FALSE
+stride,TRUE
+strides,FALSE
+strifes,FALSE
+strifed,FALSE
+strikes,FALSE
+striking,FALSE
+striker,TRUE
+strung,FALSE
+stripe,TRUE
+striping,FALSE
+striper,TRUE
+strodes,FALSE
+stroded,FALSE
+stroding ,FALSE
+stroke,TRUE
+strokes,FALSE
+stroking ,FALSE
+strolls,FALSE
+strollers,FALSE
+strongest,FALSE
+strew,TRUE
+strewn,FALSE
+strews,FALSE
+strewing,FALSE
+strewed,FALSE
+struggles,FALSE
+strums,FALSE
+strummed,FALSE
+strumming,FALSE
+struts,FALSE
+strutted,FALSE
+stub,TRUE
+stubs,FALSE
+stubbing,FALSE
+studies,FALSE
+studios,FALSE
+stuffs,FALSE
+stumbled,FALSE
+stumbles,FALSE
+stumbling,FALSE
+stumps,FALSE
+stumped,FALSE
+stumping,FALSE
+stun,TRUE
+stuns,FALSE
+stunning,FALSE
+stunts,FALSE
+stunted,FALSE
+stunting,FALSE
+stutter,TRUE
+stutters,FALSE
+stuttering,FALSE
+styles,FALSE
+styled,FALSE
+styling,FALSE
+subjected,FALSE
+subjecting,FALSE
+subways,FALSE
+succeeded,FALSE
+succeeding,FALSE
+successes,FALSE
+successfully,FALSE
+sucks,FALSE
+sucked,FALSE
+sucking,FALSE
+sud,TRUE
+suing,FALSE
+suffer,TRUE
+suffering,FALSE
+sugars,FALSE
+sugarcoats,FALSE
+sugarcoated,FALSE
+sugarcoating,FALSE
+suggest,TRUE
+suggesting,FALSE
+suiting,FALSE
+suicides,FALSE
+sulk,TRUE
+sulks,FALSE
+sulked,FALSE
+sunbeam,TRUE
+sunburnt,FALSE
+sunburns,FALSE
+sunburning,FALSE
+sunroofs,FALSE
+sunsets,FALSE
+sunshines,FALSE
+superheroes,FALSE
+superintendents,FALSE
+supermarkets,FALSE
+superstars,FALSE
+supply,TRUE
+supplying ,FALSE
+supported,FALSE
+supposes,FALSE
+supposing,FALSE
+suprises,FALSE
+suprised,FALSE
+suprising,FALSE
+surfs,FALSE
+surfed,FALSE
+surfing,FALSE
+surfaced,FALSE
+surfaces,FALSE
+surfacing,FALSE
+surfboards,FALSE
+surgeons,FALSE
+surprising,FALSE
+surround,TRUE
+surrounds,FALSE
+survey,TRUE
+surveys,FALSE
+surveying ,FALSE
+surveyor,TRUE
+survive,TRUE
+survives,FALSE
+surviving ,FALSE
+swallows,FALSE
+swamps,FALSE
+swaps,FALSE
+swapping ,FALSE
+swarms,FALSE
+swarmed,FALSE
+swarming ,FALSE
+swayed,FALSE
+swashed,FALSE
+swashes,FALSE
+swashing ,FALSE
+sweats,FALSE
+sweatshirts,FALSE
+sweatshops,FALSE
+sweeps,FALSE
+sweepers,FALSE
+sweets,FALSE
+sweeter,FALSE
+swells,FALSE
+swelling,FALSE
+swerves,FALSE
+swerving,FALSE
+swifts,FALSE
+swifted,FALSE
+swifting,FALSE
+swiftly,FALSE
+swimmers,FALSE
+swines,FALSE
+swirls,FALSE
+swished,FALSE
+switchback,TRUE
+switchbacks,FALSE
+switchbacked,FALSE
+switch,TRUE
+switches,FALSE
+switching,FALSE
+swizzle,TRUE
+swizzles,FALSE
+swizzling,FALSE
+swoons,FALSE
+swooned,FALSE
+swooning,FALSE
+swoops,FALSE
+swooshes,FALSE
+swooshed,FALSE
+swooshing,FALSE
+swords,FALSE
+swordfishes,FALSE
+swear,TRUE
+swears,FALSE
+swearing,FALSE
+symbols,FALSE
+symboled,FALSE
+symboling ,FALSE
+syrups,FALSE
+tablecloths,FALSE
+tablespoonfuls,FALSE
+tacks,FALSE
+tackles,FALSE
+tackled,FALSE
+tackling,FALSE
+tags,FALSE
+tagged,FALSE
+tagging,FALSE
+tailing,FALSE
+tailored,FALSE
+tailoring,FALSE
+talent,TRUE
+tallchief,TRUE
+taller,FALSE
+tames,FALSE
+taming,FALSE
+tampers,FALSE
+tampered,FALSE
+tampering,FALSE
+tans,FALSE
+tanned,FALSE
+tanning,FALSE
+tangling,FALSE
+tangos,FALSE
+tanked,FALSE
+tanking,FALSE
+tapes,FALSE
+taped,FALSE
+taping,FALSE
+tars,FALSE
+tarred,FALSE
+tarring,FALSE
+tassel,TRUE
+tasting,FALSE
+tatter,TRUE
+tatters,FALSE
+tattering ,FALSE
+tattletales,FALSE
+tattoo,TRUE
+tattoos,FALSE
+tattooing ,FALSE
+taunt,TRUE
+taunts,FALSE
+taunted,FALSE
+taverns,FALSE
+teas,FALSE
+teaches,FALSE
+teams,FALSE
+teamed,FALSE
+teaming,FALSE
+teardrops,FALSE
+tear,TRUE
+tease,TRUE
+teases,FALSE
+teats,FALSE
+tees,FALSE
+teenagers,FALSE
+teethed,FALSE
+teething ,FALSE
+teethes,FALSE
+telegraphs,FALSE
+telephones,FALSE
+telephoning ,FALSE
+telescopes,FALSE
+televisions,FALSE
+temperatures,FALSE
+temper,TRUE
+tempers,FALSE
+tempering ,FALSE
+temples,FALSE
+tenders,FALSE
+tendered,FALSE
+tendering ,FALSE
+tenements,FALSE
+tents,FALSE
+tentacle,TRUE
+termite,TRUE
+terrify,TRUE
+terrifies,FALSE
+terrifying ,FALSE
+territories,FALSE
+terrors,FALSE
+tests,FALSE
+testing ,FALSE
+thanking,FALSE
+theaters,FALSE
+theirs,FALSE
+themself,TRUE
+therapists,FALSE
+thermoses,FALSE
+thickest,FALSE
+thieves,FALSE
+thimbles,FALSE
+thins,FALSE
+thinned,FALSE
+thinning,FALSE
+thinkers,FALSE
+thinnest,FALSE
+thorned,FALSE
+thorning,FALSE
+thornbush,TRUE
+threats,FALSE
+thresh,TRUE
+threshes,FALSE
+threshed,FALSE
+thrills,FALSE
+thrilling ,FALSE
+thrives,FALSE
+thrived,FALSE
+thriving,FALSE
+thrones,FALSE
+throned,FALSE
+throning ,FALSE
+throttles,FALSE
+throttled,FALSE
+throttling ,FALSE
+thuds,FALSE
+thumping ,FALSE
+thunders,FALSE
+thunderstorms,FALSE
+ticked,FALSE
+ticking,FALSE
+ticketed,FALSE
+ticketing ,FALSE
+tides,FALSE
+ties,FALSE
+tying ,FALSE
+tightens,FALSE
+tightening ,FALSE
+tightropes,FALSE
+tightroped,FALSE
+tightroping ,FALSE
+tile,TRUE
+tiled,FALSE
+tiling ,FALSE
+tilts,FALSE
+tilted,FALSE
+tilting ,FALSE
+timbers,FALSE
+timbered,FALSE
+timbering ,FALSE
+timed,FALSE
+timing ,FALSE
+tins,FALSE
+tings,FALSE
+tinged,FALSE
+tinging ,FALSE
+tingle,TRUE
+tingles,FALSE
+tingling ,FALSE
+tinkles,FALSE
+tinkled,FALSE
+tinkling ,FALSE
+tiptoes,FALSE
+tiring ,FALSE
+titles,FALSE
+titled,FALSE
+titling,FALSE
+titters,FALSE
+tittered,FALSE
+tittering ,FALSE
+toadstools,FALSE
+toasts,FALSE
+toasting ,FALSE
+tocked,FALSE
+toddlers,FALSE
+toeing,FALSE
+toenail,TRUE
+toils,FALSE
+toiled,FALSE
+toiling ,FALSE
+toilets,FALSE
+tolls,FALSE
+tolled,FALSE
+tolling ,FALSE
+tomcats,FALSE
+tong,TRUE
+tongued,FALSE
+tonguing ,FALSE
+ton,TRUE
+tonsil,TRUE
+tools,FALSE
+tooled,FALSE
+tooling ,FALSE
+toolsheds,FALSE
+tooting,FALSE
+tooted,FALSE
+toothaches,FALSE
+toothbrushes,FALSE
+toothpick,TRUE
+topped,FALSE
+topping ,FALSE
+topple,TRUE
+topples,FALSE
+toppling ,FALSE
+torches,FALSE
+torched,FALSE
+torching,FALSE
+tornados,FALSE
+tortilla,TRUE
+tortoises,FALSE
+tosses,FALSE
+toucans,FALSE
+touches,FALSE
+touchdowns,FALSE
+toughest,FALSE
+toupées,FALSE
+tourists,FALSE
+tour,TRUE
+toured,FALSE
+touring,FALSE
+tows,FALSE
+towers,FALSE
+toyed,FALSE
+toying,FALSE
+traced,FALSE
+tracing,FALSE
+tracked,FALSE
+tracking,FALSE
+trades,FALSE
+trading,FALSE
+traffics,FALSE
+trafficked,FALSE
+trafficking,FALSE
+tragedy,TRUE
+trails,FALSE
+trainers,FALSE
+traits,FALSE
+tramps,FALSE
+transporters,FALSE
+transport,TRUE
+transported,FALSE
+transporting,FALSE
+traps,FALSE
+trapped,FALSE
+trapping,FALSE
+travels,FALSE
+travelers,FALSE
+trays,FALSE
+tread,TRUE
+treads,FALSE
+treading,FALSE
+treasured,FALSE
+treasuring,FALSE
+treating,FALSE
+trembles,FALSE
+tremendously,FALSE
+trencher,TRUE
+tricked,FALSE
+tricking,FALSE
+tricycles,FALSE
+trifles,FALSE
+trifled,FALSE
+trifling,FALSE
+trikes,FALSE
+trillion,TRUE
+trilogies,FALSE
+trims,FALSE
+tripping,FALSE
+trolls,FALSE
+trolled,FALSE
+trolling,FALSE
+trollies,FALSE
+tromps,FALSE
+tromped,FALSE
+tromping,FALSE
+troop,TRUE
+troops,FALSE
+trooping,FALSE
+trotted,FALSE
+trots,FALSE
+trouts,FALSE
+trucked,FALSE
+trucking,FALSE
+truckdriver,TRUE
+trudging,FALSE
+trumpeted,FALSE
+truths,FALSE
+trusts,FALSE
+trusted,FALSE
+trusting,FALSE
+tubs,FALSE
+tubbing,FALSE
+tubbed,FALSE
+tubas,FALSE
+tube,TRUE
+tugging,FALSE
+tugboats,FALSE
+tumbles,FALSE
+tunes,FALSE
+tuned,FALSE
+tunneled,FALSE
+tunneling,FALSE
+turbans,FALSE
+turnip,TRUE
+turntables,FALSE
+tusk,TRUE
+twaddles,FALSE
+twaddled,FALSE
+twaddling,FALSE
+tweak,TRUE
+tweaks,FALSE
+tweaking,FALSE
+tweedles,FALSE
+tweedled,FALSE
+tweedling,FALSE
+tweets,FALSE
+tweeted,FALSE
+tweeting,FALSE
+twerps,FALSE
+twiddled,FALSE
+twiddles,FALSE
+twiddling,FALSE
+twinned,FALSE
+twinning,FALSE
+twinkling,FALSE
+twitches,FALSE
+twitter,TRUE
+typed,FALSE
+typing,FALSE
+typewriters,FALSE
+uglier,FALSE
+ultimate,TRUE
+umbrellas,FALSE
+unbearably,FALSE
+unbuttons,FALSE
+unbuttoned,FALSE
+unbuttoning,FALSE
+unclench,TRUE
+unclenches,FALSE
+unclenching,FALSE
+uncomb,TRUE
+uncombing,FALSE
+uncomfortably,FALSE
+uncontrollably,FALSE
+uncouples,FALSE
+uncoupling,FALSE
+undersides,FALSE
+undertaker,TRUE
+undusts,FALSE
+undusted,FALSE
+undusting,FALSE
+uneventful,TRUE
+unfolds,FALSE
+unfolded,FALSE
+unhear,TRUE
+unicycles,FALSE
+uniformed,FALSE
+uniforming,FALSE
+uninvite,TRUE
+uninvites,FALSE
+uninviting,FALSE
+unite,TRUE
+unites,FALSE
+uniting,FALSE
+unlatch,TRUE
+unlatches,FALSE
+unlatching,FALSE
+unlikely,FALSE
+unloads,FALSE
+unloading,FALSE
+unscrew,TRUE
+unscrews,FALSE
+unscrewing,FALSE
+unselfish,TRUE
+untie,TRUE
+unties,FALSE
+untying ,FALSE
+unuse,TRUE
+unusually,FALSE
+unwrap,TRUE
+unwraps,FALSE
+unwrapping ,FALSE
+upholds,FALSE
+upheld,FALSE
+upholding,FALSE
+uppercased,FALSE
+upsets,FALSE
+upturn,TRUE
+upturns,FALSE
+upturning ,FALSE
+upwards,FALSE
+urges,FALSE
+urging ,FALSE
+urgently ,FALSE
+ushers,FALSE
+ushered,FALSE
+ushering ,FALSE
+usuals,FALSE
+vacants,FALSE
+vacanted,FALSE
+vacationed,FALSE
+vacationing,FALSE
+vaccination,TRUE
+vanish,TRUE
+vanishes,FALSE
+vanishing,FALSE
+varies,FALSE
+varying ,FALSE
+variety,TRUE
+vegetable,TRUE
+veils,FALSE
+veiled,FALSE
+veiling,FALSE
+velociraptors,FALSE
+ventures,FALSE
+ventured,FALSE
+venturing,FALSE
+vests,FALSE
+vets,FALSE
+veterinarians,FALSE
+vex,TRUE
+vexes,FALSE
+vexing ,FALSE
+victim,TRUE
+victories,FALSE
+victual,TRUE
+views,FALSE
+viewed,FALSE
+viewing,FALSE
+viewpoints,FALSE
+villes,FALSE
+vined,FALSE
+vining,FALSE
+violently,FALSE
+violins,FALSE
+viruses,FALSE
+visioned,FALSE
+visioning,FALSE
+visits,FALSE
+visiting,FALSE
+vivid,TRUE
+voiced,FALSE
+voicing,FALSE
+volunteer,TRUE
+volunteers,FALSE
+volunteering,FALSE
+vote,TRUE
+voting,FALSE
+vow,TRUE
+vows,FALSE
+vowing,FALSE
+vrooms,FALSE
+vroomed,FALSE
+vrooming,FALSE
+waddling,FALSE
+wade,TRUE
+wades,FALSE
+wading ,FALSE
+wags,FALSE
+waggle,TRUE
+waggles,FALSE
+walkers,FALSE
+wallop,TRUE
+wallops,FALSE
+walloping,FALSE
+walnuts,FALSE
+walruses,FALSE
+waltz,TRUE
+waltzes,FALSE
+waltzed,FALSE
+wands,FALSE
+wanders,FALSE
+wanting,FALSE
+wars,FALSE
+warred,FALSE
+warring ,FALSE
+warbler,TRUE
+wardrobes,FALSE
+wared,FALSE
+waring ,FALSE
+warms,FALSE
+warmers,FALSE
+warns,FALSE
+warts,FALSE
+warthog,TRUE
+washers,FALSE
+washtubs,FALSE
+wastes,FALSE
+wastebaskets,FALSE
+watering ,FALSE
+waterpipes,FALSE
+watt,TRUE
+wax,TRUE
+waxes,FALSE
+waxing ,FALSE
+weasel,TRUE
+weathers,FALSE
+weathered,FALSE
+weathering ,FALSE
+weaves,FALSE
+weaved,FALSE
+weaving ,FALSE
+weds,FALSE
+wedded,FALSE
+wedge,TRUE
+wedges,FALSE
+wedging ,FALSE
+weeded,FALSE
+weeding ,FALSE
+weekends,FALSE
+weep,TRUE
+weeps,FALSE
+wept,FALSE
+weighs,FALSE
+weighed,FALSE
+weighing ,FALSE
+weights,FALSE
+weighted,FALSE
+weighting ,FALSE
+weirdest,FALSE
+welcomes,FALSE
+welcoming ,FALSE
+wells,FALSE
+welled,FALSE
+welling ,FALSE
+westwards,FALSE
+wets,FALSE
+wetted,FALSE
+wetting ,FALSE
+whacks,FALSE
+whacking ,FALSE
+wharf,TRUE
+wheelbarrows,FALSE
+wheeze,TRUE
+wheezed,FALSE
+wheezing ,FALSE
+whiff,TRUE
+whiffs,FALSE
+whiffing ,FALSE
+whimper,TRUE
+whimpered,FALSE
+whimpering,FALSE
+whine,TRUE
+whines,FALSE
+whining ,FALSE
+whiners,FALSE
+whips,FALSE
+whipping ,FALSE
+whirls,FALSE
+whisk,TRUE
+whisks,FALSE
+whisking ,FALSE
+whisker,TRUE
+whiz ,TRUE
+whizzes,FALSE
+whizzing ,FALSE
+wholes,FALSE
+whoops,FALSE
+whooping ,FALSE
+whooshes,FALSE
+whooshed,FALSE
+whooshing ,FALSE
+whores,FALSE
+wigs,FALSE
+wiggles,FALSE
+wiggling ,FALSE
+wildcat,TRUE
+wills,FALSE
+willed,FALSE
+willing ,FALSE
+willows,FALSE
+wilts,FALSE
+wilting,FALSE
+windowpanes,FALSE
+wines,FALSE
+wined,FALSE
+winged,FALSE
+wingspan,TRUE
+winks,FALSE
+winking ,FALSE
+wiper,TRUE
+wired,FALSE
+wiring ,FALSE
+wisdoms,FALSE
+wishers,FALSE
+witched,FALSE
+witching ,FALSE
+wither,TRUE
+withers,FALSE
+withering,FALSE
+wit,TRUE
+witted,FALSE
+witty ,FALSE
+witting ,FALSE
+wizen,TRUE
+wizens,FALSE
+wizening ,FALSE
+wobble,TRUE
+wobbles,FALSE
+wobbling ,FALSE
+woes,FALSE
+woodbine,TRUE
+woodchucks,FALSE
+woos,FALSE
+wooing,FALSE
+woofs,FALSE
+worded,FALSE
+wording ,FALSE
+workdays,FALSE
+workload,TRUE
+workshops,FALSE
+worsen,TRUE
+worsens,FALSE
+worsened,FALSE
+wounds,FALSE
+wounded,FALSE
+wounding ,FALSE
+wrangles,FALSE
+wrangled,FALSE
+wrangling ,FALSE
+wrecks,FALSE
+wrench,TRUE
+wrenching ,FALSE
+wrestle,TRUE
+wrestles,FALSE
+wrestling ,FALSE
+wriggle,TRUE
+wriggling ,FALSE
+wrinkles,FALSE
+wrinkling ,FALSE
+wrists,FALSE
+writers,FALSE
+wrongs,FALSE
+wronged,FALSE
+wronging ,FALSE
+wuddle,TRUE
+wuddles,FALSE
+xylophones,FALSE
+yam,TRUE
+yaks,FALSE
+yanks,FALSE
+yanking ,FALSE
+yankees,FALSE
+yapped,FALSE
+yaps,FALSE
+yarns,FALSE
+yarned,FALSE
+yarning ,FALSE
+yaw,TRUE
+yawed,FALSE
+yaws,FALSE
+yawning,FALSE
+yelps,FALSE
+yields,FALSE
+yielded,FALSE
+yielding ,FALSE
+yodel,TRUE
+yodels,FALSE
+yodeled,FALSE
+yips,FALSE
+yipped,FALSE
+yolks,FALSE
+yolked,FALSE
+yowls,FALSE
+yowled,FALSE
+yowling,FALSE
+yummiest,FALSE
+zebras,FALSE
+zip,TRUE
+zips,FALSE
+zipping ,FALSE
+zone,TRUE
+zoned,FALSE
+zoning ,FALSE
+zoos,FALSE
+zookeepers,FALSE
+zooms,FALSE

@@ -11,7 +11,7 @@ from utilities import save
 # set variables
 WORDPATH = './raw/wcbc-ranked.csv'
 wcbc = pd.read_csv(WORDPATH)
-
+morphological_variants = [word.strip() for word in pd.read_csv('raw/wcbc-morphological-variants-to-add.csv').new_variant.tolist()]
 
 # get outlier short words (ie words that fall within the length threshold that are weird)
 outliers = pd.read_csv('./raw/wcbc-outliers.csv', header=None)[0].tolist()
@@ -22,10 +22,12 @@ MAXSYLL = 3
 
 # get the string lebels/words
 words = wcbc.orth.tolist()
+words.extend(morphological_variants)
+
 
 #%%
-more = ['ration', 'nation', 'shriek']
-words.extend(more)
+#more = ['ration', 'nation', 'shriek']
+#words.extend(more)
 
 #%%
 left = d(words, outliers=outliers, cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, justify='left', terminals=True, onehot=False, orthpad=9)
@@ -44,3 +46,5 @@ save(right.traindata, 'right.traindata')
 # %%
 with open('phonreps-with-terminals.json', 'w') as t:
     json.dump(left.phonreps, t)
+
+#%%

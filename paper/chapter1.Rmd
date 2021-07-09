@@ -1,0 +1,70 @@
+---
+title: "introduction"
+output: html_document
+---
+
+# Chapter 1: Introduction
+
+## Overview
+Words are read by virtue of perceptual and cognitive processes that are distributed across space and time. As a reader engages visually with a word printed on the page, the reader's eyes move by fixation in semi-systematic ways across portions of printed word, tapping her or his knowledge of speech, print, and meaning. Historically, cognitive accounts of word reading have been focused on the simplest of words of English - those with one syllable (perry2010, rastle2000jml, sibley2010, yap2009), especially in the connectionist learning literature (plaut1996, seidenberg1989, sibley2010). This focus results from two primary factors. First, any model of word reading must at the very least account for the development of knowledge of the simplest words in the language given the child develops the ability to read these words first (ref.). Second, accounting for words that are longer than one syllable requires the specification of a learning architecture that accounts for time-varying aspects of learning that must be happening over longer words. This includes but is not limited to variability in prosodic information involved in pronunciation over different syllables (especially of vowels and their associated patterns of stress).
+
+This dissertation reports on a model of word reading (that associates print to speech) that can accommodate words that are not bounded by orthographic or phonological length - that is, of words that are not limited to a single syllable. This is a significant advance from previous models in that the types of words it can recognize (printed and spoken) resemble those that are naturalistic in terms of the word environments that children (and adults) learn within.
+
+The remaining chapters of this dissertation are organized in the following way. First, in the remaining portion of Chapter 1, I will introduce the central issues in word reading as they relate to the type of sequential processing that is essential to the theory developed in the dissertation. In Chapter 2, a history of models of word recognition will be provided. Chapter 3 will develop the architecture and corresponding theory of naming that represents the core topic of the dissertation. Chapter 4 will provide several experiments using the architecture described in Chapter 3, forming the behavioral support validating the architecture. Chapter 5 will be the conclusion, which will discuss the theory in light of its limitations and future directions.
+
+# Introduction
+Language comes and goes in a time-contingent fashion. The language that we see and hear is structured by sequential statistics that are processed through processes that happen across time. Among other important perceptual and cognitive aspects of language processing, letters are processed visually according to patterns of fixation that occur in a temporally governed manner, auditory processes take place relative to sound patterns that appear in a fast fading way over time. As a result, our theoretical models should account for the fact that such processing takes place in a sequentially arranged, time-contingent manner. This is especially true of reading given that the activity involves several such processes, each of which is distributed across time.
+
+Prevailing models of word reading have dealt with temporal aspects of processing in three ways: (1) through the use of networks that have a continuous recurrent component to their architecture (harm1999, harm2004), (2) implicit implementations with the use of feedforward networks that possess a component of the architecture dedicated to stress (perry2010), or (3) using simple recurrent networks (sibley2010). How time factors into word reading is typically discussed in the literature as concerning the processing of syllables: models of word reading can either deal with polysyllabic words or not. This distinction makes sense at one level, given that syllables are an important unit of speech. They carry information about vowel stress, and are an organizational category of language, contributing to the understanding of how consonants and vowels cluster within and across words. However, sequential statistics relevant to long words go beyond structure related to syllables. For example, orthotactic patterns exist as a matter of linguistic structure not strictly tied to syllabic structure.
+
+In a separate research tradition, several architectures have been proposed in the engineering literature in order to simulate the relationship between text and speech for technological and commercial ends.
+
+
+
+# Chapter 2: A Brief History of Models of Word Reading
+
+## Representational units
+
+## Models of multisyllabic word reading
+The CDP++ model from Perry et al. (2010) posits a complex architecture with subcompnents that capture different aspects of the theory from which the computational architecture is based. Said differently, their system lacks architectural homogeneity, a hallmark of connectionist learning systems. Some assumptions of the system violate primitives of learning seen in naturalistic environments. For example, CDP++ requires the prespecification of a graphemic level of representation, based on the assumption that letter sequences map cleanly onto phonemic sequences, and that such representational units contribute to low level operations within the reading system. Graphemes are identified on the input layer based on their frequency,  This violates an important aspect of development of word reading knowledge in that such representations (i.e., the ways that print sequences relate to auditory sequences) are learned and do not preexist in the learner once knowledge about print begins to develop.
+
+In a connectionist architecture something like a grapheme may well exist, but it is an emergent aspect of the knowledge of the system that develops as the result of the exposure of the learning architecture to the environment.
+
+The selection of representational units is a critical issue of theoretical interest in the development of a learning architecture that learns to read words. A fundamental question will always be: how do such representational units arise in learning? This issue plays even larger in models of word reading that deal in long words given that the longer the words are the more representational units there are to account for. In symbolic approaches this has been taken up historically as an issue of positing rules of identification, as in Rastle and Coltheart (2000). These rules take the form of complex verbal descriptions that specify structured labels for representational units based on the presence or absence of structural elements in a printed or spoken wordform.
+
+
+## Statistical learning
+
+
+
+# Survey of previous architectures
+
+## Simple recurrent networks
+The most comprehensive application of an SRN to date is Sibley et al. (2010), which used a two-component architecture for orthography and phonology, each with an SRN operating under the hood.
+
+The most recent of these architectures can be found in @Luthra2020, which they refer to as VOISeR. This model of orthography-to-phonology processing takes in an orthographic sequence (a spatially represented)
+
+
+
+## "Serial" effects in naming
+The evidence most commonly taken to suggest that there is some type of serial processing operating during naming, particularly for words that contain "irregular" pronunciations, concerns the timecourse of naming processes for such words. 
+
+Such findings are typically identified as evidence for a dual-route process operating during reading. The dual-route theory predicts that 
+
+
+## Strategic control
+There have been a number of studies concerning so-called "extra-stimulus" factors that concern processes in naming (see @kello2003 for a review), which have been described broadly as strategies for cognitive control in word naming. The most important of these for the present work has to do with the time-course of processing printed words.
+
+In behavioral research on aspects of control in word reading, the method of control is typically manipulated by providing special instructions to the participant, or constructing a paradigm to elicit a control-type mechanism when processing a visually presented word. Most research on this topic and using experimental paradigms along these lines has concerned short, or monosyllabic words. This isn't surprising given the rich history of such words in theories of word recognition (discussed elsewhere here), and that characteristics of the stimuli have driven theorizing and experimentation; monosyllabic words offer natural constraints to theory building that are useful to the endeavor, and provide simplifying case-studies of most critical characteristics observed in words more broadly (see @yap2009 for discussion).
+
+
+# Behavioral data
+There are a number of possibilities for the visual span over which visual information is passed in the process of initiating phonology in word reading.
+
+
+
+Earlier connectionist models avoided this issue in favor of simplified feedforward networks that typically passed visual information to phonology in a single temporal step. Alternative implementations using recurrent backpropagation through time were also used (ref.) These networks function with a continuous, recurrent component, over temporal intervals ("ticks" in that literature) where the input pattern (in a feedforward network) is allowed to stay clamped to the input layer, allowing for gradual buildup of the input signal over some time period. During training, error signal is backpropagated over timesteps where inputs are gradually being increased up to their eventual full activation state. However, architectures with recurrent backpropagation along these lines are simulating the timecourse of activation in a way that is different than networks that take time-distributed input patterns, like LSTM architectures and, more specifically, the architecture laid out in the current work.  Rather than simulating the ways that sequentially-arranged portions of perceptual information play in cross-modal mappings (where the perceptual information unfolds in a time-distributed manner), these earlier implementations of continuous processes that operate over some time were developed in order to understand the types of disordered behavior seen, for example, in patients with brain injuries that impact lexical or semantic processing (@Plaut1996, @Rogers2004). 
+
+
+
+
