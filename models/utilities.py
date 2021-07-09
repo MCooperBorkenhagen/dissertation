@@ -1,9 +1,10 @@
-
+#%%
+from numpy.random import choice
 import numpy as np
 import json
 
 
-
+#%%
 
 
 
@@ -34,3 +35,12 @@ def printspace(lines, symbol='#', repeat=25):
 
 def L2(a, v):
     return(np.linalg.norm(a-np.array(v)))
+
+
+#%%
+def sample(x, n, probabilities):
+    assert len(x) == len(probabilities), 'Your values to sample and associated probabilities have different lengths. Respecify x or probabilities'
+    return(choice(x, n, p=probabilities))
+
+def interpolate(start, end):
+    
