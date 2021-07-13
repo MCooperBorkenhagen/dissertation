@@ -24,6 +24,18 @@ MAXSYLL = 3
 words = wcbc.orth.tolist()
 words.extend(morphological_variants)
 
+# add together the missing words into a single JSON file to supply to d
+with open('./raw/kidwords-missing-from-cmudict.json') as f:
+    missing1 = json.load(f)
+
+with open('./raw/wcbc-morphological-variants-nin-cmudict.json') as f:
+    missing2 = json.load(f)
+
+missing1.update(missing2)
+
+#%%
+with open('./raw/missing-words.json', 'w') as all_missing:
+    json.dump(missing1, all_missing, indent=5)
 
 #%%
 #more = ['ration', 'nation', 'shriek']

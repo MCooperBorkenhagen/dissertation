@@ -42,5 +42,5 @@ def sample(x, n, probabilities):
     assert len(x) == len(probabilities), 'Your values to sample and associated probabilities have different lengths. Respecify x or probabilities'
     return(choice(x, n, p=probabilities))
 
-def interpolate(start, end):
+#def interpolate(start, end):
     

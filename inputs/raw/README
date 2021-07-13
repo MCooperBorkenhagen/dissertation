@@ -4,23 +4,27 @@ for modeling in the dissertation project. Some
 (non exhaustive) notes:
 
 ----------------------------------
-kidwords-missing-from-cmudict.json
+kidwords-missing-from-cmudict-1.json
 ----------------------------------
 This file was created by Kaycie Barron in winter
-2020-2021 and contains words that are contained
+2020-2021 and then supplemented in July 2021
+and has words that are contained
 within WCBC but are not transcribed by nltk's
 implementation of cmudict (ie, they aren't contained
-within cmudict in nltk). The companion file to
-this one is kidwords-missing-from-cmudict.csv. We
-may not ultimately include these words in the
-pool for modeling, but they are here for reference 
-if needed.
+within cmudict in nltk). This file does not contain
+morphological variants to those words, but
+is added to the companion JSON that contains
+those variants to compose the larger dictionary
+of missing words from CMU.
 
----------------------------------
-kidwords-missing-from-cmudict.csv
----------------------------------
-This CSV contains the missing words mentioned
-above but in tabular form. There are columns
+-----------------------------------
+kidwords-missing-from-cmudict-1.csv
+-----------------------------------
+This CSV contains the first round of missing 
+words mentioned above but in tabular form. The
+first round of words did not include the morphological
+variants, which were added in summer of 2021. 
+There are columns in this csv
 that indicate additional useful data about
 the words included in these datasets. Note
 that the "sublist" column indicates if a
@@ -28,3 +32,19 @@ word included in the accompanying json file
 is associated with more than one phonological
 wordform in that json file.
 
+--------------------------------------
+wcbc-morphological-variants-to-add.csv
+--------------------------------------
+These are the additional morphological variants
+put together by Kaycie Barron in summer of 2021
+listed in tabular form.
+
+-------------------------
+all-missing-kidwords.json
+-------------------------
+This file contains the kidwords that are missing
+from cmudict and their morphological variants. It
+is constructed by adding together different JSON
+files that contain separate lists of missing words
+and their phological transcription in a single
+JSON file to be specified for Traindata.
