@@ -185,13 +185,21 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, return_histories=False, cycles=1, batch_size=25, epochs=1, train_proportion=.9, verbose=True):
+    def fitcycle(self, traindata=None, return_histories=False, cycles=1, cycle_id='', batch_size=25, epochs=1, train_proportion=.9, verbose=True, sample_weights=False, evaluate=False):
 
         if traindata is None:
             traindata = self.traindata
         
         histories = {}
         cycletime = 0
+
+        itemdata = open('item-data'+ '-' + self.modelname + '' + cycle_id + '.csv', 'w')
+        modeldata = open('model-data'+ self.modelname + '' + cycle_id + '.csv', 'w')
+        if not evaluate:
+            itemdata.write('Evaluate set to False. No evaluation data written.')
+            modeldata.write('Evaluate set to False. No evaluation data written.')
+
+
         for cycle in range(cycles):
             printspace(4)
             print('Training', cycle+1, 'of', cycles, 'cycles')
@@ -205,12 +213,24 @@ class Learner():
                 Xp = traindata[length]['phonSOS']
                 Y = traindata[length]['phonEOS']
                 t1 = time.time()
-                cb = self.model.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, validation_split=1-train_proportion, verbose=verbose, callbacks=[tensorboard_callback])
+                if sample_weights:
+                    print('need sample weights')
+                    #sample_weights = scale(traindata[length]['frequency']) # need to write scale()
+                elif not sample_weights:
+                    sample_weights=None
+                cb = self.model.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, validation_split=1-train_proportion, sample_weight=sample_weights, verbose=verbose, callbacks=[tensorboard_callback])
                 cb.history['learntime'] = round((time.time()-t1)/60, 2)
+                if evaluate:
+                    for i, word in enumerate(traindata[length]['wordlist']):
+                        loss, accuracy = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
+                        itemdata.write("{}, {}, {}\n".format(cycle+1, word, accuracy))
                 cycletime += cb.history['learntime']
                 history_[length] = cb.history
             histories[cycle] = history_
         
+        itemdata.close()
+        modeldata.close()
+
         self.model.history.history['cycletime'] = cycletime
         self.model.history.history['epochs_done'] = cycletime*epochs
 

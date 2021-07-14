@@ -5,7 +5,7 @@ from Learner import Learner
 import numpy as np
 
 #%%
-from utilities import load, loadreps
+from utilities import load, loadreps, reshape
 
 #%%
 
@@ -30,8 +30,16 @@ phon_features = left[3]['phonSOS'].shape[2]
 
 learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=t, hidden=400, mask_phon=False, devices=False)
 #%%
+learner.fitcycle(batch_size=70, epochs=1, cycles=1, evaluate=True) 
 
-learner.fitcycle(batch_size=70, epochs=1, cycles=1)
+#%%
+xO = t[4]['orth']
+xP = t[4]['phonSOS']
+y = t[4]['phonEOS']
+i = 0
+
+tmp = learner.model.evaluate([reshape(xO[i]), reshape(xP[i])], reshape(y[i]))
+
 
 #%%
 
