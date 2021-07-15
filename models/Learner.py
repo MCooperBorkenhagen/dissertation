@@ -185,7 +185,7 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, return_histories=False, cycles=1, cycle_id='', batch_size=25, epochs=1, train_proportion=.9, verbose=True, sample_weights=False, evaluate=False):
+    def fitcycle(self, traindata=None, return_histories=False, cycles=1, cycle_id='', batch_size=25, epochs=1, train_proportion=1, verbose=True, sample_weights=False, evaluate=False):
 
         if traindata is None:
             traindata = self.traindata
@@ -220,13 +220,19 @@ class Learner():
                     sample_weights=None
                 cb = self.model.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, validation_split=1-train_proportion, sample_weight=sample_weights, verbose=verbose, callbacks=[tensorboard_callback])
                 cb.history['learntime'] = round((time.time()-t1)/60, 2)
-                if evaluate:
-                    for i, word in enumerate(traindata[length]['wordlist']):
-                        loss, accuracy = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
-                        itemdata.write("{}, {}, {}\n".format(cycle+1, word, accuracy))
                 cycletime += cb.history['learntime']
                 history_[length] = cb.history
             histories[cycle] = history_
+
+            if evaluate:
+                print('Generating evaluation data at end of cycle. It will take a minute...')
+                for length, subset in traindata.items():
+                    Xo = traindata[length]['orth']
+                    Xp = traindata[length]['phonSOS']
+                    Y = traindata[length]['phonEOS']
+                    for i, word in enumerate(traindata[length]['wordlist']):
+                        loss, accuracy = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
+                        itemdata.write("{}, {}, {}, {}\n".format(cycle+1, word, length, accuracy))
         
         itemdata.close()
         modeldata.close()
