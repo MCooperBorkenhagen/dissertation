@@ -24,6 +24,7 @@ MAXSYLL = 3
 words = wcbc.orth.tolist()
 words.extend(morphological_variants)
 
+
 # add together the missing words into a single JSON file to supply to d
 with open('./raw/kidwords-missing-from-cmudict.json') as f:
     missing1 = json.load(f)
@@ -37,9 +38,27 @@ missing1.update(missing2)
 with open('./raw/missing-words.json', 'w') as all_missing:
     json.dump(missing1, all_missing, indent=5)
 
+
+# frequency data, read and compile into dictionary
+elp = pd.read_csv('raw/elp_5.27.16.csv')
+
+
+
+frequency = {}
+missing = [word for word in set(words) if word not in elp['Word'].tolist()]
+for index, row in elp.iterrows():
+    word = row['Word'].lower()
+    if word in words:
+        frequency[word] = row['Freq_HAL'] + 2
+
+
 #%%
-#more = ['ration', 'nation', 'shriek']
-#words.extend(more)
+for word in set(words):
+    if word in missing:
+        frequency[word] = 2
+
+
+
 
 #%%
 left = d(words, outliers=outliers, cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, justify='left', terminals=True, onehot=False, orthpad=9)

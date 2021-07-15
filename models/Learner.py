@@ -185,20 +185,21 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, return_histories=False, cycles=1, cycle_id='', batch_size=25, epochs=1, train_proportion=1, verbose=True, sample_weights=False, evaluate=False):
+    def fitcycle(self, traindata=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, sample_weights=False, evaluate=False, evaluate_when=4):
 
         if traindata is None:
             traindata = self.traindata
         
         histories = {}
         cycletime = 0
-
-        itemdata = open('item-data'+ '-' + self.modelname + '' + cycle_id + '.csv', 'w')
-        modeldata = open('model-data'+ self.modelname + '' + cycle_id + '.csv', 'w')
-        if not evaluate:
-            itemdata.write('Evaluate set to False. No evaluation data written.')
-            modeldata.write('Evaluate set to False. No evaluation data written.')
-
+        
+        if evaluate:
+            # set up file for item data if evaluate set to True
+            itemdata = open('item-data'+ '-' + self.modelname + '-' + cycle_id + '.csv', 'w')
+            itemdata.write("cycle, word, phonlength, accuracy, loss\n")
+            # set up file for model data if evaluate set to True 
+            modeldata = open('model-data'+ self.modelname + '-' + cycle_id + '.csv', 'w')
+            modeldata.write("cycle, phonlength, accuracy, loss\n")
 
         for cycle in range(cycles):
             printspace(4)
@@ -225,15 +226,18 @@ class Learner():
             histories[cycle] = history_
 
             if evaluate:
-                print('Generating evaluation data at end of cycle. It will take a minute...')
-                for length, subset in traindata.items():
-                    Xo = traindata[length]['orth']
-                    Xp = traindata[length]['phonSOS']
-                    Y = traindata[length]['phonEOS']
-                    for i, word in enumerate(traindata[length]['wordlist']):
-                        loss, accuracy = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
-                        itemdata.write("{}, {}, {}, {}\n".format(cycle+1, word, length, accuracy))
-        
+                if cycle % evaluate_when == 0 or cycle+1 == cycles: # calculates periodically based on evaluate_when
+                    print('Generating evaluation data at end of cycle. It will take a minute...')
+                    for length, subset in traindata.items():
+                        Xo = traindata[length]['orth']
+                        Xp = traindata[length]['phonSOS']
+                        Y = traindata[length]['phonEOS']
+                        for i, word in enumerate(traindata[length]['wordlist']):
+                            loss, accuracy = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
+                            itemdata.write("{}, {}, {}, {}, {}\n".format(cycle+1, word, length, accuracy, loss))
+                        loss, accuracy = self.model.evaluate([Xo, Xp], Y, batch_size=Y.shape[0])
+                        modeldata.write("{}, {}, {}, {}\n".format(cycle+1, length, accuracy, loss))
+
         itemdata.close()
         modeldata.close()
 

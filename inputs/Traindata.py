@@ -436,6 +436,15 @@ class Reps():
             
             self.traindata[length] = traindata_
 
+        ##################
+        # FREQUENCY DATA #
+        ##################
+        if frequency is not None:
+            for length, d in self.traindata.values():
+                frequencies = []
+                for word in d['wordlist']:
+                    frequencies.append(frequency[word])
+                self.traindata[length]
 
 
 
