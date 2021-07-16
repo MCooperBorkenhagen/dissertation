@@ -180,7 +180,7 @@ class Reps():
     """
 
 
-    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, maxsyll=None, onehot=True, orthpad=9, phonpad=9, terminals=False, phon_index=0, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True, verbose=True):
+    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, maxsyll=None, onehot=True, orthpad=9, phonpad=9, terminals=False, phon_index=0, justify='left', punctuation=False, numerals=False, tolower=True, frequency=None, test_reps=True, verbose=True):
         """Initialize Reps with a values that specify representations over words.
         Parameters
         ----------
@@ -433,18 +433,19 @@ class Reps():
             ortharray = [self.orthforms_padded[word] for word in wordlist]
             traindata_['orth'] = np.array(ortharray)
             traindata_['wordlist'] = wordlist
-            
+                
+            ##################
+            # FREQUENCY DATA #
+            ##################
+            if frequency is not None:
+                frequencies = []
+                for word in wordlist:
+                    frequencies.append(frequency[word])
+                traindata_['frequency'] = np.array(frequencies)
+
             self.traindata[length] = traindata_
 
-        ##################
-        # FREQUENCY DATA #
-        ##################
-        if frequency is not None:
-            for length, d in self.traindata.values():
-                frequencies = []
-                for word in d['wordlist']:
-                    frequencies.append(frequency[word])
-                self.traindata[length]
+
 
 
 

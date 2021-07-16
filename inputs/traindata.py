@@ -44,25 +44,25 @@ elp = pd.read_csv('raw/elp_5.27.16.csv')
 
 
 
-frequency = {}
+frequencies = {}
 missing = [word for word in set(words) if word not in elp['Word'].tolist()]
 for index, row in elp.iterrows():
     word = row['Word'].lower()
     if word in words:
-        frequency[word] = row['Freq_HAL'] + 2
+        frequencies[word] = row['Freq_HAL'] + 2
 
 
 #%%
 for word in set(words):
     if word in missing:
-        frequency[word] = 2
+        frequencies[word] = 2
 
 
 
 
 #%%
-left = d(words, outliers=outliers, cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, justify='left', terminals=True, onehot=False, orthpad=9)
-right = d(words, outliers=outliers, cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, justify='right', terminals=True, onehot=False, orthpad=9)
+left = d(words, outliers=outliers, cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, justify='left', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
+right = d(words, outliers=outliers, cmudict_supplement='./raw/kidwords-missing-from-cmudict.json', maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, justify='right', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
 
 #%%
 # test that the words for each set are the same:
