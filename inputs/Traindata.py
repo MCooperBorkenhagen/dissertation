@@ -460,8 +460,8 @@ class Reps():
                     assert reconstruct(d['phonEOS'], [self.cmudictEOS[word] for word in d['wordlist']], repdict=self.phonreps, join=False), 'EOS phonological representations do not match their string representations'
                 elif not terminals:
                     assert reconstruct(d['phon'], [self.cmudict[word] for word in d['wordlist']], repdict=self.phonreps, join=False), 'Phonological representations do not match their string representations'
-        #        if verbose:
-        #            print('Words of phonological length', length, 'pass reconstruction test')
+                if verbose:
+                    print('Words of phonological length', length, 'pass reconstruction test')
 
 
         # check that all the phonemes in words in pool are represented in phonreps:
@@ -481,6 +481,7 @@ class Reps():
         elif not terminals:
             assert set(self.orthforms.keys()) == set(self.phonforms.keys()), 'The keys in your orth and phon dictionaries do not match'
 
+        print('Representations initialized. Done.')
 
 
 if __name__ == "__main__":

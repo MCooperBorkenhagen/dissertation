@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.utils import plot_model as plot
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
-from utilities import printspace, reshape, L2
+from utilities import printspace, reshape, L2, choose
 
 
 log_dir = "logs/fit/"
@@ -185,8 +185,23 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, sample_weights=False, evaluate=False, evaluate_when=4):
+    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, sample_weights=False, evaluate=False, evaluate_when=4):
 
+        """Cycle through key, value pairs in traindata and apply fit() at each cycle.
+
+        ----------
+        Parameters
+        ----------
+        
+        probs : floats
+            Probabilities to be pplied when sampling the sequence of phonological lengths
+            contained in the values of traindata. If None, lengths are selected in ascending
+            order. This means that if probabilities are not specified, fit() is called over
+            examples that start with the (phonetically) shortest words, moving to the longer
+            words as you go. (Default is None)
+
+
+        """
         if traindata is None:
             traindata = self.traindata
         
@@ -201,12 +216,19 @@ class Learner():
             modeldata = open('model-data'+ self.modelname + '-' + cycle_id + '.csv', 'w')
             modeldata.write("cycle, phonlength, accuracy, loss\n")
 
+        if probs is None:
+            phonlens = traindata.keys()
+
         for cycle in range(cycles):
-            printspace(4)
+            printspace(1)
             print('Training', cycle+1, 'of', cycles, 'cycles')
-            printspace(4)
+            printspace(1)
             history_ = {}
-            for length, subset in traindata.items():
+
+            if probs is not None:
+                phonlens = choose(list(traindata.keys()), len(traindata.keys()), probs)
+
+            for length in phonlens:
                 printspace(1, symbol='-')
                 print('Cycling on phonological length', length)
                 printspace(1, symbol='-')
@@ -228,7 +250,7 @@ class Learner():
             if evaluate:
                 if cycle % evaluate_when == 0 or cycle+1 == cycles: # calculates periodically based on evaluate_when
                     print('Generating evaluation data at end of cycle. It will take a minute...')
-                    for length, subset in traindata.items():
+                    for length in traindata.keys():
                         Xo = traindata[length]['orth']
                         Xp = traindata[length]['phonSOS']
                         Y = traindata[length]['phonEOS']
@@ -238,8 +260,9 @@ class Learner():
                         loss, accuracy = self.model.evaluate([Xo, Xp], Y, batch_size=Y.shape[0])
                         modeldata.write("{}, {}, {}, {}\n".format(cycle+1, length, accuracy, loss))
 
-        itemdata.close()
-        modeldata.close()
+        if evaluate:
+            itemdata.close()
+            modeldata.close()
 
         self.model.history.history['cycletime'] = cycletime
         self.model.history.history['epochs_done'] = cycletime*epochs
@@ -259,7 +282,6 @@ class Learner():
         else:
             pass
         return(plot(self.model, to_file=PATH))
-
 
     def get_word(self, word, traindata=None, construct=True):
 
