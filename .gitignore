@@ -16,7 +16,7 @@
 *.Rhistory
 *.npy
 *.png
-
+*.traindata
 #directories
 logs/
 .Rproj.user/
