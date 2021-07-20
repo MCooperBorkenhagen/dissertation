@@ -24,18 +24,27 @@ orthreps = loadreps('../inputs/raw/orthreps.json')
 # %%
 orth_features = left[3]['orth'].shape[2]
 phon_features = left[3]['phonSOS'].shape[2]
-#%%
+#%% probabilities for sampling phonological lengths during fitcycle()
 ps = [.2, .3, .2, .2, .05, .05] 
 #%%
 learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=data, hidden=400, mask_phon=False, devices=False)
+
+
+#%% using same function for sampling probabilities from Seidenberg & McClelland (1989)
+frequencies = {word: v['frequency'][i] for k, v in data.items() for i, word in enumerate(v['wordlist'])}
+p = .93
+maxf = max(frequencies.values())
+K = p/np.log(maxf)
+
+
+
 #%%
-learner.fitcycle(batch_size=70, cycles=2, probs=ps, evaluate=False) 
+learner.fitcycle(batch_size=70, cycles=50, probs=ps, K=K, evaluate=False) 
+
+
+
+
 
 #%%
 learner.model.save('base-model')
 #%%
-
-# %% determining K
-
-np.log(8965)
-# %%

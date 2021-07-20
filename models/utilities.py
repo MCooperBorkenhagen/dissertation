@@ -37,10 +37,11 @@ def L2(a, v):
     return(np.linalg.norm(a-np.array(v)))
 
 
-#%%
 def choose(x, n, probabilities):
     assert len(x) == len(probabilities), 'Your values to sample and associated probabilities have different lengths. Respecify x or probabilities'
     return(choice(x, n, p=probabilities, replace=False))
 
-#def interpolate(start, end):
+def scale(x, K):
+    p = K*np.log(x)
+    return p
     

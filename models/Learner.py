@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.utils import plot_model as plot
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
-from utilities import printspace, reshape, L2, choose
+from utilities import printspace, reshape, L2, choose, scale
 
 
 log_dir = "logs/fit/"
@@ -185,7 +185,7 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, sample_weights=False, evaluate=False, evaluate_when=4):
+    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False, evaluate_when=4):
 
         """Cycle through key, value pairs in traindata and apply fit() at each cycle.
 
@@ -236,10 +236,9 @@ class Learner():
                 Xp = traindata[length]['phonSOS']
                 Y = traindata[length]['phonEOS']
                 t1 = time.time()
-                if sample_weights:
-                    print('need sample weights')
-                    #sample_weights = scale(traindata[length]['frequency']) # need to write scale()
-                elif not sample_weights:
+                if K is not None:
+                    sample_weights = scale(traindata[length]['frequency'], K)
+                elif K is None:
                     sample_weights=None
                 cb = self.model.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, validation_split=1-train_proportion, sample_weight=sample_weights, verbose=verbose, callbacks=[tensorboard_callback])
                 cb.history['learntime'] = round((time.time()-t1)/60, 2)

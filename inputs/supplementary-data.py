@@ -16,6 +16,9 @@ cmuwords = list(nltk.corpus.cmudict.dict().keys())
 #%%
 cmudict = {word: phonforms[0] for word, phonforms in nltk.corpus.cmudict.dict().items() if word in words}
 
+with open('kidwords-morphological-variants')
+
+
 #%%
 missing = [word for word in words if word not in cmuwords]
 
