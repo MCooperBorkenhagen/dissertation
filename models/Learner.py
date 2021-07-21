@@ -282,6 +282,18 @@ class Learner():
             pass
         return(plot(self.model, to_file=PATH))
 
+    def find(self, word):
+        if word in self.words:
+            for length, traindata_ in self.traindata.items():
+                for i, w in enumerate(traindata_['wordlist']):
+                    if w == word:
+                        Xo = traindata_['orth'][i]
+                        Xp = traindata_['phonSOS'][i]
+                        Yp = traindata_['phonEOS'][i]
+                        return Xo, Xp, Yp
+        else:
+            raise Exception('Word is not present in the training pool.')
+            
     def get_word(self, word, traindata=None, construct=True):
 
         if traindata is None:
@@ -321,7 +333,7 @@ class Learner():
         phon_reader = Model([self.decoder_inputs] + phon_states_inputs, [phon_outputs] + phon_states)
         return orth_reader, phon_reader
 
-    def read(self, word, phonreps=None, ties='stop', verbose=True, construct=True):
+    def read(self, word, phonreps=None, ties='stop', verbose=True, construct=True, **kwargs):
         """Read a word after the learner has learned.
 
         Parameters
@@ -351,6 +363,11 @@ class Learner():
 
         verbose : bool
             If True the resulting sequence of words is printed. (Default is True)
+
+        construct : bool
+            If True, create the orthographic form of the word if it isn't in
+            the traindata object. In this case, the word cannot be evaluated unless
+            you specify a target phonological pattern. (Default is True)
             
         Returns
         -------
@@ -400,7 +417,74 @@ class Learner():
             print(word_read)
 
         return(word_read)
+
+
+    def test(self, word, target=None, return_phonform=True, phonreps=None, ties='stop', verbose=True, construct=True, return_array=True):
+        """Test a word after the learner has learned.
+
+        Parameters
+        ----------
+        word : str
+            An orthographic form to be tested.
+
+        return_phonform : bool
+            Specify whether or not the phonological form (list of strings) should
+            be returned along with test data. If true, it is returned as the
+            first element of the return object. (Default is True)
+
+        phonreps : dict
+            A dictionary with symbolic phoneme strings as keys and binary 
+            feature vectors as values. This object can be provided and if 
+            provided will be used in place of the analagous dictionary of
+            representations in Learner.phonreps. This parameter is passed 
+            to read(). (Default is None)
+
+        ties : str
+            Specify the behavior of the method in the presence of ties produced
+            for phonemes (ie, if the most plausible phoneme produced isn't a
+            single phoneme but several different phonemes, none of which can be
+            identified as the least distant phonemes over all phonemes). The value
+            specified is passed to the nearest_phoneme() method. Possible values 
+            are 'stop' and 'sample', where specifying 'stop' halts the execution
+            of the method and 'sample' randomly samples from the alternative
+            phonemes selected. This parameter is passed to read(). (Default is 'stop')
+
+        verbose : bool
+            If True the resulting sequence of words is printed. (Default is True)
+
+        construct : bool
+            If True, create the orthographic form of the word if it isn't in
+            the traindata object. In this case, the word cannot be evaluated unless
+            you specify a target phonological pattern. (Default is True)
+
+        returns : str
+            Specify the form of the test to be returned. If a distance measure is
+            specified as the test, then an L2 norm is used so that there is no
+            penalty for length. Possible values are 'phonemes-right', which specifies 
+            how many phonemes were right, 'phonemes-wrong', which specifies how many 
+            phonemes were wrong, 'phonemes-proportion', which specifies the proportion 
+            of phonemes that were right, 'phonemes-sum', which specifies the sum of all 
+            phonemewise distances between the produced phoneme and the right one,
+            'phonemes-average', which calculates the average distances between the right
+            phoneme and the produced one, 'word', which calculates the distance between
+            the right word and the produced one (both padded to the longest word in the
+            training data), or 'all' which returns all six tests as a tuple.
+            (Default is 'word')
             
+        Returns
+        -------
+        Int, float, or tuple depending on the value provided for "returns" above.
+
+        """
+
+        if target is None:
+            if word not in self.words:
+                raise Exception('Target not specified and the word is not in training pool. To test, provide target.')
+            else:
+                xo, xp, yp = self.find(word)
+
+        word_read = self.read(word, phonreps=phonreps, ties=ties, verbose=verbose, construct=construct, return_array=return_array)
+        return(word_read)
 
 
 if __name__ == "__main__":

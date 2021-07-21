@@ -3,6 +3,7 @@
 #%%
 from Learner import Learner
 import numpy as np
+import keras
 
 #%%
 from utilities import load, loadreps, reshape, choose
@@ -12,9 +13,8 @@ from utilities import load, loadreps, reshape, choose
 
 #%%
 # load
-left = load('../inputs/left.traindata')
+data = load('../inputs/left.traindata')
 # here k is equal to the phonological length of the word + 1 (because of the terminal segment)
-data = {k:v for k, v in left.items() if k > 3}
 
 
 #%% phonreps and orthreps
@@ -22,8 +22,8 @@ phonreps = loadreps('../inputs/phonreps-with-terminals.json')
 orthreps = loadreps('../inputs/raw/orthreps.json')
 
 # %%
-orth_features = left[3]['orth'].shape[2]
-phon_features = left[3]['phonSOS'].shape[2]
+orth_features = data[4]['orth'].shape[2]
+phon_features = data[4]['phonSOS'].shape[2]
 #%% probabilities for sampling phonological lengths during fitcycle()
 ps = [.2, .3, .2, .2, .05, .05] 
 #%%
@@ -39,12 +39,17 @@ K = p/np.log(maxf)
 
 
 #%%
-learner.fitcycle(batch_size=70, cycles=50, probs=ps, K=K, evaluate=False) 
+learner.fitcycle(batch_size=70, cycles=10, probs=ps, K=K, evaluate=False) 
 
 
 
 
 
 #%%
-learner.model.save('base-model')
+#learner.model.save('base-model')
+#m = keras.models.load_model('./base-model')
 #%%
+import pickle
+with open('base.learner', 'wb') as f:
+    pickle.dump(learner, f)
+# %%

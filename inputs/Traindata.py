@@ -180,7 +180,7 @@ class Reps():
     """
 
 
-    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, maxsyll=None, onehot=True, orthpad=9, phonpad=9, terminals=False, phon_index=0, justify='left', punctuation=False, numerals=False, tolower=True, frequency=None, test_reps=True, verbose=True):
+    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, minorth=None, minphon=None, maxsyll=None, onehot=True, orthpad=9, phonpad=9, terminals=False, phon_index=0, justify='left', punctuation=False, numerals=False, tolower=True, frequency=None, test_reps=True, verbose=True):
         """Initialize Reps with a values that specify representations over words.
         Parameters
         ----------
@@ -203,7 +203,8 @@ class Reps():
             may produce idiosyncratic behavior. 
 
         oneletter : bool
-            Whether to exclude words that are one letter long or not. (Default is True)
+            Whether to exclude words that are one letter long or not. Note the partial
+            redundancy with the minorth parameter. (Default is True)
 
         maxorth : int or None
             The maximum length of the orthographic wordforms to populate the pool
@@ -211,6 +212,14 @@ class Reps():
 
         maxphon : int or None
             The maximum length of the phonological wordforms to populate the pool
+            for representations. This value is calculated inclusively. (Default is None)
+
+        minorth : int or None
+            The minimum length of the orthographic wordforms to populate the pool
+            for representations. This value is calculated inclusively. (Default is None)
+
+        minphon : int or None
+            The minimum length of the phonological wordforms to populate the pool
             for representations. This value is calculated inclusively. (Default is None)
 
         onehot : bool
@@ -283,6 +292,21 @@ class Reps():
             for word in toomanyphones:
                 excluded[word] = "too many phonemes"
                 print(word, 'removed from pool because it has too many phonemes')
+
+
+        if minorth is not None:
+            toofewletters = [word for word in pool if len(word) < minorth]
+            pool = [word for word in pool if word not in toofewletters]
+            for word in toofewletters:
+                excluded[word] = "too few letters"
+                print(word, 'removed from pool because it has too few letters')
+
+        if minphon is not None:
+            toofewphones = [word for word in pool if len(cmudict[word]) < minphon]
+            pool = [word for word in pool if word not in toofewphones]
+            for word in toofewphones:
+                excluded[word] = "too few phonemes"
+                print(word, 'removed from pool because it has too few phonemes')
 
         if maxsyll is not None:
             toomanysyllables = [word for word in pool if n_syllables(cmudict[word]) > maxsyll]

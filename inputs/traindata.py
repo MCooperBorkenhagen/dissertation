@@ -22,6 +22,9 @@ outliers = pd.read_csv('./raw/wcbc-outliers.csv', header=None)[0].tolist()
 MAXORTH = 8
 MAXPHON = 8
 MAXSYLL = 3
+MINORTH = 2
+MINPHON = 3
+
 
 # get the string labels/words
 words = wcbc.orth.tolist()
@@ -64,8 +67,9 @@ for word in set(words):
 
 
 #%%
-left = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json', maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, justify='left', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
-right = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json', maxorth=MAXORTH, maxphon=MAXPHON, maxsyll=MAXSYLL, justify='right', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
+left = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json', maxorth=MAXORTH, maxphon=MAXPHON, minorth=MINORTH, minphon=MINPHON, maxsyll=MAXSYLL, justify='left', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
+right = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json', maxorth=MAXORTH, maxphon=MAXPHON, minorth=MINORTH, minphon=MINPHON, maxsyll=MAXSYLL, justify='right', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
+
 
 #%%
 # test that the words for each set are the same:
@@ -77,7 +81,7 @@ for length, traindict in left.traindata.items():
 
 save(left.traindata, 'left.traindata')
 save(right.traindata, 'right.traindata')
-#%%
+
 with open('phonreps-with-terminals.json', 'w') as t:
     json.dump(left.phonreps, t)
 

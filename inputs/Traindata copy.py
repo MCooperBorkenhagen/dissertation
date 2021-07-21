@@ -180,7 +180,7 @@ class Reps():
     """
 
 
-    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, maxsyll=None, onehot=True, orthpad=9, phonpad=9, terminals=False, phon_index=0, justify='left', punctuation=False, numerals=False, tolower=True, test_reps=True, verbose=True):
+    def __init__(self, words, outliers=None, cmudict_supplement=None, phonpath=None, oneletter=False, maxorth=None, maxphon=None, maxsyll=None, onehot=True, orthpad=9, phonpad=9, terminals=False, phon_index=0, justify='left', punctuation=False, numerals=False, tolower=True, frequency=None, test_reps=True, verbose=True):
         """Initialize Reps with a values that specify representations over words.
         Parameters
         ----------
@@ -433,8 +433,18 @@ class Reps():
             ortharray = [self.orthforms_padded[word] for word in wordlist]
             traindata_['orth'] = np.array(ortharray)
             traindata_['wordlist'] = wordlist
-            
+                
+            ##################
+            # FREQUENCY DATA #
+            ##################
+            if frequency is not None:
+                frequencies = []
+                for word in wordlist:
+                    frequencies.append(frequency[word])
+                traindata_['frequency'] = np.array(frequencies)
+
             self.traindata[length] = traindata_
+
 
 
 
@@ -450,8 +460,8 @@ class Reps():
                     assert reconstruct(d['phonEOS'], [self.cmudictEOS[word] for word in d['wordlist']], repdict=self.phonreps, join=False), 'EOS phonological representations do not match their string representations'
                 elif not terminals:
                     assert reconstruct(d['phon'], [self.cmudict[word] for word in d['wordlist']], repdict=self.phonreps, join=False), 'Phonological representations do not match their string representations'
-        #        if verbose:
-        #            print('Words of phonological length', length, 'pass reconstruction test')
+                if verbose:
+                    print('Words of phonological length', length, 'pass reconstruction test')
 
 
         # check that all the phonemes in words in pool are represented in phonreps:
@@ -471,6 +481,7 @@ class Reps():
         elif not terminals:
             assert set(self.orthforms.keys()) == set(self.phonforms.keys()), 'The keys in your orth and phon dictionaries do not match'
 
+        print('Representations initialized. Done.')
 
 
 if __name__ == "__main__":
