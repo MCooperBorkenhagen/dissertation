@@ -86,3 +86,5 @@ with open('phonreps-with-terminals.json', 'w') as t:
     json.dump(left.phonreps, t)
 
 #%%
+
+# orthographic syllabics
