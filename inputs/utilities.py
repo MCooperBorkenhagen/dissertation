@@ -127,3 +127,54 @@ def save(x, PATH):
     f = open(PATH, 'wb')
     pickle.dump(x, f)
     f.close()
+
+def phontable(PATH):
+    df = pd.read_csv(PATH)
+    df = df.set_index('phone')
+    feature_cols = [column for column in df if column.startswith('#')]
+    df = df[feature_cols]
+    df.columns = df.columns.str[1:]
+    return(df)
+
+def phonemedict(PATH, terminals=False):
+    """Binary phonological reps from CSV.
+
+    Parameters
+    ----------
+    PATH : str
+        Path to the csv containing phonological representations.
+    
+    sos : bool
+        Specify whether to add start-of-string
+        feature to reps (default is not/ False). If true
+        the character "#" is used. Note that if set to 
+        true a new key-value pair is created in return 
+        dict for this character, and a feature node is 
+        added to every value in the dictionary.
+
+    eos : bool
+        Specify whether to add end-of-string
+        feature to reps (default is not/ False). If true
+        the character "%" is used. Note that if set to 
+        true a new key-value pair is created in return 
+        dict for this character, and a feature node is 
+        added to every value in the dictionary.
+
+    Returns
+    -------
+    dict
+        A dictionary of phonemes and their binary representations
+    """
+    df = phontable(PATH)
+
+    dict = {}
+    for index, row in df.iterrows():
+        dict[index] = row.tolist()
+
+    if terminals:
+        for k, v in dict.items():
+            dict[k].extend([0, 0])
+        dict['#'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+        dict['%'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+
+    return(dict)

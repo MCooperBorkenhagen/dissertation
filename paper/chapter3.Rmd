@@ -11,6 +11,7 @@ Results of the model's ability to correctly produce a spoken form of a word can 
 
 A limited corpus of words has been selected for training purposes here, though the model is capable of attempting to produce phonology from any sequence of letters provided on the input - a feature we see as a virtue of the implementation given that humans are also capable of this.
 
+
 ## Training details
 
 ## Testing trials

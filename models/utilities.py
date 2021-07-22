@@ -45,3 +45,21 @@ def scale(x, K):
     p = K*np.log(x)
     return p
     
+
+def key(dict, value):
+    for k, v in dict.items():
+        if value == v:
+            return(k)
+
+def mean(x):
+    return(sum(x)/len(x))
+
+
+def has_numeric(x):
+    return any(c.isdigit() for c in x)
+
+def get_vowels(x, index=True):
+    if index:
+        return [i for i, v in enumerate(x) if has_numeric(v)]
+    else:
+        return [v for v in x if has_numeric(v)]

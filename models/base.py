@@ -39,17 +39,23 @@ K = p/np.log(maxf)
 
 
 #%%
-learner.fitcycle(batch_size=70, cycles=10, probs=ps, K=K, evaluate=False) 
-
-
-
+learner.fitcycle(batch_size=70, cycles=50, probs=ps, K=K, evaluate=False) 
 
 
 #%%
 #learner.model.save('base-model')
 #m = keras.models.load_model('./base-model')
+
+# %%
+tmp = learner.read('think', returns='patterns', ties='sample')
+# %%
+__, __, yp = learner.find('think')
+
+# %%
+tmp = learner.test('thinking', return_phonform=True, returns='all', ties = 'sample', phonreps=None)
+# %%
+
 #%%
-import pickle
-with open('base.learner', 'wb') as f:
-    pickle.dump(learner, f)
+
+
 # %%

@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.utils import plot_model as plot
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
-from utilities import printspace, reshape, L2, choose, scale
+from utilities import printspace, reshape, L2, choose, scale, key, mean, get_vowels
 
 
 log_dir = "logs/fit/"
@@ -333,7 +333,7 @@ class Learner():
         phon_reader = Model([self.decoder_inputs] + phon_states_inputs, [phon_outputs] + phon_states)
         return orth_reader, phon_reader
 
-    def read(self, word, phonreps=None, ties='stop', verbose=True, construct=True, **kwargs):
+    def read(self, word, returns='strings', phonreps=None, ties='stop', verbose=True, construct=True, **kwargs):
         """Read a word after the learner has learned.
 
         Parameters
@@ -344,6 +344,18 @@ class Learner():
             read. If word is not present in Learner.words, then an array
             will be generated and passed to the method for reading, in which
             case the array is constructed within Learner.get_word().
+
+        returns : str
+            What type of object do you want returned? By specifying 'strings'
+            you will get the list of phonemes specified as strings, and by 
+            specifying 'patterns' you will get the vectors that represent 
+            those phonemes as distributed patterns. Note that there is an
+            asymmetry in this return process: if you specify strings you get
+            the nearest phonemes based on the patterns produced, and if you
+            specify 'patterns' you get the actual patterns produced. This is
+            because specifying 'strings' only makes sense if you want the nearest
+            ones to the patterns produced, which is useful if you want the
+            output to be human readable. (Default is 'strings')
 
         phonreps : dict
             A dictionary with symbolic phoneme strings as keys and binary 
@@ -398,6 +410,7 @@ class Learner():
 
         done_reading = False
         word_read = []
+        word_repd = []
         
 
         while not done_reading:
@@ -405,6 +418,7 @@ class Learner():
             phoneme_produced = nearest_phoneme(output_tokens, phonreps=phonreps, ties=ties, return_array=False)
             sampled_rep = nearest_phoneme(output_tokens, phonreps, ties=ties, return_array=True)
             word_read.append(phoneme_produced)
+            word_repd.append(output_tokens.reshape(self.phon_features))
             
             if (phoneme_produced == '%' or len(word_read) == maxlen):
                 done_reading = True
@@ -416,10 +430,13 @@ class Learner():
         if verbose:
             print(word_read)
 
-        return(word_read)
+        if returns == 'strings':
+            return(word_read)
+        elif returns == 'patterns':
+            return(np.array(word_repd))
 
 
-    def test(self, word, target=None, return_phonform=True, phonreps=None, ties='stop', verbose=True, construct=True, return_array=True):
+    def test(self, word, target=None, returns='all', return_phonform=True, phonreps=None, ties='stop', verbose=True, construct=True):
         """Test a word after the learner has learned.
 
         Parameters
@@ -459,32 +476,135 @@ class Learner():
 
         returns : str
             Specify the form of the test to be returned. If a distance measure is
-            specified as the test, then an L2 norm is used so that there is no
-            penalty for length. Possible values are 'phonemes-right', which specifies 
+            specified as the test, then an L2 norm is used (so that there is no
+            penalty for length). Possible values are 'phonemes-right', which specifies 
             how many phonemes were right, 'phonemes-wrong', which specifies how many 
             phonemes were wrong, 'phonemes-proportion', which specifies the proportion 
             of phonemes that were right, 'phonemes-sum', which specifies the sum of all 
             phonemewise distances between the produced phoneme and the right one,
             'phonemes-average', which calculates the average distances between the right
-            phoneme and the produced one, 'word', which calculates the distance between
-            the right word and the produced one (both padded to the longest word in the
-            training data), or 'all' which returns all six tests as a tuple.
-            (Default is 'word')
+            phoneme and the produced one, 'phoneme-distances', which is a list of all 
+            the phonemewise distances, 'stress', which tests the stress pattern only
+            returning how much of the stress pattern was correct as a proportion, 
+            'length', which returns the discrepancy in length between the word produced
+            and the target word, 'word', which calculates the distance between the right 
+            word and the produced one (both padded to the longest word in the training data), 
+            or 'all' which returns all seven tests as a tuple. (Default is 'word')
             
         Returns
         -------
         Int, float, or tuple depending on the value provided for "returns" above.
 
         """
-
         if target is None:
             if word not in self.words:
                 raise Exception('Target not specified and the word is not in training pool. To test, provide target.')
             else:
                 xo, xp, yp = self.find(word)
+        else:
+            yp = target
 
-        word_read = self.read(word, phonreps=phonreps, ties=ties, verbose=verbose, construct=construct, return_array=return_array)
-        return(word_read)
+        if return_phonform:
+            word_read = self.read(word, phonreps=phonreps, returns='strings', ties=ties, verbose=False, construct=construct)
+
+        if phonreps is None:
+            phonreps = self.phonreps
+
+        word_cmu = [key(phonreps, list(e)) for e in yp]
+
+
+
+        word_repd = self.read(word, phonreps=phonreps, returns='patterns', ties=ties, verbose=False, construct=construct)
+
+        # the produced word can keep '_' at the end, only if it is a different length than the target word
+        if word_read[-1] == '%' or word_read[-1] == '_':
+            if len(word_read) == len(word_cmu):
+                __ = word_read.pop()
+            else:
+                if word_read[-1] == '%':
+                    __ = word_read.pop()
+
+        terminal = word_cmu.pop() # remove the EOS terminal element
+        assert terminal == '%', 'The last element of your target string for test is not correct. Check target and check reps.'
+
+
+        phonemes_right = len([i for i, e in enumerate(word_cmu) if e == word_read[i]])
+        phonemes_wrong = len(word_cmu)-phonemes_right
+        phonemes_proportion = phonemes_right/len(word_cmu) # how much of the word it should have produced did it get right
+        how_much_longer = len(word_read)-len(word_cmu)
+        phoneme_dists = [L2(word_repd[i], yp[i]) for i, e in enumerate(yp)]
+        phonemes_sum = sum(phoneme_dists)
+        phonemes_average = mean(phoneme_dists)
+
+        target_vowel_indices = get_vowels(word_cmu, index=True)
+        read_vowel_indices = get_vowels(word_read, index=True)
+
+        stress_right = [True for i, e in enumerate(read_vowel_indices) if word_read[e][-1] == word_cmu[target_vowel_indices[i]][-1]]
+        stress = len(stress_right)/len(target_vowel_indices)
+
+        if not word_repd.shape[0] == yp.shape[0]:
+            maxlen = max([v['phonEOS'].shape[1] for k, v in self.traindata.items()])
+            pad_target = self.phonreps['_']*(maxlen-yp.shape[0])
+            pad_repd = self.phonreps['_']*(maxlen-yp.shape[0])
+            word_repd_padded = np.append(word_repd.flatten(), pad_repd)
+            target_padded = np.append(yp.flatten(), pad_target)
+            wordwise_dist = L2(word_repd_padded, target_padded)
+        else:
+            wordwise_dist = L2(word_repd.flatten(), yp.flatten())
+
+        if returns == 'phonemes-right':
+            if return_phonform:
+                return word_read, phonemes_right
+            else:
+                return phonemes_right
+        elif returns == 'phonemes-wrong':
+            if return_phonform:
+                return word_read, phonemes_wrong
+            else:
+                return phonemes_wrong
+        elif returns == 'phonemes-proportion':
+            if return_phonform:
+                return word_read, phonemes_proportion
+            else:
+                return phonemes_proportion
+        elif returns == 'phonemes-sum':
+            if return_phonform:
+                return word_read, phonemes_sum
+            else:
+                return phonemes_sum
+        elif returns == 'phonemes-avg':
+            if return_phonform:
+                return word_read, phonemes_average
+            else:
+                return phonemes_average
+        elif returns == 'phoneme-distances':
+            if return_phonform:
+                return word_read, phoneme_dists
+            else:
+                return phoneme_dists
+        elif returns == 'stress':
+            if return_phonform:
+                return word_read, stress
+            else:
+                return stress
+        elif returns == 'length':
+            if return_phonform:
+                return word_read, how_much_longer
+            else:
+                return how_much_longer
+        elif returns == 'word':
+            if return_phonform:
+                return word_read, wordwise_dist
+            else:
+                return wordwise_dist
+        elif returns == 'all':
+            if return_phonform:
+                return word_read, phonemes_right, phonemes_wrong, phonemes_proportion, phonemes_sum, phonemes_average, phoneme_dists, stress, wordwise_dist 
+            else:
+                return phonemes_right, phonemes_wrong, phonemes_proportion, phonemes_sum, phonemes_average, phoneme_dists, stress, wordwise_dist
+        else:
+            raise Exception('Provide an appropriate value for returns parameter in test() in order to get data for your test.')
+
 
 
 if __name__ == "__main__":

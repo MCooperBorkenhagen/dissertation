@@ -11,7 +11,7 @@ import nltk
 from copy import deepcopy as cp
 import string
 
-
+from utilities import phontable, phonemedict
 
 # %%%
 
