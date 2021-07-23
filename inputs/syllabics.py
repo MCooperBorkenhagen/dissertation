@@ -9,7 +9,6 @@ from utilities import phontable, phonemedict, numeral_detect
 
 
 
-
 def append(x, y):
     """Combine x to y with a type check.
     
@@ -47,12 +46,11 @@ def vowels(wordform, orthography=True):
 
     Parameters
     ----------
-    wordform : str or None
+    wordform : str or list
         An orthographic (str) of phonological (list) wordform.
         If an orthographic wordform is provided, orthography
         should be set to True, else False. An orthographic
-        wordform is a sequence of letters representing a word,
-        whose letters will be converted to lowercase at runtime.
+        wordform is a sequence of letters representing a word.
         A phonological wordform is a list whose elements are
         two-letter ARPAbet phones (as in cmudict).
 
@@ -62,9 +60,9 @@ def vowels(wordform, orthography=True):
 
     Returns
     -------
-    str or list
-        A clean version of the wordform. If orthographic, a string
-        is returned. If phonological, a list is returned.
+    list
+        The vowels of English in either orthographic or 
+        phonological form.
     """
 
     if orthography:
@@ -159,7 +157,7 @@ def clean(wordform, orthography=True):
     """
 
     if orthography:
-        alphabet(wordform)
+        alphabet(wordform) # checks that the word is a permissible word in the English alphabet
         return wordform.lower()
     else:
         for e in wordform:
@@ -181,6 +179,8 @@ def heart(orthform):
         A string designating the element of the orthform that is
         the first vowel.
     """
+    orthform = clean(orthform, orthography=True)
+
     vs = vowels(orthform, orthography=True)
     if 'qu' in orthform:
         orthform = orthform.replace('qu', '~')
@@ -211,7 +211,8 @@ def anchor(phonform):
         the first vowel.
 
     """
-    vs = vowels(None, orthography=False, terminals=terminals)
+    phonform = clean(phonform, orthography=False)
+    vs = vowels(None, orthography=False)
     anchor = next((p for p in phonform if p in vs), None)
     if anchor == None:
         raise TypeError('First vowel error. No vowel detected. Check phonform: {}'.format(phonform))
@@ -245,6 +246,7 @@ def first_vowel(wordform, orthography = True):
         The element of wordform corresponding to its first vowel.
 
     """
+    wordform = clean(wordform, orthography=orthography)
     if orthography:
         return(heart(wordform))
     elif not orthography:
@@ -285,7 +287,7 @@ def rime(wordform, orthography=True, return_length=False):
         object itself is returned, then the type is integer.
 
     """
-
+    wordform = clean(wordform, orthography=orthography)
     fv = first_vowel(wordform, orthography=orthography)
 
     r = wordform[wordform.index(fv):]
@@ -328,7 +330,7 @@ def nucleus(wordform, orthography=True, return_length=False):
         object itself is returned, then the type is integer.
 
     """
-    
+    wordform = clean(wordform, orthography=orthography)
     if orthography:
         n = ''
     else:
@@ -381,6 +383,7 @@ def onset(wordform, orthography=True, return_length=False):
         object itself is returned, then the type is integer.
 
     """
+    wordform = clean(wordform, orthography=orthography)
     fv = first_vowel(wordform, orthography=orthography)
     
     o = wordform[0:wordform.index(fv)]
@@ -392,7 +395,7 @@ def onset(wordform, orthography=True, return_length=False):
 
 
 
-def oncleus(wordform, orthography=True, return_length=False, terminals=True):
+def oncleus(wordform, orthography=True, return_length=False):
 
     """Acquire the oncleus of a wordform (or its length).
 
@@ -425,9 +428,9 @@ def oncleus(wordform, orthography=True, return_length=False, terminals=True):
         object itself is returned, then the type is integer.
 
     """
-
-    fv = first_vowel(wordform, orthography=orthography, terminals=terminals)
-    n = nucleus(wordform, orthography=orthography, terminals=terminals)
+    wordform = clean(wordform, orthography=orthography)
+    fv = first_vowel(wordform, orthography=orthography)
+    n = nucleus(wordform, orthography=orthography)
     o = wordform[0:wordform.index(fv)+len(n)]
     if not return_length:
         return(o)
@@ -467,7 +470,7 @@ def coda(wordform, orthography=True, return_length = False):
         object itself is returned, then the type is integer.
 
     """
-
+    wordform = clean(wordform, orthography=orthography)
 
     r = rime(wordform, orthography=orthography)
     n = nucleus(wordform, orthography=orthography)
@@ -495,6 +498,7 @@ def syllables(phonform):
         The number of syllables in phonform.
 
     """
+    phonform = clean(phonform, orthography=False)
     ns = sum([numeral_detect(e) for e in phonform])
     if ns == 0:
         raise ValueError('Your phonological form has no vowels. Check phonform: {}'.format(phonform))
@@ -522,7 +526,7 @@ def contour(phonform):
         stress, and 0 marks no stress.
 
     """
-
+    phonform = clean(phonform, orthography=False)
     return([e[-1] for e in phonform if numeral_detect(e)])
 
 
@@ -545,5 +549,6 @@ def get_vowels(phonform):
         return corresponds to the order of vowels in phonform.
 
     """
+    phonform = clean(phonform, orthography=False)
     return([e for e in phonform if numeral_detect(e)])
 

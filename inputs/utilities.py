@@ -178,3 +178,33 @@ def phonemedict(PATH, terminals=False):
         dict['%'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
 
     return(dict)
+
+
+def collapse(x, delimiter=','):
+
+    """Collapse elements of x into a pretty string
+
+    Parameters
+    ----------
+    x : list
+        A list of strings to be collapsed.
+
+    delimiter : str
+        A delimiter of your choice.
+
+    Returns
+    -------
+    str
+        Each element of x collapsed into a string,
+        and delimited with the delimiter.
+
+    """
+
+    s = ''
+
+    for i in range(len(x)):
+        if i < len(x)-1:
+            s = s + str(x[i]) + delimiter
+        else:
+            s = s + str(x[i])
+    return(s)
