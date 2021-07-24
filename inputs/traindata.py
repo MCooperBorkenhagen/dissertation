@@ -7,7 +7,7 @@ import json
 import csv
 import pickle
 from utilities import save, collapse
-import syllabics
+from syllabics import onset, first_vowel, nucleus, oncleus, coda, rime, onset, syllables, contour, get_vowels
 #%%
 # set variables
 WORDPATH = './raw/wcbc-ranked.csv'
@@ -86,32 +86,41 @@ save(right.traindata, 'right.traindata')
 with open('phonreps-with-terminals.json', 'w') as t:
     json.dump(left.phonreps, t)
 
-#%%
-
-
+#%% # orthographic syllabics
 
 with open('syllabics.csv', 'w') as s:
+    s.write('word,foot,heart,core,leg,head,body,phon,onset,anchor,nucleus,oncleus,coda,rime,nsyll,contour,vowels\n')
+
     for orthform, phonform in left.cmudict.items():
+
         foot =  onset(orthform) #orthographic onset
         heart = first_vowel(orthform) # first orthographic vowel
         core = nucleus(orthform) # orthographic nucleus
         leg = oncleus(orthform) # orthographic oncleus
         head = coda(orthform)# orthographic coda
         body = rime(orthform) # orthographic rime
-        onset_ = onset(phonform, orthography=False)
+        phon = collapse(phonform, delimiter='-')
+        onset_ = collapse(onset(phonform, orthography=False), delimiter='-')
         anchor = first_vowel(phonform, orthography=False) # first phonological vowel
-        nucleus_ = nucleus(phonform, orthography=False)
-        oncleus_ = oncleus(phonform, orthography=False)
-        coda_ = coda(phonform, orthography=False)
-        rime_ = rime(phonform, orthography=False)
+        nucleus_ = collapse(nucleus(phonform, orthography=False), delimiter='-')
+        oncleus_ = collapse(oncleus(phonform, orthography=False), delimiter='-')
+        coda_ = collapse(coda(phonform, orthography=False), delimiter='-')
+        rime_ = collapse(rime(phonform, orthography=False), delimiter='-')
         nsyll = syllables(phonform)
-        contour_ = collapse(contour(phonform)) # stress pattern
-        vowels = collapse(get_vowels(phonform)) # all phonological vowels
+        contour_ = collapse(contour(phonform), delimiter='-') # stress pattern
+        vowels = collapse(get_vowels(phonform), delimiter='-') # all phonological vowels
 
-        s.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(
-            foot, heart, core, leg, head, body, onset_, 
+        s.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(
+            orthform, foot, heart, core, leg, head, body, phon, onset_, 
             anchor, nucleus_, oncleus_, coda_, rime_, nsyll, contour_, vowels))
     
-    s.close()
-# orthographic syllabics
+
+s.close()
+
 #%%
+
+
+# now generate the monosyllabic data only:
+syllabics = pd.read_csv('../inputs/syllabics.csv')
+
+monowords = syllabics['word'][syllabics['nsyll'] == 1].tolist()
