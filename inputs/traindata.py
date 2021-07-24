@@ -7,7 +7,9 @@ import json
 import csv
 import pickle
 from utilities import save, collapse
-from syllabics import onset, first_vowel, nucleus, oncleus, coda, rime, onset, syllables, contour, get_vowels
+#from syllabics import onset, first_vowel, nucleus, oncleus, coda, rime, onset, syllables, contour, get_vowels
+from syllabics import *
+
 #%%
 # set variables
 WORDPATH = './raw/wcbc-ranked.csv'
@@ -86,6 +88,13 @@ save(right.traindata, 'right.traindata')
 with open('phonreps-with-terminals.json', 'w') as t:
     json.dump(left.phonreps, t)
 
+
+# %% get special traindata for just mono words
+
+mono = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json', maxorth=MAXORTH, maxphon=MAXPHON, minorth=MINORTH, minphon=MINPHON, maxsyll=1, justify='left', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
+save(mono.traindata, 'mono.traindata')
+
+
 #%% # orthographic syllabics
 
 with open('syllabics.csv', 'w') as s:
@@ -116,11 +125,3 @@ with open('syllabics.csv', 'w') as s:
     
 
 s.close()
-
-#%%
-
-
-# now generate the monosyllabic data only:
-syllabics = pd.read_csv('../inputs/syllabics.csv')
-
-monowords = syllabics['word'][syllabics['nsyll'] == 1].tolist()
