@@ -63,3 +63,128 @@ def get_vowels(x, index=True):
         return [i for i, v in enumerate(x) if has_numeric(v)]
     else:
         return [v for v in x if has_numeric(v)]
+
+
+def syllables(phonform):
+
+    """Count the number of syllables in the phonological wordform.
+
+    Parameters
+    ----------
+    phonform : list
+        A phonological form expressed in a list with phones
+        defined as two-letter ARPAbet phonemic segments
+        (i.e., as in cmudict). Each element in the list
+        is a single phonemic segment.
+
+    Returns
+    -------
+    int
+        The number of syllables in phonform.
+
+    """
+    phonform = clean(phonform, orthography=False)
+    ns = sum([numeral_detect(e) for e in phonform])
+    if ns == 0:
+        raise ValueError('Your phonological form has no vowels. Check phonform: {}'.format(phonform))
+    else:
+        return(ns)
+
+
+
+
+def split(traindata, n, seed = 652):
+    from random import sample, seed
+    
+    seed(seed)
+
+    s = [word for k, v in traindata.items() for word in v['wordlist']]
+
+    if type(n) == float:
+        n = round(n*len(s))
+
+    r = sample(s, n)
+
+    holdout = {}
+    train = {}
+    for k, v in traindata.items():
+        iho = []
+        itr = []
+        testwords = []
+        trainwords = []
+        for i, word in enumerate(v['wordlist']):
+            if word in r:
+                iho.append(i)
+                testwords.append(word)
+            else:
+                itr.append(i)
+                trainwords.append(word)
+        train[k] = {'phonSOS':v['phonSOS'][itr], 'phonEOS':v['phonEOS'][itr], 'orth':v['orth'][itr], 'wordlist':trainwords, 'frequency':v['frequency'][itr]}
+        holdout[k] = {'phonSOS':v['phonSOS'][iho], 'phonEOS':v['phonEOS'][iho], 'orth':v['orth'][iho], 'wordlist':testwords, 'frequency':v['frequency'][iho]}
+        
+    return holdout, train
+
+
+
+def collapse(x, delimiter='-'):
+
+    """Collapse elements of x into a pretty string
+
+    Parameters
+    ----------
+    x : list
+        A list of strings to be collapsed.
+
+    delimiter : str
+        A delimiter of your choice.
+
+    Returns
+    -------
+    str
+        Each element of x collapsed into a string,
+        and delimited with the delimiter.
+
+    """
+
+    s = ''
+
+    for i in range(len(x)):
+        if i < len(x)-1:
+            s = s + str(x[i]) + delimiter
+        else:
+            s = s + str(x[i])
+    return(s)
+
+
+def flatten(x, newline=True, unlist=True, delimiter=','):
+    y = ''
+    for i, e in enumerate(x):
+        if i < len(x)-1:
+            if unlist:
+                if type(e) == list:
+                    e = collapse(e)
+            y = y + str(e) + delimiter
+        elif i == len(x)-1: # when you get to the last element
+            if unlist:
+                if type(e) == list:
+                    e = collapse(e)
+                y = y + str(e)
+    if newline:
+        y = y + '\n'
+    return y
+
+
+
+def shelve(x, ty=str, delimiter=',', newline=True):
+    y = delimiter.join(map(ty, x))
+    if newline:
+        return(y+'\n')
+    else:
+        return(y)
+
+
+def flad(a, pads=0, pad=None):
+    if pads == 0:
+        return(a.flatten())
+    else:
+        return(np.append(a, pad*pads))

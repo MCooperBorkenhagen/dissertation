@@ -3,7 +3,7 @@ from Learner import Learner
 import numpy as np
 import pandas as pd
 import keras
-from utilities import load, loadreps, reshape, choose, split
+from utilities import load, loadreps, reshape, choose, split, collapse, flatten, shelve, flad
 
 
 mono = load('../inputs/mono.traindata')
@@ -38,25 +38,72 @@ maxf = max(frequencies.values())
 K = p/np.log(maxf)
 
 
+#%% for testing
+C = 2 # how many runs of fitcycle do you want to run
+for i in range(1, C+1):
+    cycle_id = str(i)
+    learner.fitcycle(batch_size=70, cycles=2, probs=probs, K=K, evaluate=False, evaluate_when=11, cycle_id=cycle_id) 
+
 
 #%%
-learner.fitcycle(batch_size=70, cycles=10, probs=probs, K=K, evaluate=False) 
+C = 4 # how many runs of fitcycle do you want to run
+for i in range(1, C+1):
+    cycle_id = str(i)
+    learner.fitcycle(batch_size=70, cycles=10, probs=probs, K=K, evaluate=True, evaluate_when=11, cycle_id=cycle_id) 
 
 
 #%%
 learner.model.save('monosyllabic-model')
+# if you want to load the previously saved model:
 #m = keras.models.load_model('./base-model')
 
-# %%
-learner.read('hand', ties='sample')
-# %%
-__, __, yp = learner.find('think')
 
-# %%
-tmp = learner.test('think', return_phonform=True, returns='all', ties = 'sample', phonreps=None)
-# %%
 
+
+# %% calculate and write item performance data at end of training for the training items
+colnames = 'word,freq,phon_read,phonemes_right,phonemes_wrong,phonemes_proportion,phonemes_sum,phonemes_average,phoneme_dists,stress,wordwise_dist\n'
+with open('posttest-trainwords.csv', 'w') as at:
+    at.write(colnames)
+    for word in learner.words:
+        wd = learner.test(word, return_phonform=True, returns='all', ties='sample')
+        at.write(word+','+str(frequencies[word])+','+flatten(wd))
+
+at.close()
+
+
+# %% calculate true phonological outputs for all training and test items
+maxphon = max(train.keys())
+assert maxphon == max(test.keys()), 'The phonological lengths in your train and test data are not identical. Check your train-test split'
 #%%
+with open('posttest-train-outputs.csv', 'w') as to:
+    for word in learner.words:
+        y = learner.read(word, returns='patterns', ties='sample')
+        assert y is not None, 'No output for the word. Check your word'
+        to.write(word+','+shelve(flad(y, pads=maxphon-y.shape[0], pad=phonreps['_'])))
+
+to.close()
+
+with open('posttest-test-outputs.csv', 'w') as te:
+    for length, data in test.items():
+        for word in data['wordlist']:
+            y = learner.read(word, returns='patterns', ties='sample')
+            assert y is not None, 'No output for the word. Check your word'
+            te.write(word+','+shelve(flad(y, pads=maxphon-y.shape[0], pad=phonreps['_'])))
+
+te.close()
+# %%
+
+# %% assessments for the holdout items:
+colnames = 'word,freq,phon_read,phonemes_right,phonemes_wrong,phonemes_proportion,phonemes_sum,phonemes_average,phoneme_dists,stress,wordwise_dist\n'
+with open('posttest-holdout-words.csv', 'w') as ht:
+    ht.write(colnames)
+
+    for length, data in test.items():
+        for i, word in enumerate(data['wordlist'][0:10]):
+            wd = learner.test(word, target=data['phonEOS'][i], return_phonform=True, returns='all', ties='sample')
+            ht.write(word+','+str(frequencies[word])+','+flatten(wd))
+
+ht.close()
 
 
 # %%

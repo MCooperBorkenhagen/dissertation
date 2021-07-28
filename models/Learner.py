@@ -213,7 +213,7 @@ class Learner():
             itemdata = open('item-data'+ '-' + self.modelname + '-' + cycle_id + '.csv', 'w')
             itemdata.write("cycle, word, phonlength, accuracy, loss\n")
             # set up file for model data if evaluate set to True 
-            modeldata = open('model-data'+ self.modelname + '-' + cycle_id + '.csv', 'w')
+            modeldata = open('model-data'+ '-' + self.modelname + '-' + cycle_id + '.csv', 'w')
             modeldata.write("cycle, phonlength, accuracy, loss\n")
 
         if probs is None:
@@ -436,7 +436,7 @@ class Learner():
             return(np.array(word_repd))
 
 
-    def test(self, word, target=None, returns='all', return_phonform=True, phonreps=None, ties='stop', verbose=True, construct=True):
+    def test(self, word, target=None, returns='all', return_phonform=True, phonreps=None, ties='stop', construct=True):
         """Test a word after the learner has learned.
 
         Parameters
@@ -465,9 +465,6 @@ class Learner():
             are 'stop' and 'sample', where specifying 'stop' halts the execution
             of the method and 'sample' randomly samples from the alternative
             phonemes selected. This parameter is passed to read(). (Default is 'stop')
-
-        verbose : bool
-            If True the resulting sequence of words is printed. (Default is True)
 
         construct : bool
             If True, create the orthographic form of the word if it isn't in
@@ -543,12 +540,19 @@ class Learner():
         stress = len(stress_right)/len(target_vowel_indices)
 
         if not word_repd.shape[0] == yp.shape[0]:
-            maxlen = max([v['phonEOS'].shape[1] for k, v in self.traindata.items()])
+            #maxlen = max([v['phonEOS'].shape[1] for k, v in self.traindata.items()])
+            #pad_target = self.phonreps['_']*(maxlen-yp.shape[0])
+            #pad_repd = self.phonreps['_']*(maxlen-yp.shape[0])
+            #word_repd_padded = np.append(word_repd.flatten(), pad_repd)
+            #target_padded = np.append(yp.flatten(), pad_target)
+            #wordwise_dist = L2(word_repd_padded, target_padded)
+            maxlen = max(self.traindata.keys())
             pad_target = self.phonreps['_']*(maxlen-yp.shape[0])
-            pad_repd = self.phonreps['_']*(maxlen-yp.shape[0])
+            pad_repd = self.phonreps['_']*(maxlen-word_repd.shape[0])
             word_repd_padded = np.append(word_repd.flatten(), pad_repd)
             target_padded = np.append(yp.flatten(), pad_target)
             wordwise_dist = L2(word_repd_padded, target_padded)
+
         else:
             wordwise_dist = L2(word_repd.flatten(), yp.flatten())
 
