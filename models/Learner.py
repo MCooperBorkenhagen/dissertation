@@ -29,10 +29,12 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
 
     ties : str
         Test to see if ties are present. If a tie is present then an 
-        exception will be raised. If set to 'stop', an exception is raised
-        if the pairwise comparison across representations yields a tie. The
-        alternative is the value 'sample' which yields a random representation
-        selected from the ties if ties are present. (default is 'stop')
+        exception will be raised or a sample is made from the ties.
+        If set to 'stop', an exception is raised if the pairwise comparison 
+        across representations yields a tie. The value 'sample' yields a 
+        random representation selected from the ties if ties are present.
+        The value 'identify' returns 'XX' as the string return (ie, when 
+        return_array is False) and an empty representation (default is 'stop')
 
     round : bool
         Specify whether to round the input array or not prior to calculating
@@ -64,12 +66,19 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
         s = u[0] # if the exception isn't raised then the selected phoneme is the single element of u  
     elif ties == 'sample':
         s = random.sample(u, 1)[0]
+    elif ties == 'identify':
+        s ='XX'
+
 
     if return_array:
-        return(phonreps[s])
+        if ties == 'sample':
+            return(phonreps[s])
+        elif ties == 'identify':
+            e = np.empty(len(phonreps['_']))
+            e[:] = np.nan
+            return(e) #this option probably won't ever be used
     elif not return_array:
         return(s)
-
 
 
 
@@ -369,9 +378,10 @@ class Learner():
             single phoneme but several different phonemes, none of which can be
             identified as the least distant phonemes over all phonemes). The value
             specified is passed to the nearest_phoneme() method. Possible values 
-            are 'stop' and 'sample', where specifying 'stop' halts the execution
-            of the method and 'sample' randomly samples from the alternative
-            phonemes selected. (Default is 'stop')
+            are 'stop', 'sample', 'identify', where specifying 'stop' halts the execution
+            of the method, 'sample' randomly samples from the alternative
+            phonemes selected, and 'identify' puts a placeholder for that
+            segment to identify it as a tie (placeholder is 'XX'). (Default is 'stop')
 
         verbose : bool
             If True the resulting sequence of words is printed. (Default is True)
@@ -462,9 +472,11 @@ class Learner():
             single phoneme but several different phonemes, none of which can be
             identified as the least distant phonemes over all phonemes). The value
             specified is passed to the nearest_phoneme() method. Possible values 
-            are 'stop' and 'sample', where specifying 'stop' halts the execution
-            of the method and 'sample' randomly samples from the alternative
-            phonemes selected. This parameter is passed to read(). (Default is 'stop')
+            are 'stop', 'sample', 'identify', where specifying 'stop' halts the execution
+            of the method, 'sample' randomly samples from the alternative
+            phonemes selected, and 'identify' puts a placeholder for that
+            segment to identify it as a tie (placeholder is 'XX'). (Default is 'stop')
+
 
         construct : bool
             If True, create the orthographic form of the word if it isn't in
@@ -524,8 +536,11 @@ class Learner():
         terminal = word_cmu.pop() # remove the EOS terminal element
         assert terminal == '%', 'The last element of your target string for test is not correct. Check target and check reps.'
 
-
-        phonemes_right = len([i for i, e in enumerate(word_cmu) if e == word_read[i]])
+        print(word)
+        print('word read:', word_read)
+        print('word cmu:', word_cmu)
+        #phonemes_right = len([i for i, e in enumerate(word_cmu) if e == word_read[i]])
+        phonemes_right = len([True for e in zip(word_cmu, word_read) if e[0]==e[1]])
         phonemes_wrong = len(word_cmu)-phonemes_right
         phonemes_proportion = phonemes_right/len(word_cmu) # how much of the word it should have produced did it get right
         how_much_longer = len(word_read)-len(word_cmu)
@@ -533,19 +548,22 @@ class Learner():
         phonemes_sum = sum(phoneme_dists)
         phonemes_average = mean(phoneme_dists)
 
-        target_vowel_indices = get_vowels(word_cmu, index=True)
-        read_vowel_indices = get_vowels(word_read, index=True)
+        #target_vowel_indices = get_vowels(word_cmu, index=True)
+        #read_vowel_indices = get_vowels(word_read, index=True)
 
-        stress_right = [True for i, e in enumerate(read_vowel_indices) if word_read[e][-1] == word_cmu[target_vowel_indices[i]][-1]]
-        stress = len(stress_right)/len(target_vowel_indices)
+        target_vowels = get_vowels(word_cmu, index=False)
+        read_vowels = get_vowels(word_read, index=False)
+
+        # converted to user defined function and applied below, but kept for now
+        print('read vowel indices:', read_vowels)
+        print('target vowel indices', target_vowels)
+        #stress_right = [True for i, e in enumerate(read_vowel_indices) if word_read[e][-1] == word_cmu[target_vowel_indices[i]][-1]]
+
+        stress_right = [True for e in zip(target_vowels, read_vowels) if e[0][-1] == e[1][-1]]
+        #stress = len(stress_right)/len(target_vowel_indices)
+        stress = len(stress_right)/len(target_vowels)
 
         if not word_repd.shape[0] == yp.shape[0]:
-            #maxlen = max([v['phonEOS'].shape[1] for k, v in self.traindata.items()])
-            #pad_target = self.phonreps['_']*(maxlen-yp.shape[0])
-            #pad_repd = self.phonreps['_']*(maxlen-yp.shape[0])
-            #word_repd_padded = np.append(word_repd.flatten(), pad_repd)
-            #target_padded = np.append(yp.flatten(), pad_target)
-            #wordwise_dist = L2(word_repd_padded, target_padded)
             maxlen = max(self.traindata.keys())
             pad_target = self.phonreps['_']*(maxlen-yp.shape[0])
             pad_repd = self.phonreps['_']*(maxlen-word_repd.shape[0])
