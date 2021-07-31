@@ -1,7 +1,8 @@
 
 #files
 .DS_Store
-
+inputs/left.traindata
+inputs/right.traindata
 
 #filetypes
 *.pyc
