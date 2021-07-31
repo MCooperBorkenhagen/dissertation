@@ -67,8 +67,6 @@ for word in set(words):
         frequencies[word] = 2
 
 
-
-
 #%%
 left = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json', maxorth=MAXORTH, maxphon=MAXPHON, minorth=MINORTH, minphon=MINPHON, maxsyll=MAXSYLL, justify='left', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
 right = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json', maxorth=MAXORTH, maxphon=MAXPHON, minorth=MINORTH, minphon=MINPHON, maxsyll=MAXSYLL, justify='right', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
@@ -95,7 +93,7 @@ mono = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json'
 save(mono.traindata, 'mono.traindata')
 
 
-#%% # orthographic syllabics
+#%% # syllabics
 
 with open('syllabics.csv', 'w') as s:
     s.write('word,foot,heart,core,leg,head,body,phon,onset,anchor,nucleus,oncleus,coda,rime,nsyll,contour,vowels\n')
@@ -125,3 +123,4 @@ with open('syllabics.csv', 'w') as s:
     
 
 s.close()
+#%%

@@ -5,7 +5,7 @@ over strings that can be extended for more complex
 functions that operate over many wordforms.
 """
 from utilities import phontable, phonemedict, numeral_detect
-
+import pandas
 
 
 
@@ -71,10 +71,11 @@ def vowels(wordform, orthography=True):
         else:
             return(['a', 'e', 'i', 'o', 'u', 'y'])
     else:
-        import pandas
         phonpath = 'https://raw.githubusercontent.com/MCooperBorkenhagen/ARPAbet/master/phonreps.csv'
         phonreps = phonemedict(phonpath, terminals=False)
         return([v for v in phonreps.keys() if numeral_detect(v)])
+
+
 
 def phones(phonpath = 'https://raw.githubusercontent.com/MCooperBorkenhagen/ARPAbet/master/phonreps.csv', terminals=False):
 
