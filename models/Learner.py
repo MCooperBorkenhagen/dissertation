@@ -55,7 +55,6 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
     if round:
         a = np.around(a)
 
-    #d = {k:np.linalg.norm(a-np.array(v)) for k, v in phonreps.items()}
     d = {k:L2(a, v) for k, v in phonreps.items()}
     mindist = min(d.values())
     
@@ -65,18 +64,27 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
         assert len(u) == 1, 'More than one minumum value for pairwise distances for phonemes identified. Ties present.'
         s = u[0] # if the exception isn't raised then the selected phoneme is the single element of u  
     elif ties == 'sample':
-        s = random.sample(u, 1)[0]
+        if len(u) != 1:
+            s = random.sample(u, 1)[0]
+        else:
+            s = u[0]
     elif ties == 'identify':
-        s ='XX'
+        if len(u) != 1:
+            s = 'XX'
+        else:
+            s = u[0]
 
 
     if return_array:
-        if ties == 'sample':
+        if ties == 'sample' or ties == 'stop':
             return(phonreps[s])
         elif ties == 'identify':
-            e = np.empty(len(phonreps['_']))
-            e[:] = np.nan
-            return(e) #this option probably won't ever be used
+            if s == 'XX':
+                e = np.empty(len(phonreps['_']))
+                e[:] = np.nan
+            else:
+                e = phonreps[s]
+            return(e) #this option probably won't ever be used, but returns the segment as nans
     elif not return_array:
         return(s)
 
@@ -84,7 +92,7 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
 
 class Learner():
 
-    def __init__(self, orth_features, phon_features, orthreps=None, phonreps=None, traindata=None, mask_phon=False, phon_weights=None, output_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=300, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
+    def __init__(self, orth_features, phon_features, model=None, orthreps=None, phonreps=None, traindata=None, mask_phon=False, phon_weights=None, output_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=300, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
         
         """Initialize your Learner() with some values and methods.
 
@@ -112,15 +120,10 @@ class Learner():
         self.orthreps = orthreps
         self.phonreps = phonreps
 
-        # learner:
-        if op_names:
-            input1_name = 'orth_input'
-            input2_name = 'phon_input'
-            output_name = 'phon_output'
-        else:
-            input1_name = 'input_1'
-            input2_name = 'input_2'
-            output_name = 'output'
+        # names
+        input1_name = 'orth_input'
+        input2_name = 'phon_input'
+        output_name = 'phon_output'
 
 
         self.words = [word for traindata_ in traindata.values() for word in traindata_['wordlist']]
@@ -128,73 +131,100 @@ class Learner():
         if traindata is not None:
             self.traindata = traindata
 
+        if model is None:            
+            # input features should be defined as something like Xe.shape[2]
+            encoder_inputs = Input(shape=(None, orth_features), name=input1_name)
+            encoder_mask = Masking(mask_value=9)(encoder_inputs)
+            encoder = LSTM(hidden, return_state=True)
+            encoder_outputs, state_h, state_c = encoder(encoder_mask)
+            encoder_states = [state_h, state_c]
+
+            # output features should be defined as something like Xd.shape[2]
+            decoder_inputs = Input(shape=(None, phon_features), name=input2_name)
+
+            if mask_phon:
+                decoder_inputs_masked = Masking(mask_value=9)(decoder_inputs)
+            elif not mask_phon:
+                print('Note: learner architecture implemented with no phonological mask')
 
 
-        # input features should be defined as something like Xe.shape[2]
-        encoder_inputs = Input(shape=(None, orth_features), name=input1_name)
-        encoder_mask = Masking(mask_value=9)(encoder_inputs)
-        encoder = LSTM(hidden, return_state=True)
-        encoder_outputs, state_h, state_c = encoder(encoder_mask)
-        encoder_states = [state_h, state_c]
-
-        # output features should be defined as something like Xd.shape[2]
-        decoder_inputs = Input(shape=(None, phon_features), name=input2_name)
-
-        if mask_phon:
-            decoder_inputs_masked = Masking(mask_value=9)(decoder_inputs)
-        elif not mask_phon:
-            print('Note: learner architecture implemented with no phonological mask')
-
-
-        decoder_lstm = LSTM(hidden, return_sequences=True, return_state=True)
+            decoder_lstm = LSTM(hidden, return_sequences=True, return_state=True)
+            
+            if freeze_phon:
+                decoder_lstm.trainable = False
+            
+            if phon_weights is not None:
+                decoder_lstm.set_weights(phon_weights)
+            
+            if mask_phon:
+                decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked, initial_state=encoder_states)
+            elif not mask_phon:
+                decoder_outputs, _, _ = decoder_lstm(decoder_inputs, initial_state=encoder_states)
         
-        if freeze_phon:
-            decoder_lstm.trainable = False
-        
-        if phon_weights is not None:
-            decoder_lstm.set_weights(phon_weights)
-        
-        if mask_phon:
-            decoder_outputs, _, _ = decoder_lstm(decoder_inputs_masked, initial_state=encoder_states)
-        elif not mask_phon:
-            decoder_outputs, _, _ = decoder_lstm(decoder_inputs, initial_state=encoder_states)
-    
-        decoder_dense = Dense(phon_features, activation=transfer_function, name=output_name)
-        
-        if output_weights is not None:
-            decoder_dense.set_weights(output_weights)
-        
-        decoder_outputs = decoder_dense(decoder_outputs)
-        model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+            decoder_dense = Dense(phon_features, activation=transfer_function, name=output_name)
+            
+            if output_weights is not None:
+                decoder_dense.set_weights(output_weights)
+            
+            decoder_outputs = decoder_dense(decoder_outputs)
+            model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
-        self.encoder_inputs = encoder_inputs
-        self.encoder_mask = encoder_mask
-        self.encoder = encoder
-        self.encoder_states = encoder_states
-        self.decoder_lstm = decoder_lstm
-        self.decoder_inputs = decoder_inputs
-        self.decoder_dense = decoder_dense 
+            self.encoder_inputs = encoder_inputs
+            self.encoder_mask = encoder_mask
+            self.encoder = encoder
+            self.encoder_states = encoder_states
+            self.decoder_lstm = decoder_lstm
+            self.decoder_inputs = decoder_inputs
+            self.decoder_dense = decoder_dense 
 
-        # specify metrics
-        if accuracy == 'binary':
-            metric = [tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None, threshold=0.5)]
-        else:
-            metric = accuracy
+            # specify metrics
+            if accuracy == 'binary':
+                metric = [tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None, threshold=0.5)]
+            else:
+                metric = accuracy
 
-        model.compile(optimizer=optimizer, loss=loss, metrics=metric)
-        
-        self.model = model
+            model.compile(optimizer=optimizer, loss=loss, metrics=metric)
+            
+            self.model = model
+
+        elif model is not None:
+            warning = """Your learner has been initialized with a model.
+            Parameters that can be inherited from the model have been, but 
+            learner parameters that you have supplied at class call may be 
+            different than those supplied when the model provided was originally 
+            trained. Make sure your supplied parameters are accurate."""
+            print(warning)
+            self.model = model
+
+            # these params are overwritten as None so that newly specified values don't mislead
+            # if they don't match values originally used when the model was put together. Those
+            # set to none can all be inferred from the supplied model object directly
+            self.loss_function = None
+            self.hidden_units = None
+            self.transfer_function = None
+            self.optimizer = None
+            self.loss_function = None
+            
+            self.encoder_inputs = self.model.layers[0]
+            self.encoder_mask = self.model.layers[1]
+            self.encoder = self.model.layers[3]
+            self.encoder_states = self.model.layers[3].states
+            self.decoder_lstm = self.model.layers[4]
+            self.decoder_inputs = self.model.layers[2]
+            self.decoder_dense = self.model.layers[5]
+
+
+            self.orth_features = self.model.layers[0].input_shape[0][2]
+            self.phon_features = self.model.layers[2].input_shape[0][2]
 
         self.modelname=modelname
-        self.orth_features = orth_features
-        self.phon_features = phon_features
 
 
         if verbose:
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False, evaluate_when=4):
+    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False):
 
         """Cycle through key, value pairs in traindata and apply fit() at each cycle.
 
@@ -256,7 +286,7 @@ class Learner():
             histories[cycle] = history_
 
             if evaluate:
-                if cycle % evaluate_when == 0 or cycle+1 == cycles: # calculates periodically based on evaluate_when
+                if cycle+1 == cycles: # calculates on the last cycle
                     print('Generating evaluation data at end of cycle. It will take a minute...')
                     for length in traindata.keys():
                         Xo = traindata[length]['orth']
@@ -426,7 +456,7 @@ class Learner():
         while not done_reading:
             output_tokens, h, c = d.predict([target_seq] + states_value)
             phoneme_produced = nearest_phoneme(output_tokens, phonreps=phonreps, ties=ties, return_array=False)
-            sampled_rep = nearest_phoneme(output_tokens, phonreps, ties=ties, return_array=True)
+            sampled_rep = nearest_phoneme(output_tokens, phonreps, ties='sample', return_array=True)
             word_read.append(phoneme_produced)
             word_repd.append(output_tokens.reshape(self.phon_features))
             
@@ -544,7 +574,8 @@ class Learner():
         phonemes_wrong = len(word_cmu)-phonemes_right
         phonemes_proportion = phonemes_right/len(word_cmu) # how much of the word it should have produced did it get right
         how_much_longer = len(word_read)-len(word_cmu)
-        phoneme_dists = [L2(word_repd[i], yp[i]) for i, e in enumerate(yp)]
+        #phoneme_dists = [L2(word_repd[i], yp[i]) for i, e in enumerate(yp)]
+        phoneme_dists = [L2(e[0], e[1]) for e in zip(yp, word_repd)]
         phonemes_sum = sum(phoneme_dists)
         phonemes_average = mean(phoneme_dists)
 

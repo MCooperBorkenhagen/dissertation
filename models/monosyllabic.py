@@ -17,7 +17,8 @@ assert test.keys() == train.keys(), 'Phonological lengths represented in test an
 #%% phonreps and orthreps
 phonreps = loadreps('../inputs/phonreps-with-terminals.json')
 orthreps = loadreps('../inputs/raw/orthreps.json')
-
+# get frequencies for all words:
+frequencies = {word: v['frequency'][i] for k, v in mono.items() for i, word in enumerate(v['wordlist'])}
 
 
 #%%
@@ -30,22 +31,22 @@ learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orth
 
 
 #%% using same function for sampling probabilities from Seidenberg & McClelland (1989)
-frequencies = {word: v['frequency'][i] for k, v in mono.items() for i, word in enumerate(v['wordlist'])}
+train_frequencies = {word: v['frequency'][i] for k, v in train.items() for i, word in enumerate(v['wordlist'])}
 p = .93
-maxf = max(frequencies.values())
+maxf = max(train_frequencies.values())
 K = p/np.log(maxf)
 
 
+
 #%%
-C = 2 # how many runs of fitcycle do you want to run. # might be too many to get variability on accuracy, especially with respect to frequency
+C = 3 # how many runs of fitcycle do you want to run. # might be too many to get variability on accuracy, especially with respect to frequency
 for i in range(1, C+1):
     cycle_id = str(i)
-    learner.fitcycle(batch_size=70, cycles=10, probs=probs, K=K, evaluate=True, evaluate_when=11, cycle_id=cycle_id) 
+    learner.fitcycle(batch_size=70, cycles=11, probs=probs, K=K, evaluate=True, cycle_id=cycle_id) 
 
 # %% save the train and test words for the future. We will also save its scaled frquency along with it
 #%%
 with open('train-test-items.csv', 'w') as tt:
-
     tt.write('word,freq_scaled,train-test\n')
     for word in learner.words:
         sf = str(scale(frequencies[word], K))
@@ -68,20 +69,16 @@ colnames = 'word,freq,phon_read,phonemes_right,phonemes_wrong,phonemes_proportio
 steps = len([word for data in test.values() for word in data['wordlist']])
 step = 1
 
-
 with open('posttest-holdout-words.csv', 'w') as ht:
     ht.write(colnames)
 
     for length, data in test.items():
-        if len(data['wordlist']) > 0:
-            for i, word in enumerate(data['wordlist']):
-                if i in [0, 1]:
-                    print('on word', step, 'of', steps, 'total words')
-                    wd = learner.test(word, target=data['phonEOS'][i], return_phonform=True, returns='all', ties='identify')
-                    ht.write(word+','+str(frequencies[word])+','+flatten(wd))
-                    step += 1
+        for i, word in enumerate(data['wordlist']):
+            print('on word', step, 'of', steps, 'total words')
+            wd = learner.test(word, target=data['phonEOS'][i], return_phonform=True, returns='all', ties='identify')
+            ht.write(word+','+str(frequencies[word])+','+flatten(wd))
+            step += 1
 ht.close()
-
 
 
 # %% calculate and write item performance data at end of training for the training items
@@ -89,21 +86,15 @@ colnames = 'word,freq,phon_read,phonemes_right,phonemes_wrong,phonemes_proportio
 with open('posttest-trainwords.csv', 'w') as at:
     at.write(colnames)
     for word in learner.words:
-        wd = learner.test(word, return_phonform=True, returns='all', ties='sample')
+        wd = learner.test(word, return_phonform=True, returns='all', ties='identify')
         at.write(word+','+str(frequencies[word])+','+flatten(wd))
 
 at.close()
 
 
 
-
-
-
-
-
 # calculate true phonological outputs for all training and test items
 maxphon = max(train.keys())
-assert maxphon == max(test.keys()), 'The phonological lengths in your train and test data are not identical. Check your train-test split'
 
 with open('posttest-train-outputs.csv', 'w') as to:
     for word in learner.words:
