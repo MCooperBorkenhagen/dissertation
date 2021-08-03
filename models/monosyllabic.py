@@ -3,18 +3,14 @@ from Learner import Learner
 import numpy as np
 import pandas as pd
 import keras
-from utilities import load, loadreps, reshape, choose, split, collapse, flatten, shelve, flad, scale
+import tensorflow as tf
+from utilities import load, loadreps, reshape, choose, split, collapse, flatten, shelve, flad, scale, subset
 
+import time
 
 mono = load('../inputs/mono.traindata')
-# here k is equal to the phonological length of the word + 1 (because of the terminal segment)
-test, train = split(mono, .07)
-assert test.keys() == train.keys(), 'Phonological lengths represented in test and train are not the same. Resample'
 
-
-
-
-#%% phonreps and orthreps
+# phonreps and orthreps
 phonreps = loadreps('../inputs/phonreps-with-terminals.json')
 orthreps = loadreps('../inputs/raw/orthreps.json')
 # get frequencies for all words:
@@ -22,12 +18,18 @@ frequencies = {word: v['frequency'][i] for k, v in mono.items() for i, word in e
 
 
 #%%
+# here k is equal to the phonological length of the word + 1 (because of the terminal segment)
+test, train = split(mono, .07)
+assert test.keys() == train.keys(), 'Phonological lengths represented in test and train are not the same. Resample'
+
 orth_features = train[4]['orth'].shape[2]
 phon_features = train[4]['phonSOS'].shape[2]
 #%% probabilities for sampling phonological lengths during fitcycle() for training
 probs = [.3, .4, .2, .075, .025]
+
 #%%
-learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=train, modelname='monosyllabic', hidden=400, mask_phon=False, devices=False)
+learner = Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=train, modelname='monosyllabic', hidden=400, devices=False)
+#%%
 
 
 #%% using same function for sampling probabilities from Seidenberg & McClelland (1989)
@@ -36,14 +38,23 @@ p = .93
 maxf = max(train_frequencies.values())
 K = p/np.log(maxf)
 
-
+# low train for strong manipulation of frequency:
+C = 3
+for i in range(1, C+1):
+    cycle_id = 'pre-'+str(i)
+    learner.fitcycle(batch_size=70, cycles=3, probs=probs, K=K, evaluate=True, cycle_id=cycle_id) 
+#%%
+learner.model.save('monosyllabic-model-pre')
 
 #%%
-C = 3 # how many runs of fitcycle do you want to run. # might be too many to get variability on accuracy, especially with respect to frequency
+C = 2 # how many runs of fitcycle do you want to run. # might be too many to get variability on accuracy, especially with respect to frequency
 for i in range(1, C+1):
-    cycle_id = str(i)
-    learner.fitcycle(batch_size=70, cycles=11, probs=probs, K=K, evaluate=True, cycle_id=cycle_id) 
+    cycle_id = 'advanced-'+str(i)
+    learner.fitcycle(batch_size=70, cycles=18, probs=probs, K=K, evaluate=True, cycle_id=cycle_id) 
 
+print('Done with advanced training')
+#%%
+learner.model.save('monosyllabic-model-advanced')
 # %% save the train and test words for the future. We will also save its scaled frquency along with it
 #%%
 with open('train-test-items.csv', 'w') as tt:
@@ -58,9 +69,8 @@ with open('train-test-items.csv', 'w') as tt:
 
 tt.close()
 #%%
-learner.model.save('monosyllabic-model')
 # if you want to load the previously saved model:
-#m = keras.models.load_model('./base-model')
+#m = keras.models.load_model('...')
 
 #%%
 # assessments for the holdout items:
@@ -82,35 +92,20 @@ ht.close()
 
 
 # %% calculate and write item performance data at end of training for the training items
-colnames = 'word,freq,phon_read,phonemes_right,phonemes_wrong,phonemes_proportion,phonemes_sum,phonemes_average,phoneme_dists,stress,wordwise_dist\n'
+# should take about 45 minutes per 1000 words
+steps = len([word for data in train.values() for word in data['wordlist']])
+step = 1
+
 with open('posttest-trainwords.csv', 'w') as at:
     at.write(colnames)
     for word in learner.words:
+        print('on word', step, 'of', steps, 'total words')
         wd = learner.test(word, return_phonform=True, returns='all', ties='identify')
         at.write(word+','+str(frequencies[word])+','+flatten(wd))
-
+        step += 1
 at.close()
 
 
-
-# calculate true phonological outputs for all training and test items
-maxphon = max(train.keys())
-
-with open('posttest-train-outputs.csv', 'w') as to:
-    for word in learner.words:
-        y = learner.read(word, returns='patterns', ties='sample')
-        assert y is not None, 'No output for the word. Check your word'
-        to.write(word+','+shelve(flad(y, pads=maxphon-y.shape[0], pad=phonreps['_'])))
-
-to.close()
-#%%
-with open('posttest-test-outputs.csv', 'w') as te:
-    for length, data in test.items():
-        for word in data['wordlist']:
-            y = learner.read(word, returns='patterns', ties='sample')
-            assert y is not None, 'No output for the word. Check your word'
-            te.write(word+','+shelve(flad(y, pads=maxphon-y.shape[0], pad=phonreps['_'])))
-
-te.close()
-
-# %%
+#
+# calculate true phonological outputs for all training and test items: see monosyllabic-supplemet.py
+#
