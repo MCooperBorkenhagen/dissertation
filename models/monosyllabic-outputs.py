@@ -103,13 +103,19 @@ from scipy.spatial.distance import pdist, cdist, squareform
 d_hat = squareform(pdist(all_outputs))
 d_true = squareform(pdist(all_targets))
 #%%
-d_comp = squareform(cdist(all_outputs, all_targets))
+d_comp = squareform(pdist(np.concatenate((all_outputs, all_targets))))
 # %%
 
 np.savetxt('posttest-outputs-distance-matrix.csv', d_hat)
-np.savetxt('posstest-targets_distance-matrix.csv', d_true)
+np.savetxt('targets_distance-matrix.csv', d_true)
 
-# %% now construct the same arrays and matrix for the true outputs:
+# %%
+d_targets_by_outputs = np.zeros((d_hat.shape))
+d_targets_by_outputs[:] = np.nan
+#%%
 
-
-
+for row in range(d_targets_by_outputs.shape[0]):
+    d_targets_by_outputs[row] = d_comp[row][d_hat.shape[0]:d_comp.shape[0]]
+    
+#%%
+np.savetxt('posttest-outputs-targets-distance-matrix.csv', d_targets_by_outputs)
