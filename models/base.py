@@ -1,14 +1,20 @@
+
+
 #%%
 from Learner import Learner
 import numpy as np
 import pandas as pd
 import keras
-from utilities import load, loadreps, reshape, choose, split
+
+#%%
+from utilities import load, loadreps, reshape, choose
+
+#%%
 
 
+#%%
+# load
 data = load('../inputs/left.traindata')
-
-mono = load('../inputs/mono.traindata')
 # here k is equal to the phonological length of the word + 1 (because of the terminal segment)
 
 
@@ -23,6 +29,7 @@ syllabics = pd.read_csv('../inputs/syllabics.csv')
 #%%
 
 
+mono = load('../inputs/mono.traindata')
 
 
 #%%
@@ -66,6 +73,38 @@ tmp = learner.test('think', return_phonform=True, returns='all', ties = 'sample'
 # %%
 
 #%%
+
+def split(traindata, n, seed = 652):
+    from random import sample, seed
+    
+    seed(seed)
+
+    s = [word for k, v in data.items() for word in v['wordlist']]
+
+    if type(n) == float:
+        n = round(n*len(s))
+
+    r = sample(s, n)
+
+    holdout = {}
+    train = {}
+    for k, v in data.items():
+        subset = []
+        primary = []
+        wordlist = []
+        trainwords = []
+        for i, word in enumerate(v['wordlist']):
+            if word in r:
+                subset.append(i)
+                wordlist.append(word)
+            else:
+                primary.append(i)
+                trainwords.append(word)
+        train[k] = {'phonSOS':v['phonSOS'][primary], 'phonEOS':v['phonEOS'][primary], 'orth':v['orth'][primary], 'wordlist':trainwords, 'frequency':v['frequency'][primary]}
+        holdout[k] = {'phonSOS':v['phonSOS'][subset], 'phonEOS':v['phonEOS'][subset], 'orth':v['orth'][subset], 'wordlist':wordlist, 'frequency':v['frequency'][subset]}
+        
+    return holdout, train
+
 
 
 # %%

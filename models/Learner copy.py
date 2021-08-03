@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.utils import plot_model as plot
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
-from utilities import printspace, reshape, L2, choose, scale
+from utilities import printspace, reshape, L2, choose, scale, key, mean, get_vowels
 
 
 log_dir = "logs/fit/"
@@ -29,10 +29,12 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
 
     ties : str
         Test to see if ties are present. If a tie is present then an 
-        exception will be raised. If set to 'stop', an exception is raised
-        if the pairwise comparison across representations yields a tie. The
-        alternative is the value 'sample' which yields a random representation
-        selected from the ties if ties are present. (default is 'stop')
+        exception will be raised or a sample is made from the ties.
+        If set to 'stop', an exception is raised if the pairwise comparison 
+        across representations yields a tie. The value 'sample' yields a 
+        random representation selected from the ties if ties are present.
+        The value 'identify' returns 'XX' as the string return (ie, when 
+        return_array is False) and an empty representation (default is 'stop')
 
     round : bool
         Specify whether to round the input array or not prior to calculating
@@ -53,7 +55,6 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
     if round:
         a = np.around(a)
 
-    #d = {k:np.linalg.norm(a-np.array(v)) for k, v in phonreps.items()}
     d = {k:L2(a, v) for k, v in phonreps.items()}
     mindist = min(d.values())
     
@@ -63,13 +64,29 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
         assert len(u) == 1, 'More than one minumum value for pairwise distances for phonemes identified. Ties present.'
         s = u[0] # if the exception isn't raised then the selected phoneme is the single element of u  
     elif ties == 'sample':
-        s = random.sample(u, 1)[0]
+        if len(u) != 1:
+            s = random.sample(u, 1)[0]
+        else:
+            s = u[0]
+    elif ties == 'identify':
+        if len(u) != 1:
+            s = 'XX'
+        else:
+            s = u[0]
+
 
     if return_array:
-        return(phonreps[s])
+        if ties == 'sample' or ties == 'stop':
+            return(phonreps[s])
+        elif ties == 'identify':
+            if s == 'XX':
+                e = np.empty(len(phonreps['_']))
+                e[:] = np.nan
+            else:
+                e = phonreps[s]
+            return(e) #this option probably won't ever be used, but returns the segment as nans
     elif not return_array:
         return(s)
-
 
 
 
@@ -185,7 +202,7 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False, evaluate_when=4):
+    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False):
 
         """Cycle through key, value pairs in traindata and apply fit() at each cycle.
 
@@ -213,7 +230,7 @@ class Learner():
             itemdata = open('item-data'+ '-' + self.modelname + '-' + cycle_id + '.csv', 'w')
             itemdata.write("cycle, word, phonlength, accuracy, loss\n")
             # set up file for model data if evaluate set to True 
-            modeldata = open('model-data'+ self.modelname + '-' + cycle_id + '.csv', 'w')
+            modeldata = open('model-data'+ '-' + self.modelname + '-' + cycle_id + '.csv', 'w')
             modeldata.write("cycle, phonlength, accuracy, loss\n")
 
         if probs is None:
@@ -247,7 +264,7 @@ class Learner():
             histories[cycle] = history_
 
             if evaluate:
-                if cycle % evaluate_when == 0 or cycle+1 == cycles: # calculates periodically based on evaluate_when
+                if cycle+1 == cycles: # calculates on the last cycle
                     print('Generating evaluation data at end of cycle. It will take a minute...')
                     for length in traindata.keys():
                         Xo = traindata[length]['orth']
@@ -282,6 +299,18 @@ class Learner():
             pass
         return(plot(self.model, to_file=PATH))
 
+    def find(self, word):
+        if word in self.words:
+            for length, traindata_ in self.traindata.items():
+                for i, w in enumerate(traindata_['wordlist']):
+                    if w == word:
+                        Xo = traindata_['orth'][i]
+                        Xp = traindata_['phonSOS'][i]
+                        Yp = traindata_['phonEOS'][i]
+                        return Xo, Xp, Yp
+        else:
+            raise Exception('Word is not present in the training pool.')
+            
     def get_word(self, word, traindata=None, construct=True):
 
         if traindata is None:
@@ -321,7 +350,7 @@ class Learner():
         phon_reader = Model([self.decoder_inputs] + phon_states_inputs, [phon_outputs] + phon_states)
         return orth_reader, phon_reader
 
-    def read(self, word, phonreps=None, ties='stop', verbose=True, construct=True):
+    def read(self, word, returns='strings', phonreps=None, ties='stop', verbose=True, construct=True, **kwargs):
         """Read a word after the learner has learned.
 
         Parameters
@@ -332,6 +361,18 @@ class Learner():
             read. If word is not present in Learner.words, then an array
             will be generated and passed to the method for reading, in which
             case the array is constructed within Learner.get_word().
+
+        returns : str
+            What type of object do you want returned? By specifying 'strings'
+            you will get the list of phonemes specified as strings, and by 
+            specifying 'patterns' you will get the vectors that represent 
+            those phonemes as distributed patterns. Note that there is an
+            asymmetry in this return process: if you specify strings you get
+            the nearest phonemes based on the patterns produced, and if you
+            specify 'patterns' you get the actual patterns produced. This is
+            because specifying 'strings' only makes sense if you want the nearest
+            ones to the patterns produced, which is useful if you want the
+            output to be human readable. (Default is 'strings')
 
         phonreps : dict
             A dictionary with symbolic phoneme strings as keys and binary 
@@ -345,12 +386,18 @@ class Learner():
             single phoneme but several different phonemes, none of which can be
             identified as the least distant phonemes over all phonemes). The value
             specified is passed to the nearest_phoneme() method. Possible values 
-            are 'stop' and 'sample', where specifying 'stop' halts the execution
-            of the method and 'sample' randomly samples from the alternative
-            phonemes selected. (Default is 'stop')
+            are 'stop', 'sample', 'identify', where specifying 'stop' halts the execution
+            of the method, 'sample' randomly samples from the alternative
+            phonemes selected, and 'identify' puts a placeholder for that
+            segment to identify it as a tie (placeholder is 'XX'). (Default is 'stop')
 
         verbose : bool
             If True the resulting sequence of words is printed. (Default is True)
+
+        construct : bool
+            If True, create the orthographic form of the word if it isn't in
+            the traindata object. In this case, the word cannot be evaluated unless
+            you specify a target phonological pattern. (Default is True)
             
         Returns
         -------
@@ -381,13 +428,15 @@ class Learner():
 
         done_reading = False
         word_read = []
+        word_repd = []
         
 
         while not done_reading:
             output_tokens, h, c = d.predict([target_seq] + states_value)
             phoneme_produced = nearest_phoneme(output_tokens, phonreps=phonreps, ties=ties, return_array=False)
-            sampled_rep = nearest_phoneme(output_tokens, phonreps, ties=ties, return_array=True)
+            sampled_rep = nearest_phoneme(output_tokens, phonreps, ties='sample', return_array=True)
             word_read.append(phoneme_produced)
+            word_repd.append(output_tokens.reshape(self.phon_features))
             
             if (phoneme_produced == '%' or len(word_read) == maxlen):
                 done_reading = True
@@ -399,8 +448,194 @@ class Learner():
         if verbose:
             print(word_read)
 
-        return(word_read)
+        if returns == 'strings':
+            return(word_read)
+        elif returns == 'patterns':
+            return(np.array(word_repd))
+
+
+    def test(self, word, target=None, returns='all', return_phonform=True, phonreps=None, ties='stop', construct=True):
+        """Test a word after the learner has learned.
+
+        Parameters
+        ----------
+        word : str
+            An orthographic form to be tested.
+
+        return_phonform : bool
+            Specify whether or not the phonological form (list of strings) should
+            be returned along with test data. If true, it is returned as the
+            first element of the return object. (Default is True)
+
+        phonreps : dict
+            A dictionary with symbolic phoneme strings as keys and binary 
+            feature vectors as values. This object can be provided and if 
+            provided will be used in place of the analagous dictionary of
+            representations in Learner.phonreps. This parameter is passed 
+            to read(). (Default is None)
+
+        ties : str
+            Specify the behavior of the method in the presence of ties produced
+            for phonemes (ie, if the most plausible phoneme produced isn't a
+            single phoneme but several different phonemes, none of which can be
+            identified as the least distant phonemes over all phonemes). The value
+            specified is passed to the nearest_phoneme() method. Possible values 
+            are 'stop', 'sample', 'identify', where specifying 'stop' halts the execution
+            of the method, 'sample' randomly samples from the alternative
+            phonemes selected, and 'identify' puts a placeholder for that
+            segment to identify it as a tie (placeholder is 'XX'). (Default is 'stop')
+
+
+        construct : bool
+            If True, create the orthographic form of the word if it isn't in
+            the traindata object. In this case, the word cannot be evaluated unless
+            you specify a target phonological pattern. (Default is True)
+
+        returns : str
+            Specify the form of the test to be returned. If a distance measure is
+            specified as the test, then an L2 norm is used (so that there is no
+            penalty for length). Possible values are 'phonemes-right', which specifies 
+            how many phonemes were right, 'phonemes-wrong', which specifies how many 
+            phonemes were wrong, 'phonemes-proportion', which specifies the proportion 
+            of phonemes that were right, 'phonemes-sum', which specifies the sum of all 
+            phonemewise distances between the produced phoneme and the right one,
+            'phonemes-average', which calculates the average distances between the right
+            phoneme and the produced one, 'phoneme-distances', which is a list of all 
+            the phonemewise distances, 'stress', which tests the stress pattern only
+            returning how much of the stress pattern was correct as a proportion, 
+            'length', which returns the discrepancy in length between the word produced
+            and the target word, 'word', which calculates the distance between the right 
+            word and the produced one (both padded to the longest word in the training data), 
+            or 'all' which returns all seven tests as a tuple. (Default is 'word')
             
+        Returns
+        -------
+        Int, float, or tuple depending on the value provided for "returns" above.
+
+        """
+        if target is None:
+            if word not in self.words:
+                raise Exception('Target not specified and the word is not in training pool. To test, provide target.')
+            else:
+                xo, xp, yp = self.find(word)
+        else:
+            yp = target
+
+        if return_phonform:
+            word_read = self.read(word, phonreps=phonreps, returns='strings', ties=ties, verbose=False, construct=construct)
+
+        if phonreps is None:
+            phonreps = self.phonreps
+
+        word_cmu = [key(phonreps, list(e)) for e in yp]
+
+
+
+        word_repd = self.read(word, phonreps=phonreps, returns='patterns', ties=ties, verbose=False, construct=construct)
+
+        # the produced word can keep '_' at the end, only if it is a different length than the target word
+        if word_read[-1] == '%' or word_read[-1] == '_':
+            if len(word_read) == len(word_cmu):
+                __ = word_read.pop()
+            else:
+                if word_read[-1] == '%':
+                    __ = word_read.pop()
+
+        terminal = word_cmu.pop() # remove the EOS terminal element
+        assert terminal == '%', 'The last element of your target string for test is not correct. Check target and check reps.'
+
+        print(word)
+        print('word read:', word_read)
+        print('word cmu:', word_cmu)
+        #phonemes_right = len([i for i, e in enumerate(word_cmu) if e == word_read[i]])
+        phonemes_right = len([True for e in zip(word_cmu, word_read) if e[0]==e[1]])
+        phonemes_wrong = len(word_cmu)-phonemes_right
+        phonemes_proportion = phonemes_right/len(word_cmu) # how much of the word it should have produced did it get right
+        how_much_longer = len(word_read)-len(word_cmu)
+        #phoneme_dists = [L2(word_repd[i], yp[i]) for i, e in enumerate(yp)]
+        phoneme_dists = [L2(e[0], e[1]) for e in zip(yp, word_repd)]
+        phonemes_sum = sum(phoneme_dists)
+        phonemes_average = mean(phoneme_dists)
+
+        #target_vowel_indices = get_vowels(word_cmu, index=True)
+        #read_vowel_indices = get_vowels(word_read, index=True)
+
+        target_vowels = get_vowels(word_cmu, index=False)
+        read_vowels = get_vowels(word_read, index=False)
+
+        # converted to user defined function and applied below, but kept for now
+        print('read vowel indices:', read_vowels)
+        print('target vowel indices', target_vowels)
+        #stress_right = [True for i, e in enumerate(read_vowel_indices) if word_read[e][-1] == word_cmu[target_vowel_indices[i]][-1]]
+
+        stress_right = [True for e in zip(target_vowels, read_vowels) if e[0][-1] == e[1][-1]]
+        #stress = len(stress_right)/len(target_vowel_indices)
+        stress = len(stress_right)/len(target_vowels)
+
+        if not word_repd.shape[0] == yp.shape[0]:
+            maxlen = max(self.traindata.keys())
+            pad_target = self.phonreps['_']*(maxlen-yp.shape[0])
+            pad_repd = self.phonreps['_']*(maxlen-word_repd.shape[0])
+            word_repd_padded = np.append(word_repd.flatten(), pad_repd)
+            target_padded = np.append(yp.flatten(), pad_target)
+            wordwise_dist = L2(word_repd_padded, target_padded)
+
+        else:
+            wordwise_dist = L2(word_repd.flatten(), yp.flatten())
+
+        if returns == 'phonemes-right':
+            if return_phonform:
+                return word_read, phonemes_right
+            else:
+                return phonemes_right
+        elif returns == 'phonemes-wrong':
+            if return_phonform:
+                return word_read, phonemes_wrong
+            else:
+                return phonemes_wrong
+        elif returns == 'phonemes-proportion':
+            if return_phonform:
+                return word_read, phonemes_proportion
+            else:
+                return phonemes_proportion
+        elif returns == 'phonemes-sum':
+            if return_phonform:
+                return word_read, phonemes_sum
+            else:
+                return phonemes_sum
+        elif returns == 'phonemes-avg':
+            if return_phonform:
+                return word_read, phonemes_average
+            else:
+                return phonemes_average
+        elif returns == 'phoneme-distances':
+            if return_phonform:
+                return word_read, phoneme_dists
+            else:
+                return phoneme_dists
+        elif returns == 'stress':
+            if return_phonform:
+                return word_read, stress
+            else:
+                return stress
+        elif returns == 'length':
+            if return_phonform:
+                return word_read, how_much_longer
+            else:
+                return how_much_longer
+        elif returns == 'word':
+            if return_phonform:
+                return word_read, wordwise_dist
+            else:
+                return wordwise_dist
+        elif returns == 'all':
+            if return_phonform:
+                return word_read, phonemes_right, phonemes_wrong, phonemes_proportion, phonemes_sum, phonemes_average, phoneme_dists, stress, wordwise_dist 
+            else:
+                return phonemes_right, phonemes_wrong, phonemes_proportion, phonemes_sum, phonemes_average, phoneme_dists, stress, wordwise_dist
+        else:
+            raise Exception('Provide an appropriate value for returns parameter in test() in order to get data for your test.')
+
 
 
 if __name__ == "__main__":
