@@ -3,6 +3,17 @@
 .DS_Store
 inputs/left.traindata
 inputs/right.traindata
+models/posttest-holdout-words.csv
+models/posttest-outputs-distance-matrix.csv
+models/posttest-outputs-targets-distance-matrix.csv
+models/posttest-test-outputs.csv
+models/posttest-test-outputs-order.csv
+models/posttest-train-outputs.csv
+models/posttest-train-outputs-order.csv
+models/posttest-trainwords.csv
+models/monosyllabic-model-pre
+models/monosyllabic-model-advanced
+
 
 #filetypes
 *.pyc
@@ -21,5 +32,5 @@ inputs/right.traindata
 #directories
 logs/
 .Rproj.user/
-
+models/__pycache__
 

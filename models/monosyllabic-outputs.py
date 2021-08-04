@@ -105,9 +105,9 @@ d_true = squareform(pdist(all_targets))
 #%%
 d_comp = squareform(pdist(np.concatenate((all_outputs, all_targets))))
 # %%
-
-np.savetxt('posttest-outputs-distance-matrix.csv', d_hat)
-np.savetxt('targets_distance-matrix.csv', d_true)
+# if you want to save:
+#np.savetxt('posttest-outputs-distance-matrix.csv', d_hat)
+#np.savetxt('targets-distance-matrix.csv', d_true)
 
 # %%
 d_targets_by_outputs = np.zeros((d_hat.shape))
@@ -119,3 +119,4 @@ for row in range(d_targets_by_outputs.shape[0]):
     
 #%%
 np.savetxt('posttest-outputs-targets-distance-matrix.csv', d_targets_by_outputs)
+# %%
