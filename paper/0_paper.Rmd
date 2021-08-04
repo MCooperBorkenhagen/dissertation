@@ -1,6 +1,6 @@
 ---
 title             : "Time for time: In search of a veridical model of time-varying processes in word reading"
-shorttitle        : no
+shorttitle        : "A time-varying model of word reading"
 
 author:  
   - name          : "Matt Cooper Borkenhagen"
@@ -54,6 +54,8 @@ knitr::opts_chunk$set(warning = FALSE,
 options(knitr.table.format = "latex")
 options(knitr.kable.NA = '')
 options(scipen = 1000)
+#knitr::knit_hooks$set(inline = function(x) {if(!is.numeric(x)){x}else{prettyNum(round(x,2), big.mark=",")}})
+#knit_hooks$set(inline = function(x) {prettyNum(x, big.mark=",")})
 ```
 
 

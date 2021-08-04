@@ -41,7 +41,7 @@ consistency_ = read_csv('../models/train-test-items.csv') %>%
   mutate(consistency = friends/community) %>% 
   select(word, consistency)
 
-d = read_csv('../models/train-test-items.csv') %>% 
+mono = read_csv('../models/train-test-items.csv') %>% 
   rename(train_test = `train-test`) %>% 
   left_join(posttests)  %>% 
   left_join(read_csv('../inputs/syllabics.csv')) %>% 
@@ -54,31 +54,9 @@ d = read_csv('../models/train-test-items.csv') %>%
 
 rm(c1, c2, c3, c4, c5)
 
+nw = read.csv('data/monosyllabic-wordwise-distances.csv')
 
-# nearest phon data (all end of training)
-rn = read_csv('../models/train-test-items.csv')$word
-dm = as.matrix(read.csv('../models/posttest-outputs-targets-distance-matrix.csv', sep = ' ', header = F))
-rownames(dm) = rn
-colnames(dm) = rn
-
-
-
-nw = data.frame(matrix(nrow = length(rn), ncol = 3))
-colnames(nw) = c('word', 'nearest_phon_rank', 'nearest_phon')
-
-row = 1
-for (word in rn){
-  rank = nearest_word(dm, word, return_rank = T)
-  nearest = nearest_word(dm, word, return_rank = F)
-  
-  nw$word[row] = word
-  nw$nearest_phon_rank[row] = rank
-  nw$nearest_phon[row] = nearest
-  
-  row = row + 1
-}
-
-d = d %>% 
+mono = mono %>% 
   left_join(nw)
 
 
@@ -88,9 +66,11 @@ elp = read_csv('../inputs/raw/elp_5.27.16.csv') %>%
          elp_rt = I_Mean_RT) %>% 
   mutate(elp_rt = as.numeric(elp_rt))
 
-d = d %>% 
+mono = mono %>% 
   left_join(elp)
+
+monosyllabic_k = read_csv('../models/monosyllabic-K.csv', col_names = F)[[1]]
 
 
 # final cleans:
-rm(elp, nw, consistency_, dm, posttests)
+rm(elp, nw, consistency_, posttests)
