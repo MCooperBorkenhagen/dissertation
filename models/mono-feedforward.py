@@ -4,10 +4,18 @@ from tensorflow.keras.utils import plot_model as plot
 from keras.models import Model
 from keras.layers import Input, Dense
 import numpy as np
+from utilities import reshape
+import pandas as pd
 
 # X and Y
-X = np.genfromtxt('../inputs/3k/orth.csv', delimiter=',')
-Y = np.genfromtxt('../inputs/3k/phon.csv', delimiter=',')
+X = np.genfromtxt('data/mono-feedforward-train-orth.csv', delimiter=',')
+Y = np.genfromtxt('data/mono-feedforward-train-phon.csv', delimiter=',')
+
+X_test = np.genfromtxt('data/mono-feedforward-test-orth.csv', delimiter=',')
+Y_test = np.genfromtxt('data/mono-feedforward-test-phon.csv', delimiter=',')
+
+#
+testwords = pd.read_csv('data/mono-test.csv')
 
 #%%
 
@@ -21,5 +29,18 @@ model = Model(inputs=orth, outputs=phon, name='mono-feedforward')
 model.compile(optimizer='adam', loss="categorical_crossentropy", metrics=metric)
 model.summary()
 # %%
-model.fit(X, Y, batch_size=120, epochs=320, validation_split=0)
+items = open('../outputs/mono/feedforward/item-data.csv', 'w')
+items.write('epoch,word,accuracy,loss\n')
+
+CYCLES = 1
+EPOCHS = 80
+for cycle in range(1, CYCLES+1):
+    model.fit(X, Y, batch_size=120, epochs=10, validation_split=0)
+
+    for i, xy in enumerate(zip(X_test, Y_test)):
+        word = testwords.iloc[i]['word']
+        epochs = cycle*EPOCHS
+        loss, acc = model.evaluate(xy[0].reshape((1, xy[0].shape[0])), xy[1].reshape((1, xy[1].shape[0])))
+        items.write('{},{},{},{}\n'.format(epochs, word, acc, loss))
 # %%
+items.close()
