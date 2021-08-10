@@ -22,7 +22,7 @@ Once collected, all words were transcribed using the CMU pronunciation dictionar
 
 Word frequencies for all words included in the corpus were collected using the Hyperspace Analogue to Language corpus data found in the English Lexicon Project database. These frequencies were used for the gradient scaling operation used in backpropagation for model training. The purpose of using the values provided in the ELP database was to allow for more direct comparisons to behavioral data from the English Lexicon Project in the results provided. There are more current and thorough databases available that provide word frequencies for the words included in the simulations here, however having frequencies that match human data reported was more important than having current and accurate estimates of word frequency in general. The children's text corpus used for aggregating the corpus could have been used for this purpose, but again, the ELP provides frequency data directly, and so those values were used.
 
-
+Though a limited corpus of words has been selected for training purposes here, the model is capable of attempting to produce phonology from any sequence of letters provided on the input - a feature we see as a virtue of the implementation given that humans are also capable of this.
 
 # Architecture
 In this section, an initial high-level description of the computational learner is provided, and is followed by a more technical description of how the architecture operates functionally and mathematically.

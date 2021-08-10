@@ -13,7 +13,6 @@ The purpose of the model developed here is to read printed words aloud. A number
 ## Accuracy
 Results of the model's ability to correctly produce a spoken form of a word can be based on a number of different measures. The most common measure of the model's ability is an accuracy score, which itself can be structured in a few different ways - similar to that of a human reader. Given that the goal of the model is to take a sequence of letters and recode them in the form of a sequence of speech sounds, individual sounds can be inspected for their accuracy along with the entire sequence of sounds - that is, the entire word. Both the phoneme-wise and the word-wise accuracy metrics are used in reporting, depending on the purpose of the result shown. They are of course correlated given that a word that is produced correctly is one in which all the phonemes are produced correctly (or at least each phoneme produced is closer to the correct phoneme than all other possible phonemes).
 
-A limited corpus of words has been selected for training purposes here, though the model is capable of attempting to produce phonology from any sequence of letters provided on the input - a feature we see as a virtue of the implementation given that humans are also capable of this.
 
 
 ## Training details
@@ -51,7 +50,7 @@ mono %>%
 
 
 ## Monosyllabic words
-Given that a number of behavioral effects for reading monosyllabic words are well established, along with investigation of those effects using computational models of such processes, a set of monosyllabic words was assembled from the full corpus of words and used for experimentation. This resulted in a training set of `r length(unique(mono$word))` words. In order to avoid spurious effects of length (either too short or too long), words ranging from three to seven phonemes were included in the training set. This included phonologically short words like `r scaps('and')` and `r scaps('through')`, and longer words like `r scaps('strength')` and `r scaps('sprints')`.
+Given that a number of behavioral effects for reading monosyllabic words are well established, along with investigation of those effects using computational models of such processes, a set of monosyllabic words was assembled from the full corpus of words and used for experimentation. A list used in other connectionist modeling exercises was used for this list [@Cox2019]. Morphological variants that were related with the addition of `r scaps('s')` or `r scaps('ed')`, and verbs with the  This resulted in a training set of `r length(unique(mono$word))` words. In order to avoid spurious effects of length (either too short or too long), words ranging from three to seven phonemes were included in the training set. This included phonologically short words like `r scaps('and')` and `r scaps('through')`, and longer words like `r scaps('strength')` and `r scaps('sprints')`.
 
 
 ## Results

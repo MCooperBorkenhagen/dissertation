@@ -36,5 +36,10 @@ phon = function(d, orth){
 }
 
 
-
+freq_for_word = function(d, word){
+  
+  i = match(word, d$word)
+  return(d$freq[i])
+  
+}
 

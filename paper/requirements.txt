@@ -5,3 +5,4 @@ magrittr
 dplyr
 Hmisc
 ggplot2
+scapr

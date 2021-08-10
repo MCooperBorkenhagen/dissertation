@@ -2,7 +2,7 @@
 from numpy.random import choice
 import numpy as np
 import json
-
+import tensorflow as tf
 
 #%%
 
@@ -124,7 +124,18 @@ def split(traindata, n, seed = 652):
         
     return holdout, train
 
+def subset(traindata, words):
 
+    d = {}
+    for k, v in traindata.items():
+        I = []
+        wordlist = []
+        for i, word in enumerate(v['wordlist']):          
+            if word in words:
+                I.append(i)
+                wordlist.append(word)
+        d[k] = {'phonSOS':v['phonSOS'][I], 'phonEOS':v['phonEOS'][I], 'orth':v['orth'][I], 'wordlist':wordlist, 'frequency':v['frequency'][I]}       
+    return d
 
 
 def collapse(x, delimiter='-'):
@@ -189,3 +200,24 @@ def flad(a, pads=0, pad=None):
         return(a.flatten())
     else:
         return(np.append(a, pad*pads))
+
+
+def get_words(traindata, verbose=True):
+    words = [word for k, v in traindata.items() for word in v['wordlist']]
+    return(words)
+    
+    if verbose:
+        print(words)
+
+
+
+def get(traindata, x, data='phonEOS'):
+    return [v[data][i] for k, v in traindata.items() for i, word in enumerate(v['wordlist']) if word == x][0]
+
+
+
+
+def memory_growth(grow=True):
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, grow)
