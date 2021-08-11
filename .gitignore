@@ -13,6 +13,8 @@ models/posttest-train-outputs-order.csv
 models/posttest-trainwords.csv
 models/monosyllabic-model-pre
 models/monosyllabic-model-advanced
+outputs/mono/lstm/monosyllabic-model-advanced
+outputs/mono/lstm/monosyllabic-model-pre
 
 
 #filetypes
