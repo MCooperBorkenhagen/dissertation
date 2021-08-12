@@ -12,13 +12,15 @@ words = pd.read_csv('../inputs/3k/words.csv', header=None)
 phonreps = loadreps('../inputs/phonreps-with-terminals.json')
 orthreps = loadreps('../inputs/raw/orthreps.json')
 # get frequencies for all words:
+#%%
+
+#%%
 
 
-
-
+#%%
 # here k is equal to the phonological length of the word + 1 (because of the terminal segment)
-mono_lstm_test, mono_lstm_train = split(tk, .07)
-assert mono_lstm_test.keys() == mono_lstm_train.keys(), 'Phonological lengths represented in test and train are not the same. Resample'
+mono_lstm_test, mono_lstm_train = split(tk, .07, drop=True, keys=[4, 5, 6])
+#assert mono_lstm_test.keys() == mono_lstm_train.keys(), 'Phonological lengths represented in test and train are not the same. Resample'
 
 
 
