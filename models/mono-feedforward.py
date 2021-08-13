@@ -7,6 +7,9 @@ import numpy as np
 from utilities import reshape
 import pandas as pd
 import time
+from scipy.spatial.distance import pdist, cdist, squareform
+
+
 
 # X and Y
 X = np.genfromtxt('data/mono-feedforward-train-orth.csv', delimiter=',')
@@ -69,3 +72,34 @@ items.close()
 """Done"""
 """Learntime was {} minutes""".format(round((end-start)/60))
 #%%
+
+
+# generate the distance matrices for wordwise comparisons:
+for cycle in range(1, CYCLES+1):
+    PATH = '../outputs/mono/feedforward/'
+    TESTPATH = PATH+'test-outputs-'+str(cycle)+'.csv'
+    TRAINPATH = PATH+'train-outputs-'+str(cycle)+'.csv'
+    test_outputs = np.genfromtxt(TESTPATH)
+    train_outputs = np.genfromtxt(TRAINPATH)
+
+    all_outputs = np.concatenate((train_outputs, test_outputs))
+    all_targets = np.concatenate((Y, Y_test))
+
+    d_hat = squareform(pdist(all_outputs))
+    d_true = squareform(pdist(all_targets))
+
+    d_comp = squareform(pdist(np.concatenate((all_outputs, all_targets))))
+
+    np.savetxt(PATH+'posttest-outputs-distance-matrix-'+str(cycle)+'.csv', d_hat)
+    np.savetxt(PATH+'targets-distance-matrix-'+str(cycle)+'.csv', d_true)
+
+    d_targets_by_outputs = np.zeros((d_hat.shape))
+    d_targets_by_outputs[:] = np.nan
+
+    for row in range(d_targets_by_outputs.shape[0]):
+        d_targets_by_outputs[row] = d_comp[row][d_hat.shape[0]:d_comp.shape[0]]
+    
+    np.savetxt(PATH+'posttest-outputs-targets-distance-matrix-'+str(cycle)+'.csv', d_targets_by_outputs)
+
+
+# %%
