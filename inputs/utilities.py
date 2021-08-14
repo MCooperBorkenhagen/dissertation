@@ -208,3 +208,27 @@ def collapse(x, delimiter=','):
         else:
             s = s + str(x[i])
     return(s)
+
+
+def numphones(x, delimiter='-'):
+    count = 0
+    if len(x) == 0:
+        return(count)
+    elif len(x) > 0:
+        for i in x:
+            if i == delimiter:
+                count += 1
+        return(count+1)
+
+
+
+def numphones(x, delimiter='-'):
+    count = 0
+    if len(x) == 0:
+        return(count)
+    elif len(x) > 0:
+        for i in x:
+            if i == delimiter:
+                count += 1
+        return(count+1)
+

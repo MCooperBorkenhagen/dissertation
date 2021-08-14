@@ -19,6 +19,8 @@ wcbc = pd.read_csv(WORDPATH)
 
 morphological_variants = [word.strip() for word in pd.read_csv('raw/wcbc-morphological-variants-to-add.csv').new_variant.tolist()]
 
+
+
 # get outlier short words (ie words that fall within the length threshold that are weird)
 outliers = pd.read_csv('./raw/wcbc-outliers.csv', header=None)[0].tolist()
 # %%
@@ -40,6 +42,7 @@ with open('./raw/kidwords-missing-from-cmudict.json') as f:
 
 with open('./raw/wcbc-morphological-variants-nin-cmudict.json') as f:
     missing2 = json.load(f)
+
 
 missing1.update(missing2)
 
@@ -91,7 +94,6 @@ with open('phonreps-with-terminals.json', 'w') as t:
 
 mono = d(words, outliers=outliers, cmudict_supplement='./raw/missing-words.json', maxorth=MAXORTH, maxphon=MAXPHON, minorth=MINORTH, minphon=MINPHON, maxsyll=1, justify='left', terminals=True, onehot=False, orthpad=9, frequency=frequencies)
 save(mono.traindata, 'mono.traindata')
-
 
 #%% # syllabics
 

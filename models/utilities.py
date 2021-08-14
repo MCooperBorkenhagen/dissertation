@@ -6,6 +6,16 @@ import tensorflow as tf
 
 #%%
 
+def drop_empty_values(traindata):
+    empty = []
+    for k, v in traindata.items():
+        if len(v['wordlist']) == 0:
+            empty.append(k)
+
+    for k in empty:
+        traindata.pop(k)
+
+    return traindata
 
 
 def loadreps(PATH, changepad=True, newpad=0):
@@ -92,13 +102,15 @@ def syllables(phonform):
 
 
 
-
-def split(traindata, n, seed = 652):
+def split(traindata, n, seed = 652, drop=True, keys=None):
     from random import sample, seed
     
     seed(seed)
 
-    s = [word for k, v in traindata.items() for word in v['wordlist']]
+    if keys is None:
+        s = [word for k, v in traindata.items() for word in v['wordlist']]
+    else:
+        s = [word for k, v in traindata.items() for word in v['wordlist'] if k in keys]
 
     if type(n) == float:
         n = round(n*len(s))
@@ -121,8 +133,13 @@ def split(traindata, n, seed = 652):
                 trainwords.append(word)
         train[k] = {'phonSOS':v['phonSOS'][itr], 'phonEOS':v['phonEOS'][itr], 'orth':v['orth'][itr], 'wordlist':trainwords, 'frequency':v['frequency'][itr]}
         holdout[k] = {'phonSOS':v['phonSOS'][iho], 'phonEOS':v['phonEOS'][iho], 'orth':v['orth'][iho], 'wordlist':testwords, 'frequency':v['frequency'][iho]}
-        
+    
+    if drop:
+        holdout = drop_empty_values(holdout)
+        train = drop_empty_values(train)
+
     return holdout, train
+
 
 def subset(traindata, words):
 
@@ -218,6 +235,15 @@ def get(traindata, x, data='phonEOS'):
 
 
 def memory_growth(grow=True):
-        gpus = tf.config.experimental.list_physical_devices('GPU')
-        for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, grow)
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, grow)
+
+
+
+def save(x, PATH):
+    import pickle
+    f = open(PATH, 'wb')
+    pickle.dump(x, f)
+    f.close()
+

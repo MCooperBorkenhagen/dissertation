@@ -60,7 +60,7 @@ options(scipen = 1000)
 
 
 ```{r}
-
+source('requirements.R')
 packages = read.csv('requirements.txt', stringsAsFactors = F)[[1]]
 lapply(packages, require, ch = T)
 ```

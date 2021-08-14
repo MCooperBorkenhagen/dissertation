@@ -14,14 +14,14 @@
     "squaw": [["S", "K", "W", "AO1"]],
     "rheum": [["R", "UW1", "M"]],
     "pram": [["P", "R", "AE1", "M"]],
-    "clod": [["K", "L", "A01", "D"]],
+    "clod": [["K", "L", "AO1", "D"]],
     "manse": [["M", "AE1", "N", "S"]],
     "zit": [["Z", "IH1", "T"]],
     "chive": [["CH", "AY1", "V"]],
     "retch": [["R", "EH1", "CH"]],
     "phage": [["F", "EY1", "JH"]],
     "gunk": [["G", "AH1", "NG", "K"]],
-    "hasp": [["H", "AE1", "S", "P"]],
+    "hasp": [["HH", "AE1", "S", "P"]],
     "sprig": [["S", "P", "R", "IH1", "G"]],
     "bleat": [["B", "L", "IY1", "T"]],
     "shoal": [["SH", "OW1", "L"]],
@@ -42,6 +42,7 @@
     "frappe": [["F", "R", "AE1", "P"]],
     "veldt": [["V", "EH1", "L", "T"]],
     "letch": [["L", "EH1", "CH"]],
-    "tyme": [["T", "AY1", "M"]]
+    "tyme": [["T", "AY1", "M"]],
+    "and": [["AE1", "N", "D"]]
 
 }

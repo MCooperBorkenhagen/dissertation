@@ -43,3 +43,26 @@ freq_for_word = function(d, word){
   
 }
 
+
+nearest_word_df = function(distance_matrix, words, cols = c('word', 'nearest_phon_rank', 'nearest_phon')){
+  
+  rownames(distance_matrix) = words
+  colnames(distance_matrix) = words
+  
+  nw = data.frame(matrix(nrow = length(words), ncol = 3))
+  colnames(nw) = cols
+  
+  row = 1
+  for (word in words){
+    rank = nearest_word(distance_matrix, word, return_rank = T)
+    nearest = nearest_word(distance_matrix, word, return_rank = F)
+    
+    nw$word[row] = word
+    nw$nearest_phon_rank[row] = rank
+    nw$nearest_phon[row] = nearest
+    
+    row = row + 1
+  }
+  
+  return(nw)  
+}

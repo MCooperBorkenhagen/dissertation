@@ -454,7 +454,7 @@ class Learner():
             return(np.array(word_repd))
 
 
-    def test(self, word, target=None, returns='all', return_phonform=True, phonreps=None, ties='stop', construct=True):
+    def test(self, word, target=None, returns='all', return_phonform=True, phonreps=None, ties='stop', construct=True, verbose=False):
         """Test a word after the learner has learned.
 
         Parameters
@@ -544,33 +544,22 @@ class Learner():
         terminal = word_cmu.pop() # remove the EOS terminal element
         assert terminal == '%', 'The last element of your target string for test is not correct. Check target and check reps.'
 
-        print(word)
-        print('word read:', word_read)
-        print('word cmu:', word_cmu)
-        #phonemes_right = len([i for i, e in enumerate(word_cmu) if e == word_read[i]])
         phonemes_right = len([True for e in zip(word_cmu, word_read) if e[0]==e[1]])
         phonemes_wrong = len(word_cmu)-phonemes_right
         phonemes_proportion = phonemes_right/len(word_cmu) # how much of the word it should have produced did it get right
         how_much_longer = len(word_read)-len(word_cmu)
-        #phoneme_dists = [L2(word_repd[i], yp[i]) for i, e in enumerate(yp)]
         phoneme_dists = [L2(e[0], e[1]) for e in zip(yp, word_repd)]
         phonemes_sum = sum(phoneme_dists)
         phonemes_average = mean(phoneme_dists)
-
-        #target_vowel_indices = get_vowels(word_cmu, index=True)
-        #read_vowel_indices = get_vowels(word_read, index=True)
-
         target_vowels = get_vowels(word_cmu, index=False)
         read_vowels = get_vowels(word_read, index=False)
-
-        # converted to user defined function and applied below, but kept for now
-        print('read vowel indices:', read_vowels)
-        print('target vowel indices', target_vowels)
-        #stress_right = [True for i, e in enumerate(read_vowel_indices) if word_read[e][-1] == word_cmu[target_vowel_indices[i]][-1]]
-
         stress_right = [True for e in zip(target_vowels, read_vowels) if e[0][-1] == e[1][-1]]
-        #stress = len(stress_right)/len(target_vowel_indices)
         stress = len(stress_right)/len(target_vowels)
+
+        if verbose:
+            print(word)
+            print('word read:', word_read)
+            print('word in cmu:', word_cmu)
 
         if not word_repd.shape[0] == yp.shape[0]:
             maxlen = max(self.traindata.keys())
@@ -579,7 +568,6 @@ class Learner():
             word_repd_padded = np.append(word_repd.flatten(), pad_repd)
             target_padded = np.append(yp.flatten(), pad_target)
             wordwise_dist = L2(word_repd_padded, target_padded)
-
         else:
             wordwise_dist = L2(word_repd.flatten(), yp.flatten())
 
