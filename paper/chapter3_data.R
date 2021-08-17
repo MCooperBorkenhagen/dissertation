@@ -9,11 +9,15 @@ ff = read_csv('../outputs/mono/feedforward/item-data.csv') %>%
   mutate(stage = factor(case_when(epoch == 80 ~ 'Early',
                            epoch == 160 ~ 'Middle',
                            epoch == 240 ~ 'Late'))) %>% 
-  select(-c(train_test, epoch)) %>% 
+  select(-epoch) %>% 
   mutate(model = 'Feedforward')
+
 
 # relevel factors
 ff$stage = ordered(ff$stage, c('Early', 'Middle', 'Late'))
+
+
+
 
 # data generated from distance matrices (see chapter3_data_preprocess.R)
 nearest_f1 = read_csv('data/monosyllabic-feedforward-wordwise-distances-1.csv')
@@ -48,16 +52,14 @@ c5 = read_csv('../outputs/mono/lstm/item-data-monosyllabic-advanced-2.csv') %>%
   full_join(items)
 
 # all cycle data
-C = rbind(c1, c3, c5) %>% 
-  select(-`train_test`)
+C = rbind(c1, c3, c5)
 
 # these are the post test data unique to the lstm implementation (because they are generated in offline test mode)
-posttests = read_csv('../outputs/mono/lstm/posttest-trainwords.csv') %>% 
+mono_lstm_post = read_csv('../outputs/mono/lstm/posttest-trainwords.csv') %>% 
   full_join(read_csv('../outputs/mono/lstm/posttest-holdout-words.csv')) %>% 
-  mutate(stage = factor('Late'))
+  mutate(stage = factor('Late')) %>% 
+  select(-freq)
 
-C = C %>% 
-  left_join(posttests, by = c('word', 'stage')) 
 
 # wordwise distances for lstm
 # data generated from distance matrices (see chapter3_data_preprocess.R)
@@ -71,7 +73,10 @@ lstm = C %>%
 
 rm(c1, c3, c5)
 
-frequency = posttests %>% 
+
+# word ("lexical") data
+frequency = read_csv('../outputs/mono/lstm/posttest-trainwords.csv') %>% 
+  full_join(read_csv('../outputs/mono/lstm/posttest-holdout-words.csv')) %>% 
   select(word, freq) %>% 
   left_join(read_csv('../outputs/mono/lstm/train-test-items.csv')) %>% 
   select(word, freq, freq_scaled)
@@ -101,11 +106,22 @@ syllabics = read_csv('../inputs/3k/syllabics.csv') %>%
   ungroup() %>% 
   mutate(consistency = body_rime/body_neighbors)
 
+mono_lstm_testmode = mono_lstm_post %>% 
+  left_join(syllabics) %>% 
+  left_join(frequency) %>% 
+  left_join(elp) %>% 
+  left_join(items)
+
 mono = rbind(lstm, ff) %>% 
   left_join(syllabics) %>% 
   left_join(elp) %>% 
-  left_join(frequency)
+  left_join(frequency) %>% 
+  left_join(items)
+
+# reorder stage factor
+mono$stage = ordered(mono$stage, c('Early', 'Middle', 'Late'))
+
 
 
 # final cleans:
-rm(C, c1, c3, c5, elp, ff, frequency, items, lstm, nearest_f, nearest_f1, nearest_f2, nearest_l, nearest_l1, nearest_l2, posttests, syllabics)
+rm(C, elp, ff, frequency, items, lstm, nearest_f, nearest_f1, nearest_f2, nearest_l, nearest_l1, nearest_l2,syllabics, mono_lstm_post)

@@ -14,7 +14,6 @@ The purpose of the model developed here is to read printed words aloud. A number
 Results of the model's ability to correctly produce a spoken form of a word can be based on a number of different measures. The most common measure of the model's ability is an accuracy score, which itself can be structured in a few different ways - similar to that of a human reader. Given that the goal of the model is to take a sequence of letters and recode them in the form of a sequence of speech sounds, individual sounds can be inspected for their accuracy along with the entire sequence of sounds - that is, the entire word. Both the phoneme-wise and the word-wise accuracy metrics are used in reporting, depending on the purpose of the result shown. They are of course correlated given that a word that is produced correctly is one in which all the phonemes are produced correctly (or at least each phoneme produced is closer to the correct phoneme than all other possible phonemes).
 
 
-
 ## Training details
 ### Batch assembly
 In order to avoid padded input and output representations for training, words were assembled for learning based on phonological length for reasons discussed previously. Batches consisted of words of the same phonological length, where the orthographic length of words within a batch could vary but were accommodated with masked timesteps on input (i.e., timesteps that are skipped rather than empty). This is due to the fact that words that share the same number of phonemes don't necessarily share the same number of letters. For simplicity during training, batches were selected from all words of the same phonological length until all the words of that length were trained, then a new length was selected for training. This was repeated until all words were trained during that epoch. Within each epoch, a set of shorter words (e.g., words with a phonological length of five phonemes) were more likely to come earlier in the epoch than words of a longer length (e.g., those with 8 phonemes).
@@ -58,6 +57,78 @@ In order to link model behavior to that of humans, a standard approach was taken
 
 ## Basic characterization of model behavior
 A base model was developed in order to determine whether or not, like human readers, the model was able to produce well-formed phonological output from orthography after learning the mappings between the two for a large set of monosyllabic words. The model for monosyllabic words was trained to a high level of performance on all the training items and tested on a range of words to inspect the production of the model for trained and untrained words. 7% of words were held out for the purposes of generalization testing. 
+
+## Frequency
+More experience with a word leads to more robust representation of the word, which in turn enhances the ability to act on it in some form. The most common proxy for experience in the reading literature is the frequency of a word's occurrence in a set of texts or other corpus. Connectionist models of reading aloud have established the effect of experience in a number of studies, where experience is implemented by proxy as a frequency-influenced procedure during learning (XX).
+
+Word frequencies were used in order to scale gradients during training for the time-varying model reported on here. One issue is whether the LSTM architecture is sensitive to experience given this implementation, and whether or not this sensitivity resembles that of other computational architectures and human behavioral data. In other work this was done through constructing and comparing a model "latency" of some kind to latency data in humans or other models. For example, in @Sibley2010 "latency" was defined using an accuracy metric, and in @Seidenberg1989 this was the sum of squared errors. Rather than assuming the link between latency and accuracy here, I will call examine performance in these analyses by referencing accuracy directly. Of course, the assumption is that higher accuracy (lower error) is associated with faster responses in naming and other tasks, thoough this assumption doesn't play out directly in the analyses reported here, in part because the concept of "latency" in long short term memory units isn't well established but is likely to be an area of future research, especially related to models of human cognition and performance.
+
+In order to establish a common measure of accuracy across computational architectures examined here, a word-level metric was constructed in order to avoid issues having to do with the idiosyncracies of unitwise measures of accuracy and how they differ in LSTM versus feedforward model architectures. Each model was tested for every word in the training set after some amount of training and the output for each word was recorded. The output was then compared against every possible target output. The actual output and the target output are then compared using an L2 norm. In order to make such a calculation for the time-varying model, the outputs are flattened (across timesteps) into a 1d array. Outputs were padded with zeros in order to make them all the same length, thus facilitating the calculation of euclidean distance. This procedure isn't necessary for the outputs of the feedforward network because that model uses centered (and padded) inputs an outputs during training. Thus all its outputs (and the targets to which they are compared) are the proper (identical) dimensions.
+
+For a word to be correct using a word-wise measure, the produced output needs to be closer to the proper target than to all others. When measuring this difference rank of the true target relative to all others is recorded, where if the true target is the closest target, the rank is one. This word-level measure avoids the possibility that error differences across the LSTM and feedforward architectures might be related to the differences in the dimensions of the output vectors, differences in the ways that output phonemes are specified (i.e., the feedforward architecture doesn't use start- and end-of-word patterns/ units), or other differences not directly related to the cognitive model of the computational learner. Furthermore, this comparison is intended to be a general and approximate linking analysis between the two different computational processes rather than a finer grained and mechanistic account of the nature of errors in one or the other architectures.
+
+Behavioral data from the English Lexicon Project is included here as a reference as well.
+
+
+```{r}
+
+elp_words = mono %>% 
+  select(word, elp_acc) %>% 
+  filter(!is.na(elp_acc)) %>% 
+  pull(word) %>% 
+  unique()
+
+descriptives_model = mono %>%
+  filter(train_test == 'train') %>% 
+  filter(stage %in% c('Early', 'Late')) %>% 
+  group_by(model, stage) %>% 
+  summarise(MEAN = mean(nearest_phon_rank),
+            SD = sd(nearest_phon_rank))
+
+
+COLORS = c('LSTM' = 'firebrick', 'Feedforward' = 'goldenrod', 'Behavioral' = 'Grey74')
+
+descriptives_elp = mono %>% 
+  filter(word %in% elp_words) %>% 
+  filter(stage == 'Late' & model == 'LSTM') %>% #arbitrary because values repeat
+  filter(train_test == 'train') %>% 
+  summarise(MEAN = mean(elp_acc),
+            SD = sd(elp_acc)) %>% 
+  mutate(model = 'Behavioral')
+
+
+d_elp = mono %>% 
+  filter(word %in% elp_words) %>% 
+  filter(stage == 'Late' & model == 'LSTM') %>% #arbitrary because values repeat
+  filter(train_test == 'train') %>% 
+  mutate(model = 'Behavioral') %>% 
+  left_join(descriptives_elp) %>% 
+  mutate(acc = -(elp_acc-MEAN)/SD) %>% 
+  select(word, model, acc, freq_scaled)
+  
+
+
+STAGE = 'Early'
+mono %>% 
+  left_join(descriptives_model, by = c('model', 'stage')) %>% 
+  group_by(model, stage) %>% 
+  mutate(acc = (nearest_phon_rank-MEAN)/SD) %>% 
+  ungroup() %>% 
+  filter(train_test == 'train') %>% 
+  filter(stage == STAGE) %>% 
+  filter(word %in% elp_words) %>% 
+  select(word, model, acc, freq_scaled) %>% 
+  rbind(d_elp) %>% 
+  ggplot(aes(freq_scaled, acc, color = model)) +
+  geom_point(size = .6) +
+  geom_smooth(method = 'lm', color = 'grey32') +
+  scale_color_manual(values = COLORS) +
+  facet_grid(~model) +
+  labs(x = 'Frequency (scaled)', y = 'Accuracy') +
+  theme_bw() +
+  theme(legend.position = 'none')
+```
+
 
 
 ## Consistency
