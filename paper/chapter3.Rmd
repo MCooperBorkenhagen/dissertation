@@ -5,6 +5,7 @@ output: html_document
 
 ```{r ch3_src, include=FALSE}
 source('chapter3_data.R')
+source('plot-specs.R')
 ```
 
 # Chapter 3: Experimentation
@@ -63,14 +64,13 @@ More experience with a word leads to more robust representation of the word, whi
 
 Word frequencies were used in order to scale gradients during training for the time-varying model reported on here. One issue is whether the LSTM architecture is sensitive to experience given this implementation, and whether or not this sensitivity resembles that of other computational architectures and human behavioral data. In other work this was done through constructing and comparing a model "latency" of some kind to latency data in humans or other models. For example, in @Sibley2010 "latency" was defined using an accuracy metric, and in @Seidenberg1989 this was the sum of squared errors. Rather than assuming the link between latency and accuracy here, I will call examine performance in these analyses by referencing accuracy directly. Of course, the assumption is that higher accuracy (lower error) is associated with faster responses in naming and other tasks, thoough this assumption doesn't play out directly in the analyses reported here, in part because the concept of "latency" in long short term memory units isn't well established but is likely to be an area of future research, especially related to models of human cognition and performance.
 
-In order to establish a common measure of accuracy across computational architectures examined here, a word-level metric was constructed in order to avoid issues having to do with the idiosyncracies of unitwise measures of accuracy and how they differ in LSTM versus feedforward model architectures. Each model was tested for every word in the training set after some amount of training and the output for each word was recorded. The output was then compared against every possible target output. The actual output and the target output are then compared using an L2 norm. In order to make such a calculation for the time-varying model, the outputs are flattened (across timesteps) into a 1d array. Outputs were padded with zeros in order to make them all the same length, thus facilitating the calculation of euclidean distance. This procedure isn't necessary for the outputs of the feedforward network because that model uses centered (and padded) inputs an outputs during training. Thus all its outputs (and the targets to which they are compared) are the proper (identical) dimensions.
+In order to establish a common measure of accuracy across computational architectures examined here, a word-level metric was constructed in order to avoid issues having to do with the idiosyncrasies of unitwise measures of accuracy and how they differ in LSTM versus feedforward model architectures. Each model was tested for every word in the training set after some amount of training and the output for each word was recorded. The output was then compared against every possible target output. The actual output and the target output are then compared using an L2 norm. In order to make such a calculation for the time-varying model, the outputs are flattened (across timesteps) into a 1d array. Outputs were padded with zeros in order to make them all the same length, thus facilitating the calculation of euclidean distance. This procedure isn't necessary for the outputs of the feedforward network because that model uses centered (and padded) inputs an outputs during training. Thus all its outputs (and the targets to which they are compared) are the proper (identical) dimensions.
 
-For a word to be correct using a word-wise measure, the produced output needs to be closer to the proper target than to all others. When measuring this difference rank of the true target relative to all others is recorded, where if the true target is the closest target, the rank is one. This word-level measure avoids the possibility that error differences across the LSTM and feedforward architectures might be related to the differences in the dimensions of the output vectors, differences in the ways that output phonemes are specified (i.e., the feedforward architecture doesn't use start- and end-of-word patterns/ units), or other differences not directly related to the cognitive model of the computational learner. Furthermore, this comparison is intended to be a general and approximate linking analysis between the two different computational processes rather than a finer grained and mechanistic account of the nature of errors in one or the other architectures.
+For a word to be correct using a word-wise measure, the produced output needs to be closer to the proper target than to all others. When measuring this difference rank of the true target relative to all others is recorded, where if the true target is the closest target, the rank is one. This word-level measure avoids the possibility that error differences across the LSTM and feedforward architectures might be related to the differences in the dimensions of the output vectors, differences in the ways that output phonemes are specified (i.e., the feedforward architecture doesn't use start- and end-of-word patterns/ units), or other differences not directly related to the cognitive model of the computational learner. This accuracy measure (shown as "error" in figures) is standardized in order to compare measures directly across model and behavioral data.
 
-Behavioral data from the English Lexicon Project is included here as a reference as well.
+Early on in training, increases in word frequency are associated with lower errors, as shown in Figure XX. This association is lower in both computational models than in the naming accuracy data for the training words from @Balota2007, but in all three we see a relationship between frequency and errors. This comparison demonstrates that by including frequency as an aspect of training we see an impact on performance, regardless of architecture.
 
-
-```{r}
+```{r, fig.cap="A descriptive relationship between word frequency (scaled) and word-level error is shown for human behavioral data (left), a feedforward network architecture (middle), and the time-varying/ LSTM architecture (right). Here error is calculated as how close the produced output was to the target output relative to all other targets in the training set. In all three cases, an increase in frequency is associated with an increase in errors."}
 
 elp_words = mono %>% 
   select(word, elp_acc) %>% 
@@ -95,7 +95,6 @@ descriptives_elp = mono %>%
   summarise(MEAN = mean(elp_acc),
             SD = sd(elp_acc)) %>% 
   mutate(model = 'Behavioral')
-
 
 d_elp = mono %>% 
   filter(word %in% elp_words) %>% 
@@ -124,11 +123,36 @@ mono %>%
   geom_smooth(method = 'lm', color = 'grey32') +
   scale_color_manual(values = COLORS) +
   facet_grid(~model) +
-  labs(x = 'Frequency (scaled)', y = 'Accuracy') +
+  labs(x = 'Frequency (scaled)', y = 'Error') +
   theme_bw() +
   theme(legend.position = 'none')
 ```
 
+
+Furthermore, the effect of frequency fades as learning progresses; at the end of training even the least frequent items show a high level of accuracy. This is due to the fact that structural complexity (here in orthography, phonology and the mappings between them) bears most heavily on performance when experiences with that structure are limited, but with time a learner can overcome complexity with repeated learning opportunities.
+
+```{r}
+
+STAGE = 'Late'
+mono %>% 
+  left_join(descriptives_model, by = c('model', 'stage')) %>% 
+  group_by(model, stage) %>% 
+  mutate(acc = (nearest_phon_rank-MEAN)/SD) %>% 
+  ungroup() %>% 
+  filter(train_test == 'train') %>% 
+  filter(stage == STAGE) %>% 
+  filter(word %in% elp_words) %>% 
+  select(word, model, acc, freq_scaled) %>% 
+  filter(acc < 5) %>% 
+  ggplot(aes(freq_scaled, acc, color = model)) +
+  geom_point(size = .6) +
+  geom_smooth(method = 'lm', color = 'grey32') +
+  scale_color_manual(values = COLORS) +
+  facet_grid(~model) +
+  labs(x = 'Frequency (scaled)', y = 'Error') +
+  theme_bw() +
+  theme(legend.position = 'none')
+```
 
 
 ## Consistency
