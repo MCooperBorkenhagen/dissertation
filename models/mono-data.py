@@ -6,25 +6,14 @@ import numpy as np
 
 tk = load('../inputs/3k/3k.traindata')
 words = pd.read_csv('../inputs/3k/words.csv', header=None)
-
-#%%
 # phonreps and orthreps
 phonreps = loadreps('../inputs/phonreps-with-terminals.json')
 orthreps = loadreps('../inputs/raw/orthreps.json')
-# get frequencies for all words:
-#%%
-
-#%%
-
-
-#%%
 # here k is equal to the phonological length of the word + 1 (because of the terminal segment)
 mono_lstm_test, mono_lstm_train = split(tk, .07, drop=True, keys=[4, 5, 6])
 #assert mono_lstm_test.keys() == mono_lstm_train.keys(), 'Phonological lengths represented in test and train are not the same. Resample'
 
-
-
-#%% get train and test words to match for the feedforward implementation
+# get train and test words to match for the feedforward implementation
 trainwords = {word: freq for k, v in mono_lstm_train.items() for word, freq in zip(v['wordlist'], v['frequency'])}
 testwords = [word for k, v in mono_lstm_test.items() for word in v['wordlist']]
 p = .93

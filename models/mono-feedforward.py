@@ -10,7 +10,6 @@ import time
 from scipy.spatial.distance import pdist, cdist, squareform
 
 
-
 # X and Y
 X = np.genfromtxt('data/mono-feedforward-train-orth.csv', delimiter=',')
 Y = np.genfromtxt('data/mono-feedforward-train-phon.csv', delimiter=',')
@@ -26,11 +25,11 @@ trainwords = pd.read_csv('data/mono-train.csv')
 orth = Input(shape=(X.shape[1], ), name='input')
 hidden = Dense(100, activation='sigmoid', name='hidden')(orth)
 phon = Dense(Y.shape[1], activation='sigmoid', name='phon')(hidden)
-metric = [tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None, threshold=0.5)]
-
+#metric = [tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None, threshold=0.5)]
+mse = tf.keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")
 model = Model(inputs=orth, outputs=phon, name='mono-feedforward')
 
-model.compile(optimizer='adam', loss="categorical_crossentropy", metrics=metric)
+model.compile(optimizer='adam', loss="categorical_crossentropy", metrics=mse)
 model.summary()
 
 # %% at four cycles, this takes about 8 minutes
@@ -72,8 +71,6 @@ items.close()
 """Done"""
 """Learntime was {} minutes""".format(round((end-start)/60))
 #%%
-
-
 # generate the distance matrices for wordwise comparisons:
 for cycle in range(1, CYCLES+1):
     PATH = '../outputs/mono/feedforward/'
