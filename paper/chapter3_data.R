@@ -5,10 +5,11 @@ source('utilities.R')
 
 # get feedforward item data
 ff = read_csv('../outputs/mono/feedforward/item-data.csv') %>% 
-  filter(epoch != 320) %>% 
+#  filter(epoch != 320) %>% 
+  filter(epoch != 240) %>% 
   mutate(stage = factor(case_when(epoch == 80 ~ 'Early',
                            epoch == 160 ~ 'Middle',
-                           epoch == 240 ~ 'Late'))) %>% 
+                           epoch == 320 ~ 'Late'))) %>% 
   select(-epoch) %>% 
   mutate(model = 'Feedforward')
 
@@ -20,33 +21,31 @@ ff$stage = ordered(ff$stage, c('Early', 'Middle', 'Late'))
 
 
 # data generated from distance matrices (see chapter3_data_preprocess.R)
-nearest_f1 = read_csv('data/monosyllabic-feedforward-wordwise-distances-1.csv')
-nearest_f2 = read_csv('data/monosyllabic-feedforward-wordwise-distances-2.csv')
-nearest_f = rbind(nearest_f1, nearest_f2)
+nearest_f = read_csv('data/monosyllabic-feedforward-wordwise-distances-late.csv')
+
 
 
 ff = ff %>% 
   left_join(nearest_f)
 
 
-
 # get lstm items (their order is different than the order of feedforward matrices, when order isn't included in dataset)
-items = read_csv('../outputs/mono/lstm/train-test-items.csv') %>% 
+items = read_csv('../outputs/mono/train-test-items.csv') %>% 
   select(-freq_scaled) %>% 
   rename(train_test = `train-test`)
 
 # c is for cycle
-c1 = read_csv('../outputs/mono/lstm/item-data-monosyllabic-pre-1.csv') %>% 
+c1 = read_csv('../outputs/mono/lstm/item-data-monosyllabic-early-1.csv') %>% 
   mutate(stage = 'Early') %>% 
   select(-c(cycle, phonlength)) %>% 
   full_join(items)
 
-c3 = read_csv('../outputs/mono/lstm/item-data-monosyllabic-pre-3.csv') %>% 
+c3 = read_csv('../outputs/mono/lstm/item-data-monosyllabic-early-3.csv') %>% 
   mutate(stage = 'Middle') %>% 
   select(-c(cycle, phonlength)) %>% 
   full_join(items)
 
-c5 = read_csv('../outputs/mono/lstm/item-data-monosyllabic-advanced-2.csv') %>% 
+c5 = read_csv('../outputs/mono/lstm/item-data-monosyllabic-late-2.csv') %>% 
   mutate(stage = 'Late') %>% 
   select(-c(cycle, phonlength)) %>% 
   full_join(items)
@@ -55,17 +54,15 @@ c5 = read_csv('../outputs/mono/lstm/item-data-monosyllabic-advanced-2.csv') %>%
 C = rbind(c1, c3, c5)
 
 # these are the post test data unique to the lstm implementation (because they are generated in offline test mode)
-mono_lstm_post = read_csv('../outputs/mono/lstm/posttest-trainwords.csv') %>% 
-  full_join(read_csv('../outputs/mono/lstm/posttest-holdout-words.csv')) %>% 
+mono_lstm_post = read_csv('../outputs/mono/lstm/posttest-trainwords.csv') %>% # these are the production trials for train words
+  full_join(read_csv('../outputs/mono/lstm/posttest-holdout-words.csv')) %>% # these are the production trials for test words
   mutate(stage = factor('Late')) %>% 
   select(-freq)
 
 
 # wordwise distances for lstm
 # data generated from distance matrices (see chapter3_data_preprocess.R)
-nearest_l1 = read_csv('data/monosyllabic-lstm-wordwise-distances-1.csv')
-nearest_l2 = read_csv('data/monosyllabic-lstm-wordwise-distances-2.csv')
-nearest_l = rbind(nearest_l1, nearest_l2)
+nearest_l = read_csv('data/monosyllabic-lstm-wordwise-distances-late.csv')
 
 lstm = C %>% 
   mutate(model = 'LSTM') %>% 
@@ -78,7 +75,7 @@ rm(c1, c3, c5)
 frequency = read_csv('../outputs/mono/lstm/posttest-trainwords.csv') %>% 
   full_join(read_csv('../outputs/mono/lstm/posttest-holdout-words.csv')) %>% 
   select(word, freq) %>% 
-  left_join(read_csv('../outputs/mono/lstm/train-test-items.csv')) %>% 
+  left_join(read_csv('../outputs/mono/train-test-items.csv')) %>% 
   select(word, freq, freq_scaled)
 
 elp = read_csv('../inputs/raw/elp_5.27.16.csv') %>% 
@@ -124,4 +121,4 @@ mono$stage = ordered(mono$stage, c('Early', 'Middle', 'Late'))
 
 
 # final cleans:
-rm(C, elp, ff, frequency, items, lstm, nearest_f, nearest_f1, nearest_f2, nearest_l, nearest_l1, nearest_l2,syllabics, mono_lstm_post)
+rm(C, elp, ff, frequency, items, lstm, nearest_f, nearest_l, syllabics, mono_lstm_post)
