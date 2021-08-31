@@ -160,10 +160,8 @@ In the corpus of words used here for modeling monosyllabic word reading
 ```{r}
 
 mono %>% 
-  filter(stage == 'Middle') %>% 
+  filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
   filter(train_test == 'train') %>% 
-  filter(consistency < 1) %>% 
-  nrow()
   mutate(trainstage = case_when(stage == 'Middle' ~ 'Early',
                                 stage == 'Late' ~ 'Late')) %>% 
   ggplot(aes(consistency, accuracy)) +
@@ -171,13 +169,35 @@ mono %>%
   geom_smooth(method = 'lm', color = 'grey32') +
   scale_color_manual(values = COLORS) +
   facet_grid(~trainstage) +
-  labs(x = 'Frequency (scaled)', y = 'Mean Squared Error') +
+  labs(x = 'Consistency (body-rime)', y = 'Mean Squared Error') +
   theme_bw() +
   theme(legend.position = 'none')
 
 ```
 
 
+```{r}
+descriptives_model = mono %>% 
+  filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>% 
+  group_by(stage) %>% 
+  summarise(M = mean(freq_scaled))
+
+mono %>% 
+  filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
+  filter(train_test == 'train') %>% 
+  mutate(trainstage = case_when(stage == 'Middle' ~ 'Early',
+                                stage == 'Late' ~ 'Late')) %>% 
+  left_join(descriptives_model) %>% 
+  mutate(freq_f = case_when(freq_scaled <= M ~ 'LF',
+                            freq_scaled > M ~ 'HF')) %>% 
+  ggplot(aes(consistency, accuracy)) +
+  facet_grid(vars(trainstage), vars(freq_f)) +
+  geom_point(size = .6) +
+  geom_smooth(method = 'lm', color = 'grey32')
+
+
+
+```
 
 ## Number of syllables
 
