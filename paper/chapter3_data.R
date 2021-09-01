@@ -118,7 +118,7 @@ mono = rbind(lstm, ff) %>%
 # reorder stage factor
 mono$stage = ordered(mono$stage, c('Early', 'Middle', 'Late'))
 
-
+monosyllabic_k = read_csv('../outputs/mono/monosyllabic_k.csv', col_names = F)[[1]]
 
 # final cleans:
 rm(C, elp, ff, frequency, items, lstm, nearest_f, nearest_l, syllabics, mono_lstm_post)

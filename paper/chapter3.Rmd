@@ -64,9 +64,9 @@ More experience with a word leads to more robust representation of the word, whi
 
 Word frequencies were used in order to scale gradients during training for the time-varying model reported on here. One issue is whether the LSTM architecture is sensitive to experience given this implementation, and whether or not this sensitivity resembles that of other computational architectures and human behavioral data. In other work this was done through constructing and comparing a model "latency" of some kind to latency data in humans or other models. For example, in @Sibley2010 "latency" was defined using an accuracy metric, and in @Seidenberg1989 this was the sum of squared errors. Rather than assuming the link between latency and accuracy here, I will call examine performance in these analyses by referencing accuracy directly. Of course, the assumption is that higher accuracy (lower error) is associated with faster responses in naming and other tasks, thoough this assumption doesn't play out directly in the analyses reported here, in part because the concept of "latency" in long short term memory units isn't well established but is likely to be an area of future research, especially related to models of human cognition and performance.
 
-Earlyincreases in word frequency are associated with lower errors, as shown in Figure XX. This association is lower in both computational models than in the naming accuracy data for the training words from @Balota2007, but in all three we see a relationship between frequency and errors. This comparison demonstrates that by including frequency as an aspect of training we see an impact on performance, regardless of architecture.
+Early increases in word frequency are associated with lower errors, as shown in Figure XX. This association is lower in both computational models than in the naming accuracy data for the training words from @Balota2007, but in all three we see a relationship between frequency and errors. This comparison demonstrates that by including frequency as an aspect of training we see an impact on performance, and that the effect is present in both behavioral data and computational implementations.
 
-```{r, fig.cap="The relationship between word frequency (scaled) and word-level error is shown for human behavioral data (left), a feedforward network architecture (middle), and the time-varying/ LSTM architecture (right). Here error is calculated as mean squared error. In all three cases, an increase in frequency is associated with an increase in errors."}
+```{r, freqeffectHumanComp, echo=FALSE, fig.cap="The relationship between word frequency (scaled) and word-level error is shown for human behavioral data (left), a feedforward network architecture (middle), and the time-varying/ LSTM architecture (right). Here error is calculated as mean squared error. In all three cases, an increase in frequency is associated with an increase in errors. Points are individual words that participated in training. In the case of human data errors are computed as accuracy of naming the word in a megastudy of word reading [@Balota2007] where the accuracy value of a word has the sign reversed. Model errors are mean squared error, calculated unitwise on the phonological output layer of the network (over differences between the produced output for a unit and the target output). Error metrics are standardized across the three panels so that points (words) could share a common y-axis."}
 
 STAGE = 'Middle'
 
@@ -76,7 +76,7 @@ elp_words = mono %>%
   pull(word) %>% 
   unique()
 
-descriptives_model = mono %>%
+descriptives = mono %>%
   filter(train_test == 'train') %>% 
   filter(stage == STAGE) %>% 
   group_by(model, stage) %>% 
@@ -108,7 +108,7 @@ d_elp = mono %>%
 
 mono %>% 
   filter(stage == STAGE & train_test == 'train') %>% 
-  left_join(descriptives_model, by = c('model')) %>% 
+  left_join(descriptives, by = c('model')) %>% 
   #group_by(model, stage) %>% 
   mutate(acc = (accuracy-MEAN)/SD) %>% 
   #ungroup() %>% 
@@ -127,18 +127,18 @@ mono %>%
 
 ```
 
-Furthermore, the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. Here we see the raw error (as mean square error) plotted at two points in training: once early on (at 27 epochs) and again late in training (at 63 epochs).
+Furthermore, the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. With enough experience, challenges (errors) associated with processing are minimized due to familiarity. In table XX we see this in the relationship between raw error (as mean square error) plotted at two points in training: once early on (at 27 epochs) and again late in training (at 63 epochs). Errors become low even for the least frequent words.
 
-```{r}
+```{r, freqeffectEarlyLate, echo=FALSE, fig.cap= 'The effect of word frequency early and late in training on the time-varying network differs such that with ample experience errors on infrequent words are minimized and the overall effect of frequency on error is reduced. Raw errors are plotted for words (points) using mean squared error.' }
 
-STAGE = 'Late'
 mono %>% 
   filter(stage == c('Middle', 'Late')) %>% 
+  filter(model == 'LSTM') %>% 
   filter(train_test == 'train') %>% 
-  mutate(trainstage = case_when(stage == 'Middle' ~ 'Early',
-                                stage == 'Late' ~ 'Late')) %>% 
+  mutate(trainstage = case_when(stage == 'Middle' ~ 'Early in training',
+                                stage == 'Late' ~ 'Late in training')) %>% 
   ggplot(aes(freq_scaled, accuracy)) +
-  geom_point(size = .6) +
+  geom_point(size = .5, color = 'firebrick') +
   geom_smooth(method = 'lm', color = 'grey32') +
   scale_color_manual(values = COLORS) +
   facet_grid(~trainstage) +
@@ -149,21 +149,57 @@ mono %>%
 
 
 ## Consistency
-One important aspect of reading behavior concerns how structural complexity affects reading performance. Readers are sensitive to the complexity of the mappings between print and speech; the more complex the form, the slower and more error prone performance is. Debates about how readers deal with this complexity and the role of experience in development and performance have been important for understanding the cognitive system that underlies reading development and performance, with different theoretical frameworks approaching the computations (and associated measurement) in different ways.
+Another important aspect of learning to read and reading behavior concerns how structural complexity affects reading performance. Readers are sensitive to the degree of coherent covariation among the mappings between printed and spoken words; the less covariation that exists between letters and sounds, the slower and more error prone performance is. Debates about how readers deal with this complexity and the role of experience in development and performance have been important for understanding the cognitive system that underlies reading development and performance, with different theoretical frameworks approaching the computations (and associated measurement) in different ways.
 
 Parallel distributed processing theories of reading and lexical processing, like the model reported in @Seidenberg1989 and extended in @Plaut1996, hold that complexity leads to more burdensome processing (i.e., longer naming latencies), which can be overcome with experience. Networks that implement the theory encode information about the mappings between perceptual modalities in neuron-like processing units, with a single architecturally homogenous process accounting for words learned and read. In a model that learns to map print to speech over the course of experience (perception, action) these units (weights) encode the relationships between printed and spoken words with increasing robustness. This robustness is affected by the amount of experience the reader (or computational model) has in learning the words during training and the reliability with which the mappings across modalities occur across those words.
 
-In this line of work the complexity of the mappings between print and speech is described in terms of _consistency_: the extent to which the pronunciation of a word is similar other similarly spelled words. Defining consistency in a measurable way is important for understanding the behavior of the network. The approach here is similar to @Plaut1996, where the consistency of a word is defined by the orthographic body with respect to the phonological rime. Here _body_ refers to the portion of the word consisting of the first orthographic vowel and the orthographic structure that follows it (e.g., the _umbling_ in _fumbling_), and rime refers to the first vowel phoneme and everything that follows it (i.e, `AH1 - M - B - L - IH0 - NG` portion of the spoken form). A highly consistent word is one where words with this same body also have a similar pronunciation for this portion of the syllabic structure. We use a proportion for our purposes here, using the total number of words with a given body as the denominator, with the numerator as the number of words that share the rime present in that word. The result is that highly consistent words have values that tend towards one (i.e., all words with a given body share the rime) and inconsistent words have a value that tend towards zero.
+In connectionist models of reading, the complexity of the mappings between print and speech is described in terms of _consistency_: the extent to which the pronunciation of a word is similar other similarly spelled words. Defining consistency in a measurable way is important for understanding the behavior of the network. The approach here is similar to @Plaut1996, where the consistency of a word is defined by the orthographic body with respect to the phonological rime. Here _body_ refers to the portion of the word consisting of the first orthographic vowel and the orthographic structure that follows it (e.g., the _umbling_ in _fumbling_), and rime refers to the first vowel phoneme and everything that follows it (i.e, `AH1 - M - B - L - IH0 - NG` portion of the spoken form). A highly consistent word is one where words with this same body also have a similar pronunciation for this portion of the syllabic structure. We use a proportion for our purposes here, using the total number of words with a given body as the denominator, with the numerator as the number of words that share the rime present in that word. The result is that highly consistent words have values that tend towards one (i.e., all words with a given body share the rime) and inconsistent words have a value that tend towards zero.
 
-In the corpus of words used here for modeling monosyllabic word reading
+
+
+
+
+```{r, consistencyHumanComp, echo=FALSE, fig.cap='The relationship between monosyllabic word consistency and error is shown for computational models (feedforward and time-varying) and human naming tasks. In all three there is a relationship between consistency and error such that increases in consistency (across words) are associated with lower error on average. Here errors for human and model data are processed as previously described, standardizing so that data can share the same y-axis.'}
+
+
+d_elp = mono %>% 
+  filter(word %in% elp_words) %>% 
+  filter(stage == STAGE & model == 'LSTM') %>% #arbitrary because values repeat
+  filter(train_test == 'train') %>% 
+  mutate(model = 'Behavioral') %>% 
+  left_join(descriptives_elp) %>% 
+  mutate(acc = -(elp_acc-MEAN)/SD) %>% 
+  select(word, model, acc, consistency)
+
+
+mono %>% 
+  filter(stage == STAGE & train_test == 'train') %>% 
+  left_join(descriptives, by = 'model') %>% 
+  mutate(acc = (accuracy-MEAN)/SD) %>% 
+  filter(word %in% elp_words) %>% 
+  select(word, model, acc, consistency) %>% 
+  rbind(d_elp) %>% 
+  ggplot(aes(consistency, acc, color = model)) +
+  geom_point(size = .6) +
+  geom_smooth(method = 'lm', color = 'grey32') +
+  scale_color_manual(values = COLORS) +
+  facet_grid(~model) +
+  labs(x = 'Consistency', y = 'Error') +
+  theme_bw() +
+  theme(legend.position = 'none')
+
+```
+
+
+The time-varying network proposed here shows a similar effect of consistency as defined above on accuracy as both the traditional feedforward networks of word reading as well as human naming data. As consistency increases, we see lower error scores. Consistent words are, in general, easier to read than less consistent words, and this effect is present across both human and model data.
 
 ```{r}
 
 mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
   filter(train_test == 'train') %>% 
-  mutate(trainstage = case_when(stage == 'Middle' ~ 'Early',
-                                stage == 'Late' ~ 'Late')) %>% 
+  mutate(trainstage = case_when(stage == 'Middle' ~ 'Early in Training',
+                                stage == 'Late' ~ 'Late in Training')) %>% 
   ggplot(aes(consistency, accuracy)) +
   geom_point(size = .6) +
   geom_smooth(method = 'lm', color = 'grey32') +
@@ -176,8 +212,10 @@ mono %>%
 ```
 
 
+
+
 ```{r}
-descriptives_model = mono %>% 
+descriptives = mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>% 
   group_by(stage) %>% 
   summarise(M = mean(freq_scaled))
@@ -185,20 +223,42 @@ descriptives_model = mono %>%
 mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
   filter(train_test == 'train') %>% 
-  mutate(trainstage = case_when(stage == 'Middle' ~ 'Early',
-                                stage == 'Late' ~ 'Late')) %>% 
-  left_join(descriptives_model) %>% 
-  mutate(freq_f = case_when(freq_scaled <= M ~ 'LF',
-                            freq_scaled > M ~ 'HF')) %>% 
+  mutate(trainstage = case_when(stage == 'Middle' ~ 'Early in Training',
+                                stage == 'Late' ~ 'Late in Training')) %>% 
+  left_join(descriptives) %>% 
+  mutate(freq_f = case_when(freq_scaled <= M ~ 'Low Frequency',
+                            freq_scaled > M ~ 'High Frequency')) %>% 
   ggplot(aes(consistency, accuracy)) +
   facet_grid(vars(trainstage), vars(freq_f)) +
   geom_point(size = .6) +
-  geom_smooth(method = 'lm', color = 'grey32')
-
+  geom_smooth(method = 'lm', color = 'grey32') +
+  labs(x = 'Consistency (body-rime)', y = 'Mean Squared Error') +
+  theme_bw()
 
 
 ```
 
+
+```{r}
+descriptives = mono %>% 
+  filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
+  filter(train_test == 'train') %>% 
+  group_by(stage) %>% 
+  summarise(frequency_m = mean(freq_scaled),
+            consistency_m = mean(consistency)) %>% 
+  mutate(stage_f = case_when(stage == 'Middle' ~ -.5,
+                             stage == 'Late' ~ .5))
+
+mono %>% 
+  filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
+  filter(train_test == 'train') %>% 
+  left_join(descriptives) %>% 
+  mutate(frequency_c = freq_scaled-frequency_m,
+         consistency_c = consistency-consistency_m) %>% 
+  stats::lm(accuracy ~ stage_f*consistency_c*frequency_c, data = .) %>% 
+  summary()
+
+```
 ## Number of syllables
 
 

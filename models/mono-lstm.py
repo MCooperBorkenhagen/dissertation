@@ -40,7 +40,10 @@ train_frequencies = {word: v['frequency'][i] for k, v in train.items() for i, wo
 p = .93
 maxf = max(train_frequencies.values())
 K = p/np.log(maxf)
-
+# write K to file
+with open('../outputs/mono/monosyllabic_k.csv', 'w') as f:
+    f.write('{}\n'.format(K))
+f.close()
 # low train for strong manipulation of frequency:
 C = 3
 for i in range(1, C+1):
@@ -187,3 +190,5 @@ for row in range(d_targets_by_outputs.shape[0]):
 #%%
 np.savetxt('../outputs/mono/lstm/posttest-outputs-targets-distance-matrix-late.csv', d_targets_by_outputs)
 # %% you can create the same for the less advanced lstm model, go to: mono-lstm-postprocess.py
+
+
