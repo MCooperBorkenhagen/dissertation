@@ -270,28 +270,23 @@ modelCI = confint(model)
 modeldata = summary(model)
 
 tabledata = data.frame(modeldata$coefficients) %>% 
-  round(digits = 2)
+  round(digits = 3)
 
 tabledata$CI = squarebracket(modelCI[,1], modelCI[,2], digits = 3)
 
-tabledata$Predictor = c('Intercept', 'Learning stage', 'Consistency', 'Frequency', 'Learn stg x consist', 'Learn stg x freq', 'Consistency x frequency', 'Lrn stg x consist x freq')
+tabledata$Predictor = c('Intercept', 'Learning stage', 'Consistency', 'Frequency', 'Learn stg x consist', 'Learn stg x freq', 'Consistency x frequency', 'Learn stg x consist x freq')
 
 rownames(tabledata) = NULL
 ```
 
-```{r, stageFrequencyConsistencyModelRender} 
+```{r, stageFrequencyConsistencyModelRender, echo=FALSE} 
 
-
-
-HEADER = c('', 'b', 'SE', 't', 'p', '95% CI')
+HEADER = c('*b*', '*SE*', '*t*', '*p*', '95% CI', 'Predictor')
 names(tabledata) = HEADER
-names(tabledata)[2] = cell_spec(names(tabledata)[2], italic = T)
 
 tabledata %>% 
   select(Predictor, everything()) %>% 
-  kable(align = 'l')
-
-
+  apa_table(digits = 3, format = 'pandoc', note = 'Model estimated using lm() in R with confidence intervals estimated using confint(), both methods from the stats package. \n*p < .05 **p < .001')
 ```
 
 ## Number of syllables
