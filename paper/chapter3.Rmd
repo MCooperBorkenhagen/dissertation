@@ -155,9 +155,7 @@ Parallel distributed processing theories of reading and lexical processing, like
 
 In connectionist models of reading, the complexity of the mappings between print and speech is described in terms of _consistency_: the extent to which the pronunciation of a word is similar other similarly spelled words. Defining consistency in a measurable way is important for understanding the behavior of the network. The approach here is similar to @Plaut1996, where the consistency of a word is defined by the orthographic body with respect to the phonological rime. Here _body_ refers to the portion of the word consisting of the first orthographic vowel and the orthographic structure that follows it (e.g., the _umbling_ in _fumbling_), and rime refers to the first vowel phoneme and everything that follows it (i.e, `AH1 - M - B - L - IH0 - NG` portion of the spoken form). A highly consistent word is one where words with this same body also have a similar pronunciation for this portion of the syllabic structure. We use a proportion for our purposes here, using the total number of words with a given body as the denominator, with the numerator as the number of words that share the rime present in that word. The result is that highly consistent words have values that tend towards one (i.e., all words with a given body share the rime) and inconsistent words have a value that tend towards zero.
 
-
-
-
+The time-varying network shows a similar effect of consistency on accuracy as both the traditional feedforward networks of word reading as well as human naming data. As consistency increases, we see lower error scores. Consistent words are, in general, easier to read than less consistent words, and this effect is present across both human (left pane) and model data (middle and right panes).
 
 ```{r, consistencyHumanComp, echo=FALSE, fig.cap='The relationship between monosyllabic word consistency and error is shown for computational models (feedforward and time-varying) and human naming tasks. In all three there is a relationship between consistency and error such that increases in consistency (across words) are associated with lower error on average. Here errors for human and model data are processed as previously described, standardizing so that data can share the same y-axis.'}
 
@@ -179,6 +177,8 @@ mono %>%
   filter(word %in% elp_words) %>% 
   select(word, model, acc, consistency) %>% 
   rbind(d_elp) %>% 
+  mutate(model = case_when(model == 'LSTM' ~ 'Time-varying',
+                           TRUE ~ model)) %>% 
   ggplot(aes(consistency, acc, color = model)) +
   geom_point(size = .6) +
   geom_smooth(method = 'lm', color = 'grey32') +
@@ -190,10 +190,9 @@ mono %>%
 
 ```
 
+Like the effect of word frequency on accuracy, the effect of consistency diminishes over time. Processing difficulty associated with the consistency of an item can be overcome by having enough experience with the item. This can be seen when examining the relationship between consistency and error at two stages of the learning process. Table XX shows the relationship between consistency and error early in training and late in training, with the correlation decreasing over time as the learner develops experience with words in the training set.
 
-The time-varying network proposed here shows a similar effect of consistency as defined above on accuracy as both the traditional feedforward networks of word reading as well as human naming data. As consistency increases, we see lower error scores. Consistent words are, in general, easier to read than less consistent words, and this effect is present across both human and model data.
-
-```{r}
+```{r, consistencyEarlyLate, echo=FALSE, fig.cap='The relationship between word consistency and error at two different points in training is shown. With experience, the effect of consistency on errors is reduced.'}
 
 mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
@@ -201,7 +200,7 @@ mono %>%
   mutate(trainstage = case_when(stage == 'Middle' ~ 'Early in Training',
                                 stage == 'Late' ~ 'Late in Training')) %>% 
   ggplot(aes(consistency, accuracy)) +
-  geom_point(size = .6) +
+  geom_point(size = .6, color = 'firebrick') +
   geom_smooth(method = 'lm', color = 'grey32') +
   scale_color_manual(values = COLORS) +
   facet_grid(~trainstage) +
@@ -211,10 +210,18 @@ mono %>%
 
 ```
 
+## Consistency effects in generalization
+These effects can also be seen in generalization errors collected using the offline test mode of the network.
 
 
 
-```{r}
+## The interaction between frequency and consistency
+The consistency of a word and the frequency with which it appears during learning have interrelated -- and similar -- effects on learning (and accuracy). Consistency concerns the extent to which a word's structure is shared with other words in the learning environment. Here this is defined in terms of the orthographic body and phonological rime, but we should consider structure more generally outside of this operationalization of the concept. More consistent words will contribute in a more substantial way to the weighted connections between units in the network by virtue of the learning rule used in the network. A two words that share neighborhood structure (similar pronunciations and similar spellings) will mutually benefit from the weight optimization that happens throughout learning. For example, take the word `r scaps('feed')`. This word is highly consistent because all other words in the training corpus that end in `r scaps('-eed')` (e.g., `r scaps('tweed')`, `r scaps('speed')`, `r scaps('seed')`, etc.) also have the rime `IY - D`. Therefore learning `r scaps('feed')` benefits knowledge related to the other words in its neighborhood (like `r scaps('tweed')`).
+
+This also applies to other aspects of structure, including structure possessed by words that are greater than one syllable, even though single syllable words are the focus here. For example, the words `r scaps('print')`, `r scaps('sprint')`, and `r scaps('prim')` will benefit from weight updates that result from learning the word `r scaps('prince')` even though this neighborhood of words is defined in a different way than how consistency was defined above. Nonetheless, there is reason to believe that it is beneficial to define neighborhoods of monosyllabic words in terms of body-rime units rather than some other portion of syllabic structure due to the reliability of this structure relative to alternatives. For example, @Treiman1995 demonstrated that rime structure is more stable for short monosyllabic words, and that this stability is associated with more explained variance in naming latencies and errors than other syllabic structure.
+
+
+```{r, frequencyByConsistency, echo=FALSE, fig.cap='The relationship between word consistency and errors at two levels of word frequency. Words were binned for frequency based on a mean-split only for purposes of visualization. Early in training the effect of consistency is most prevalent in low frequency words, and this effect is reduced late in training. Also, the overall effect of consistency is attenuated by the end of training, and the effect of frequency becomes less differentiated across levels of frequency.'}
 descriptives = mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>% 
   group_by(stage) %>% 
@@ -230,7 +237,7 @@ mono %>%
                             freq_scaled > M ~ 'High Frequency')) %>% 
   ggplot(aes(consistency, accuracy)) +
   facet_grid(vars(trainstage), vars(freq_f)) +
-  geom_point(size = .6) +
+  geom_point(size = .6, color = 'firebrick') +
   geom_smooth(method = 'lm', color = 'grey32') +
   labs(x = 'Consistency (body-rime)', y = 'Mean Squared Error') +
   theme_bw()
@@ -238,8 +245,10 @@ mono %>%
 
 ```
 
+These differences in performance between learning stage, frequency, and consistency are seen more precisely in a statistical model of error. Mean squared error was regressed on the interaction of learning stage, frequency, and consistency (all centered on the mean), yielding significant effects for all predictors and interactions, shown in Table XX.
 
-```{r}
+
+```{r, stageFrequencyConsistencyModel, echo=FALSE}
 descriptives = mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
   filter(train_test == 'train') %>% 
@@ -255,10 +264,36 @@ mono %>%
   left_join(descriptives) %>% 
   mutate(frequency_c = freq_scaled-frequency_m,
          consistency_c = consistency-consistency_m) %>% 
-  stats::lm(accuracy ~ stage_f*consistency_c*frequency_c, data = .) %>% 
-  summary()
+  stats::lm(accuracy ~ stage_f*consistency_c*frequency_c, data = .) -> model
+
+modelCI = confint(model)
+modeldata = summary(model)
+
+tabledata = data.frame(modeldata$coefficients) %>% 
+  round(digits = 2)
+
+tabledata$CI = squarebracket(modelCI[,1], modelCI[,2], digits = 3)
+
+tabledata$Predictor = c('Intercept', 'Learning stage', 'Consistency', 'Frequency', 'Learn stg x consist', 'Learn stg x freq', 'Consistency x frequency', 'Lrn stg x consist x freq')
+
+rownames(tabledata) = NULL
+```
+
+```{r, stageFrequencyConsistencyModelRender} 
+
+
+
+HEADER = c('', 'b', 'SE', 't', 'p', '95% CI')
+names(tabledata) = HEADER
+names(tabledata)[2] = cell_spec(names(tabledata)[2], italic = T)
+
+tabledata %>% 
+  select(Predictor, everything()) %>% 
+  kable(align = 'l')
+
 
 ```
+
 ## Number of syllables
 
 
