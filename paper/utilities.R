@@ -1,3 +1,6 @@
+require(kableExtra)
+require(glue)
+
 
 phonlen = function(x, delimiter='-'){
   return(str_count(x, delimiter)+1)
@@ -66,3 +69,40 @@ nearest_word_df = function(distance_matrix, words, cols = c('word', 'nearest_pho
   
   return(nw)  
 }
+
+
+
+z = function(x, MEAN, SD){
+  return((x-MEAN)/SD)
+}
+
+
+
+squarebracket = function(x, y, digits = 3){
+  
+  return(paste('[', round(x, digits = digits), ', ', round(y, digits = 3), ']', sep = ''))
+  
+  
+}
+
+
+presentp = function(p_value, round_places = 3){
+  return(case_when(p_value < .05 & p_value >= .01 ~ glue('< .05'),
+                   p_value < .01 & p_value >= .001 ~ glue('< .01'),
+                   p_value < .001 ~ glue('< .001'),
+                   TRUE ~ glue('= {round(p_value, digits = round_places)}')))
+}
+
+
+sig_threshold = function(p, b){
+  return(ifelse(p < .05, glue('**', b, '**'), glue(b)))
+}
+
+
+sig_level = function(bs, ps, digits = 3){
+  out = c()
+  stopifnot(length(bs) == length(ps))
+  for (i in seq(length(bs))){
+    out = c(out, sig_threshold(ps[i], round(bs[i], digits = digits)))}
+  return(out)}
+

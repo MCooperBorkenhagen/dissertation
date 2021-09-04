@@ -216,9 +216,9 @@ These effects can also be seen in generalization errors collected using the offl
 
 
 ## The interaction between frequency and consistency
-The consistency of a word and the frequency with which it appears during learning have interrelated -- and similar -- effects on learning (and accuracy). Consistency concerns the extent to which a word's structure is shared with other words in the learning environment. Here this is defined in terms of the orthographic body and phonological rime, but we should consider structure more generally outside of this operationalization of the concept. More consistent words will contribute in a more substantial way to the weighted connections between units in the network by virtue of the learning rule used in the network. A two words that share neighborhood structure (similar pronunciations and similar spellings) will mutually benefit from the weight optimization that happens throughout learning. For example, take the word `r scaps('feed')`. This word is highly consistent because all other words in the training corpus that end in `r scaps('-eed')` (e.g., `r scaps('tweed')`, `r scaps('speed')`, `r scaps('seed')`, etc.) also have the rime `IY - D`. Therefore learning `r scaps('feed')` benefits knowledge related to the other words in its neighborhood (like `r scaps('tweed')`).
+The consistency of a word and the frequency with which it appears during learning have interrelated -- and similar -- effects on learning (and accuracy). Consistency concerns the extent to which a word's structure is shared with other words in the learning environment. Here this is defined in terms of the orthographic body and phonological rime, but we should consider structure more generally outside of this operationalization of the concept. More consistent words will contribute in a more substantial way to the weighted connections between units in the network by virtue of the learning rule used in the network. A two words that share neighborhood structure (similar pronunciations and similar spellings) will mutually benefit from the weight optimization that happens throughout learning. For example, take the word `r scaps('feed')`. This word is highly consistent because all other words in the training corpus that end in `r scaps('-eed')` (e.g., `r scaps('tweed')`, `r scaps('speed')`, `r scaps('seed')`, etc.) also have the rime `r scaps('...iy-d')`. Therefore learning `r scaps('feed')` benefits knowledge related to the other words in its neighborhood (like `r scaps('tweed')`).
 
-This also applies to other aspects of structure, including structure possessed by words that are greater than one syllable, even though single syllable words are the focus here. For example, the words `r scaps('print')`, `r scaps('sprint')`, and `r scaps('prim')` will benefit from weight updates that result from learning the word `r scaps('prince')` even though this neighborhood of words is defined in a different way than how consistency was defined above. Nonetheless, there is reason to believe that it is beneficial to define neighborhoods of monosyllabic words in terms of body-rime units rather than some other portion of syllabic structure due to the reliability of this structure relative to alternatives. For example, @Treiman1995 demonstrated that rime structure is more stable for short monosyllabic words, and that this stability is associated with more explained variance in naming latencies and errors than other syllabic structure.
+This also applies to other aspects of structure, including structure possessed by words that are greater than one syllable, even though single syllable words are the focus here. For example, the words `r scaps('print')`, `r scaps('sprint')`, and `r scaps('prim')` will benefit from weight updates that result from learning the word `r scaps('prince')` even though this neighborhood of words is defined in a different way than how consistency was defined for the analyses here. Nonetheless, there is reason to believe that it is beneficial to define neighborhoods of monosyllabic words in terms of body-rime units rather than some other portion of syllabic structure due to the reliability of this structure relative to alternatives. For example, @Treiman1995 demonstrated that rime structure is more stable for short monosyllabic words, and that this stability is associated with more explained variance in naming latencies and errors than other syllabic structure.
 
 
 ```{r, frequencyByConsistency, echo=FALSE, fig.cap='The relationship between word consistency and errors at two levels of word frequency. Words were binned for frequency based on a mean-split only for purposes of visualization. Early in training the effect of consistency is most prevalent in low frequency words, and this effect is reduced late in training. Also, the overall effect of consistency is attenuated by the end of training, and the effect of frequency becomes less differentiated across levels of frequency.'}
@@ -270,7 +270,8 @@ modelCI = confint(model)
 modeldata = summary(model)
 
 tabledata = data.frame(modeldata$coefficients) %>% 
-  round(digits = 3)
+  mutate(Estimate = sig_level(Estimate, Pr...t..),
+         Pr...t.. = presentp(Pr...t..))
 
 tabledata$CI = squarebracket(modelCI[,1], modelCI[,2], digits = 3)
 
@@ -279,6 +280,11 @@ tabledata$Predictor = c('Intercept', 'Learning stage', 'Consistency', 'Frequency
 rownames(tabledata) = NULL
 ```
 
+
+  
+  
+\newpage
+
 ```{r, stageFrequencyConsistencyModelRender, echo=FALSE} 
 
 HEADER = c('*b*', '*SE*', '*t*', '*p*', '95% CI', 'Predictor')
@@ -286,7 +292,11 @@ names(tabledata) = HEADER
 
 tabledata %>% 
   select(Predictor, everything()) %>% 
-  apa_table(digits = 3, format = 'pandoc', note = 'Model estimated using lm() in R with confidence intervals estimated using confint(), both methods from the stats package. \n*p < .05 **p < .001')
+  apa_table(digits = 3, format = 'pandoc', align = 'l', landscape = T,
+            note = 'Model estimated using lm() in R with confidence intervals estimated using confint(), both methods from the native R stats package [@R2021]. Bold parameter estimates indicate significant *p*-values below the alpha threshold of .05.',
+            caption = 'Regression Model of the Interaction Between Learning Stage, Word (Body-Rime) Consistency, and Word Frequency on Mean Squared Error')
+
+
 ```
 
 ## Number of syllables
