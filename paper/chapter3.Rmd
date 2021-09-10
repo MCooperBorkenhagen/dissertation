@@ -17,12 +17,12 @@ Results of the model's ability to correctly produce a spoken form of a word can 
 
 ## Training details
 ### Batch assembly
-In order to avoid padded input and output representations for training, words were assembled for learning based on phonological length for reasons discussed previously. Batches consisted of words of the same phonological length, where the orthographic length of words within a batch could vary but were accommodated with masked timesteps on input (i.e., timesteps that are skipped rather than empty). This is due to the fact that words that share the same number of phonemes don't necessarily share the same number of letters. For simplicity during training, batches were selected from all words of the same phonological length until all the words of that length were trained, then a new length was selected for training. This was repeated until all words were trained during that epoch. Within each epoch, a set of shorter words (e.g., words with a phonological length of five phonemes) were more likely to come earlier in the epoch than words of a longer length (e.g., those with 8 phonemes).
+In order to avoid padded input and output representations for training, words were assembled for learning based on phonological length for reasons discussed previously. Batches consisted of words of the same phonological length, where the orthographic length of words within a batch could vary but were accommodated with masked timesteps on input (i.e., timesteps that are skipped rather than empty). This is due to the fact that words that share the same number of phonemes don't necessarily share the same number of letters. For simplicity during training, batches were selected from all words of the same phonological length until all the words of that length were trained, then a new length was selected for training. This was repeated until all words were trained during that epoch. Within each epoch, a set of shorter words (e.g., words with a phonological length of five phonemes) were more likely to come earlier in the epoch than words of a longer length (e.g., those with 8 phonemes). This probabalistic sampling based on length doesn't have significant effects on learning because within each epoch all words are presented at some point, the sampling procedure only dictates the set of words (based on phonological length) that is selected and trained before moving onto words of the next phonological length.
 
-Alternatives to this process are possible, including specifying batches of one training example at a time (i.e., stochastic gradient descent). Investigating the role of batch size on learning, and the behavioral correlates in humans would no doubt be a worthwhile avenue of future research but is outside the scope of the work being done here. The assembly of batches in this way isn't intended to convey a hypothesis about how processing in humans works, rather is specified as it is for efficiency reasons - alternative such as stochastic gradient descent can lead to training times of over an order of magnitude longer than those where larger batches are assembled.
+Alternatives to this process are possible. This one was selected for its simplicity. Possibilities include specifying batches of one training example at a time (i.e., stochastic gradient descent). Investigating the role of batch size on learning, and the behavioral correlates in humans would no doubt be a worthwhile avenue of future research but is outside the scope of the work being done here. The assembly of batches in this way isn't intended to convey a hypothesis about how processing in humans works, rather is specified as it is for efficiency reasons - alternative such as stochastic gradient descent can lead to training times of over an order of magnitude longer than those where larger batches are assembled.
 
 ## "Testing" trials
-The model is tested in a way that follows a different procedure than that used in training, allowing for more flexible and deeper introspection about the dynamics at play in the learning system when operating. These will be called _testing trials_, and are performed as follows. When a word is submitted for testing an orthographic pattern is introduced to the the orthographic input - the model's visual input system. This pattern is structured just like that of the orthographic input during training: it is a two dimensional array with as many letter representations along the first axis as there are letters in the word. This time-varying input pattern is input to the orthographic input, and its representation decomposed into its two critical states for use in phonology: the cell state and the final hidden state. Once these vectors are achieved for the orthographic form of the word, that portion of the model rests and is unchanged for the remainder of the trial.
+For generalization tests, the model can be tested in a way that follows a different procedure than that used in training. These will be called _generalization trials_, and are performed as follows. When a word is submitted for testing an orthographic pattern is introduced to the the orthographic input - the model's visual input system. This pattern is structured just like that of the orthographic input during training: it is a two dimensional array with as many letter representations along the first axis as there are letters in the word. This time-varying input pattern is input to the orthographic input, and its representation decomposed into its two critical states for use in phonology: the cell state and the final hidden state. Once these vectors are achieved for the orthographic form of the word, that portion of the model rests and is unchanged for the remainder of the trial.
 
 The states of the orthographic layer are passed to phonology to generate the phonological code output. This process is initiated by the input of the start of word segment (which we can think of as the symbol `#`), the representation of which was described earlier. The fact that the model has been trained with an explicit start of word marker enables the phonological layer to produce a next phoneme given the current state of the layer and its input pattern. At the start of production this context is provided completely from the orthographic layer. That is, the role of the phonological portion of the model is to produce a phonological code given the orthographic context.
 
@@ -66,7 +66,7 @@ Word frequencies were used in order to scale gradients during training for the t
 
 Early increases in word frequency are associated with lower errors, as shown in Figure XX. This association is lower in both computational models than in the naming accuracy data for the training words from @Balota2007, but in all three we see a relationship between frequency and errors. This comparison demonstrates that by including frequency as an aspect of training we see an impact on performance, and that the effect is present in both behavioral data and computational implementations.
 
-```{r, freqeffectHumanComp, echo=FALSE, fig.cap="The relationship between word frequency (scaled) and word-level error is shown for human behavioral data (left), a feedforward network architecture (middle), and the time-varying/ LSTM architecture (right). Here error is calculated as mean squared error. In all three cases, an increase in frequency is associated with an increase in errors. Points are individual words that participated in training. In the case of human data errors are computed as accuracy of naming the word in a megastudy of word reading [@Balota2007] where the accuracy value of a word has the sign reversed. Model errors are mean squared error, calculated unitwise on the phonological output layer of the network (over differences between the produced output for a unit and the target output). Error metrics are standardized across the three panels so that points (words) could share a common y-axis."}
+```{r, freqeffectHumanComp, echo=FALSE, fig.cap="The relationship between word frequency (scaled) and word-level processing difficulty is shown for human behavioral data (panel A shows naming accuracy and panel B shows naming latency), a feedforward network architecture (C), and the time-varying/ LSTM architecture (D). For computational models (C-D) error is calculated as mean squared error. In all cases, an increase in frequency is associated with an increase in processing difficulty. Points are individual words that participated in training. In the case of human accuracy (A) errors are computed as accuracy of naming the word in a megastudy of word reading [@Balota2007] where the accuracy value of a word has the sign reversed. Human RTs are msecs standardized. Model errors are mean squared error, calculated unitwise on the phonological output layer of the network (over differences between the produced output for a unit and the target output). Error metrics are standardized across the three panels so that points (words) could share a common y-axis."}
 
 STAGE = 'Middle'
 
@@ -76,6 +76,8 @@ elp_words = mono %>%
   pull(word) %>% 
   unique()
 
+
+ 
 descriptives = mono %>%
   filter(train_test == 'train') %>% 
   filter(stage == STAGE) %>% 
@@ -84,47 +86,69 @@ descriptives = mono %>%
             SD = sd(accuracy))
 
 
-COLORS = c('LSTM' = 'firebrick', 'Feedforward' = 'goldenrod', 'Behavioral' = 'Grey74')
+COLORS = c('LSTM' = 'firebrick', 'Feedforward' = 'goldenrod', '(D) Time-varying' = 'firebrick', 'Time-varying' = 'firebrick',  '(C) Feedforward' = 'goldenrod', 'Human - Accuracy' = 'Black', 'Human - RT' = 'Grey20', '(A) Human - Naming Accuracy' = 'Black', '(B) Human - Naming RT' = 'Grey20')
 
-descriptives_elp = mono %>% 
+descriptives_elp_acc = mono %>% 
   filter(word %in% elp_words) %>% 
   filter(stage == STAGE & model == 'LSTM') %>% #arbitrary because values repeat
   filter(train_test == 'train') %>% 
-  summarise(MEAN = mean(elp_acc),
-            SD = sd(elp_acc)) %>% 
-  mutate(model = 'Behavioral')
+  summarise(accMEAN = mean(elp_acc),
+            accSD = sd(elp_acc),
+            rtMEAN = mean(elp_rt),
+            rtSD = sd(elp_rt)) %>% 
+  mutate(model = '(A) Human - Naming Accuracy')
 
-d_elp = mono %>% 
+d_elp_acc = mono %>% 
   filter(word %in% elp_words) %>% 
   filter(stage == STAGE & model == 'LSTM') %>% #arbitrary because values repeat
   filter(train_test == 'train') %>% 
-  mutate(model = 'Behavioral') %>% 
-  left_join(descriptives_elp) %>% 
-  mutate(acc = -(elp_acc-MEAN)/SD) %>% 
-  select(word, model, acc, freq_scaled)
+  mutate(model = '(A) Human - Naming Accuracy') %>% 
+  left_join(descriptives_elp_acc) %>% 
+  mutate(acc = -(elp_acc-accMEAN)/accSD) %>% 
+  select(word, model, acc, freq, consistency)
 
+
+descriptives_elp_rt = mono %>% 
+  filter(word %in% elp_words) %>% 
+  filter(stage == STAGE & model == 'LSTM') %>% #arbitrary because values repeat
+  filter(train_test == 'train') %>% 
+  summarise(accMEAN = mean(elp_acc),
+            accSD = sd(elp_acc),
+            rtMEAN = mean(elp_rt),
+            rtSD = sd(elp_rt)) %>% 
+  mutate(model = '(B) Human - Naming RT')
+
+d_elp_rt = mono %>% 
+  filter(word %in% elp_words) %>% 
+  filter(stage == STAGE & model == 'LSTM') %>% #arbitrary because values repeat
+  filter(train_test == 'train') %>% 
+  mutate(model = '(B) Human - Naming RT') %>% 
+  left_join(descriptives_elp_rt) %>% 
+  mutate(acc = (elp_rt-rtMEAN)/rtSD) %>% 
+  select(word, model, acc, freq, consistency)
 
 
 
 mono %>% 
   filter(stage == STAGE & train_test == 'train') %>% 
   left_join(descriptives, by = c('model')) %>% 
-  #group_by(model, stage) %>% 
   mutate(acc = (accuracy-MEAN)/SD) %>% 
-  #ungroup() %>% 
   filter(word %in% elp_words) %>% 
-  select(word, model, acc, freq_scaled) %>% 
-  rbind(d_elp) %>% 
-  ggplot(aes(freq_scaled, acc, color = model)) +
-  geom_point(size = .6) +
-  geom_smooth(method = 'lm', color = 'grey32') +
+  select(word, model, acc, freq) %>% 
+  rbind(select(d_elp_acc, -consistency)) %>%
+  rbind(select(d_elp_rt, -consistency)) %>% 
+  mutate(model = case_when(model == 'LSTM' ~ '(D) Time-varying',
+                           model == 'Feedforward' ~ '(C) Feedforward',
+                           TRUE ~ model)) %>% 
+  ggplot(aes(log(freq), acc, color = model)) +
+  geom_point(size = .2) +
+  geom_smooth(method = 'lm', color = 'grey32', span = 1/3) +
   scale_color_manual(values = COLORS) +
   facet_grid(~model) +
-  labs(x = 'Frequency (scaled)', y = 'Error') +
+  labs(x = 'Frequency (log)', y = 'Processing difficulty') +
   theme_bw() +
   theme(legend.position = 'none') +
   ylim(c(-1, 5))
-
 ```
 
 Furthermore, the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. With enough experience, challenges (errors) associated with processing are minimized due to familiarity. In table XX we see this in the relationship between raw error (as mean square error) plotted at two points in training: once early on (at 27 epochs) and again late in training (at 63 epochs). Errors become low even for the least frequent words.
@@ -159,15 +183,7 @@ The time-varying network shows a similar effect of consistency on accuracy as bo
 
 ```{r, consistencyHumanComp, echo=FALSE, fig.cap='The relationship between monosyllabic word consistency and error is shown for computational models (feedforward and time-varying) and human naming tasks. In all three there is a relationship between consistency and error such that increases in consistency (across words) are associated with lower error on average. Here errors for human and model data are processed as previously described, standardizing so that data can share the same y-axis.'}
 
-
-d_elp = mono %>% 
-  filter(word %in% elp_words) %>% 
-  filter(stage == STAGE & model == 'LSTM') %>% #arbitrary because values repeat
-  filter(train_test == 'train') %>% 
-  mutate(model = 'Behavioral') %>% 
-  left_join(descriptives_elp) %>% 
-  mutate(acc = -(elp_acc-MEAN)/SD) %>% 
-  select(word, model, acc, consistency)
+COLORS = c('(C) Time-varying' = 'firebrick', '(B) Feedforward' = 'goldenrod', '(A) Human - Naming Accuracy' = 'Black')
 
 
 mono %>% 
@@ -176,8 +192,9 @@ mono %>%
   mutate(acc = (accuracy-MEAN)/SD) %>% 
   filter(word %in% elp_words) %>% 
   select(word, model, acc, consistency) %>% 
-  rbind(d_elp) %>% 
-  mutate(model = case_when(model == 'LSTM' ~ 'Time-varying',
+  rbind(select(d_elp_acc, -freq)) %>%
+  mutate(model = case_when(model == 'LSTM' ~ '(C) Time-varying',
+                           model == 'Feedforward' ~ '(B) Feedforward',
                            TRUE ~ model)) %>% 
   ggplot(aes(consistency, acc, color = model)) +
   geom_point(size = .6) +
@@ -211,8 +228,22 @@ mono %>%
 ```
 
 ## Consistency effects in generalization
-These effects can also be seen in generalization errors collected using the offline test mode of the network.
+These effects can also be seen in errors collected using the offline generalization mode of the network. The network was tested on a set of words held out during training (test items) using the offline method. The results are similar to those of the other accuracy tests reported earlier. The higher the consistency of a given word is, the less error you see on average at the time of test. Generalization results produced from the offline testing method are important because they demonstrate the capacity of the network in absence of phonological input at the time of test. These test trials are completed by providing the orthographic state (cell and hidden) to the phonological portion of the network along with the word-initial segment. A phonological wordform is then produced, one segment at a time. Those segments (vectors) are then combined and compared against the corresponding vector for the entire target word ^[Both the produced vector and the target vectors are all zero padded on the right side for this calculation to account for the fact that it is possible to produce a sequence of phonemes that is a different length than the target sequence. This padding does not affect the calculation of L2 distance, it only allows the calculation for vectors that are not of equal length]. 
 
+```{r, consistencyGeneralization, echo=FALSE, fig.cap='The relationship between (body-rime) consistency and errors in offline generalization mode are shown, with the left panel showing errors for held out test items and the right panel showing errors on training items. Here error is calculated as the distance between the produced output and the target output for the entire word, a measure that is mathematically different from but very highly correlated with mean square error and other standard error metrics associated with these networks.'}
+mono_lstm_testmode %>% 
+  #filter(train_test == 'test') %>% 
+#  filter(consistency < 1) %>% 
+  mutate(train_test = case_when(train_test == 'train' ~ 'Training items',
+                                train_test == 'test' ~ 'Test items')) %>% 
+  ggplot(aes(consistency, wordwise_dist)) +
+  facet_grid(~train_test) +
+  geom_point(color = 'firebrick') +
+  geom_smooth(method = 'lm', color = 'grey32') +
+  labs(x = 'Consistency (body-rime)',
+       y = 'Error')
+
+```
 
 
 ## The interaction between frequency and consistency
@@ -298,6 +329,15 @@ tabledata %>%
 
 
 ```
+
+
+
+
+
+## Graded effects of consistency and frequency: replicating Plaut et al. (1996)
+An additional simulation was conducted in order to replicate the effects from @Plaut1996 regarding the graded effects of consistency and the interaction with frequency. An additional simulation was required because of the special training set used in those simulations (specifically in terms of the @Taraban1987 word lists). The 
+
+
 
 ## Number of syllables
 

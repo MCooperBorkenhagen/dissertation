@@ -82,7 +82,7 @@ elp = read_csv('../inputs/raw/elp_5.27.16.csv') %>%
   mutate(word = tolower(Word)) %>% 
   filter(word %in% frequency$word) %>% 
   select(word, elp_acc = I_NMG_Mean_Accuracy,
-         elp_rt = I_Mean_RT) %>% 
+         elp_rt = I_NMG_Mean_RT) %>% 
   mutate(elp_rt = as.numeric(elp_rt))
 
 syllabics = read_csv('../inputs/3k/syllabics.csv') %>% 
@@ -119,6 +119,14 @@ mono = rbind(lstm, ff) %>%
 mono$stage = ordered(mono$stage, c('Early', 'Middle', 'Late'))
 
 monosyllabic_k = read_csv('../outputs/mono/monosyllabic_k.csv', col_names = F)[[1]]
+
+
+taraban = read_csv('../inputs/raw/taraban_etal_1987_words_ls_edits.csv') %>% 
+  mutate(threek = case_when(word %in% unique(mono$word) ~ TRUE,
+                            TRUE ~ FALSE))
+
+
+
 
 # final cleans:
 rm(C, elp, ff, frequency, items, lstm, nearest_f, nearest_l, syllabics, mono_lstm_post)
