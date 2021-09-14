@@ -31,6 +31,10 @@ outputs/mono/lstm/monosyllabic-model-pre
 *.npy
 *.png
 *.traindata
+*.h5
+*.tex
+*.log
+
 #directories
 logs/
 .Rproj.user/
