@@ -1,12 +1,9 @@
 #%%
+import pandas as pd
 
-import keras
-from utilities import L2, load
-# %%
-mono = load('../inputs/mono.traindata')
+words = pd.read_csv('../inputs/3k/words.csv', header=None)[0].tolist()
 
 # %%
-
-m = keras.models.load_model('./monosyllabic-model')
-
-#%%
+with open('tmp.csv', 'w') as f:
+    for i in range(100):
+        f.write('{}\n')

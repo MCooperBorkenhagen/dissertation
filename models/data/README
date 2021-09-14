@@ -1,0 +1,11 @@
+
+--------
+OVERVIEW
+--------
+This directory holds preprocessed input data
+to be consumed in an experiment specified in
+the parent directory. If data is present here
+there is a corresponding script in the parent
+directory that processes data from ../../input
+or other similar data repository and processes
+it for the purposes of experimentation.

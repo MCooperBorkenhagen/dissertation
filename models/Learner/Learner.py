@@ -135,7 +135,7 @@ class Learner():
 
         if traindata is not None:
             self.traindata = traindata
-            self.frequencies = [v['frequency'][i] for k, v in traindata.items() for i, word in enumerate(v['wordlist']) for w in self.wordlist if w == word]
+
 
 
         # input features should be defined as something like Xe.shape[2]
@@ -187,7 +187,7 @@ class Learner():
         if accuracy == 'binary':
             metric = [tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None, threshold=0.5)]
         else:
-            metric = accuracy
+            metric = [accuracy]
 
         model.compile(optimizer=optimizer, loss=loss, metrics=metric)
         
@@ -202,7 +202,7 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, wordprobs=None, lenprobs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25,train_proportion=1, verbose=True, K=None, evaluate=False):
+    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False):
 
         """Cycle through key, value pairs in traindata and apply fit() at each cycle.
 
@@ -210,14 +210,7 @@ class Learner():
         Parameters
         ----------
         
-        wordprobs : bool
-            Whether or not to use sampling for constructing words included in each epoch.
-            If True, the value K is used. Therefore, if you set to True, you have to
-            provide a value for K in order to scale the frequencies to values appropriate
-            for sampling probabilities. (Default is False)
-
-
-        lenprobs : list
+        probs : floats
             Probabilities to be pplied when sampling the sequence of phonological lengths
             contained in the values of traindata. If None, lengths are selected in ascending
             order. This means that if probabilities are not specified, fit() is called over
@@ -240,13 +233,8 @@ class Learner():
             modeldata = open('model-data'+ '-' + self.modelname + '-' + cycle_id + '.csv', 'w')
             modeldata.write("cycle, phonlength, accuracy, loss\n")
 
-        if lenprobs is None:
+        if probs is None:
             phonlens = traindata.keys()
-
-        if wordprobs is not None:
-            probs = scale(self.frequencies, K) # these are the K scaled probabilities
-            norms = [float(p)/sum(probs) for p in probs] # this is the probability distribution
-
 
         for cycle in range(cycles):
             printspace(1)
@@ -254,12 +242,8 @@ class Learner():
             printspace(1)
             history_ = {}
 
-            if lenprobs is not None:
-                phonlens = choose(list(traindata.keys()), len(traindata.keys()), lenprobs)
-
-            if wordprobs is not None:
-                n = np.random.choice(self.words, len(self.words), replace=True, p=norms) # this is the sample of words for this fitcycle
-
+            if probs is not None:
+                phonlens = choose(list(traindata.keys()), len(traindata.keys()), probs)
 
             for length in phonlens:
                 printspace(1, symbol='-')
@@ -273,7 +257,7 @@ class Learner():
                     sample_weights = scale(traindata[length]['frequency'], K)
                 elif K is None:
                     sample_weights=None
-                cb = self.model.fit([Xo, Xp], Y, epochs=1, batch_size=batch_size, validation_split=1-train_proportion, sample_weight=sample_weights, verbose=verbose, callbacks=[tensorboard_callback])
+                cb = self.model.fit([Xo, Xp], Y, epochs=epochs, batch_size=batch_size, validation_split=1-train_proportion, sample_weight=sample_weights, verbose=verbose, callbacks=[tensorboard_callback])
                 cb.history['learntime'] = round((time.time()-t1)/60, 2)
                 cycletime += cb.history['learntime']
                 history_[length] = cb.history
@@ -296,7 +280,8 @@ class Learner():
             itemdata.close()
             modeldata.close()
 
-        self.model.history.history['epochs_done'] = cycletime
+        self.model.history.history['cycletime'] = cycletime
+        self.model.history.history['epochs_done'] = cycletime*epochs
 
         if verbose:
             print(cycletime, 'minutes elapsed since start of the first cycle')
