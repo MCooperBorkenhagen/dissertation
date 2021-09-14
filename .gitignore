@@ -39,4 +39,4 @@ outputs/mono/lstm/monosyllabic-model-pre
 logs/
 .Rproj.user/
 models/__pycache__
-
+.legacy/
