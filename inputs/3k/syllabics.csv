@@ -1,7 +1,7 @@
 word,foot,heart,core,leg,head,body,phon,onset,anchor,nucleus,oncleus,coda,rime,nsyll,contour,vowels
 act,,a,a,a,ct,act,AE1-K-T,,AE1,AE1,AE1,K-T,AE1-K-T,1,1,AE1
 aft,,a,a,a,ft,aft,AE1-F-T,,AE1,AE1,AE1,F-T,AE1-F-T,1,1,AE1
-and,,a,a,a,nd,and,AH0-N-D,,AH0,AH0,AH0,N-D,AH0-N-D,1,0,AH0
+and,,a,a,a,nd,and,AE1-N-D,,AE1,AE1,AE1,N-D,AE1-N-D,1,1,AE1
 angst,,a,a,a,ngst,angst,AA1-NG-K-S-T,,AA1,AA1,AA1,NG-K-S-T,AA1-NG-K-S-T,1,1,AA1
 ant,,a,a,a,nt,ant,AE1-N-T,,AE1,AE1,AE1,N-T,AE1-N-T,1,1,AE1
 apt,,a,a,a,pt,apt,AE1-P-T,,AE1,AE1,AE1,P-T,AE1-P-T,1,1,AE1

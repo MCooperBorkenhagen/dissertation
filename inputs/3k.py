@@ -8,7 +8,7 @@ import csv
 import pickle
 from utilities import save, collapse
 from syllabics import *
-from syllabics import getreps, phonemedict, numphones
+from utilities import getreps, phonemedict, numphones
 
 #%%
 # set variables

@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import json
+import statistics
 
 # %%
 def getreps(PATH, terminals=False):
@@ -232,3 +233,5 @@ def numphones(x, delimiter='-'):
                 count += 1
         return(count+1)
 
+def mean(x):
+    return sum(x)/len(x)

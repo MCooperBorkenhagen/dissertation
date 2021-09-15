@@ -1,0 +1,20 @@
+{
+
+    "choir": [["K", "W", "AY1", "R"]],
+    "barre": [["B", "AA1", "R"]],
+    "dial": [["D", "AY1", "L"]],
+    "dour": [["D", "AW1", "R"]],
+    "duel": [["D", "UW1", "L"]],
+    "fire": [["F", "AY1", "R"]],
+    "flour": [["F", "L", "AW1", "R"]],
+    "fuel": [["F", "UW1", "L"]],
+    "hire": [["HH",  "AY1", "R"]],
+    "lisle": [["L", "AY1", "L"]],
+    "pyre": [["P", "AY1", "R"]],
+    "scour": [["S", "K", "AW1", "R"]],
+    "sour": [["S", "AW1", "R"]],
+    "tire": [["T", "AY1", "R"]],
+    "trial": [["T", "R", "AY1", "L"]],
+    "wire": [["W",  "AY1", "R"]]
+
+}
