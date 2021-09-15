@@ -141,6 +141,67 @@ def split(traindata, n, seed = 652, drop=True, keys=None):
     return holdout, train
 
 
+
+def split_but_skip(traindata, n, skip=None, seed = 652, drop=True, keys=None):
+
+    """This is a version of split() but where the user can specify words to skip when
+    splitting up a traindata object into test and holdout examples. If skip is set to 
+    None, this method is identical to split(). This method will be deprecated in the 
+    future by merge with split().
+
+    Parameters
+    ----------
+    traindata : dict
+        A traindata dictionary to split.
+    
+
+    Returns
+    -------
+    dict
+        Two dictionaries are returned. The first is the holdout set and the second
+        is the training set having been split from the input dict.
+    """
+
+    from random import sample, seed
+    
+    seed(seed)
+
+    if keys is None:
+        s = [word for k, v in traindata.items() for word in v['wordlist'] if word not in skip]
+    else:
+        s = [word for k, v in traindata.items() for word in v['wordlist'] if k in keys and word not in skip]
+
+    if type(n) == float:
+        n = round(n*len(s))
+
+    r = sample(s, n)
+
+    holdout = {}
+    train = {}
+    for k, v in traindata.items():
+        iho = []
+        itr = []
+        testwords = []
+        trainwords = []
+        for i, word in enumerate(v['wordlist']):
+            if word in r:
+                iho.append(i)
+                testwords.append(word)
+            else:
+                itr.append(i)
+                trainwords.append(word)
+        train[k] = {'phonSOS':v['phonSOS'][itr], 'phonEOS':v['phonEOS'][itr], 'orth':v['orth'][itr], 'wordlist':trainwords, 'frequency':v['frequency'][itr]}
+        holdout[k] = {'phonSOS':v['phonSOS'][iho], 'phonEOS':v['phonEOS'][iho], 'orth':v['orth'][iho], 'wordlist':testwords, 'frequency':v['frequency'][iho]}
+    
+    if drop:
+        holdout = drop_empty_values(holdout)
+        train = drop_empty_values(train)
+
+    return holdout, train
+
+
+
+
 def subset(traindata, words):
 
     d = {}

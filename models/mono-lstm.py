@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 import keras
 import tensorflow as tf
-from utilities import load, loadreps, reshape, choose, split, collapse, flatten, shelve, flad, scale, subset
-from scipy.spatial.distance import pdist, cdist, squareform
+from utilities import load, loadreps, reshape, flatten, scale
+from scipy.spatial.distance import pdist, squareform
 
 import time
 

@@ -1,4 +1,12 @@
 
+
+"""
+This version of Learner was used for the original mono
+experiments (ie, with prefix mono-), but should be compatible
+with future versions of Learner.
+"""
+
+
 import numpy as np
 import time
 import random
@@ -7,7 +15,7 @@ from tensorflow.keras.utils import plot_model as plot
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
 from utilities import printspace, reshape, L2, choose, scale, key, mean, get_vowels
-import os
+
 
 log_dir = "logs/fit/"
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
@@ -92,7 +100,7 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
 
 class Learner():
 
-    def __init__(self, orth_features, phon_features, orthreps=None, phonreps=None, traindata=None, testdata=None, mask_phon=False, phon_weights=None, output_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=400, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", seed=886, devices=True, memory_growth=True):
+    def __init__(self, orth_features, phon_features, orthreps=None, phonreps=None, traindata=None, mask_phon=False, phon_weights=None, output_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=400, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", accuracy='binary', seed=886, devices=True, memory_growth=True):
         
         """Initialize your Learner() with some values and methods.
 
@@ -136,8 +144,7 @@ class Learner():
         if traindata is not None:
             self.traindata = traindata
 
-        if testdata is not None:
-            self.testdata = testdata
+
 
         # input features should be defined as something like Xe.shape[2]
         encoder_inputs = Input(shape=(None, orth_features), name=input1_name)
@@ -186,8 +193,12 @@ class Learner():
         self.encoder_outputs = encoder_outputs
 
         # specify metrics
-        metrics = [tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None, threshold=0.5), tf.keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")]
-        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        if accuracy == 'binary':
+            metric = [tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None, threshold=0.5)]
+        else:
+            metric = [accuracy]
+
+        model.compile(optimizer=optimizer, loss=loss, metrics=metric)
         
         self.model = model
 
@@ -200,7 +211,7 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, testdata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False, outpath='.'):
+    def fitcycle(self, traindata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False):
 
         """Cycle through key, value pairs in traindata and apply fit() at each cycle.
 
@@ -219,20 +230,17 @@ class Learner():
         """
         if traindata is None:
             traindata = self.traindata
-
-        if testdata is None:
-            testdata = self.testdata
         
         histories = {}
         cycletime = 0
         
         if evaluate:
             # set up file for item data if evaluate set to True
-            itemdata = open(os.path.join(outpath, 'item-data'+ '-' + self.modelname + '-' + cycle_id + '.csv'), 'w')
-            itemdata.write("cycle, word, train_test, phonlength, binary_acc, mse, loss\n")
+            itemdata = open('item-data'+ '-' + self.modelname + '-' + cycle_id + '.csv', 'w')
+            itemdata.write("cycle, word, phonlength, accuracy, loss\n")
             # set up file for model data if evaluate set to True 
-            modeldata = open(os.path.join(outpath, 'model-data'+ '-' + self.modelname + '-' + cycle_id + '.csv'), 'w')
-            modeldata.write("cycle, train_test, phonlength, binary_acc, mse, loss\n")
+            modeldata = open('model-data'+ '-' + self.modelname + '-' + cycle_id + '.csv', 'w')
+            modeldata.write("cycle, phonlength, accuracy, loss\n")
 
         if probs is None:
             phonlens = traindata.keys()
@@ -272,20 +280,10 @@ class Learner():
                         Xp = traindata[length]['phonSOS']
                         Y = traindata[length]['phonEOS']
                         for i, word in enumerate(traindata[length]['wordlist']):
-                            loss, binary_acc, mse = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
-                            itemdata.write("{}, {}, {}, {}, {}, {}, {}\n".format(cycle+1, word, 'train', length, binary_acc, mse, loss))
-                        loss, binary_acc, mse = self.model.evaluate([Xo, Xp], Y, batch_size=Y.shape[0])
-                        modeldata.write("{}, {}, {}, {}, {}, {}\n".format(cycle+1, 'train', length, binary_acc, mse, loss))
-                    for length in testdata.keys():
-                        Xo = testdata[length]['orth']
-                        Xp = testdata[length]['phonSOS']
-                        Y = testdata[length]['phonEOS']
-                        for i, word in enumerate(testdata[length]['wordlist']):
-                            loss, binary_acc, mse = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
-                            itemdata.write("{}, {}, {}, {}, {}, {}, {}\n".format(cycle+1, word, 'train', length, binary_acc, mse, loss))
-                        loss, binary_acc, mse = self.model.evaluate([Xo, Xp], Y, batch_size=Y.shape[0])
-                        modeldata.write("{}, {}, {}, {}, {}, {}\n".format(cycle+1, 'test', length, binary_acc, mse, loss))
-
+                            loss, accuracy = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
+                            itemdata.write("{}, {}, {}, {}, {}\n".format(cycle+1, word, length, accuracy, loss))
+                        loss, accuracy = self.model.evaluate([Xo, Xp], Y, batch_size=Y.shape[0])
+                        modeldata.write("{}, {}, {}, {}\n".format(cycle+1, length, accuracy, loss))
 
         if evaluate:
             itemdata.close()
