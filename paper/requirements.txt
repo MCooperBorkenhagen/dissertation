@@ -6,3 +6,9 @@ dplyr
 Hmisc
 ggplot2
 scapr
+lme4
+knitr
+kableExtra
+papaja
+glue
+tidyverse

@@ -1,0 +1,40 @@
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r monopbyraw, echo=FALSE, message=FALSE, warning=FALSE, fig.width=4, fig.height=4, fig.cap='Scaled word frequency by raw frequency for words included for training in the time-varying monosyllabic model implemented. For reference, the most frequent word, "and", can be seen in the upper right hand corner.'}
+mono %>% 
+  ggplot(aes(freq, freq_scaled)) +
+  geom_point(color = 'firebrick', size = .05) +
+  theme_bw() +
+  labs(x = 'Raw frequency', y = 'Scaled frequency (p)')
+```
+
+
+
+```{r}
+
+x = mono %>% 
+  filter(model == 'LSTM' & stage == 'Early') %>% 
+  filter(train_test == 'train') %>% 
+  filter(word %in% elp_words) %>% 
+  arrange(sort(word)) %>% 
+  pull(nearest_phon_rank)
+
+y = mono %>% 
+  filter(model == 'Feedforward' & stage == 'Early') %>% 
+  filter(train_test == 'train') %>% 
+  filter(word %in% elp_words) %>% 
+  arrange(sort(word)) %>% 
+  pull(nearest_phon_rank)
+
+z = d_elp %>% 
+  arrange(sort(word)) %>% 
+  pull(acc)
+
+tmp = cor.test(x, y)
+```
+

@@ -1,0 +1,11 @@
+
+
+
+apa_table()
+https://rdrr.io/github/crsh/papaja/man/apa_table.html
+
+kableExtra
+https://cran.r-project.org/web/packages/kableExtra/kableExtra.pdf
+
+Citing R
+https://intro2r.com/citing-r.html

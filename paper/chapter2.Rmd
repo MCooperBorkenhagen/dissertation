@@ -1,9 +1,9 @@
 ---
-title: "3. Architecture"
+title: "2. Architecture"
 output: html_document
 ---
 
-# Chapter 3: Architecture of a computational learner
+# Chapter 2: Architecture of a computational learner
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
