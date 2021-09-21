@@ -334,8 +334,10 @@ tabledata %>%
 
 
 
-## Graded effects of consistency and frequency: replicating Plaut et al. (1996)
-An additional simulation was conducted in order to replicate the effects from @Plaut1996 regarding the graded effects of consistency and the interaction with frequency. An additional simulation was required because of the special training set used in those simulations (specifically in terms of the @Taraban1987 word lists). The 
+## Graded effects of consistency and frequency: replicating previous experimental findings
+An additional simulation was conducted in order to replicate the graded effects of consistency and the interaction with frequency. This section reports data from the @Taraban1987 and @Jared1997 word lists, both of which investigated these phenomena in monosyllabic words. These additional simulations were very similar to those reported in the previous sections but with the training environments including all the words from @Taraban19876 and @Jared1997, with the exception of words that were too short phonologically (less than two phonemes). This exclusion was made due to the relative few very short words in the training corpus and the possible idiosyncrasies that such words have in time-varying models of phonological processing, rather than deeper theoretical reasons. In the corpus of monosyllabic words assembled, only 19 eligible words were two phonemes or fewer, and were thus excluded (just as words that were one letter or fewer were excluded). The model reported on here is entirely capable of learning and processing such words successfully.
+
+
 
 
 
