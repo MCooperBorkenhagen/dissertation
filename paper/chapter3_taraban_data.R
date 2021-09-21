@@ -16,9 +16,60 @@ t72 = read_csv('../outputs/taraban/item-data-taraban-72.csv') %>%
   select(-cycle)
 
 
+
+
+syllabics = read_csv('../inputs/taraban/syllabics.csv') %>% 
+  group_by(body) %>% 
+  mutate(body_neighbors = n()) %>% 
+  ungroup() %>% 
+  group_by(rime) %>% 
+  mutate(rime_neighbors = n()) %>% 
+  ungroup() %>% 
+  group_by(nucleus) %>% 
+  mutate(nucleus_neighbors = n()) %>% 
+  ungroup() %>% 
+  group_by(core) %>% 
+  mutate(core_neighbors = n()) %>% 
+  ungroup() %>% 
+  group_by(body, rime) %>% 
+  mutate(body_rime = n()) %>% 
+  ungroup() %>% 
+  mutate(consistency = body_rime/body_neighbors)
+
+# experimental words
+
+taraban_conditions = read_csv('../inputs/raw/taraban_etal_1987_words.csv') %>% 
+  rename(taraban = condition,
+         freq_taraban = frequency) %>% 
+  filter(word %in% syllabics$word)
+
+jaredA_conditions = read_csv('../inputs/raw/jared_1997_appendixA.csv') %>% 
+  rename(jaredA = condition,
+         freq_jaredA = frequency) %>% 
+  filter(word %in% syllabics$word)
+
+#jaredC_conditions = read_csv('../inputs/raw/jared_1997_appendixC.csv')
+
+frequency = read_csv('../outputs/taraban/frequency.csv', col_names = F) %>% 
+  rename(word = X1, freq = X2)  
+
+tarabanK = read_csv('../models/data/taraban-K.txt', col_names = F)[[1]]
+
 taraban = t18 %>% 
   full_join(t36) %>% 
   full_join(t54) %>% 
-  full_join(t72)
+  full_join(t72) %>% 
+  left_join(syllabics) %>% 
+  left_join(taraban_conditions) %>% 
+  left_join(jaredA_conditions) %>% 
+  left_join(frequency)  
 
-syllabics = read_csv('../inputs/taraban/syllabics.csv')
+
+taraban_testmode = read_csv('../outputs/taraban/taraban-generalization-epoch72.csv')
+
+
+
+taraban$freq_taraban = ordered(taraban$freq_taraban, c('low', 'high'))
+
+
+rm(t18, t36, t54, t72, frequency, syllabics, taraban_conditions, jaredA_conditions)

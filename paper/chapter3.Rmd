@@ -5,6 +5,7 @@ output: html_document
 
 ```{r ch3_src, include=FALSE}
 source('chapter3_data.R')
+source('chapter3_taraban_data.R')
 source('plot-specs.R')
 ```
 
@@ -335,11 +336,48 @@ tabledata %>%
 
 
 ## Graded effects of consistency and frequency: replicating previous experimental findings
-An additional simulation was conducted in order to replicate the graded effects of consistency and the interaction with frequency. This section reports data from the @Taraban1987 and @Jared1997 word lists, both of which investigated these phenomena in monosyllabic words. These additional simulations were very similar to those reported in the previous sections but with the training environments including all the words from @Taraban19876 and @Jared1997, with the exception of words that were too short phonologically (less than two phonemes). This exclusion was made due to the relative few very short words in the training corpus and the possible idiosyncrasies that such words have in time-varying models of phonological processing, rather than deeper theoretical reasons. In the corpus of monosyllabic words assembled, only 19 eligible words were two phonemes or fewer, and were thus excluded (just as words that were one letter or fewer were excluded). The model reported on here is entirely capable of learning and processing such words successfully.
+An additional simulation was conducted in order to replicate the graded effects of consistency and the interaction with frequency. This section reports data with the real words from the @Taraban1987 and @Jared1997 word lists included during training, both of which investigated these phenomena in monosyllabic words. These additional simulations were very similar to those reported in the previous sections but with the training environments including all the words from @Taraban19876 and @Jared1997, with the exception of words that were too short phonologically (less than two phonemes). This exclusion was made due to the relative few very short words in the training corpus and the possible idiosyncrasies that such words have in time-varying models of phonological processing, rather than deeper theoretical reasons. In the corpus of monosyllabic words assembled, only 19 eligible words were two phonemes or fewer, and were thus excluded (just as words that were one letter or fewer were excluded). The model reported on here is entirely capable of learning and processing such words successfully.
+
+These experimental lists were designed in order to systematically vary the level of orthography-to-phonology consistency but using a set of categorical distinctions across consistency in order to investigate the trade-offs on reading performance as a function of consistency and whether or not the word can be produced "by rule" (i.e., if it is _regular_ or _irregular_). This distinction is important because connectionist networks show the ability to generate phonology from orthography despite the fact that such systems do not operate by way of rules that map orthography to phonology, as computational models using dual-route mechanisms do.
+
+If the time-varying model proposed here operates in a similar fashion to the connectionist architectures developed using feedforward architectures then results should replicate for previous experiments with such architectures. Specifically, the graded effects of consistency on error (or loss) should be observed, in addition to their interaction with frequency.
+
+
+```{r}
 
 
 
+# shapes:
+# 0 = ambiguous (square)
+# 1 = exception (circle)
+# 2 = regular consistent (triangle)
+# 5 = regular inconsistent (diamond)
 
+
+taraban %>% 
+  filter(!is.na(freq_taraban)) %>% 
+  filter(epoch == 36) %>% 
+  filter(word %nin% c('mouse')) %>% 
+  filter(taraban != 'nonword') %>%
+  mutate(taraban = case_when(taraban == 'ambiguous' ~ 'Ambiguous',
+                             taraban == 'exception' ~ 'Exception',
+                             taraban == 'reg_consistent' ~ 'Regular consistent',
+                             taraban == 'reg_inconsistent' ~ 'Regular inconsistent'),
+         freq_taraban = case_when(freq_taraban == 'low' ~ 'Low',
+                                  freq_taraban =='high' ~ 'High'),
+         freq_taraban = fct_relevel(freq_taraban, c('Low', 'High'))) %>% 
+  group_by(freq_taraban, taraban) %>% 
+  summarise(loss = mean(loss)) %>% 
+  ggplot(aes(freq_taraban, loss, shape = taraban, group = taraban)) +
+  geom_line() +
+  geom_point(size = 3) +
+  scale_shape_manual(values = c(0, 1, 2, 5)) +
+  labs(x = 'Frequency', y = 'Cross entropy') +
+  theme_bw() +
+  theme(legend.title = element_blank())
+ 
+
+```
 
 ## Number of syllables
 
