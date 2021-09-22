@@ -123,13 +123,11 @@ with open('taraban/syllabics.csv', 'w') as s:
         i += 1
 
 s.close()
+
 #%%
-syllabics = pd.read_csv('taraban/syllabics.csv', keep_default_na=False)
 
-
-# %%
 with open('taraban/words.csv', 'w') as f:
-    for word in words:
+    for word in tj.pool:
         f.write('{}\n'.format(word))
 f.close()
 # %%

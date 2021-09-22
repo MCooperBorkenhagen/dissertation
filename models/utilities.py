@@ -154,6 +154,26 @@ def split_but_skip(traindata, n, skip=None, seed = 652, drop=True, keys=None):
     traindata : dict
         A traindata dictionary to split.
     
+    n : int or float
+        The number of holdout items to select, or if float the proportion.
+
+    skip : list
+        Words (if any) to make sure are present in the training set after
+        split. (Default is None)
+
+    seed : int
+        Random seed to be passed to random.seed(). (Default is 652)
+
+    drop : bool
+        Whether to drop empty values (keys) from the return objects.
+        This is equivalent to making sure that no empty key-value
+        pairs are present after the split. (Default is True)
+
+    keys : list
+        The keys (phoneme lengths) if any to include (exclusively)
+        in the return splits. Keys not present in this list but
+        present in traindata will be skipped when splitting the
+        train and test data. (Default is None)
 
     Returns
     -------
@@ -199,6 +219,89 @@ def split_but_skip(traindata, n, skip=None, seed = 652, drop=True, keys=None):
 
     return holdout, train
 
+
+def allocate(traindata, n, train=None, test=None, seed = 652, drop=True, keys=None):
+
+    """This is a version of split() and split_but_skip() but where the user can specify 
+    words to allocate specifically to the train and test sets when splitting up a 
+    traindata object into test and holdout examples. If skip is set to None, this 
+    method is identical to split(). This method will be deprecated in the future by 
+    merge with split() and split_but_skip().
+
+    Parameters
+    ----------
+    traindata : dict
+        A traindata dictionary to split.
+    
+    n : int or float
+        The number of holdout items to select, or if float the proportion.
+
+    train : list
+        Words (if any) to make sure are present in the training set after
+        split. (Default is None)
+
+    test : list
+        Words (if any) to make sure are present in the test set after the
+        split. These words will be added to the test pool and be above and
+        beyond the number of items specified in the n argument. (Default is None)
+
+    seed : int
+        Random seed to be passed to random.seed(). (Default is 652)
+
+    drop : bool
+        Whether to drop empty values (keys) from the return objects.
+        This is equivalent to making sure that no empty key-value
+        pairs are present after the split. (Default is True)
+
+    keys : list
+        The keys (phoneme lengths) if any to include (exclusively)
+        in the return splits. Keys not present in this list but
+        present in traindata will be skipped when splitting the
+        train and test data. (Default is None)
+
+    Returns
+    -------
+    dict
+        Two dictionaries are returned. The first is the holdout set and the second
+        is the training set having been split from the input dict.
+    """
+
+    from random import sample, seed
+    
+    seed(seed)
+
+    if keys is None:
+        s = [word for k, v in traindata.items() for word in v['wordlist'] if word not in test]
+    else:
+        s = [word for k, v in traindata.items() for word in v['wordlist'] if k in keys and word not in test]
+
+    if type(n) == float:
+        n = round(n*len(s))
+
+    r = list(set(sample(s, n) + test))
+
+    holdout = {}
+    train = {}
+    for k, v in traindata.items():
+        iho = []
+        itr = []
+        testwords = []
+        trainwords = []
+        for i, word in enumerate(v['wordlist']):
+            if word in r:
+                iho.append(i)
+                testwords.append(word)
+            else:
+                itr.append(i)
+                trainwords.append(word)
+        train[k] = {'phonSOS':v['phonSOS'][itr], 'phonEOS':v['phonEOS'][itr], 'orth':v['orth'][itr], 'wordlist':trainwords, 'frequency':v['frequency'][itr]}
+        holdout[k] = {'phonSOS':v['phonSOS'][iho], 'phonEOS':v['phonEOS'][iho], 'orth':v['orth'][iho], 'wordlist':testwords, 'frequency':v['frequency'][iho]}
+    
+    if drop:
+        holdout = drop_empty_values(holdout)
+        train = drop_empty_values(train)
+
+    return holdout, train
 
 
 

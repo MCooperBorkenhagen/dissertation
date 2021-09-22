@@ -131,7 +131,9 @@ class Learner():
             output_name = 'output'
 
 
-        self.words = [word for traindata_ in traindata.values() for word in traindata_['wordlist']]
+        self.trainwords = [word for traindata_ in traindata.values() for word in traindata_['wordlist']]
+        self.testwords = [word for testdata_ in testdata.values() for word in testdata_['wordlist']]
+        self.words = self.trainwords + self.testwords
 
         if traindata is not None:
             self.traindata = traindata
@@ -282,7 +284,7 @@ class Learner():
                         Y = testdata[length]['phonEOS']
                         for i, word in enumerate(testdata[length]['wordlist']):
                             loss, binary_acc, mse = self.model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
-                            itemdata.write("{}, {}, {}, {}, {}, {}, {}\n".format(cycle+1, word, 'train', length, binary_acc, mse, loss))
+                            itemdata.write("{}, {}, {}, {}, {}, {}, {}\n".format(cycle+1, word, 'test', length, binary_acc, mse, loss))
                         loss, binary_acc, mse = self.model.evaluate([Xo, Xp], Y, batch_size=Y.shape[0])
                         modeldata.write("{}, {}, {}, {}, {}, {}\n".format(cycle+1, 'test', length, binary_acc, mse, loss))
 
@@ -311,38 +313,37 @@ class Learner():
         return(plot(self.model, to_file=PATH))
 
     def find(self, word):
-        if word in self.words:
-            for length, traindata_ in self.traindata.items():
+        if word in self.trainwords:
+            for traindata_ in self.traindata.values():
                 for i, w in enumerate(traindata_['wordlist']):
                     if w == word:
                         Xo = traindata_['orth'][i]
                         Xp = traindata_['phonSOS'][i]
                         Yp = traindata_['phonEOS'][i]
                         return Xo, Xp, Yp
+        elif word in self.testwords:
+            for testdata_ in self.testdata.values():
+                for i, w in enumerate(testdata_['wordlist']):
+                    if w == word:
+                        Xo = testdata_['orth'][i]
+                        Xp = testdata_['phonSOS'][i]
+                        Yp = testdata_['phonEOS'][i]
+                        return Xo, Xp, Yp
         else:
-            raise Exception('Word is not present in the training pool.')
+            raise Exception('Word is not present in the training or test pool.')
             
-    def get_word(self, word, traindata=None, construct=True):
-
-        if traindata is None:
-            traindata = self.traindata
+    def get_word(self, word, construct=True):
 
         if word in self.words:
-            for length, traindata_ in traindata.items():
-                for i, w in enumerate(traindata_['wordlist']):
-                    if w == word:
-                        Xo = traindata_['orth'][i]
-                        Xp = traindata_['phonSOS'][i]
-                        Yp = traindata_['phonEOS'][i]
+            Xo, Xp, Yp = self.find(word)
 
-        #assert word in self.words, 'The word you want is not in your reps. To read this word, set construct=True'
+        #assert word in self.trainwords, 'The word you want is not in your reps. To read this word, set construct=True'
         if construct:
             if word not in self.words:
-                new_word = np.array([self.orthreps[letter] for letter in word])
-                return new_word, None, None
+                constructed = np.array([self.orthreps[letter] for letter in word])
+                return constructed, None, None
             else:
-                return Xo, Xp, Yp
-                    
+                return Xo, Xp, Yp         
         elif not construct:
             if word not in self.words:
                 raise Exception('The word is not in your list of words, and you did not tell me to construct it.')
@@ -526,7 +527,7 @@ class Learner():
         """
         if target is None:
             if word not in self.words:
-                raise Exception('Target not specified and the word is not in training pool. To test, provide target.')
+                raise Exception('Target not specified and the word is not in training or test pool. To test, provide target.')
             else:
                 xo, xp, yp = self.find(word)
         else:

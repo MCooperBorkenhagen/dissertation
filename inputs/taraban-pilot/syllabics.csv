@@ -1728,7 +1728,7 @@ rot,r,o,o,ro,t,ot,R-AA1-T,R,AA1,AA1,R-AA1,T,AA1-T,1,1,AA1
 rouge,r,o,ou,rou,ge,ouge,R-UW1-ZH,R,UW1,UW1,R-UW1,ZH,UW1-ZH,1,1,UW1
 rough,r,o,ou,rou,gh,ough,R-AH1-F,R,AH1,AH1,R-AH1,F,AH1-F,1,1,AH1
 round,r,o,ou,rou,nd,ound,R-AW1-N-D,R,AW1,AW1,R-AW1,N-D,AW1-N-D,1,1,AW1
-rouse,r,o,ou,rou,se,ouse,R-AW1-Z,R,AW1,AW1,R-AW1,Z,AW1-Z,1,1,AW1
+rouse,r,o,ou,rou,se,ouse,R-AW1-S,R,AW1,AW1,R-AW1,S,AW1-S,1,1,AW1
 rout,r,o,ou,rou,t,out,R-AW1-T,R,AW1,AW1,R-AW1,T,AW1-T,1,1,AW1
 route,r,o,ou,rou,te,oute,R-UW1-T,R,UW1,UW1,R-UW1,T,UW1-T,1,1,UW1
 rove,r,o,o,ro,ve,ove,R-OW1-V,R,OW1,OW1,R-OW1,V,OW1-V,1,1,OW1
@@ -2699,4 +2699,3 @@ pome,p,o,o,po,me,ome,P-OW1-M,P,OW1,OW1,P-OW1,M,OW1-M,1,1,OW1
 mive,m,i,i,mi,ve,ive,M-AY1-V,M,AY1,AY1,M-AY1,V,AY1-V,1,1,AY1
 foll,f,o,o,fo,ll,oll,F-OW1-L,F,OW1,OW1,F-OW1,L,OW1-L,1,1,OW1
 dramp,dr,a,a,dra,mp,amp,D-R-AE1-M-P,D-R,AE1,AE1,D-R-AE1,M-P,AE1-M-P,1,1,AE1
-gorm,g,o,o,go,rm,orm,G-AO1-R-M,G,AO1,AO1,G-AO1,R-M,AO1-R-M,1,1,AO1
