@@ -356,8 +356,7 @@ If the time-varying model proposed here operates in a similar fashion to the con
 
 taraban %>% 
   filter(!is.na(freq_taraban)) %>% 
-  filter(epoch == 36) %>% 
-  filter(word %nin% c('mouse')) %>% 
+  filter(epoch == 27) %>% 
   filter(taraban != 'nonword') %>%
   mutate(taraban = case_when(taraban == 'ambiguous' ~ 'Ambiguous',
                              taraban == 'exception' ~ 'Exception',
@@ -375,7 +374,6 @@ taraban %>%
   labs(x = 'Frequency', y = 'Cross entropy') +
   theme_bw() +
   theme(legend.title = element_blank())
- 
 
 ```
 
