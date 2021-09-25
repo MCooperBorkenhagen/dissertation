@@ -342,6 +342,7 @@ These experimental lists were designed in order to systematically vary the level
 
 If the time-varying model proposed here operates in a similar fashion to the connectionist architectures developed using feedforward architectures then results should replicate for previous experiments with such architectures. Specifically, the graded effects of consistency on error (or loss) should be observed, in addition to their interaction with frequency.
 
+In Figure X you we see the cross entropy (calculated with the loss function used) for each of the four regularity conditions from @Taraban1987 and in the high and low frequency conditions. Values are averaged across epochs. The trend observed closely resembles that of the computational results from @Plaut1997 and follows the expected pattern based on graded effects of consistency as they are modulated by frequency.
 
 ```{r}
 
@@ -356,7 +357,7 @@ If the time-varying model proposed here operates in a similar fashion to the con
 
 taraban %>% 
   filter(!is.na(freq_taraban)) %>% 
-  filter(epoch == 27) %>% 
+  filter(epoch %nin% c(9, 18)) %>% 
   filter(taraban != 'nonword') %>%
   mutate(taraban = case_when(taraban == 'ambiguous' ~ 'Ambiguous',
                              taraban == 'exception' ~ 'Exception',
@@ -364,7 +365,8 @@ taraban %>%
                              taraban == 'reg_inconsistent' ~ 'Regular inconsistent'),
          freq_taraban = case_when(freq_taraban == 'low' ~ 'Low',
                                   freq_taraban =='high' ~ 'High'),
-         freq_taraban = fct_relevel(freq_taraban, c('Low', 'High'))) %>% 
+         freq_taraban = fct_relevel(freq_taraban, c('Low', 'High')),
+         taraban = fct_relevel(taraban, c('Exception', 'Ambiguous', 'Regular inconsistent', 'Regular consistent'))) %>% 
   group_by(freq_taraban, taraban) %>% 
   summarise(loss = mean(loss)) %>% 
   ggplot(aes(freq_taraban, loss, shape = taraban, group = taraban)) +
@@ -372,10 +374,86 @@ taraban %>%
   geom_point(size = 3) +
   scale_shape_manual(values = c(0, 1, 2, 5)) +
   labs(x = 'Frequency', y = 'Cross entropy') +
-  theme_bw() +
+  theme_apa() +
   theme(legend.title = element_blank())
 
 ```
+
+
+# Jared (1997)
+
+```{r}
+COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
+
+taraban %>% 
+  filter(epoch == 72) %>% 
+  filter(!is.na(jaredA)) %>%
+  mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
+                          freq_jaredA == 'low' ~ 'Low'),
+         condition = case_when(jaredA == 'consistent' ~ 'Consistent',
+                               jaredA == 'inconsistent' ~ 'Inconsistent'),
+         condition = fct_relevel(condition, c('Inconsistent', 'Consistent'))) %>% 
+  ggplot(aes(freq, loss, fill=condition)) +
+  geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
+  scale_fill_manual(values = COLORS_jared) +
+  theme_bw() +
+  labs(x = 'Frequency', y = 'Mean Squared Error') +
+  theme(legend.title = element_blank())
+
+```
+
+However, these effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at five different training stages: 18, 27, 36, 45, and 54 epochs. The interaction looks stable across training for the most part, but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
+
+```{r}
+COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
+EPOCHS = c('18', '27', '36', '45', '54')
+
+
+taraban %>% 
+  filter(epoch %in% EPOCHS) %>% 
+  filter(!is.na(jaredA)) %>%
+  mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
+                          freq_jaredA == 'low' ~ 'Low'),
+         condition = case_when(jaredA == 'consistent' ~ 'Consistent',
+                               jaredA == 'inconsistent' ~ 'Inconsistent'),
+         condition = fct_relevel(condition, c('Inconsistent', 'Consistent'))) %>% 
+  ggplot(aes(freq, mse, fill=condition)) +
+  geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
+  scale_fill_manual(values = COLORS_jared) +
+  theme_bw() +
+  labs(x = 'Frequency', y = 'Mean Squared Error') +
+  theme(legend.title = element_blank()) +
+  facet_grid(~epoch)
+
+```
+
+One issue about such a comparison (and comparisons of model performance as it relates to processing difficulty in general) has to do with equating measures arising from computational models and those derived from human performance. Errors calculated here (mean square error) average across all units on the output layer and will therefore minimize the extent to which processing difficulty results from words being longer and more complex to produce. The LSTM-based system investigated here always has information about a given output segment available for error correction. There is no additional penalty for a word being longer other than the difficulties that arise with from co-occurrence statistics across phonological segments (e.g., that certain transitional probabilities at word endings might be less frequent at the ends of words than at beginnings). Therefore, mean squared error, while it has been a standard of evaluation in other similar computational approaches, may be less precise than other alternatives for time-varying learning systems like the architecture put forward here.
+
+As an alternative, we can look at other accuracy measures that may index processing difficulty more precisely than mean squared error, especially when comparing to naming latency, as so often is done when examining computational models as they relate to human behavior. An alternative to consider arises from the separate testing process available to this architecture. The model's offline test mode is dictated by a recurrent process that settles into a final state through and internal mechanism rather than dictated by the number of timesteps provided at the phonological input. Observing accuracy across phonological segments using this testing mechanism yields separate converging evidence about processing difficulty at a finer grain than that offered through mean squared error.
+
+Figure X shows the cumulative (sum) phoneme-wise distances for the @Jared1997 stimuli using production mode at the end of training.
+
+
+```{r}
+
+
+taraban_testmode %>% 
+  filter(!is.na(jaredA)) %>% 
+  mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
+                          freq_jaredA == 'low' ~ 'Low'),
+         condition = case_when(jaredA == 'consistent' ~ 'Consistent',
+                               jaredA == 'inconsistent' ~ 'Inconsistent'),
+         condition = fct_relevel(condition, c('Inconsistent', 'Consistent'))) %>% 
+  ggplot(aes(freq, phonemes_sum, fill=condition)) +
+  geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
+  scale_fill_manual(values = COLORS_jared) +
+  labs(x = 'Frequency', y = 'Sum of phoneme-wise distance') +
+  theme_apa() +
+  theme(legend.title = element_blank())
+
+```
+
+
 
 ## Number of syllables
 

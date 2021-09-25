@@ -101,7 +101,9 @@ taraban = t9 %>%
   left_join(frequency)  
 
 
-taraban_testmode = read_csv('../outputs/taraban/taraban-generalization-epoch72.csv')
+taraban_testmode = read_csv('../outputs/taraban/taraban-generalization-epoch72.csv') %>% 
+  left_join(taraban_conditions) %>% 
+  left_join(jaredA_conditions)
 
 
 
