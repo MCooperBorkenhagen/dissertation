@@ -342,7 +342,7 @@ These experimental lists were designed in order to systematically vary the level
 
 If the time-varying model proposed here operates in a similar fashion to the connectionist architectures developed using feedforward architectures then results should replicate for previous experiments with such architectures. Specifically, the graded effects of consistency on error (or loss) should be observed, in addition to their interaction with frequency.
 
-In Figure X you we see the cross entropy (calculated with the loss function used) for each of the four regularity conditions from @Taraban1987 and in the high and low frequency conditions. Values are averaged across epochs. The trend observed closely resembles that of the computational results from @Plaut1997 and follows the expected pattern based on graded effects of consistency as they are modulated by frequency.
+In Figure X you we see the cross entropy (calculated with the loss function used) for each of the four regularity conditions from @Taraban1987 and in the high and low frequency conditions. Values are averaged across epochs. The trend observed closely resembles that of the computational results from @Plaut1997 and follows the expected pattern based on graded effects of consistency as they interact with frequency.
 
 ```{r}
 
@@ -380,13 +380,16 @@ taraban %>%
 ```
 
 
+
+
 # Jared (1997)
+The pattern of results hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and with inconsistent words being more difficult than consistent ones. Here is that trend early on in training at 36 epochs, with the comparable figure reproduced from @Jared1997.
 
 ```{r}
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
 
 taraban %>% 
-  filter(epoch == 72) %>% 
+  filter(epoch == 36) %>% 
   filter(!is.na(jaredA)) %>%
   mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
                           freq_jaredA == 'low' ~ 'Low'),
@@ -402,7 +405,7 @@ taraban %>%
 
 ```
 
-However, these effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at five different training stages: 18, 27, 36, 45, and 54 epochs. The interaction looks stable across training for the most part, but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
+However, these effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at several different training stages: 18, 27, 36, 45, and 54 epochs. The interaction looks stable across training for the most part (and is on average when collapsing across epochs), but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
 
 ```{r}
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
@@ -427,12 +430,9 @@ taraban %>%
 
 ```
 
-One issue about such a comparison (and comparisons of model performance as it relates to processing difficulty in general) has to do with equating measures arising from computational models and those derived from human performance. Errors calculated here (mean square error) average across all units on the output layer and will therefore minimize the extent to which processing difficulty results from words being longer and more complex to produce. The LSTM-based system investigated here always has information about a given output segment available for error correction. There is no additional penalty for a word being longer other than the difficulties that arise with from co-occurrence statistics across phonological segments (e.g., that certain transitional probabilities at word endings might be less frequent at the ends of words than at beginnings). Therefore, mean squared error, while it has been a standard of evaluation in other similar computational approaches, may be less precise than other alternatives for time-varying learning systems like the architecture put forward here.
+It is expected that the process of acquiring knowledge that is subject to constraints like those that operate on the stimuli here, you will see stochastic variability throughout learning, but with overall trends emerging when averaging across individuals or, in the case of the simulation here, across time.
 
-As an alternative, we can look at other accuracy measures that may index processing difficulty more precisely than mean squared error, especially when comparing to naming latency, as so often is done when examining computational models as they relate to human behavior. An alternative to consider arises from the separate testing process available to this architecture. The model's offline test mode is dictated by a recurrent process that settles into a final state through and internal mechanism rather than dictated by the number of timesteps provided at the phonological input. Observing accuracy across phonological segments using this testing mechanism yields separate converging evidence about processing difficulty at a finer grain than that offered through mean squared error.
-
-Figure X shows the cumulative (sum) phoneme-wise distances for the @Jared1997 stimuli using production mode at the end of training.
-
+As an alternative, additional information about performance can be observed using the network's offline test mode. This performance method is dictated by a recurrent process that settles into a final state through and internal mechanism rather than dictated by the number of timesteps provided at the phonological input (see the previous section on the method for details). Summing the accuracy across phonological segments using this testing mechanism yields separate converging evidence about processing difficulty at a finer grain than that offered through mean squared error. Figure X shows the cumulative (sum) phoneme-wise distances for the @Jared1997 stimuli using production mode at the end of training, the trend of which is very similar to that seen in the previous analyses of these items.
 
 ```{r}
 
@@ -452,6 +452,8 @@ taraban_testmode %>%
   theme(legend.title = element_blank())
 
 ```
+
+
 
 
 
