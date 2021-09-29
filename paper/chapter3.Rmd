@@ -332,9 +332,6 @@ tabledata %>%
 ```
 
 
-
-
-
 ## Graded effects of consistency and frequency: replicating previous experimental findings
 An additional simulation was conducted in order to replicate the graded effects of consistency and the interaction with frequency. This section reports data with the real words from the @Taraban1987 and @Jared1997 word lists included during training, both of which investigated these phenomena in monosyllabic words. These additional simulations were very similar to those reported in the previous sections but with the training environments including all the words from @Taraban19876 and @Jared1997, with the exception of words that were too short phonologically (less than two phonemes). This exclusion was made due to the relative few very short words in the training corpus and the possible idiosyncrasies that such words have in time-varying models of phonological processing, rather than deeper theoretical reasons. In the corpus of monosyllabic words assembled, only 19 eligible words were two phonemes or fewer, and were thus excluded (just as words that were one letter or fewer were excluded). The model reported on here is entirely capable of learning and processing such words successfully.
 
@@ -342,11 +339,9 @@ These experimental lists were designed in order to systematically vary the level
 
 If the time-varying model proposed here operates in a similar fashion to the connectionist architectures developed using feedforward architectures then results should replicate for previous experiments with such architectures. Specifically, the graded effects of consistency on error (or loss) should be observed, in addition to their interaction with frequency.
 
-In Figure X you we see the cross entropy (calculated with the loss function used) for each of the four regularity conditions from @Taraban1987 and in the high and low frequency conditions. Values are averaged across epochs. The trend observed closely resembles that of the computational results from @Plaut1997 and follows the expected pattern based on graded effects of consistency as they interact with frequency.
+In Figure X you we see the cross entropy (calculated with the loss function used) for each of the four regularity conditions from @Taraban1987 and in the high and low frequency conditions taken from performance data early on in training (27 epochs). The trend observed closely resembles that of the computational results from @Plaut1997 and follows the expected pattern based on graded effects of consistency as they interact with frequency.
 
 ```{r}
-
-
 
 # shapes:
 # 0 = ambiguous (square)
@@ -357,7 +352,34 @@ In Figure X you we see the cross entropy (calculated with the loss function used
 
 taraban %>% 
   filter(!is.na(freq_taraban)) %>% 
-  filter(epoch %nin% c(9, 18)) %>% 
+  filter(epoch == 27) %>% 
+  filter(taraban != 'nonword') %>%
+  mutate(taraban = case_when(taraban == 'ambiguous' ~ 'Ambiguous',
+                             taraban == 'exception' ~ 'Exception',
+                             taraban == 'reg_consistent' ~ 'Regular consistent',
+                             taraban == 'reg_inconsistent' ~ 'Regular inconsistent'),
+         freq_taraban = case_when(freq_taraban == 'low' ~ 'Low',
+                                  freq_taraban =='high' ~ 'High'),
+         freq_taraban = fct_relevel(freq_taraban, c('Low', 'High')),
+         taraban = fct_relevel(taraban, c('Exception', 'Ambiguous', 'Regular inconsistent', 'Regular consistent'))) %>% 
+  group_by(freq_taraban, taraban) %>% 
+  summarise(loss = mean(loss)) %>% 
+  ggplot(aes(freq_taraban, loss, shape = taraban, group = taraban)) +
+  geom_line() +
+  geom_point(size = 3) +
+  scale_shape_manual(values = c(0, 1, 2, 5)) +
+  labs(x = 'Frequency', y = 'Cross entropy') +
+  theme_apa() +
+  theme(legend.title = element_blank())
+```
+
+In order to avoid results that rely on a single, perhaps idiosyncratic simulation, the simulation was conducted 50 times over and the same trend results when examining performance relatively early in training. The figure below shows these results averaging across runs of the model at an early stage of learning (here epoch 27).
+
+```{r}
+
+taraban_crossval %>% 
+  filter(!is.na(freq_taraban)) %>% 
+  filter(epoch == 27) %>% 
   filter(taraban != 'nonword') %>%
   mutate(taraban = case_when(taraban == 'ambiguous' ~ 'Ambiguous',
                              taraban == 'exception' ~ 'Exception',
@@ -381,6 +403,107 @@ taraban %>%
 
 
 
+```{r, echo=FALSE}
+taraban_crossval %>% 
+  filter(!is.na(freq_taraban)) %>% 
+  filter(epoch == 27) %>% 
+  filter(taraban != 'nonword') %>%
+  mutate(taraban = case_when(taraban == 'ambiguous' ~ 'Ambiguous',
+                             taraban == 'exception' ~ 'Exception',
+                             taraban == 'reg_consistent' ~ 'Regular consistent',
+                             taraban == 'reg_inconsistent' ~ 'Regular inconsistent'),
+         freq_taraban = case_when(freq_taraban == 'low' ~ -.5,
+                                  freq_taraban =='high' ~ .5),
+         taraban = fct_relevel(taraban, c('Exception', 'Ambiguous', 'Regular inconsistent', 'Regular consistent')),
+         taraban_num = as.numeric(taraban)) %>%
+  mutate(taraban_c = taraban_num-mean(c(1, 2, 3, 4))) %>% 
+  lmer(loss ~ taraban_c*freq_taraban + (1|word) + (1|run_id), data = .) -> m_plaut1
+
+save(m_plaut1, file = 'data/m_plaut1.Rda')
+
+load(file = 'data/m_plaut1.Rda')
+
+
+
+# recompute confints:
+#m_plaut1_confint = confint(m_plaut1)
+#m_plaut1_confint %>% 
+#  as.data.frame() %>% 
+#  rownames_to_column(var = 'predictor') %>% 
+#  write_csv('data/m_plaut1_confint.csv')
+summary(m_plaut1)
+
+
+m_plaut1_confint = read_csv('data/m_plaut1_confint.csv')
+
+#m_plaut1_summary = summary(m_plaut1)
+#save(m_plaut1_summary, file = 'data/m_plaut1_summary.Rda')
+load(file = 'data/m_plaut1_summary.Rda')
+
+
+m_plaut1_confint
+
+# runtime is about 25 minutes:
+#m_plaut1_anova = car::Anova(m_plaut1, type = 3, test = 'F')
+# note that the anova table reflects the following usage:
+# Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df)
+#write_csv(m_plaut1_anova, 'data/m_plaut1_anova.csv')
+#m_plaut1_anova = read_csv('data/m_plaut1_anova.csv')
+m_plaut1_anova
+
+```
+
+
+Furthermore the effect is similar though not identical to those observed in @Plaut1997, as demonstrated in a statistical model of consistency condition (expressed as a linearly decreasing set of conditions in the following order: exception, ambiguous, regular inconsistent, and regular consistent) with frequency (high versus low). Using a linear mixed effects model estimated in R [@R2021] in the lme4 package [@Bates2015] with confidence intervals estimated in the stats library [@R2021] and p-values computed using the Anova() method in the car package [@Fox2019]. This model includes by item random intercepts as well as random intercepts for each run (each simulation). Here an increase in condition is, on average, associated with a `.01` decrease in loss (*b* = -.01, *SE* = .003, 95%CI = [-.01, -.005]), with the effect of frequency associated with a decrease in loss of .01 units. The interaction, unlike what was reported in @Plaut1997, is not significant (*b* = .003, *SE* = .003, *F*(1, 172) = 1.55, *p* = .22, 95%CI = [-.002, .008]). This pattern resembles the effects described earlier looking at frequency and consistency as quantitative predictors (derived from the structure of words in the corpus directly) but differs in the specification of the interaction (because they are defined across conditions rather than as observed). Words of increasing consistency demonstrate lower levels of error, and high frequency words are less error prone than lower frequency words.
+
+```{r}
+
+
+taraban_crossval %>% 
+  filter(!is.na(freq_taraban)) %>% 
+  filter(epoch == 27) %>% 
+  filter(taraban != 'nonword') %>%
+  mutate(taraban_c = case_when(taraban == 'exception' ~ -.5,
+                               taraban == 'reg_inconsistent' ~ .5,
+                             taraban == 'reg_consistent' ~ .5),
+         freq_taraban = case_when(freq_taraban == 'low' ~ -.5,
+                                  freq_taraban =='high' ~ .5)) %>%
+  lmer(loss ~ taraban_c*freq_taraban + (1|word) + (1|run_id), data = .) -> m_plaut2
+
+summary(m_plaut2)
+
+# runtime is about 25 minutes:
+m_plaut2_anova = car::Anova(m_plaut2, type = 3, test = 'F')
+save(m_plaut2_anova, file = 'data/m_plaut2_anova.Rmd')
+
+load(file = 'data/m_plaut2_anova.Rmd')
+
+```
+@Plaut1997 included a number of statistical tests that aren't central to the demonstration here. One is worth observing both because it adds additional precision to the previous results and is important to note for theoretical reasons. In a model of the interaction between word regularity (regular versus exception - as was defined in @Plaut1997) amd frequency (low versus high), regular words are reliably produced with lower errors than exception words (*b* = -.02, *SE* = .003, *F*(1, 85) = 35.35, ). The effect of frequency maintains as in the previous model reported, as does the non-significance of the interaction term. This indicates that the LSTM network picks up more narrowly on the difference in complexity between words that can be characterized as regular (both consistent regulars and inconsistent regulars) and those that are exceptional (those that both can't be described via simple rules and those that have no neighbors).
+
+The absence of a significant interaction between consistency and frequency here would require further experimentation, which would require analyses of loss and other relevant model behavior across training. @Plaut1997 included a range of experiments examining the variability in effects of including frequency manipulations of different kinds during training, showing that using condensed frequencies when training the network also condenses the effects related to those frequencies. It is quite possible that by expanding the frequency values used to scale gradients during training here would make the effects of frequency (whether raw or categorical) more dramatic. While this additional experimentation is outside the scope of the demonstration of the architecture here, it is worthy of future investigation in subsequent work.
+
+In sum, the general trends relating consistency and frequency appear in data from the time-varying network architecture being proposed here. In statistical models of the experimental effects of words that vary systematically in terms of frequency and consistency, the results are mixed despite the appearance of very similar trends across the two variables from a descriptive account.
+
+## Nonword reading
+Looking at performance at the end of training, the network did quite well in pronouncing nonwords (taken from @Taraban1987; though see the footnote on @Plaut1997 p.62 for a discussion of the shortcomings of these stimuli). This is taken as a good measure of performance of models in the history of such work due to the fact that the words (should) bear a meaningful resemblance to real words and that in connectionist networks, where there are no "stored" entries of words, the ability to perform on such words evidences the ability of a rule-less system to generate reasonable pronunciations due to generalization from other similar forms.
+
+```{r, taraban_nonwords, echo=FALSE}
+taraban_testmode %>% 
+  filter(taraban == 'nonword') %>%
+  filter(phonemes_proportion < 1) %>% 
+  select(word, phon_read)  %>% 
+  pull(word) -> nonwords_pronounced_wrong
+
+nonwords = taraban_testmode %>% 
+  filter(taraban == 'nonword') %>% 
+  pull(word)
+
+  
+  
+```
+
+Of the `r length(nonwords)` from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords)/length(nonwords_pronounced_wrong)`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from a similar list in @Plaut1997, but using a much simpler computational system). Like the errors on nonwords in @Plaut1997, the errors here 
 
 # Jared (1997)
 The pattern of results hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and with inconsistent words being more difficult than consistent ones. Here is that trend early on in training at 36 epochs, with the comparable figure reproduced from @Jared1997.
@@ -407,7 +530,7 @@ taraban %>%
 
 However, these effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at several different training stages: 18, 27, 36, 45, and 54 epochs. The interaction looks stable across training for the most part (and is on average when collapsing across epochs), but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
 
-```{r}
+```{r, echo=FALSE}
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
 EPOCHS = c('18', '27', '36', '45', '54')
 
@@ -432,9 +555,9 @@ taraban %>%
 
 It is expected that the process of acquiring knowledge that is subject to constraints like those that operate on the stimuli here, you will see stochastic variability throughout learning, but with overall trends emerging when averaging across individuals or, in the case of the simulation here, across time.
 
-As an alternative, additional information about performance can be observed using the network's offline test mode. This performance method is dictated by a recurrent process that settles into a final state through and internal mechanism rather than dictated by the number of timesteps provided at the phonological input (see the previous section on the method for details). Summing the accuracy across phonological segments using this testing mechanism yields separate converging evidence about processing difficulty at a finer grain than that offered through mean squared error. Figure X shows the cumulative (sum) phoneme-wise distances for the @Jared1997 stimuli using production mode at the end of training, the trend of which is very similar to that seen in the previous analyses of these items.
+As an alternative method of assessing model production, additional information about performance can be observed using the network's offline test mode. This method is dictated by a different sort of recurrent process that settles into a final state through and internally dictated mechanism rather than by the number of timesteps provided at the phonological input (see the previous section on the method for details). Summing the accuracy across phonological segments using this testing mechanism yields separate converging evidence about processing difficulty at a finer grain than that offered through mean squared error. Figure X shows the cumulative (sum) phoneme-wise distances for the @Jared1997 stimuli using production mode at the end of training, the trend of which is very similar to that seen in the previous analyses of these items.
 
-```{r}
+```{r, echo=FALSE}
 
 
 taraban_testmode %>% 
@@ -454,6 +577,58 @@ taraban_testmode %>%
 ```
 
 
+
+```{r, echo=FALSE}
+taraban_crossval %>% 
+  filter(!is.na(jaredA)) %>% 
+  mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
+                          freq_jaredA == 'low' ~ 'Low'),
+         condition = case_when(jaredA == 'consistent' ~ 'Consistent',
+                               jaredA == 'inconsistent' ~ 'Inconsistent'),
+         condition = fct_relevel(condition, c('Inconsistent', 'Consistent'))) %>% 
+  group_by(freq, condition) %>% 
+  summarise(mse = mean(mse),
+            freq = first(freq),
+            condition = first(condition)) %>% 
+  ggplot(aes(freq, mse, fill=condition)) +
+  geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
+  #facet_grid(~epoch) +
+  scale_fill_manual(values = COLORS_jared) +
+  labs(x = 'Frequency', y = 'Mean squared error') +
+  theme_apa() +
+  theme(legend.title = element_blank())
+
+
+
+```
+
+
+```{r, echo=FALSE}
+taraban_crossval %>% 
+  filter(!is.na(freq_taraban)) %>% 
+  #filter(epoch %nin% c(9, 18)) %>% 
+  filter(epoch == 54) %>% 
+  filter(taraban != 'nonword') %>%
+  mutate(taraban = case_when(taraban == 'ambiguous' ~ 'Ambiguous',
+                             taraban == 'exception' ~ 'Exception',
+                             taraban == 'reg_consistent' ~ 'Regular consistent',
+                             taraban == 'reg_inconsistent' ~ 'Regular inconsistent'),
+         freq_taraban = case_when(freq_taraban == 'low' ~ 'Low',
+                                  freq_taraban =='high' ~ 'High'),
+         freq_taraban = fct_relevel(freq_taraban, c('Low', 'High')),
+         taraban = fct_relevel(taraban, c('Exception', 'Ambiguous', 'Regular inconsistent', 'Regular consistent'))) %>% 
+  group_by(epoch, freq_taraban, taraban) %>% 
+  summarise(loss = mean(loss)) %>% 
+  ggplot(aes(freq_taraban, loss, shape = taraban, group = taraban)) +
+  geom_line() +
+  geom_point(size = 3) +
+  scale_shape_manual(values = c(0, 1, 2, 5)) +
+  labs(x = 'Frequency', y = 'Cross entropy') +
+  facet_grid(~epoch) +
+  theme_apa() +
+  theme(legend.title = element_blank())
+
+```
 
 
 
