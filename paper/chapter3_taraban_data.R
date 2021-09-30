@@ -3,35 +3,35 @@
 
 
 
-t9 = read_csv('../outputs/taraban/item-data-taraban-9.csv') %>% 
+t9 = read_csv('../outputs/taraban_pilot/item-data-taraban-9.csv') %>% 
   mutate(epoch = '9') %>% 
   select(-cycle)
 
-t18 = read_csv('../outputs/taraban/item-data-taraban-18.csv') %>% 
+t18 = read_csv('../outputs/taraban_pilot/item-data-taraban-18.csv') %>% 
   mutate(epoch = '18') %>% 
   select(-cycle)
 
-t27 = read_csv('../outputs/taraban/item-data-taraban-27.csv') %>% 
+t27 = read_csv('../outputs/taraban_pilot/item-data-taraban-27.csv') %>% 
   mutate(epoch = '27') %>% 
   select(-cycle)
 
-t36 = read_csv('../outputs/taraban/item-data-taraban-36.csv') %>% 
+t36 = read_csv('../outputs/taraban_pilot/item-data-taraban-36.csv') %>% 
   mutate(epoch = '36') %>% 
   select(-cycle)
 
-t45 = read_csv('../outputs/taraban/item-data-taraban-45.csv') %>% 
+t45 = read_csv('../outputs/taraban_pilot/item-data-taraban-45.csv') %>% 
   mutate(epoch = '45') %>% 
   select(-cycle)
 
-t54 = read_csv('../outputs/taraban/item-data-taraban-54.csv') %>% 
+t54 = read_csv('../outputs/taraban_pilot/item-data-taraban-54.csv') %>% 
   mutate(epoch = '54') %>% 
   select(-cycle)
 
-t63 = read_csv('../outputs/taraban/item-data-taraban-63.csv') %>% 
+t63 = read_csv('../outputs/taraban_pilot/item-data-taraban-63.csv') %>% 
   mutate(epoch = '63') %>% 
   select(-cycle)
 
-t72 = read_csv('../outputs/taraban/item-data-taraban-72.csv') %>% 
+t72 = read_csv('../outputs/taraban_pilot/item-data-taraban-72.csv') %>% 
   mutate(epoch = '72') %>% 
   select(-cycle)
 
@@ -72,12 +72,12 @@ jaredA_conditions = read_csv('../inputs/raw/jared_1997_appendixA.csv') %>%
 
 
 
-freq_train = read_csv('../models/data/taraban-train.csv') %>% 
+freq_train = read_csv('../models/data/taraban_pilot/taraban-train.csv') %>% 
   mutate(train_test = 'train')
 
 
 
-freq_test = read_csv('../models/data/taraban-test.csv', col_names = 'word') %>% 
+freq_test = read_csv('../models/data/taraban_pilot/taraban-test.csv', col_names = 'word') %>% 
   mutate(freq = NA,
          freq_scaled = NA,
          train_test = 'test')
@@ -85,7 +85,7 @@ freq_test = read_csv('../models/data/taraban-test.csv', col_names = 'word') %>%
 
 frequency = rbind(freq_train, freq_test)
 
-tarabanK = read_csv('../models/data/taraban-K.txt', col_names = F)[[1]]
+tarabanK = read_csv('../models/data/taraban_pilot/taraban-K.txt', col_names = F)[[1]]
 
 taraban = t9 %>% 
   full_join(t18) %>% 
@@ -101,11 +101,49 @@ taraban = t9 %>%
   left_join(frequency)  
 
 
-taraban_testmode = read_csv('../outputs/taraban/taraban-generalization-epoch72.csv') %>% 
+taraban_testmode = read_csv('../outputs/taraban_pilot//taraban-generalization-epoch72.csv') %>% 
+  left_join(syllabics) %>% 
+  left_join(read_csv('../inputs/taraban/syllabics.csv')) %>% 
   left_join(taraban_conditions) %>% 
   left_join(jaredA_conditions)
 
 
 
+# separate section for the crossvalidation (partial) data
+maxdir = 49
+dirs = seq(0, maxdir)
+EPOCHS_ = c('9', '18', '27', '36', '45', '54', '63', '72')
 
-rm(t18, t36, t54, t72, frequency, syllabics, taraban_conditions, jaredA_conditions)
+tmp = read_csv('../outputs/taraban_crossval/0/item-data-taraban-9.csv')
+
+taraban_crossval = data.frame(matrix(nrow = 0, ncol = length(names(tmp))+1))
+colnames(taraban_crossval) = c(names(tmp), 'run_id')  
+
+
+
+for (dir_ in dirs){
+  
+  path = paste('../outputs/taraban_crossval/', dir_, '/', sep = '')
+  for (E in EPOCHS_){
+    fname = paste(path, 'item-data-taraban-', E, '.csv', sep = '')
+    d1 = read_csv(fname) %>% 
+      mutate(run_id = dir_,
+             epoch = E) %>% 
+      select(-cycle)
+    taraban_crossval = rbind(taraban_crossval, d1)
+  }
+  
+}
+
+taraban_crossval = taraban_crossval %>% 
+  left_join(taraban_conditions) %>% 
+  left_join(jaredA_conditions) %>% 
+  mutate(epoch = as.numeric(epoch)) %>% 
+  left_join(syllabics) %>% 
+  left_join(read_csv('../inputs/taraban/syllabics.csv'))
+
+
+
+
+
+rm(t9, t18, t27, t36, t45, t54, t63, t72, frequency, syllabics, taraban_conditions, jaredA_conditions, tmp, dirs, EPOCHS_, path, fname, d1)

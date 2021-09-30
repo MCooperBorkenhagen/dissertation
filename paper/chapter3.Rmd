@@ -496,14 +496,15 @@ taraban_testmode %>%
   pull(word) -> nonwords_pronounced_wrong
 
 nonwords = taraban_testmode %>% 
-  filter(taraban == 'nonword') %>% 
-  pull(word)
+  filter(word %in% nonwords_pronounced_wrong) %>% 
+  select(Nonword = word,
+         Correct = phon,
+         Response = phon_read)
 
-  
   
 ```
 
-Of the `r length(nonwords)` from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords)/length(nonwords_pronounced_wrong)`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from a similar list in @Plaut1997, but using a much simpler computational system). Like the errors on nonwords in @Plaut1997, the errors here 
+Of the `r length(nonwords)` from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords)/length(nonwords_pronounced_wrong)`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from a similar list in @Plaut1997, but using a much simpler computational system). Like the errors on nonwords in @Plaut1997, the errors here are all reasonable attempts at a sequence of phonemes given the input orthographic pattern.
 
 # Jared (1997)
 The pattern of results hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and with inconsistent words being more difficult than consistent ones. Here is that trend early on in training at 36 epochs, with the comparable figure reproduced from @Jared1997.
