@@ -34,9 +34,13 @@ outputs/mono/lstm/monosyllabic-model-pre
 *.h5
 *.tex
 *.log
+*.h5
 
 #directories
 logs/
 .Rproj.user/
 models/__pycache__
 .legacy/
+outputs/taraban_crossval/
+outputs/taraban_crossval_pilot/
+outputs/taraban_pilot/
