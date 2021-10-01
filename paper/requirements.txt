@@ -12,3 +12,4 @@ kableExtra
 papaja
 glue
 tidyverse
+car

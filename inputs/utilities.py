@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 import json
-import statistics
+
 
 # %%
 def getreps(PATH, terminals=False):
@@ -235,3 +235,10 @@ def numphones(x, delimiter='-'):
 
 def mean(x):
     return sum(x)/len(x)
+
+
+
+def load(PATH):
+    import pickle
+    f = open(PATH, 'rb')
+    return(pickle.load(f))
