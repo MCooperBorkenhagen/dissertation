@@ -1,16 +1,44 @@
 
-This directory contains learners of various kinds and
-scripts that train them. The critical learners are:
+This directory contains experiments/ simulations of various kinds.
+The Learner class that powers them all can be found in:
 
-Lstm2lstm (.py)
-EncoderDecoder (.py)
+./Learner (/Learner.py)
+
+###############
+# EXPERIMENTS #
+###############
+Experiments are identified with an identifier at the start of
+the filename (e.g., multi-, mono-, taraban-)
+
+
+mono
+----
+The mono simulations pertain to a set of general purpose monosyllabic
+words and serve as the basic set of data for analyzing the monosyllabic
+learner (LSTM-based) relative to its feedforward counterpart. The
+scripts marked with mono-lstm are LSTM based, and those with mono-feedforward
+are FF based.
+
+
+taraban
+-------
+These simulations are very similar to the mono-lstm simulations but with
+the taraban and jared (1990) words added to investigate those effects.
+
+
+multi
+-----
+These are simulations for multisyllabic words.
 
 
 
 
-###################
-# encoder-decoder #
-###################
+#########
+# NOTES #
+#########
+
+physical_devices
+----------------
 There were initial run issues that were solved by following the suggestion 
 here: https://github.com/tensorflow/tensorflow/issues/36508
 The solution involves setting the device properly at initialization:

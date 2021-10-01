@@ -3,6 +3,7 @@ from numpy.random import choice
 import numpy as np
 import json
 import tensorflow as tf
+import os
 
 #%%
 
@@ -220,7 +221,7 @@ def split_but_skip(traindata, n, skip=None, seed = 652, drop=True, keys=None):
     return holdout, train
 
 
-def allocate(traindata, n, train=None, test=None, seed = 652, drop=True, keys=None):
+def allocate(traindata, n, for_train=None, for_test=None, seed = 652, drop=True, keys=None, verbose=True):
 
     """This is a version of split() and split_but_skip() but where the user can specify 
     words to allocate specifically to the train and test sets when splitting up a 
@@ -236,11 +237,11 @@ def allocate(traindata, n, train=None, test=None, seed = 652, drop=True, keys=No
     n : int or float
         The number of holdout items to select, or if float the proportion.
 
-    train : list
+    for_train : list
         Words (if any) to make sure are present in the training set after
         split. (Default is None)
 
-    test : list
+    for_test : list
         Words (if any) to make sure are present in the test set after the
         split. These words will be added to the test pool and be above and
         beyond the number of items specified in the n argument. (Default is None)
@@ -255,33 +256,38 @@ def allocate(traindata, n, train=None, test=None, seed = 652, drop=True, keys=No
 
     keys : list
         The keys (phoneme lengths) if any to include (exclusively)
-        in the return splits. Keys not present in this list but
-        present in traindata will be skipped when splitting the
-        train and test data. (Default is None)
+        in the holdout split. (Default is None)
+
+    verbose : bool
+        If True the words that are excluded from the return objects
+        are printed for reference. (Default is True)
 
     Returns
     -------
     dict
         Two dictionaries are returned. The first is the holdout set and the second
-        is the training set having been split from the input dict.
+        is the training set having been split from the input dict (traindata).
     """
 
     from random import sample, seed
     
     seed(seed)
 
+    # s is the eligible selection pool of words that might be sampled for holdout
     if keys is None:
-        s = [word for k, v in traindata.items() for word in v['wordlist'] if word not in test]
+        s = [word for v in traindata.values() for word in v['wordlist'] if word not in for_test+for_train]
     else:
-        s = [word for k, v in traindata.items() for word in v['wordlist'] if k in keys and word not in test]
+        s = [word for k, v in traindata.items() for word in v['wordlist'] if k in keys and word not in for_test+for_train]
 
     if type(n) == float:
         n = round(n*len(s))
 
-    r = list(set(sample(s, n) + test))
+    # r is the set of sampled items that will be held out (plus items specified in for_test)
+    r = list(set(sample(s, n) + for_test))
 
     holdout = {}
     train = {}
+
     for k, v in traindata.items():
         iho = []
         itr = []
@@ -300,6 +306,20 @@ def allocate(traindata, n, train=None, test=None, seed = 652, drop=True, keys=No
     if drop:
         holdout = drop_empty_values(holdout)
         train = drop_empty_values(train)
+
+    if verbose:
+        inwords = get_words(traindata, verbose=False)
+        testwords = get_words(holdout, verbose=False)
+        trainwords = get_words(train, verbose=False)
+        missing = []
+        for word in inwords:
+            if word not in testwords+trainwords:
+                missing.append(word)
+        if len(missing) == 0:
+            print('All words in traindata are present in train or test sets returned')
+        elif len(missing) > 0:
+            print('The following words are missing from your return sets:')
+            print(missing)
 
     return holdout, train
 
@@ -357,7 +377,7 @@ def flatten(x, newline=True, unlist=True, delimiter=','):
                 if type(e) == list:
                     e = collapse(e)
             y = y + str(e) + delimiter
-        elif i == len(x)-1: # when you get to the last element
+        elif i == len(x)-1: # when you  to the last element
             if unlist:
                 if type(e) == list:
                     e = collapse(e)
@@ -385,10 +405,12 @@ def flad(a, pads=0, pad=None):
 
 def get_words(traindata, verbose=True):
     words = [word for k, v in traindata.items() for word in v['wordlist']]
-    return(words)
-    
+
     if verbose:
         print(words)
+
+    return(words)
+
 
 
 
@@ -411,3 +433,96 @@ def save(x, PATH):
     pickle.dump(x, f)
     f.close()
 
+def load_model(architecture, weights, metrics=None, loss='binary_crossentropy', compile=True):
+
+    """Load a model from its architecture (json) and weights (h5)
+
+    Parameters
+    ----------
+    architecture : str
+        The object corresponding to this path should be a json
+        file containing the architecture of the model you wish
+        to load.
+
+    weights : str
+        This object should be an object with extension *.h5
+        which contains saved weights from a pretrained model.
+
+    metrics : list
+        A list of metrics should be used to calculate accuracy
+        in the returned model, if compiled.
+
+    loss : str
+        The loss function passed to compile().
+        (Default is binary crossentropy)
+
+    compile : bool
+        Specify whether to compile the model (True) or not
+        (False). (Default is True)
+
+
+    Returns
+    -------
+    keras engine
+        The return object is an object of type 
+        keras.engine.functional.Functional
+    
+    """
+    from keras.models import model_from_json
+
+    if metrics==None:
+        import tensorflow as tf
+        metrics =  metrics=[tf.keras.metrics.BinaryAccuracy(name = "binary_accuracy", dtype = None, threshold=0.5), tf.keras.losses.MeanSquaredError(reduction="auto", name="mean_squared_error")]
+
+    j = open(architecture, 'r')
+    l = j.read()
+
+    model = model_from_json(l)
+    model.load_weights(weights)
+    if compile:
+        model.compile(loss=loss, metrics=metrics)
+
+    return model
+
+def get_weights(model, layer, combine=True):
+
+    layers_ = {'orth':3, 'phon':4, 'output':5}
+
+    if layer == 'orth' or layer == 'phon':
+        kernel = model.layers[layers_[layer]].get_weights()[0]
+        recurrent_kernel = model.layers[layers_[layer]].get_weights()[1]
+        bias = model.layers[layers_[layer]].get_weights()[2]
+        print('Three weight objects returned: kernel, recurrent kernel, and bias')
+        if combine:
+            return [kernel, recurrent_kernel, bias]
+        else:
+            return kernel, recurrent_kernel, bias
+    if layer == 'output':
+        weights = model.layers[layers_[layer]].get_weights()[0]
+        bias = model.layers[layers_[layer]].get_weights()[1]
+        print('Two weight objects returned: the weights and the biases')
+        if combine:
+            return [weights, bias]
+        else: 
+            return weights, bias
+
+
+def read_weights(PATH, run_id, epochs, layer, combine=True):
+
+    if layer == 'orth' or layer == 'phon':
+        kernel = np.genfromtxt(os.path.join(PATH, run_id, 'weights0_{}_epoch{}.csv'.format(layer, epochs)))
+        recurrent_kernel = np.genfromtxt(os.path.join(PATH, run_id, 'weights1_{}_epoch{}.csv'.format(layer, epochs)))
+        bias = np.genfromtxt(os.path.join(PATH, run_id, 'weights2_{}_epoch{}.csv'.format(layer, epochs)))
+        if combine:
+            return [kernel, recurrent_kernel, bias]
+        else:
+            return kernel, recurrent_kernel, bias
+
+    elif layer == 'output':
+        # treated as having only two weight matrices
+        weights = np.genfromtxt(os.path.join(PATH, run_id, 'weights0_{}_epoch{}.csv'.format(layer, epochs)))
+        biases = np.genfromtxt(os.path.join(PATH, run_id, 'weights1_{}_epoch{}.csv'.format(layer, epochs)))
+        if combine:
+            return [weights, biases]
+        else:
+            return weights, biases

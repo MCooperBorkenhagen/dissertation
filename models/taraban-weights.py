@@ -1,34 +1,35 @@
 
 #%%
+from utilities import load_model, get_weights
 import numpy as np
-from utilities import *
+from keras.backend import clear_session as clear
+import os
 
-
-m = load_model('../outputs/taraban/model-epoch18.json', '../outputs/taraban/model-epoch18-weights.h5', compile=False)
-
-
-#%%
-# orth weights from taraban model
-np.savetxt('data/taraban_orth_weights0.csv', m.layers[3].get_weights()[0])
-np.savetxt('data/taraban_orth_weights1.csv', m.layers[3].get_weights()[1])
-np.savetxt('data/taraban_orth_weights2.csv', m.layers[3].get_weights()[2])
-
-
-# phon weights from taraban model
-np.savetxt('data/taraban_phon_weights0.csv', m.layers[4].get_weights()[0])
-np.savetxt('data/taraban_phon_weights1.csv', m.layers[4].get_weights()[1])
-np.savetxt('data/taraban_phon_weights2.csv', m.layers[4].get_weights()[2])
-
-# dense output layer weights
-np.savetxt('data/taraban_output_weights0.csv', m.layers[5].get_weights()[0])
-np.savetxt('data/taraban_output_weights1.csv', m.layers[5].get_weights()[1])
+"""gather weights for all the taraban crossval runs"""
 
 
 
+total_runs = 50
+
+PATH = '../outputs/taraban_crossval/'
+epochs = [9, 18, 27, 36, 45, 54, 63, 72]
 
 
+for run_id in range(total_runs):
+    run = str(run_id)
+    for epoch in epochs:
 
+        model = load_model(os.path.join(PATH, str(run), 'model-epoch{}.json'.format(epoch)), os.path.join(PATH, run, 'model-epoch{}-weights.h5'.format(epoch)), compile=False)
+        orth_weights = get_weights(model, 'orth')
+        phon_weights = get_weights(model, 'phon')
+        output_weights = get_weights(model, 'output')
+
+        for i in range(len(orth_weights)):
+
+            print(i)
+            np.savetxt(os.path.join(PATH, run, 'weights{}_orth_epoch{}.csv'.format(i, epoch)), orth_weights[i])
+            np.savetxt(os.path.join(PATH, run, 'weights{}_phon_epoch{}.csv'.format(i, epoch)), phon_weights[i])
+            if i < len(output_weights):
+                np.savetxt(os.path.join(PATH, run, 'weights{}_output_epoch{}.csv'.format(i, epoch)), output_weights[i])
+        clear()
 # %%
-
-
-
