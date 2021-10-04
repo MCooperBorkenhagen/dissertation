@@ -540,7 +540,7 @@ jaredA_consistency = taraban_crossval %>%
 
 As in the behavioral data in the original paper, the model data support the tradeoffs between consistency and frequency. Taking data from 50 runs of the paradigm and using mean squared error as the metric (again early in training), low frequency words (mse = `r pull(filter(jaredA_freq, condition == 'low'), mse)`) are produced with greater error than high frequency words (mse = `r pull(filter(jaredA_freq, condition == 'high'), mse)`), and inconsistent words are higher in mse (`r pull(filter(jaredA_consistency, condition == 'inconsistent'), mse)`) than their consistent counterparts (`r pull(filter(jaredA_consistency, condition == 'consistent'), mse)`).
 
-Here is that trend early on in training at 36 epochs, with the comparable figure reproduced from @Jared1997.
+Here is that trend early on in training at 36 epochs.
 
 ```{r}
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
@@ -562,6 +562,10 @@ taraban_crossval %>%
 
 ```
 
+
+The comparable figure reproduced from @Jared1997 is shown in Figure XX![Figure 1 from Jared (1997) with frequency on the x-axis, latency is displayed on the y-axis (with accuracy above each bar) and level of consistency shown with color across grouped bars.](img/jared1.png)
+
+
 ```{r, echo=FALSE}
 taraban_crossval %>% 
   filter(epoch == 36) %>% 
@@ -570,17 +574,25 @@ taraban_crossval %>%
          consistency = case_when(jaredA == 'consistent' ~ .5, jaredA == 'inconsistent' ~ -.5)) %>% 
   lmer(mse ~ frequency*consistency + (1|word) + (1|run_id), data = .)  -> m_jared
 
-save(m_jared, file = 'data/m_jared.Rda')
+#save(m_jared, file = 'data/m_jared.Rda')
 
-m_jared_anova = car::Anova(m_jared, type=3, test="F")
-save(m_jared_anova, file = 'data/m_jared_anova.Rmd')
+#m_jared_anova = car::Anova(m_jared, type=3, test="F")
+#save(m_jared_anova, file = 'data/m_jared_anova.Rmd')
 
-m_jared_confint = confint(m_jared)
-save(m_jared_confint, file = 'data/m_jared_confint.Rda')
+#m_jared_confint = confint(m_jared)
+#save(m_jared_confint, file = 'data/m_jared_confint.Rda')
+load(file = 'data/m_jared.Rda')
+load(file = 'data/m_jared_anova.Rda')
+load(file = 'data/m_jared_confint.Rda')
+
+summary(m_jared)
+
 
 ```
 
+The effects found in the computational data are comparable but not identical to those from the original study. Using a linear mixed effects model with random slopes for words and simulations (because models were run for 50 separate train/test splits in order to avoid an idiosyncratic result from a single simulation), we see a significant effect of frequency and consistency, where the interaction displays a non-effect when calculating a p-value using the Anova method from the car library in R (@R2021).
 
+When examining the effect of consistency at the level of high frequency words, as in @Jared1997 we see that high frequency consistent words show lower error than their low consistent counterparts, mirroring the earlier analagous effect in naming latency.
 
 ```{r, echo=FALSE}
 taraban_crossval %>% 
@@ -590,16 +602,24 @@ taraban_crossval %>%
          consistency = case_when(jaredA == 'consistent' ~ -.5, jaredA == 'inconsistent' ~ .5)) %>% 
   lmer(mse ~ frequency*consistency + (1|word) + (1|run_id), data = .) -> m_jared2
 
-save(m_jared2, file = 'data/m_jared2.Rda')
+#save(m_jared2, file = 'data/m_jared2.Rda')
 
-m_jared2_anova = car::Anova(m_jared2)
-save(m_jared2_anova, file = 'data/m_jared2_anova.Rmd')
+#m_jared2_anova = car::Anova(m_jared2)
+#save(m_jared2_anova, file = 'data/m_jared2_anova.Rda')
 
-m_jared2_confint = confint(m_jared2)
-save(m_jared2_confint, file = 'data/m_jared2_confint.Rda')
+#m_jared2_confint = confint(m_jared2)
+#save(m_jared2_confint, file = 'data/m_jared2_confint.Rda')
 
+load(file = 'data/m_jared2_anova.Rda')
+load(file = 'data/m_jared2_confint.Rda')
+summary(m_jared2)
 ```
 
+
+
+
+
+## Variable effects
 It should be noted that these effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at several different training stages: 9, 18, 27, 36, 45, and 54, 63, and 72 epochs. The interaction looks stable across training for the most part (and is on average when collapsing across epochs), but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
 
 ```{r, echo=FALSE}
