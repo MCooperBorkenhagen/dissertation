@@ -514,16 +514,38 @@ While performance on made up words will be discussed further in the subsequent s
 
 All of the mistakes can be tied to the neighborhood characteristics of the words as well given that all nonwords here contain ambiguous orthography-to-phonology structure (i.e., their consistency is less than `1`). In this sense the responses can be seen as overgeneralization based on similar forms. Of the mistakes here, only `r scaps('dase')` and `r scaps('foth')` are surprising given the raw consistency counts (as body-rime calculations) of the neighborhoods involved. Most of the orthographic neighbors of `r scaps('dase')` are not associated with the rime produced here. `.67` of words with `r scaps('ase')` are associated with the rime `r scaps('EY - Z')`. Likewise, most of `r scaps('foth')`'s orthographic neighbors exhibit the lower unrounded vowel `r scaps('AA')` rather than the vowel produced by mistake (`r scaps('OW')`). This last error can be seen as an effect of an important aspect of the system, though, given that `r scaps('foth')` has a influential high frequency neighbor `r scaps('both')`.
 
-Nonetheless, and as consistent with the discussion in @Plaut1997, both humans and computational models produce incorrect phonological codes from orthography. Behavioral data have shown that reader's responses to nonwords often deviate from the expected production, notwithstanding questions about the proper production for a nonword is. For example, @Glushko1979 
-
+Nonetheless, and as consistent with the discussion in @Plaut1997, both humans and computational models produce "incorrect" phonological codes from orthography - though the notion of "correct" pronunciation for novel strings is not straightforward. Behavioral data have shown that reader's responses to nonwords often deviate from the expected production, notwithstanding questions about the proper production for a nonword is. For example, @Glushko1979 found that nonwords with inconsistent neighborhood structure often resulted in pronunciations that were different than the expected pronunciation based on grapheme-phoneme rules while being consistent with the pronunciation for that orthographic body in some other word (see @Plaut1996 for discussion). The issue of nonword naming will be returned to later in the discussion of a model that learns multisyllabic words.
 
 # Jared (1997)
-The pattern of results hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and with inconsistent words being more difficult than consistent ones. Here is that trend early on in training at 36 epochs, with the comparable figure reproduced from @Jared1997.
+Behavioral results conveying the tradeoffs between frequency and consistency hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and with inconsistent words being more difficult than consistent ones. We focus on experiment 1 in @Jared1997. In that experiment the task was simple: participants read aloud sets of words (40 words to a list over two separate visits to the lab) that belonged to one of four categories. Words were either low frequency or high frequency and were consistent (all neighbors had the same rime) or inconsistent (neighbors displayed different rimes). For example, the words `r scaps('paid')`, `r scaps('said')`, and `r scaps('plaid')` are inconsistent. These neighborhood characteristics were tested in the corpus of words used for these simulations and the characteristics were confirmed. Additionally, frequencies were set to high and low prior to training given the possibility that the frequencies used for gradient scaling differed from those consulted for the experiments in @Jared1997.
+
+```{r echo=FALSE}
+
+jaredA_freq = taraban_crossval %>% 
+  filter(epoch == 36) %>% 
+  filter(!is.na(jaredA)) %>% 
+  group_by(freq_jaredA) %>% 
+  summarise(mse = mean(mse)) %>% 
+  rename(condition = freq_jaredA)
+
+
+jaredA_consistency = taraban_crossval %>% 
+  filter(epoch == 36) %>% 
+  filter(!is.na(jaredA)) %>% 
+  group_by(jaredA) %>% 
+  summarise(mse = mean(mse)) %>% 
+  rename(condition = jaredA)
+
+```
+
+As in the behavioral data in the original paper, the model data support the tradeoffs between consistency and frequency. Taking data from 50 runs of the paradigm and using mean squared error as the metric (again early in training), low frequency words (mse = `r pull(filter(jaredA_freq, condition == 'low'), mse)`) are produced with greater error than high frequency words (mse = `r pull(filter(jaredA_freq, condition == 'high'), mse)`), and inconsistent words are higher in mse (`r pull(filter(jaredA_consistency, condition == 'inconsistent'), mse)`) than their consistent counterparts (`r pull(filter(jaredA_consistency, condition == 'consistent'), mse)`).
+
+Here is that trend early on in training at 36 epochs, with the comparable figure reproduced from @Jared1997.
 
 ```{r}
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
 
-taraban %>% 
+taraban_crossval %>% 
   filter(epoch == 36) %>% 
   filter(!is.na(jaredA)) %>%
   mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
@@ -540,15 +562,51 @@ taraban %>%
 
 ```
 
-However, these effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at several different training stages: 18, 27, 36, 45, and 54 epochs. The interaction looks stable across training for the most part (and is on average when collapsing across epochs), but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
+```{r, echo=FALSE}
+taraban_crossval %>% 
+  filter(epoch == 36) %>% 
+  filter(!is.na(jaredA)) %>% 
+  mutate(frequency = case_when(freq_jaredA == 'high' ~ .5, freq_jaredA == 'low' ~ -.5),
+         consistency = case_when(jaredA == 'consistent' ~ .5, jaredA == 'inconsistent' ~ -.5)) %>% 
+  lmer(mse ~ frequency*consistency + (1|word) + (1|run_id), data = .)  -> m_jared
+
+save(m_jared, file = 'data/m_jared.Rda')
+
+m_jared_anova = car::Anova(m_jared, type=3, test="F")
+save(m_jared_anova, file = 'data/m_jared_anova.Rmd')
+
+m_jared_confint = confint(m_jared)
+save(m_jared_confint, file = 'data/m_jared_confint.Rda')
+
+```
+
+
+
+```{r, echo=FALSE}
+taraban_crossval %>% 
+  filter(epoch == 36) %>% 
+  filter(!is.na(jaredA)) %>% 
+  mutate(frequency = case_when(freq_jaredA == 'high' ~ 0, freq_jaredA == 'low' ~ 1),
+         consistency = case_when(jaredA == 'consistent' ~ -.5, jaredA == 'inconsistent' ~ .5)) %>% 
+  lmer(mse ~ frequency*consistency + (1|word) + (1|run_id), data = .) -> m_jared2
+
+save(m_jared2, file = 'data/m_jared2.Rda')
+
+m_jared2_anova = car::Anova(m_jared2)
+save(m_jared2_anova, file = 'data/m_jared2_anova.Rmd')
+
+m_jared2_confint = confint(m_jared2)
+save(m_jared2_confint, file = 'data/m_jared2_confint.Rda')
+
+```
+
+It should be noted that these effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at several different training stages: 9, 18, 27, 36, 45, and 54, 63, and 72 epochs. The interaction looks stable across training for the most part (and is on average when collapsing across epochs), but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
 
 ```{r, echo=FALSE}
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
-EPOCHS = c('18', '27', '36', '45', '54')
 
 
-taraban %>% 
-  filter(epoch %in% EPOCHS) %>% 
+taraban_crossval %>% 
   filter(!is.na(jaredA)) %>%
   mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
                           freq_jaredA == 'low' ~ 'Low'),
@@ -598,13 +656,13 @@ taraban_crossval %>%
          condition = case_when(jaredA == 'consistent' ~ 'Consistent',
                                jaredA == 'inconsistent' ~ 'Inconsistent'),
          condition = fct_relevel(condition, c('Inconsistent', 'Consistent'))) %>% 
-  group_by(freq, condition) %>% 
+  group_by(epoch, freq, condition) %>% 
   summarise(mse = mean(mse),
             freq = first(freq),
             condition = first(condition)) %>% 
   ggplot(aes(freq, mse, fill=condition)) +
   geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
-  #facet_grid(~epoch) +
+  facet_grid(~epoch) +
   scale_fill_manual(values = COLORS_jared) +
   labs(x = 'Frequency', y = 'Mean squared error') +
   theme_apa() +
