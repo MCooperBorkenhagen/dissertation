@@ -121,7 +121,7 @@ mono$stage = ordered(mono$stage, c('Early', 'Middle', 'Late'))
 monosyllabic_k = read_csv('../outputs/mono/monosyllabic_k.csv', col_names = F)[[1]]
 
 
-taraban = read_csv('../inputs/raw/taraban_etal_1987_words_ls_edits.csv') %>% 
+taraban = read_csv('../inputs/raw/taraban_etal_1987_words.csv') %>% 
   mutate(threek = case_when(word %in% unique(mono$word) ~ TRUE,
                             TRUE ~ FALSE))
 

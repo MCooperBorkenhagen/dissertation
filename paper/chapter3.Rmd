@@ -448,7 +448,7 @@ m_plaut1_confint
 # note that the anova table reflects the following usage:
 # Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df)
 #write_csv(m_plaut1_anova, 'data/m_plaut1_anova.csv')
-#m_plaut1_anova = read_csv('data/m_plaut1_anova.csv')
+m_plaut1_anova = read_csv('data/m_plaut1_anova.csv')
 m_plaut1_anova
 
 ```
@@ -473,8 +473,8 @@ taraban_crossval %>%
 summary(m_plaut2)
 
 # runtime is about 25 minutes:
-m_plaut2_anova = car::Anova(m_plaut2, type = 3, test = 'F')
-save(m_plaut2_anova, file = 'data/m_plaut2_anova.Rmd')
+#m_plaut2_anova = car::Anova(m_plaut2, type = 3, test = 'F')
+#save(m_plaut2_anova, file = 'data/m_plaut2_anova.Rmd')
 
 load(file = 'data/m_plaut2_anova.Rmd')
 
@@ -510,7 +510,7 @@ apa_table(nonwords)
 
 Of the `r length(nonwords)` from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords)/length(nonwords_pronounced_wrong)`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from a similar list in @Plaut1997, but using a much simpler computational system). Like the errors on nonwords in @Plaut1997, the errors here are all reasonable attempts at a sequence of phonemes given the input orthographic pattern. These errors are shown in Table X \footnote{Note that the phonological coding for the nonword `r scaps('boad')` was incorrect and has been removed from this table}.
 
-While performance on made up words will be discussed further in the subsequent section devoted to producing multisyllabic words, we can say a few things here about the performance on this set of words in a model of monosyllabic words. These errors, like those in @Plaut1997 are realistic in the sense that the phones produced approximate what you would expect for the orthographic input, but don't perfectly match the true sequence. For example, vowels are produced in the vowel position and consonants in the consonant positions. Additionally, the incorrect vowels and consonants produced are quite close to the proper segments in terms of their phonological similarity to the target segment. The responses for `r scaps(nowl)` involved a vowel with a postvocalic glide (`r  scaps('OW1')`), but ot the correct one. Likewise, `r scaps('dase')` and `r scaps('boose')` were incorrect because they produced incorrect voicing on the word-final fricative (either `r scaps('Z')` for `r scaps('S')` or vice versa).
+While performance on made up words will be discussed further in the subsequent section devoted to producing multisyllabic words, we can say a few things here about the performance on this set of words in a model of monosyllabic words. These errors, like those in @Plaut1997 are realistic in the sense that the phones produced approximate what you would expect for the orthographic input, but don't perfectly match the true sequence. For example, vowels are produced in the vowel position and consonants in the consonant positions. Additionally, the incorrect vowels and consonants produced are quite close to the proper segments in terms of their phonological similarity to the target segment. The responses for `r scaps('nowl')` involved a vowel with a postvocalic glide (`r  scaps('OW1')`), but ot the correct one. Likewise, `r scaps('dase')` and `r scaps('boose')` were incorrect because they produced incorrect voicing on the word-final fricative (either `r scaps('Z')` for `r scaps('S')` or vice versa).
 
 All of the mistakes can be tied to the neighborhood characteristics of the words as well given that all nonwords here contain ambiguous orthography-to-phonology structure (i.e., their consistency is less than `1`). In this sense the responses can be seen as overgeneralization based on similar forms. Of the mistakes here, only `r scaps('dase')` and `r scaps('foth')` are surprising given the raw consistency counts (as body-rime calculations) of the neighborhoods involved. Most of the orthographic neighbors of `r scaps('dase')` are not associated with the rime produced here. `.67` of words with `r scaps('ase')` are associated with the rime `r scaps('EY - Z')`. Likewise, most of `r scaps('foth')`'s orthographic neighbors exhibit the lower unrounded vowel `r scaps('AA')` rather than the vowel produced by mistake (`r scaps('OW')`). This last error can be seen as an effect of an important aspect of the system, though, given that `r scaps('foth')` has a influential high frequency neighbor `r scaps('both')`.
 
@@ -585,12 +585,23 @@ load(file = 'data/m_jared.Rda')
 load(file = 'data/m_jared_anova.Rda')
 load(file = 'data/m_jared_confint.Rda')
 
-summary(m_jared)
+x_names = c('Intercept', 'Frequency', 'Consistency', 'Frequency*Consistency')
 
+cap = 'Mixed Effects Model Output for MSE Predicted by Consistency, Frequency, and its Interaction'
+
+t_jared = model_to_table(m_jared, x_names, m_jared_confint, m_jared_anova, caption = cap, include_R_notes = TRUE)
+
+t_jared
 
 ```
 
-The effects found in the computational data are comparable but not identical to those from the original study. Using a linear mixed effects model with random slopes for words and simulations (because models were run for 50 separate train/test splits in order to avoid an idiosyncratic result from a single simulation), we see a significant effect of frequency and consistency, where the interaction displays a non-effect when calculating a p-value using the Anova method from the car library in R (@R2021).
+The effects found in the computational data are comparable but not identical to those from the original study. Using a linear mixed effects model with random slopes for words and simulations (because models were run for 50 separate train/test splits in order to avoid an idiosyncratic result from a single simulation), we see a significant effect of frequency and consistency, with no significant effect for the interaction (p-value calculated using the Anova method from the car library in R; @R2021).
+
+```{r echo=FALSE}
+
+```
+
+
 
 When examining the effect of consistency at the level of high frequency words, as in @Jared1997 we see that high frequency consistent words show lower error than their low consistent counterparts, mirroring the earlier analagous effect in naming latency.
 

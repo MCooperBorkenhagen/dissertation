@@ -106,3 +106,38 @@ sig_level = function(bs, ps, digits = 3){
     out = c(out, sig_threshold(ps[i], round(bs[i], digits = digits)))}
   return(out)}
 
+
+model_to_table = function(model, x_names, confints, car_anova, n_sigmas = 3, notes = '', caption = '', format = 'pandoc', include_R_notes = TRUE){
+  
+  modeldata = summary(model)
+  
+  if (missing(car_anova)){
+    tabledata = data.frame(modeldata$coefficients) %>% 
+      mutate(Estimate = sig_level(Estimate, Pr...t..),
+             Pr...t.. = presentp(Pr...t..))} 
+  if (!missing(car_anova)) {
+    tabledata = data.frame(modeldata$coefficients) %>% 
+      mutate(p = car_anova[4][[1]]) %>% 
+      mutate(Estimate = sig_level(Estimate, p),
+             p = presentp(p))}
+  
+  confints = confints[(n_sigmas+1):nrow(confints), ]
+  tabledata$CI = squarebracket(confints[,1], confints[,2], digits = 3)
+  
+  tabledata$Predictor = x_names
+  
+  rownames(tabledata) = NULL
+
+  names(tabledata) = c('*b*', '*SE*', '*t*', '*p*', '95% CI', 'Predictor')
+  
+  if (include_R_notes){
+    notes = paste(notes, 'Model estimated using lm() in R with confidence intervals estimated using confint(), both methods from the native R stats package [@R2021]. Bold parameter estimates indicate significant *p*-values below the alpha threshold of .05.')
+  }
+  
+  TABLE = tabledata %>% 
+    select(Predictor, everything()) %>% 
+    apa_table(digits = 3, format = format, align = 'l', landscape = T,
+              note = notes,
+              caption = caption)
+  
+  return(TABLE)}
