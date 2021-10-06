@@ -60,13 +60,21 @@ syllabics = read_csv('../inputs/taraban/syllabics.csv') %>%
 
 taraban_conditions = read_csv('../inputs/raw/taraban_etal_1987_words.csv') %>% 
   rename(taraban = condition,
-         freq_taraban = frequency) %>% 
-  filter(word %in% syllabics$word)
+         freq_taraban = frequency,
+         taraban_test = test_control) %>% 
+  filter(word %in% syllabics$word) %>% 
+  select(-c(pair_id))
+
+
+taraban_controls = read_csv('../inputs/raw/taraban_etal_1987_missing_controls.csv') %>% 
+  select(word, freq_taraban = frequency, taraban = condition, taraban_test = test_control)
 
 jaredA_conditions = read_csv('../inputs/raw/jared_1997_appendixA.csv') %>% 
   rename(jaredA = condition,
          freq_jaredA = frequency) %>% 
   filter(word %in% syllabics$word)
+
+taraban_means = read_csv('data/taraban_etal_1987_exp1a.csv')
 
 #jaredC_conditions = read_csv('../inputs/raw/jared_1997_appendixC.csv')
 
