@@ -58,16 +58,27 @@ syllabics = read_csv('../inputs/taraban/syllabics.csv') %>%
 
 # experimental words
 
-taraban_conditions = read_csv('../inputs/raw/taraban_etal_1987_words.csv') %>% 
-  rename(taraban = condition,
-         freq_taraban = frequency,
-         taraban_test = test_control) %>% 
+plaut_conditions = read_csv('../inputs/raw/taraban_etal_1987_words.csv') %>% 
+  rename(plaut = condition,
+         freq_plaut = frequency) %>% 
   filter(word %in% syllabics$word) %>% 
-  select(-c(pair_id))
+  select(-c(pair_id, test_control))
 
 
 taraban_controls = read_csv('../inputs/raw/taraban_etal_1987_missing_controls.csv') %>% 
-  select(word, freq_taraban = frequency, taraban = condition, taraban_test = test_control)
+  select(word, freq_taraban = frequency, taraban = condition, taraban_test = test_control, taraban_group = group_id)
+
+taraban_conditions = read_csv('../inputs/raw/taraban_etal_1987_words.csv') %>% 
+  filter(!is.na(group_id)) %>%
+  rename(taraban = condition,
+         freq_taraban = frequency,
+         taraban_test = test_control,
+         taraban_group = group_id) %>% 
+  filter(word %in% syllabics$word) %>% 
+  select(-c(pair_id))
+
+taraban_conditions = taraban_conditions %>% 
+  rbind(taraban_controls)
 
 jaredA_conditions = read_csv('../inputs/raw/jared_1997_appendixA.csv') %>% 
   rename(jaredA = condition,
@@ -104,14 +115,16 @@ taraban = t9 %>%
   full_join(t63) %>% 
   full_join(t72) %>% 
   left_join(syllabics) %>% 
+  left_join(plaut_conditions) %>% 
   left_join(taraban_conditions) %>% 
   left_join(jaredA_conditions) %>% 
   left_join(frequency)  
 
 
-taraban_testmode = read_csv('../outputs/taraban_pilot//taraban-generalization-epoch72.csv') %>% 
+taraban_testmode = read_csv('../outputs/taraban_pilot/taraban-generalization-epoch72.csv') %>% 
   left_join(syllabics) %>% 
   left_join(read_csv('../inputs/taraban/syllabics.csv')) %>% 
+  left_join(plaut_conditions) %>% 
   left_join(taraban_conditions) %>% 
   left_join(jaredA_conditions)
 
@@ -144,6 +157,7 @@ for (dir_ in dirs){
 }
 
 taraban_crossval = taraban_crossval %>% 
+  left_join(plaut_conditions) %>% 
   left_join(taraban_conditions) %>% 
   left_join(jaredA_conditions) %>% 
   mutate(epoch = as.numeric(epoch)) %>% 
@@ -154,4 +168,4 @@ taraban_crossval = taraban_crossval %>%
 
 
 
-rm(t9, t18, t27, t36, t45, t54, t63, t72, frequency, syllabics, taraban_conditions, jaredA_conditions, tmp, dirs, EPOCHS_, path, fname, d1)
+rm(t9, t18, t27, t36, t45, t54, t63, t72, frequency, syllabics, taraban_conditions, plaut_conditions, jaredA_conditions, tmp, dirs, EPOCHS_, path, fname, d1)
