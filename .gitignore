@@ -35,6 +35,7 @@ outputs/mono/lstm/monosyllabic-model-pre
 *.tex
 *.log
 *.h5
+*.Rda
 
 #directories
 logs/

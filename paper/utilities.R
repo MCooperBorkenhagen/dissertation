@@ -141,3 +141,10 @@ model_to_table = function(model, x_names, confints, car_anova, n_sigmas = 3, not
               caption = caption)
   
   return(TABLE)}
+
+
+
+difference = function(x){
+  stopifnot(length(x)==2)
+  return(x[1]-x[2])
+}

@@ -13,12 +13,12 @@ import time
 
 #import time
 
-test = load('data/taraban-pilot-test.traindata')
-train = load('data/taraban-pilot-train.traindata')
+test = load('data/taraban_pilot/taraban-test.traindata')
+train = load('data/taraban_pilot/taraban-train.traindata')
 
 
 # phonreps and orthreps
-phonreps = loadreps('../inputs/taraban-pilot/phonreps-with-terminals.json')
+phonreps = loadreps('../inputs/taraban/phonreps-with-terminals.json')
 orthreps = loadreps('../inputs/raw/orthreps.json')
 
 # get frequencies for all words across train and test:
@@ -36,18 +36,24 @@ phon_features = train[4]['phonSOS'].shape[2]
 probs = [.3, .4, .2, .075, .025]
 assert len(probs) == len(train.keys()), 'Pick probabilities that match the phonological lengths in train.traindata'
 
-K = pd.read_csv('data/taraban-pilot-K.txt', header=None)[0].tolist()[0]
+K = pd.read_csv('data/taraban_pilot/taraban-K.txt', header=None)[0].tolist()[0]
 #%%
 learner = Learner.Learner(orth_features, phon_features, phonreps=phonreps, orthreps=orthreps, traindata=train, testdata=test, loss='binary_crossentropy', modelname='taraban', hidden=400, devices=False)
 # %%
 
 # %%
 gentests = 72
-cycles = 18
-for j in range(1, 5): # stop on the 4th cycle
+cycles = 9
+for j in range(1, 9): # stop on the 4th cycle
     cycle = j*cycles
-    learner.fitcycle(cycles=cycles, epochs=1, probs=probs, K=K, outpath='../outputs/taraban-pilot', evaluate=True, cycle_id=str(cycle))
-    learner.model.save('../outputs/taraban-pilot/taraban-model-epoch{}'.format(cycle))
+    learner.fitcycle(cycles=cycles, epochs=1, probs=probs, K=K, outpath='../outputs/taraban_pilot', evaluate=True, cycle_id=str(cycle))
+    learner.model.save('../outputs/taraban_pilot/taraban-model-epoch{}'.format(cycle))
+    model_json = learner.model.to_json()
+    with open('../outputs/taraban_pilot/model-epoch{}.json'.format(cycle), 'w') as json_f:
+        json_f.write(model_json)
+
+    learner.model.save_weights('../outputs/taraban_pilot/model-epoch{}-weights.h5'.format(cycle))
+    print(cycle, 'done')
     if cycle == gentests:
         # calculate and write item performance data at end of training for the training items
         # should take about 45 minutes per 1000 words
@@ -56,7 +62,7 @@ for j in range(1, 5): # stop on the 4th cycle
         steps = len([word for data in test.values() for word in data['wordlist']]) + len(learner.trainwords)
         step = 1
 
-        with open('../outputs/taraban-pilot/taraban-generalization-epoch{}.csv'.format(cycle), 'w') as gt:
+        with open('../outputs/taraban_pilot/taraban-generalization-epoch{}.csv'.format(cycle), 'w') as gt:
             gt.write(colnames)
 
             for length, data in test.items():
@@ -128,8 +134,8 @@ print('all', row, 'words took', (t2-t1)/60, 'minutes')
 assert l1+l2 == trainwords + testwords == learner.words, 'train and test words do not match the order of words in learner'
 
 #%%
-np.savetxt('../outputs/taraban-pilot/test-outputs.csv', test_outputs)
-np.savetxt('../outputs/taraban-pilot/train-outputs.csv', train_outputs)
+np.savetxt('../outputs/taraban_pilot/test-outputs.csv', test_outputs)
+np.savetxt('../outputs/taraban_pilot/train-outputs.csv', train_outputs)
 
 #%%
 all_outputs = np.concatenate((train_outputs, test_outputs))
@@ -154,7 +160,27 @@ for row in range(d_targets_by_outputs.shape[0]):
     d_targets_by_outputs[row] = d_comp[row][d_hat.shape[0]:d_comp.shape[0]]
     
 #%%
-np.savetxt('../outputs/taraban-pilot/outputs-targets-distance-matrix-epoch{}.csv'.format(cycle), d_targets_by_outputs)
+np.savetxt('../outputs/taraban_pilot/outputs-targets-distance-matrix-epoch{}.csv'.format(cycle), d_targets_by_outputs)
 # %% you can create the same for the less advanced lstm model, go to: mono-lstm-postprocess.py
 
 
+
+#%%
+
+from utilities import load, get
+
+# write train and test words to file for pairing with pairwise distance measures later
+trainwords = [word for traindata in train.values() for word in traindata['wordlist']]
+testwords = [word for testdata in test.values() for word in testdata['wordlist']]
+
+with open('../outputs/taraban_pilot/order.csv', 'w') as f:
+    for i, word in enumerate(trainwords+testwords): # it has to be in this order to match the order of the distance matrices
+        if word in trainwords:
+            condition = 'train'
+        elif word in testwords:
+            condition = 'test'
+        f.write('{},{},{}\n'.format(i, word, condition))
+f.close()
+
+
+# %%

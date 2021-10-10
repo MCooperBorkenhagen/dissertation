@@ -6,3 +6,84 @@ For a word to be correct using a word-wise measure, the produced output needs to
 
 
 One issue about such a comparison (and comparisons of model performance as it relates to processing difficulty in general) has to do with equating measures arising from computational models and those derived from human performance. The LSTM-based system investigated here always has information about a given output segment available for error correction. There is no additional penalty for a word being longer (phonologically) other than the difficulties that arise from co-occurrence statistics across phonological segments (e.g., that certain transitional probabilities at word endings might be less frequent at the ends of words than at beginnings). Furthermore, mean squared error, while it has been a standard of evaluation in other similar computational approaches, may be less precise than other alternatives for time-varying learning systems like the architecture put forward here.
+
+
+
+
+
+
+### tabling a statistical model
+```{r}
+
+require(papaja)
+require(glue)
+
+
+
+descriptives = mono %>% 
+  filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
+  filter(train_test == 'train') %>% 
+  group_by(stage) %>% 
+  summarise(frequency_m = mean(freq_scaled),
+            consistency_m = mean(consistency)) %>% 
+  mutate(stage_f = case_when(stage == 'Middle' ~ -.5,
+                             stage == 'Late' ~ .5))
+
+mono %>% 
+  filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
+  filter(train_test == 'train') %>% 
+  left_join(descriptives) %>% 
+  mutate(frequency_c = freq_scaled-frequency_m,
+         consistency_c = consistency-consistency_m) %>% 
+  stats::lm(accuracy ~ stage_f*consistency_c*frequency_c, data = .) -> model
+
+modelCI = confint(model)
+modeldata = summary(model)
+
+tabledata = data.frame(modeldata$coefficients) %>% 
+  mutate(Estimate = sig_level(Estimate, Pr...t..),
+         Pr...t.. = presentp(Pr...t..))
+
+tabledata$CI = squarebracket(modelCI[,1], modelCI[,2], digits = 3)
+
+tabledata$Predictor = c('Intercept', 'Learning stage', 'Consistency', 'Frequency', 'Learn stg x consist', 'Learn stg x freq', 'Consistency x frequency', 'Learn stg x consist x freq')
+
+rownames(tabledata) = NULL
+
+
+
+HEADER = c('*b*', '*SE*', '*t*', '*p*', '95% CI', 'Predictor')
+names(tabledata) = HEADER
+
+tabledata %>% 
+  select(Predictor, everything()) %>% 
+  apa_table(digits = 3, format = 'pandoc', align = 'l', landscape = T,
+            note = 'Model estimated using lm() in R with confidence intervals estimated using confint(), both methods from the native R stats package [@R2021]. Bold parameter estimates indicate significant *p*-values below the alpha threshold of .05.',
+            caption = 'Regression Model of the Interaction Between Learning Stage, Word (Body-Rime) Consistency, and Word Frequency on Mean Squared Error')
+
+
+```
+
+
+This is the test of conditions in the taraban factors for the model data.
+
+```{r, echo=FALSE}
+
+taraban_crossval %>% 
+  filter(!is.na(taraban_group)) %>% 
+  filter(epoch == 27) %>% 
+  mutate(frequency = case_when(freq_taraban == 'high' ~ .5,
+                               freq_taraban == 'low' ~ -.5),
+         condition = case_when(taraban_group == 1 ~ -.5,
+                               taraban_group == 2 ~ -.5,
+                               taraban_group == 3 ~ .5,
+                               taraban_group == 4 ~ .5),
+         test_control = case_when(taraban_test == 'test' ~ -.5,
+                                  taraban_test == 'control' ~ .5)) %>% 
+  lmer(mse ~ frequency*condition*test_control + (1|run_id) + (1|word), data = .) %>% 
+  summary()
+
+```
+
+
+

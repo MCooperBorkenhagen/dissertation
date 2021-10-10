@@ -19,6 +19,7 @@ Prevailing models of word reading have dealt with temporal aspects of processing
 
 In a separate research tradition, several architectures have been proposed in the engineering literature in order to simulate the relationship between text and speech for technological and commercial ends.
 
+This dissertation introduces novel aspects of a computational architecture that incorporates temporal processing into the reading system, along with associated aspects of the architecture that allow for temporal dynamics not used or investigated in previous computational models of naming English.
 
 
 # Chapter 2: A Brief History of Models of Word Reading
@@ -26,7 +27,7 @@ In a separate research tradition, several architectures have been proposed in th
 ## Representational units
 
 ## Models of multisyllabic word reading
-The CDP++ model from Perry et al. (2010) posits a complex architecture with subcompnents that capture different aspects of the theory from which the computational architecture is based. Said differently, their system lacks architectural homogeneity, a hallmark of connectionist learning systems. Some assumptions of the system violate primitives of learning seen in naturalistic environments. For example, CDP++ requires the prespecification of a graphemic level of representation, based on the assumption that letter sequences map cleanly onto phonemic sequences, and that such representational units contribute to low level operations within the reading system. Graphemes are identified on the input layer based on their frequency,  This violates an important aspect of development of word reading knowledge in that such representations (i.e., the ways that print sequences relate to auditory sequences) are learned and do not preexist in the learner once knowledge about print begins to develop.
+The CDP++ model from Perry et al. (2010) posits a complex architecture with subcomponents that capture different aspects of the theory from which the computational architecture is based. Said differently, their system lacks architectural homogeneity, a hallmark of connectionist learning systems. Some assumptions of the system violate primitives of learning seen in naturalistic environments. For example, CDP++ requires the prespecification of a graphemic level of representation, based on the assumption that letter sequences map cleanly onto phonemic sequences, and that such representational units contribute to low level operations within the reading system. Graphemes are identified on the input layer based on their frequency,  This violates an important aspect of development of word reading knowledge in that such representations (i.e., the ways that print sequences relate to auditory sequences) are learned and do not preexist in the learner once knowledge about print begins to develop.
 
 In a connectionist architecture something like a grapheme may well exist, but it is an emergent aspect of the knowledge of the system that develops as the result of the exposure of the learning architecture to the environment.
 
