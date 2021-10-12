@@ -61,7 +61,7 @@ In order to link model behavior to that of humans, a standard approach was taken
 A base model was developed in order to determine whether or not, like human readers, the model was able to produce well-formed phonological output from orthography after learning the mappings between the two for a large set of monosyllabic words. The model for monosyllabic words was trained to a high level of performance on all the training items and tested on a range of words to inspect the production of the model for trained and untrained words. 7% of words were held out for the purposes of generalization testing at the end of training. 
 
 ## Frequency
-More experience with a word leads to more robust representation of the word, which in turn enhances the ability to act on it in some form. The most common proxy for experience in the reading literature is the frequency of a word's occurrence in a set of texts or other corpus. Connectionist models of reading aloud have established the effect of experience in a number of studies, where experience is implemented by proxy as a frequency-influenced procedure during learning (XX).
+More experience with a word leads to more robust representation of the word, which in turn enhances the ability to act on it in some form. The most common proxy for experience in the reading literature is the frequency of a word's occurrence in a set of texts or other corpus. Words that are more frequently encountered tend to be easier to read, resulting in general in faster reading times and fewer errors [@Balota2004; @Forster1973; @Stanovich1978]. Connectionist models of reading aloud have established the effect of experience in a number of studies, where experience is implemented by proxy as a frequency-influenced procedure during learning (XX).
 
 Word frequencies were used in order to scale gradients during training for the time-varying model reported on here. One issue is whether the LSTM architecture is sensitive to experience given this implementation, and whether or not this sensitivity resembles that of other computational architectures and human behavioral data. In other work this was done through constructing and comparing a model "latency" of some kind to latency data in humans or other models. For example, in @Sibley2010 "latency" was defined using an accuracy metric, and in @Seidenberg1989 this was the sum of squared errors. Rather than assuming the link between latency and accuracy here, I will call examine performance in these analyses by referencing accuracy directly. Of course, the assumption is that higher accuracy (lower error) is associated with faster responses in naming and other tasks, thoough this assumption doesn't play out directly in the analyses reported here, in part because the concept of "latency" in long short term memory units isn't well established but is likely to be an area of future research, especially related to models of human cognition and performance.
 
@@ -578,7 +578,7 @@ All of the mistakes can be tied to the neighborhood characteristics of the words
 Nonetheless, and consistent with the discussion in @Plaut1997, both humans and computational models produce "incorrect" phonological codes from orthography - though the notion of "correct" pronunciation for novel strings is not straightforward. Behavioral data have shown that reader's responses to nonwords often deviate from the expected production, notwithstanding questions about the proper production for a nonword is. For example, @Glushko1979 found that nonwords with inconsistent neighborhood structure often resulted in pronunciations that were different than the expected pronunciation based on grapheme-phoneme rules while being consistent with the pronunciation for that orthographic body in some other word (see @Plaut1996 for discussion). The issue of nonword naming will be returned to later in the discussion of a model that learns multisyllabic words.
 
 # Glushko1979 nonwords
-As an additional comparison the nonwords from @Glushko1979 were submitted for testing after training. That study was important in the advancement of our knowledge about reading by showing that words that appear to be pronouncable "by rule" (i.e, they are regular) that nonetheless have few if any neighbors, behave like other words that have sparse neighborhood structure, even when the word is a nonword. This was early evidence that a theory of reading that depends on rules of "phonological assembly" [@Rastle2010] and storage of exceptions isn't feasible given that nonwords can't be "retrieved" via a lexical storage procedure. Nonwords that appear to be regular (regardless of neighborhood structure) should behave similarly to other regular words based on the rule-based ("assembly") account, but they do not. They behave in a way that conforms to their neighborhood structure.
+As an additional comparison the nonwords from @Glushko1979 were submitted for testing after training. That study was important for showing that words that appear to be pronouncable "by rule" (i.e, they are regular) that nonetheless have few if any neighbors, behave like other words that have sparse neighborhood structure, even when the word is a nonword. This was early evidence that a theory of reading that depends on rules of "phonological assembly" [@Rastle2010] and storage of exceptions isn't feasible given that nonwords can't be "retrieved" via a lexical storage procedure. Nonwords that appear to be regular (regardless of neighborhood structure) should behave similar to other regular words based on the rule-based ("assembly") account, but they do not. They behave in a way that is predictable based their neighborhood structure.
 
 In experiments 1 and 2, @Glushko1978 organized the nonwords into two groups, which were labeled "regular" (e.g., `r scaps('bink')` and `r scaps('gobe')`) or "exception" (e.g., `r scaps('pild')` and `r scaps('tost')`).  The second experiment controlled for the possibility that real-word stimuli in the first experiment may have primed participants to read nonwords in a way that inappropriately conformed to the real words in the task, so a second naming experiment was run using exclusively nonwords. For our purposes here, words are collapsed across tasks, with accuracies reported for all nonwords across the study.
 
@@ -690,8 +690,6 @@ summary(m_jared2)
 
 
 
-
-
 ## Variable effects
 It should be noted that these effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at several different training stages: 9, 18, 27, 36, 45, and 54, 63, and 72 epochs. The interaction looks stable across training for the most part (and is on average when collapsing across epochs), but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
 
@@ -795,6 +793,104 @@ taraban_crossval %>%
 
 
 # Multisyllabic words
+The process through which the model was trained on multisyllabic words did not differ from the one used with monosyllabic words, and the architecture is the same for both processes. All that differs is the training corpus. For this purpose, a corpus of `r nrow(multi_testmode)` words was assembled for training and testing. It is important to note that even though this model processes multisyllabic words, syllables are not explicitly marked as segments during processing. Stress is marked on vowels, and there are no perceptual markings in the representations (inputs or outputs) that divide any two syllables. Therefore the model, like humans, is required to learn about prosodic structure over sequences of sounds without feedback about what constitutes a syllable. In addition to the words already described for the multisyllabic corpus, words from @Chateau2003 were included in order to investigate experimental effects of frequency and consistency in multisyllabic words. The model was trained to 100 epochs with training and test data written out across the training process.
+
+In general, the learning process mirrors that of monosyllabic words, with error decreasing across training, eventually setting into a stable state.
+
+```{r, multiErrorAcrossTraining, echo=FALSE, fig.cap='Cumulative error (as MSE) across training for train and test set of multisyllabic words. Bars (barely visible) are calculated as the standard error of the mean.'}
+N = length(unique(multi$word))
+
+COLORS_tt = c('Train' = 'darkorchid', 'Test' = 'orangered3')
+
+multi %>% 
+  group_by(epoch, train_test) %>% 
+  summarise(M = mean(mse),
+            SD = sd(mse),
+            SEM = SD/sqrt(N)) %>% 
+  mutate(train_test = case_when(train_test == 'train' ~ 'Train',
+                                train_test == 'test' ~ 'Test')) %>% 
+  ggplot(aes(epoch, M, group = train_test, color = train_test)) +
+  geom_line() +
+  geom_errorbar(aes(ymin=M-SEM, ymax=M+SEM), width=.1) +
+  scale_color_manual(values = COLORS_tt) +
+  labs(x = 'Epoch', y = 'Mean squared error', color = 'Train / Test') +
+  theme_apa() +
+  theme(legend.background = element_rect(color = 'black'))
+
+
+```
+
+Words with more syllables are associated with greater errors at the end of training, both using training mode (with phonological inputs provided during the calculation of loss) and in test mode, where only the start of word representation is provided to initiate an output.
+
+```{r, trainmodeErrorsBySyllable, echo=FALSE}
+
+multi %>% 
+  filter(epoch == 99) %>% 
+  group_by(nsyll) %>% 
+  summarise(M = mean(mse),
+            SD = sd(mse)) %>% 
+  rename(Syllables = nsyll) %>% 
+  apa_table()
+
+  
+```
+
+The same trend comes out when looking at phonemewise errors across the word broken out by the number of syllables in each word. This measure provides a different and less graded measure of error, but useful still. Here, if the pattern that the network produces is closer to the correct phoneme than any other, it is considered correct. Once this prediction is made for the entire word, phoneme by phoneme, the calculation is made as the number of phonemes correct divided by the total phonemes in the word. Table XX shows the accuracy associated with syllable count across all words in the training corpus.
+
+```{r, testmodeErrorsBySyllable, echo=FALSE}
+
+
+multi_mistakes = multi_testmode %>% 
+  filter(phonemes_proportion < 1) %>%
+  select(word, phon_read, nsyll)
+
+multi_nsylls = multi_testmode %>% 
+  group_by(nsyll) %>% 
+  summarise(N = n())
+
+
+multi_mistakes_by_syllable = multi_mistakes %>% 
+  group_by(nsyll) %>% 
+  summarise(n = n()) %>% 
+  left_join(multi_nsylls) %>% 
+  mutate(Proportion = n/N) %>% 
+  select(Syllables = nsyll, `Mistakes` = n, Proportion)
+
+
+multi_testmode %>% 
+  group_by(nsyll) %>% 
+  summarise(M = mean(phonemes_proportion),
+            SD = sd(phonemes_proportion)) %>% 
+  rename(Syllables = nsyll) %>% 
+  left_join(multi_mistakes_by_syllable) %>% 
+  apa_table(caption = 'Descriptive Statistics of Errors for Number of Syllables in Each Word in Corpus', note = '"Mistakes" corresponds to the total number of mistakes made for words with that number of syllables, and "Proportion" expresses that number as a proportion of all words with that number of syllables. ')
+
+```
+
+The types of mistakes made by the model vary, with `r nrow(multi_mistakes)` words out of `r nrow(multi_testmode)` (or `r nrow(multi_mistakes)/nrow(multi_testmode)`% of all words) pronounced incorrectly. Table XX shows a sample of the mistakes made for words of different lengths.
+
+
+```{r, sampleMultiMistakes, echo=FALSE}
+mistakes_to_spotlight = c()
+
+
+mistakes_with_uncertain_phone = multi_testmode %>% 
+  filter(str_detect(phon_read, 'XX')) %>% nrow()
+
+
+
+mistakes_with_null_phone = multi_testmode %>% 
+  filter(str_detect(phon_read, '_')) %>% nrow()
+
+```
+
+
+
+Some words are shortened using syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('S-N-AA1-R-AH0-L-D')`, but which produced the single syllable alternative `r scaps('S-N-AA1-R-L-D')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps(F-L-AE1-T-B-EH0-D)`), which doesn't differ from the target in principle and out of context of reading connected text ^[Note that the stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress should be thought of as "unstressed", and whether or not an unstressed syllable/ vowel is distinct from a syllable/ vowel with secondary stress is not a clear distinction in this case.]. Therefore the pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('EH0)` include `r scaps('T-R-AW1-W-EH0-L')` and `r scaps('P-R-IH1-N-S-EH0-S')` can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('EH0)`), but the extent to which the vowel is distinct from `r scaps('EH2')` (the version displaying secondary stress) is subtle, if not negligible.
+
+A number of mistakes arise from the model either being uncertain about a phoneme (resulting in a tie among phonemes produced; `r mistakes_with_uncertain_phon` total mistakes, or `r mistakes_with_uncertain_phone/nrow(multi_mistakes)`% of mistakes) or producing a null phoneme (i.e., a segment whose nearest phoneme is the null `_` segment, consisting of all units set to zero), which was `r mistakes_with_null_phone`, or `r mistakes_with_null_phone/nrow(multi_mistakes)` of all mistakes. While a full accounting of this type of error is outside the scope of what will be described here, the error data can be found in this repository (XX). The conditions under which mistakes of this type could be avoided is a matter of future research, but it likely could be avoided through some combination of an expanded training corpus and enhanced training for complex words. Remember that training can proceed with a batch size equal to one, which likely would ameliorate such errors.
+
+
 In order to validate the model using words with more than one syllable, two analyses are presented. First, a set of relevant predictors that mirror those examined in @Yap2009 are examined (those that are relevant to an orthography-to-phonology network). Then, experiments from @Chateau2003 are reported using stimuli from that study.
 
 
@@ -803,10 +899,6 @@ In order to validate the model using words with more than one syllable, two anal
 
 
 
-
-
-## Common words are easier to read, and more accurate
-Words that are more frequently encountered tend to be easier to read, resulting in general in faster reading times and fewer errors [@Balota2004; @Forster1973; @Stanovich1978]. The first analysis reported here concerns this effect. For this analysis a training process was completed where the frequency with which words were included in training was proportional to their text frequency. In order to determine how often a word should be selected for training, the following method was used. *DESCRIBE FREQUENCY CONDITIONED TRAINING PROCESS HERE*.
 
 
 ## Tradeoff between frequency and consistency
