@@ -4,8 +4,8 @@ import time
 import random
 import tensorflow as tf
 from tensorflow.keras.utils import plot_model as plot
-from keras.models import Model
-from keras.layers import Input, LSTM, Dense, Masking, TimeDistributed
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, LSTM, Dense, Masking
 from utilities import printspace, reshape, L2, choose, scale, key, mean, get_vowels
 import os
 

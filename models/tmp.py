@@ -1,11 +1,18 @@
 #%%
-from utilities import load, get, loadreps
-# %%
-train = load('data/taraban_pilot//taraban-train.traindata')
-test = load('data/taraban_pilot//taraban-test.traindata')
+from utilities import load, get_words, scale
+import numpy as np
+train = load('data/chateau/train.traindata')
 
-i = 10
-xo = get(train, 'them', data='orth')
-xp = get(train, 'them', data='phonSOS')
+trainfreqs = {word: freq for k, v in train.items() for word, freq in zip(v['wordlist'], v['frequency'])}
 
-# %%
+p = .93
+maxf = max(trainfreqs.values())
+K = p/np.log(maxf)
+#%%
+with open('data/chateau/train.csv', 'w') as f:
+    f.write('word,freq,freq_scaled\n')
+    for word in get_words(train, verbose=False):
+        freq = trainfreqs[word]
+        freq_scaled = scale(freq, K)
+        f.write('{},{},{}\n'.format(word, freq, freq_scaled))
+f.close()

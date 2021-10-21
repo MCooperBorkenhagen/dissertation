@@ -26,8 +26,8 @@ output_weights = read_weights(PATH, run_id, epochs, 'output')
 reader = R.Reader(orth_weights, phon_weights, output_weights, orthreps=orthreps, phonreps=phonreps, devices=False)
 
 
-word = 'mune'
-cmu = ["M", "UW1", "N"] 
+word = 'seize'
+cmu = ["S", "IY1", "Z"] 
  
 
 reader.read(word, cmu, ties='sample')

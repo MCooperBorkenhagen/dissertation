@@ -8,7 +8,7 @@ tk = load('../inputs/taraban/taraban.traindata')
 #%%
 
 # phonreps and orthreps
-phonreps = loadreps('../inputs/taraban/phonreps-with-terminals.json')
+phonreps = loadreps('../inputs/chateau/phonreps-with-terminals.json')
 orthreps = loadreps('../inputs/raw/orthreps.json')
 words = pd.read_csv('../inputs/taraban/words.csv', header=None)[0].tolist()
 
