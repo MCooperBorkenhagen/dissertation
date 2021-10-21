@@ -1,0 +1,9 @@
+original,syllable,condition,group_id,rt,errors
+Reg-Inc-First,first,reg_inconsistent,1,595,3.4
+Reg-Inc-Last,last,reg_inconsistent,2,619,8.6
+Exc-First,first,exception,3,617,11.4
+Exc-Last,last,exception,4,638,5.8
+Reg(RI-F match),first,regular,1,581,0.6
+Reg(RI-L match),last,regular,2,585,0.8
+Reg(Exc-F match),first,regular,3,589,0.6
+Reg(Exc-L match),last,regular,4,606,3.4

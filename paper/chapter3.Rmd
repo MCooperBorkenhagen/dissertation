@@ -6,6 +6,7 @@ output: html_document
 ```{r ch3_src, include=FALSE}
 source('chapter3_data.R')
 source('chapter3_taraban_data.R')
+source('chapter3_multisyllabic_data.R')
 source('plot-specs.R')
 ```
 
@@ -178,11 +179,11 @@ Another important aspect of learning to read and reading behavior concerns how s
 
 Parallel distributed processing theories of reading and lexical processing, like the model reported in @Seidenberg1989 and extended in @Plaut1996, hold that complexity leads to more burdensome processing (i.e., longer naming latencies), which can be overcome with experience. Networks that implement the theory encode information about the mappings between perceptual modalities in neuron-like processing units, with a single architecturally homogenous process accounting for words learned and read. In a model that learns to map print to speech over the course of experience (perception, action) these units (weights) encode the relationships between printed and spoken words with increasing robustness. This robustness is affected by the amount of experience the reader (or computational model) has in learning the words during training and the reliability with which the mappings across modalities occur across those words.
 
-In connectionist models of reading, the complexity of the mappings between print and speech is described in terms of _consistency_: the extent to which the pronunciation of a word is similar other similarly spelled words. Defining consistency in a measurable way is important for understanding the behavior of the network. The approach here is similar to @Plaut1996, where the consistency of a word is defined by the orthographic body with respect to the phonological rime. Here _body_ refers to the portion of the word consisting of the first orthographic vowel and the orthographic structure that follows it (e.g., the _umbling_ in _fumbling_), and rime refers to the first vowel phoneme and everything that follows it (i.e, `AH1 - M - B - L - IH0 - NG` portion of the spoken form). A highly consistent word is one where words with this same body also have a similar pronunciation for this portion of the syllabic structure. We use a proportion for our purposes here, using the total number of words with a given body as the denominator, with the numerator as the number of words that share the rime present in that word. The result is that highly consistent words have values that tend towards one (i.e., all words with a given body share the rime) and inconsistent words have a value that tend towards zero.
+In connectionist models of reading, the complexity of the mappings between print and speech is described in terms of _consistency_: the extent to which the pronunciation of a word is similar other similarly spelled words. Defining consistency in a measurable way is important for understanding the behavior of the network. The approach here is similar to @Plaut1996, where the consistency of a word is defined by the orthographic body with respect to the phonological rime. Here _body_ refers to the portion of the word consisting of the first orthographic vowel and the orthographic structure that follows it (e.g., the _umbling_ in _fumbling_), and rime refers to the first vowel phoneme and everything that follows it (i.e, `r scaps('AH1-M-B-L-IH0-NG')` portion of the spoken form). A highly consistent word is one where words with this same body also have a similar pronunciation for this portion of the syllabic structure. We use a proportion for our purposes here, using the total number of words with a given body as the denominator, with the numerator as the number of words that share the rime present in that word. The result is that highly consistent words have values that tend towards one (i.e., all words with a given body share the rime) and inconsistent words have a value that tend towards zero.
 
 The time-varying network shows a similar effect of consistency on accuracy as both the traditional feedforward networks of word reading as well as human naming data. As consistency increases, we see lower error scores. Consistent words are, in general, easier to read than less consistent words, and this effect is present across both human (left pane) and model data (middle and right panes).
 
-```{r, consistencyHumanComp, echo=FALSE, fig.cap='The relationship between monosyllabic word consistency and error is shown for computational models (feedforward and time-varying) and human naming tasks. In all three there is a relationship between consistency and error such that increases in consistency (across words) are associated with lower error on average. Here errors for human and model data are processed as previously described, standardizing so that data can share the same y-axis.'}
+```{r, consistencyHumanComp, echo=FALSE, fig.cap="The relationship between monosyllabic word consistency and error is shown for computational models (feedforward and time-varying) and human naming tasks. In all three there is a relationship between consistency and error such that increases in consistency (across words) are associated with lower error on average. Here errors for human and model data are processed as previously described, standardizing so that data can share the same y-axis."}
 
 COLORS = c('(C) Time-varying' = 'firebrick', '(B) Feedforward' = 'goldenrod', '(A) Human - Naming Accuracy' = 'Black')
 
@@ -377,6 +378,10 @@ For comparison, the means from the original study are shown in Figure XX. This p
 taraban_means %>% 
   group_by(condition, frequency) %>% 
   summarise(accuracy = -difference(accuracy)) %>% 
+  mutate(condition = case_when(condition == 'exception' ~ 'Exception',
+                               condition == 'regular_inconsistent' ~ 'Regular inconsistent'),
+         frequency = case_when(frequency == 'high' ~ 'High',
+                              frequency == 'low' ~ 'Low')) %>% 
   ggplot(aes(frequency, accuracy, fill = condition)) +
   geom_bar(stat = 'identity', position = position_dodge(), color = 'black') +
   scale_fill_manual(values = COLORS_taraban) +
@@ -886,22 +891,64 @@ mistakes_with_null_phone = multi_testmode %>%
 
 
 
-Some words are shortened using syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('S-N-AA1-R-AH0-L-D')`, but which produced the single syllable alternative `r scaps('S-N-AA1-R-L-D')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps(F-L-AE1-T-B-EH0-D)`), which doesn't differ from the target in principle and out of context of reading connected text ^[Note that the stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress should be thought of as "unstressed", and whether or not an unstressed syllable/ vowel is distinct from a syllable/ vowel with secondary stress is not a clear distinction in this case.]. Therefore the pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('EH0)` include `r scaps('T-R-AW1-W-EH0-L')` and `r scaps('P-R-IH1-N-S-EH0-S')` can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('EH0)`), but the extent to which the vowel is distinct from `r scaps('EH2')` (the version displaying secondary stress) is subtle, if not negligible.
+Some words are shortened with syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('S-N-AA1-R-AH0-L-D')`, but which produced the single syllable alternative `r scaps('S-N-AA1-R-L-D')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps('F-L-AE1-T-B-EH0-D')`), which doesn't differ from the target in principle and out of context of reading connected text ^[Note that the stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress should be thought of as "unstressed", and whether or not an unstressed syllable/ vowel is distinct from a syllable/ vowel with secondary stress is not a clear distinction in this case.]. Therefore the pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('EH0')` include `r scaps('T-R-AW1-W-EH0-L')` and `r scaps('P-R-IH1-N-S-EH0-S')` can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('EH0)`), but the extent to which the vowel is distinct from `r scaps('EH2')` (the version displaying secondary stress) is subtle, if not negligible.
 
 A number of mistakes arise from the model either being uncertain about a phoneme (resulting in a tie among phonemes produced; `r mistakes_with_uncertain_phon` total mistakes, or `r mistakes_with_uncertain_phone/nrow(multi_mistakes)`% of mistakes) or producing a null phoneme (i.e., a segment whose nearest phoneme is the null `_` segment, consisting of all units set to zero), which was `r mistakes_with_null_phone`, or `r mistakes_with_null_phone/nrow(multi_mistakes)` of all mistakes. While a full accounting of this type of error is outside the scope of what will be described here, the error data can be found in this repository (XX). The conditions under which mistakes of this type could be avoided is a matter of future research, but it likely could be avoided through some combination of an expanded training corpus and enhanced training for complex words. Remember that training can proceed with a batch size equal to one, which likely would ameliorate such errors.
 
 
-In order to validate the model using words with more than one syllable, two analyses are presented. First, a set of relevant predictors that mirror those examined in @Yap2009 are examined (those that are relevant to an orthography-to-phonology network). Then, experiments from @Chateau2003 are reported using stimuli from that study.
+In order to validate the model using words with more than one syllable, two analyses are presented. First, a set of relevant predictors taken from @Yap2009 are examined. Then, experiments that examine the effects of consistency in multisyllabic words are reported, namely those from @Chateau2003.
 
 
-## Number of syllables
+## Item level predictors from the ELP [@Balota2007; @Yap2009]
+Data from the English Lexicon Project were taken and merged with the items from the data from the simulations involving multisyllabic words. A set of standard variables were identified for their applicability to examining the effects of orthography-to-phonology structure on naming: word frequency, orthographic length (number of letters), phonological length (number of phonemes), number of syllables, orthographic neighborhood size, and phonological neighborhood size. The set of words common to both the ELP naming data and the data from the multisyllabic simulations conducted here were subset for the purposes of examining these word-level variables. The descriptive characteristics of the predictors are shown in Table XX.
+
+```{r, multiWordPredictorsDescriptives, echo=False}
 
 
+tmp = multi %>% 
+  filter(epoch == 99)
+
+predictors =  c('Frequency', 'N syllables', 'Phon length', 'Orth length', 'Orth N', 'Phon N')
+
+summarows(tmp, c('freq', 'nsyll',  'phonlen', 'orthlen', 'orth_lev', 'phon_lev'), newnames = predictors, na.rm = T, manuscript = F, notes = 'Frequency values provided from HAL, which is one of the frequency sources native to the ELP data, thus permitting easy direct comparisons with the model implementation here. Phonological length was calculated directly from the phoneme transcriptions used in the model (from the Natural Language Toolkit implementation of CMU dictionary.)')
 
 
+elp_model_words = multi %>% 
+  filter(epoch == 99) %>% 
+  filter(!is.na(elp_rt)) %>% 
+  pull(word)
+
+```
+
+In order to obtain an estimate of the relationship between word variables and a relevant performance measure for behavior (from ELP) and the computational model the data were subset to include all words present in both the model corpus and the data from the ELP. This yielded data for `r length(elp_model_words)` words in the model corpus (or `r length(elp_model_words)/length(unique(multi$word))`% of words included in the training pool). The data for these items were submitted to multiple regression model in R using the same libraries and methods as those previously used for multiple regression here. For the model data the mean squared error was used, and for the ELP, the item-level RTs were used as dependent variables.
+
+```{r, corsMultiELP, echo=FALSE}
+
+EPOCH = 45
+
+multi %>% 
+  filter(!is.na(elp_rt)) %>% 
+  filter(epoch == EPOCH) -> tmp
 
 
-## Tradeoff between frequency and consistency
+header = c('Predictor', '*r* (Mod)', '*r* (ELP)')
+tabledata = data.frame(matrix(nrow = length(predictors), ncol = length(header)))
+names(tabledata) = header
+tabledata$Predictor = predictors
+
+corvars = c('freq', 'nsyll', 'phonlen', 'orthlen', 'orth_lev', 'phon_lev')
+tabledata$`*r* (Mod)` = sig_level(cortests(tmp, 'mse', corvars, 'estimate'), cortests(tmp, 'mse', corvars, 'p.value'))
+tabledata$`*r* (ELP)` = sig_level(cortests(tmp, 'elp_rt', corvars, 'estimate'), cortests(tmp, 'elp_rt', corvars, 'p.value'))
+
+
+apa_table(tabledata, caption = 'Correlations between Word Variables and Processing Difficulty (MSE for Model and RT for Behavioral Data)', note = "Correlations provided as Pearson's *r*. Bolded coefficients are significant at *p* < .001.")
+
+```
+
+
+## Jared & Seidenberg (1990)
+@Jared1990 sought to extend the findings of @Glushko1979 to multisyllabic words. Their first experiment examined the effect of consistency on naming using a very similar paradigm to @Glushko1979 (and @Taraban1987) with stimuli where the consistency varied systematically across syllables (specifically either the first syllable or last syllable of a set of multisyllabic words). Because previous implementations 
+
 
 
 
@@ -910,7 +957,7 @@ In order to validate the model using words with more than one syllable, two anal
 ## Dispersion
 Sequential approaches to orthography-to-phonology conversion solve this problem by processing discrete speech segments from discrete print segments in a left-to-right, segment-by-segment manner. These solutions always involve some form of justification (sometimes called "alignment" in the literature), though the alignment procedure differs across sequential implementations. For example, @Sejnowski1987 provided orthographic input strings as sequences of letters and mapped them to equal-length sequences of phonemes. This allowed their network to implement a kind of temporal processing over visual and its corresponding spoken pattern, but required architectural specifications that deviate from assumptions about processing in other connectionist networks. Their procedure required inserting null elements in slots where a phoneme wasn't present for the corresponding input letter (or grapheme) given that the input and output sequences were always equal length. So, for the input pattern `r scaps('late')` the corresponding output would be `L - EY - T - __`, with the final phoneme segment `__` being the null one given the word-final silent `r scaps('a')` in `r scaps('late')`. This avoids the type of dispersion found in feedforward networks, where knowledge about letters and their corresponding sounds is localized to weighted connections associated with specific slots given the way that input and output patterns are specified during learning, but introduces a different type of knowledge localization that is undesirable: that letters on the input layer become associated too narrowly with phonemic segments on the output given the segment-by-segment processing mechanism (i.e., they lose the context sensitive nature of processing due to the segment-by-segment way that print and speech are associated in the network).
 
-Dual-route models use an assembly method, where a letter or letter segment (e.g., grapheme) is associated with a phonemic segment by assembly rule, where "assembly" in this literature refers to the association of phonological segments to its corresponding orthographic segment. Processing speech from print involves assembling the phonology from the pre-specified letter-sound rules, which are derived via an analytic technique that resides outside the scope of the computational architecture itself (i.e, specified by the experimenter). The assembly process happens alongside a lexical lookup procedure, which has its own separate timecourse. The relative timecourse of these processes determine whether a word is produced via assembly rules or as a structured lexical object. This is the extreme end of the spectrum of methods that result in knowledge dispersion. Here knowledge about the relationship between visual and spoken elements is dispersed across the symbolic rules that operate over the crossmodal assembly that takes place during learning and performance. This form of knowldge dispersion is different implementationally but related conceptually in that what is known about similar elements in the domain becomes dissociated based on the structure of the architecture, which of course has implications on the learning that takes place given that architecture.
+Dual-route models use an assembly method, where a letter or letter segment (e.g., grapheme) is associated with a phonemic segment by assembly rule, where "assembly" in this literature refers to the association of phonological segments to its corresponding orthographic segment. Processing speech from print involves assembling the phonology from the pre-specified letter-sound rules, which are derived via an analytic technique that resides outside the scope of the computational architecture itself (i.e, specified by the experimenter). The assembly process happens alongside a lexical lookup procedure, which has its own separate timecourse. The relative timecourse of these processes determine whether a word is produced via assembly rules or as a structured lexical object. This is the extreme end of the spectrum of methods that result in knowledge dispersion. Here knowledge about the relationship between visual and spoken elements is dispersed across the symbolic rules that operate over the crossmodal assembly that takes place during learning and performance. This form of knowledge dispersion is different implementationally but related conceptually in that what is known about similar elements in the domain becomes dissociated based on the structure of the architecture, which of course has implications on the learning that takes place given that architecture.
 
 Other approaches handle input strings with the use of slots, but in a different way than in @Sejnowski1987. Commonly in connectionist feedforward implementations input patterns are justified in a vowel-centered way (see @Plaut1996 for a discussion). A similar solution exists in hybrid connectionist/ dual route architectures like @Perry2010. Here the input patterns are fit into a template defined by structure in terms of orthography across syllables, which is specified by the limits of the structure of the training set. So, for example the template used for the two syllable template in @Perry2010 involves fitting orthographic inputs into a `CCCVCCCC` pattern on each of the two (possible) syllables via a "graphemic buffer". This is the mechanism that defines the "slots" on the visual input to which any given input pattern are aligned to the available phonemes.
 

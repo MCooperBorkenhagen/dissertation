@@ -13,3 +13,6 @@ papaja
 glue
 tidyverse
 car
+scapr
+heplots
+

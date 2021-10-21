@@ -1,0 +1,9 @@
+latency,accuracy,frequency,condition,test_control
+573,94.1,high,exception,test
+623,91.2,low,exception,test
+583,98.7,high,regular_inconsistent,test
+579,98.7,low,regular_inconsistent,test
+560,99.6,high,exception,control
+591,99.6,low,exception,control
+576,99.1,high,regular_inconsistent,control
+569,98.3,low,regular_inconsistent,control

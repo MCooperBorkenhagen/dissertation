@@ -148,3 +148,111 @@ difference = function(x){
   stopifnot(length(x)==2)
   return(x[1]-x[2])
 }
+
+
+
+summarow = function(df, name, na.rm = T){
+  
+  desc = df %>% 
+    summarise(M = mean(!!as.name(name), na.rm = na.rm),
+              SD = sd(!!as.name(name), na.rm = na.rm),
+              MIN = min(!!as.name(name), na.rm = na.rm),
+              MAX = max(!!as.name(name), na.rm = na.rm)) %>% 
+    mutate(var = name) %>% 
+    select(var, everything())
+  
+  return(desc)}
+
+
+summarows = function(df, names, newnames = c(), na.rm = T, digits = 2, manuscript = T, notes = '', caption = '', format = 'pandoc'){
+  
+  desc = data.frame(matrix(nrow = 0, ncol = 5))
+  
+  
+  for (name in names){
+    
+    desc = rbind(desc, summarow(df, name, na.rm = na.rm))
+    
+  }
+  
+  names(desc) = c('Predictor', '*M*', '*SD*', 'min', 'max')
+  
+  if (length(newnames) > 0){
+    stopifnot(length(names) == length(newnames))
+    
+    for (i in seq_len(length(newnames))){
+      desc$Predictor[i] = newnames[i]}}
+  
+  
+  if (manuscript){
+  TABLE = desc %>% 
+    apa_table(digits = digits, format = format, align = 'l', landscape = T,
+              note = notes,
+              caption = caption)
+  
+  return(TABLE)}
+  
+  else {return(desc)}
+  
+}
+
+
+
+get_petasq = function(model, residuals = F){
+  
+  pes = etasq(model)$`Partial eta^2`
+  
+  if (!residuals){
+    return(pes[1:length(pes)-1])
+  }
+  else {return(pes)}
+  
+}
+
+get_ps = function(model, intercept=F){
+  
+  s = summary(model)
+  if (intercept){
+    return(s$coefficients[,4])}
+  else {
+    return(s$coefficients[,4][2:nrow(s$coefficients)])
+  }
+  
+}
+
+
+
+
+get_bs = function(model, intercept=F){
+  s = summary(model)
+  if (intercept){
+    return(as.numeric(s$coefficients[,1]))}
+  else {
+    return(as.numeric(s$coefficients[,1][2:nrow(s$coefficients)]))
+  }
+  
+}
+
+
+
+cortests = function(df, dv, vars, value, digits=2){
+  
+  #' @param df Data containing dv and vars for application of cor.test
+  #' @param dv Dependent measure for comparison across all vars supplied
+  #' @param vars Variables for the correlations (with dv)
+  #' @param value Possible values to return with cor.test: "statistic", "parameter", "p.value", "estimate", "conf.int"
+  #' @param digits For rounding if value is supplied with conf.int
+  
+  out = c()
+  for (var in vars){
+    
+    cr = cor.test(df[[dv]], df[[var]])[[value]]
+    if (value == 'conf.int'){
+      cr = paste('[', paste(round(cr, digits=digits), collapse = ', '), ']', sep = '')
+      
+    }
+    out = c(out, cr[[1]])
+    
+  }
+  return(out)
+}

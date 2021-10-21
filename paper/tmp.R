@@ -1,21 +1,19 @@
-taraban_testmode %>% 
-  filter(taraban == 'nonword') %>% nrow()
-  filter(phonemes_proportion < 1) %>% 
-  select(word, phon_read)  %>% 
-  pull(word) -> pronounced_wrong
 
 
-taraban_crossval %>% 
-  filter(epoch == 27 & run_id ==1) %>% 
-  filter(freq_plaut == 'low' & plaut == 'reg_consistent') %>% 
-  filter(mse > .02) %>% 
-  pull(word)
-  #ggplot(aes(mse)) +
-  #geom_histogram()
+multi %>% 
+  group_by(epoch, train_test) %>% 
+  summarise(mse = mean(binary_acc)) %>% 
+  ggplot(aes(factor(epoch), mse, color = train_test, group = train_test)) +
+  geom_point() +
+  geom_line()
+
+
+
+multi %>% 
+  #filter(epoch == EPOCH) %>% 
+  filter(!is.na(elp_rt)) %>% 
+  ggplot(aes(phonlen, mse)) +
+  geom_bar(stat='summary') + 
+  facet_grid(~epoch)
   
-  
-  
-
-
-
 
