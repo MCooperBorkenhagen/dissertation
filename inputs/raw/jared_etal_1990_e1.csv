@@ -1,0 +1,161 @@
+word,original,syllable,condition,group_id,rt,#err/25
+skeptical,Reg-Inc-First,first,reg_inconsistent,1,725,3
+passive,Reg-Inc-First,first,reg_inconsistent,1,538,0
+costume,Reg-Inc-First,first,reg_inconsistent,1,562,0
+monster,Reg-Inc-First,first,reg_inconsistent,1,535,0
+chosen,Reg-Inc-First,first,reg_inconsistent,1,581,0
+flowing,Reg-Inc-First,first,reg_inconsistent,1,624,2
+precinct,Reg-Inc-First,first,reg_inconsistent,1,800,7
+mangle,Reg-Inc-First,first,reg_inconsistent,1,639,1
+earring,Reg-Inc-First,first,reg_inconsistent,1,568,0
+pastor,Reg-Inc-First,first,reg_inconsistent,1,571,0
+jungle,Reg-Inc-First,first,reg_inconsistent,1,570,0
+cellar,Reg-Inc-First,first,reg_inconsistent,1,616,0
+model,Reg-Inc-First,first,reg_inconsistent,1,508,1
+decorate,Reg-Inc-First,first,reg_inconsistent,1,603,0
+hermit,Reg-Inc-First,first,reg_inconsistent,1,548,0
+sewing,Reg-Inc-First,first,reg_inconsistent,1,635,1
+anger,Reg-Inc-First,first,reg_inconsistent,1,552,0
+legacy,Reg-Inc-First,first,reg_inconsistent,1,591,1
+rigor,Reg-Inc-First,first,reg_inconsistent,1,583,1
+coupon,Reg-Inc-First,first,reg_inconsistent,1,636,0
+divine,Reg-Inc-Last,last,reg_inconsistent,2,579,0
+arcade,Reg-Inc-Last,last,reg_inconsistent,2,588,0
+dedicate,Reg-Inc-Last,last,reg_inconsistent,2,706,2
+primate,Reg-Inc-Last,last,reg_inconsistent,2,593,1
+spinach,Reg-Inc-Last,last,reg_inconsistent,2,678,1
+tirade,Reg-Inc-Last,last,reg_inconsistent,2,737,3
+mantle,Reg-Inc-Last,last,reg_inconsistent,2,572,0
+celestial,Reg-Inc-Last,last,reg_inconsistent,2,705,0
+conduit,Reg-Inc-Last,last,reg_inconsistent,2,779,17
+finger,Reg-Inc-Last,last,reg_inconsistent,2,566,0
+fatten,Reg-Inc-Last,last,reg_inconsistent,2,601,0
+refugee,Reg-Inc-Last,last,reg_inconsistent,2,583,1
+forget,Reg-Inc-Last,last,reg_inconsistent,2,591,0
+circle,Reg-Inc-Last,last,reg_inconsistent,2,583,0
+enrage,Reg-Inc-Last,last,reg_inconsistent,2,680,2
+pilot,Reg-Inc-Last,last,reg_inconsistent,2,619,0
+rebut,Reg-Inc-Last,last,reg_inconsistent,2,672,14
+lullaby,Reg-Inc-Last,last,reg_inconsistent,2,585,2
+import,Reg-Inc-Last,last,reg_inconsistent,2,539,0
+define,Reg-Inc-Last,last,reg_inconsistent,2,586,0
+scenery,Exc-First,first,exception,3,727,0
+passion,Exc-First,first,exception,3,518,0
+cosmic,Exc-First,first,exception,3,615,0
+monkey,Exc-First,first,exception,3,559,0
+chorus,Exc-First,first,exception,3,586,0
+flower,Exc-First,first,exception,3,576,0
+precious,Exc-First,first,exception,3,616,0
+manger,Exc-First,first,exception,3,681,15
+earnest,Exc-First,first,exception,3,598,0
+pastry,Exc-First,first,exception,3,601,0
+junior,Exc-First,first,exception,3,629,3
+cellist,Exc-First,first,exception,3,919,19
+modal,Exc-First,first,exception,3,755,11
+decibel,Exc-First,first,exception,3,640,0
+herald,Exc-First,first,exception,3,588,0
+sewage,Exc-First,first,exception,3,670,1
+angel,Exc-First,first,exception,3,561,0
+legible,Exc-First,first,exception,3,682,1
+rigid,Exc-First,first,exception,3,502,0
+couplet,Exc-First,first,exception,3,695,7
+ravine,Exc-Last,last,exception,4,611,5
+facade,Exc-Last,last,exception,4,691,3
+delicate,Exc-Last,last,exception,4,600,0
+climate,Exc-Last,last,exception,4,656,2
+stomach,Exc-Last,last,exception,4,593,0
+comrade,Exc-Last,last,exception,4,637,0
+castle,Exc-Last,last,exception,4,579,0
+sequential,Exc-Last,last,exception,4,785,0
+circuit,Exc-Last,last,exception,4,620,0
+ginger,Exc-Last,last,exception,4,699,1
+fasten,Exc-Last,last,exception,4,624,0
+negligee,Exc-Last,last,exception,4,809,4
+ballet,Exc-Last,last,exception,4,552,1
+muscle,Exc-Last,last,exception,4,534,0
+garage,Exc-Last,last,exception,4,593,0
+depot,Exc-Last,last,exception,4,747,6
+debut,Exc-Last,last,exception,4,639,3
+wallaby,Exc-Last,last,exception,4,656,1
+rapport,Exc-Last,last,exception,4,650,3
+routine,Exc-Last,last,exception,4,529,0
+subsidize,Reg(RI-F match),first,regular,1,635,1
+pennant,Reg(RI-F match),first,regular,1,625,1
+concord,Reg(RI-F match),first,regular,1,606,0
+marker,Reg(RI-F match),first,regular,1,539,0
+chapter,Reg(RI-F match),first,regular,1,592,0
+failing,Reg(RI-F match),first,regular,1,605,0
+pigment,Reg(RI-F match),first,regular,1,551,0
+mumble,Reg(RI-F match),first,regular,1,614,0
+eyeball,Reg(RI-F match),first,regular,1,566,0
+porter,Reg(RI-F match),first,regular,1,564,0
+joining,Reg(RI-F match),first,regular,1,580,0
+cancer,Reg(RI-F match),first,regular,1,540,0
+master,Reg(RI-F match),first,regular,1,508,0
+diplomat,Reg(RI-F match),first,regular,1,574,0
+helmet,Reg(RI-F match),first,regular,1,581,0
+summit,Reg(RI-F match),first,regular,1,648,1
+artist,Reg(RI-F match),first,regular,1,557,0
+latitude,Reg(RI-F match),first,regular,1,618,0
+robber,Reg(RI-F match),first,regular,1,514,0
+convex,Reg(RI-F match),first,regular,1,605,0
+dispute,Reg(RI-L match),last,regular,2,636,0
+addict,Reg(RI-L match),last,regular,2,602,1
+destiny,Reg(RI-L match),last,regular,2,527,1
+padlock,Reg(RI-L match),last,regular,2,549,0
+scatter,Reg(RI-L match),last,regular,2,683,0
+tutors,Reg(RI-L match),last,regular,2,586,0
+motor,Reg(RI-L match),last,regular,2,598,1
+collector,Reg(RI-L match),last,regular,2,590,0
+currant,Reg(RI-L match),last,regular,2,576,0
+finish,Reg(RI-L match),last,regular,2,599,0
+fireman,Reg(RI-L match),last,regular,2,573,0
+referee,Reg(RI-L match),last,regular,2,598,1
+finance,Reg(RI-L match),last,regular,2,593,0
+culture,Reg(RI-L match),last,regular,2,589,0
+enlist,Reg(RI-L match),last,regular,2,574,0
+panels,Reg(RI-L match),last,regular,2,529,0
+renew,Reg(RI-L match),last,regular,2,576,0
+lecturer,Reg(RI-L match),last,regular,2,584,0
+implies,Reg(RI-L match),last,regular,2,557,0
+discuss,Reg(RI-L match),last,regular,2,582,0
+seventy,Reg(Exc-F match),first,regular,3,638,0
+pistol,Reg(Exc-F match),first,regular,3,600,0
+candle,Reg(Exc-F match),first,regular,3,561,0
+mortal,Reg(Exc-F match),first,regular,3,580,0
+channel,Reg(Exc-F match),first,regular,3,645,1
+farmer,Reg(Exc-F match),first,regular,3,580,0
+partner,Reg(Exc-F match),first,regular,3,556,0
+mentor,Reg(Exc-F match),first,regular,3,579,0
+ethics,Reg(Exc-F match),first,regular,3,555,1
+pillar,Reg(Exc-F match),first,regular,3,517,0
+jewish,Reg(Exc-F match),first,regular,3,602,0
+culprit,Reg(Exc-F match),first,regular,3,593,0
+metro,Reg(Exc-F match),first,regular,3,550,0
+diligent,Reg(Exc-F match),first,regular,3,626,0
+hammer,Reg(Exc-F match),first,regular,3,596,0
+silver,Reg(Exc-F match),first,regular,3,576,0
+attic,Reg(Exc-F match),first,regular,3,684,1
+limerick,Reg(Exc-F match),first,regular,3,578,0
+radar,Reg(Exc-F match),first,regular,3,565,0
+canter,Reg(Exc-F match),first,regular,4,641,0
+recite,Reg(Exc-L match),last,regular,4,588,2
+fulfill,Reg(Exc-L match),last,regular,4,698,3
+density,Reg(Exc-L match),last,regular,4,653,5
+contest,Reg(Exc-L match),last,regular,4,602,0
+supper,Reg(Exc-L match),last,regular,4,609,0
+convent,Reg(Exc-L match),last,regular,4,656,0
+cannon,Reg(Exc-L match),last,regular,4,536,0
+semantics,Reg(Exc-L match),last,regular,4,681,0
+cocktail,Reg(Exc-L match),last,regular,4,569,0
+gutter,Reg(Exc-L match),last,regular,4,592,0
+fiddle,Reg(Exc-L match),last,regular,4,596,0
+novelette,Reg(Exc-L match),last,regular,4,740,2
+belong,Reg(Exc-L match),last,regular,4,533,0
+mental,Reg(Exc-L match),last,regular,4,546,1
+grenade,Reg(Exc-L match),last,regular,4,633,3
+demon,Reg(Exc-L match),last,regular,4,602,1
+decay,Reg(Exc-L match),last,regular,4,578,0
+willfully,Reg(Exc-L match),last,regular,4,613,0
+repent,Reg(Exc-L match),last,regular,4,585,0
+remark,Reg(Exc-L match),last,regular,4,562,0

@@ -1,16 +1,8 @@
 #%%
-
-from utilities import load
-
-d = load('left.traindata')
-
-# %%
-words = [word for v in d.values() for word in v['wordlist']]
-# %%
-
-# %%
+import nltk
 import pandas as pd
+d = nltk.corpus.cmudict.dict()
+# %%
 
-syllabics = pd.read_csv('syllabics.csv')
-
+js1990 = pd.read_csv('raw/jared_etal_1990_e1.csv').word.tolist()
 # %%
