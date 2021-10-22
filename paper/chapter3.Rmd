@@ -891,9 +891,9 @@ mistakes_with_null_phone = multi_testmode %>%
 
 
 
-Some words are shortened with syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('S-N-AA1-R-AH0-L-D')`, but which produced the single syllable alternative `r scaps('S-N-AA1-R-L-D')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps('F-L-AE1-T-B-EH0-D')`), which doesn't differ from the target in principle and out of context of reading connected text ^[Note that the stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress should be thought of as "unstressed", and whether or not an unstressed syllable/ vowel is distinct from a syllable/ vowel with secondary stress is not a clear distinction in this case.]. Therefore the pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('EH0')` include `r scaps('T-R-AW1-W-EH0-L')` and `r scaps('P-R-IH1-N-S-EH0-S')` can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('EH0)`), but the extent to which the vowel is distinct from `r scaps('EH2')` (the version displaying secondary stress) is subtle, if not negligible.
+Some words are shortened with syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('S-N-AA1-R-AH0-L-D')`, but which produced the single syllable alternative `r scaps('S-N-AA1-R-L-D')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps('F-L-AE1-T-B-EH0-D')`), which doesn't differ from the target in principle and out of context of reading connected text ^[Note that the stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress should be thought of as "unstressed", and whether or not an unstressed syllable/ vowel is distinct from a syllable/ vowel with secondary stress is not a clear distinction in this case.]. Therefore the pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('EH0')` include `r scaps('T-R-AW1-W-EH0-L')` and `r scaps('P-R-IH1-N-S-EH0-S')` can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('EH0')`), but the extent to which the vowel is distinct from `r scaps('EH2')` (the version displaying secondary stress) is subtle, if not negligible.
 
-A number of mistakes arise from the model either being uncertain about a phoneme (resulting in a tie among phonemes produced; `r mistakes_with_uncertain_phon` total mistakes, or `r mistakes_with_uncertain_phone/nrow(multi_mistakes)`% of mistakes) or producing a null phoneme (i.e., a segment whose nearest phoneme is the null `_` segment, consisting of all units set to zero), which was `r mistakes_with_null_phone`, or `r mistakes_with_null_phone/nrow(multi_mistakes)` of all mistakes. While a full accounting of this type of error is outside the scope of what will be described here, the error data can be found in this repository (XX). The conditions under which mistakes of this type could be avoided is a matter of future research, but it likely could be avoided through some combination of an expanded training corpus and enhanced training for complex words. Remember that training can proceed with a batch size equal to one, which likely would ameliorate such errors.
+A number of mistakes arise from the model either being uncertain about a phoneme (resulting in a tie among phonemes produced; `r mistakes_with_uncertain_phone` total mistakes, or `r mistakes_with_uncertain_phone/nrow(multi_mistakes)`% of mistakes) or producing a null phoneme (i.e., a segment whose nearest phoneme is the null `_` segment, consisting of all units set to zero), which was `r mistakes_with_null_phone`, or `r mistakes_with_null_phone/nrow(multi_mistakes)` of all mistakes. While a full accounting of this type of error is outside the scope of what will be described here, the error data can be found in this repository (XX). The conditions under which mistakes of this type could be avoided is a matter of future research, but it likely could be avoided through some combination of an expanded training corpus and enhanced training for complex words. Remember that training can proceed with a batch size equal to one, which likely would ameliorate such errors.
 
 
 In order to validate the model using words with more than one syllable, two analyses are presented. First, a set of relevant predictors taken from @Yap2009 are examined. Then, experiments that examine the effects of consistency in multisyllabic words are reported, namely those from @Chateau2003.
@@ -902,7 +902,7 @@ In order to validate the model using words with more than one syllable, two anal
 ## Item level predictors from the ELP [@Balota2007; @Yap2009]
 Data from the English Lexicon Project were taken and merged with the items from the data from the simulations involving multisyllabic words. A set of standard variables were identified for their applicability to examining the effects of orthography-to-phonology structure on naming: word frequency, orthographic length (number of letters), phonological length (number of phonemes), number of syllables, orthographic neighborhood size, and phonological neighborhood size. The set of words common to both the ELP naming data and the data from the multisyllabic simulations conducted here were subset for the purposes of examining these word-level variables. The descriptive characteristics of the predictors are shown in Table XX.
 
-```{r, multiWordPredictorsDescriptives, echo=False}
+```{r, multiWordPredictorsDescriptives, echo=FALSE}
 
 
 tmp = multi %>% 
@@ -910,7 +910,7 @@ tmp = multi %>%
 
 predictors =  c('Frequency', 'N syllables', 'Phon length', 'Orth length', 'Orth N', 'Phon N')
 
-summarows(tmp, c('freq', 'nsyll',  'phonlen', 'orthlen', 'orth_lev', 'phon_lev'), newnames = predictors, na.rm = T, manuscript = F, notes = 'Frequency values provided from HAL, which is one of the frequency sources native to the ELP data, thus permitting easy direct comparisons with the model implementation here. Phonological length was calculated directly from the phoneme transcriptions used in the model (from the Natural Language Toolkit implementation of CMU dictionary.)')
+tabledata = summarows(tmp, c('freq', 'nsyll',  'phonlen', 'orthlen', 'orth_lev', 'phon_lev'), newnames = predictors, na.rm = T, manuscript = T, notes = 'Frequency values provided from HAL, which is one of the frequency sources native to the ELP data, thus permitting easy direct comparisons with the model implementation here. Phonological length was calculated directly from the phoneme transcriptions used in the model (from the Natural Language Toolkit implementation of CMU dictionary.)')
 
 
 elp_model_words = multi %>% 
@@ -918,6 +918,8 @@ elp_model_words = multi %>%
   filter(!is.na(elp_rt)) %>% 
   pull(word)
 
+
+tabledata
 ```
 
 In order to obtain an estimate of the relationship between word variables and a relevant performance measure for behavior (from ELP) and the computational model the data were subset to include all words present in both the model corpus and the data from the ELP. This yielded data for `r length(elp_model_words)` words in the model corpus (or `r length(elp_model_words)/length(unique(multi$word))`% of words included in the training pool). The data for these items were submitted to multiple regression model in R using the same libraries and methods as those previously used for multiple regression here. For the model data the mean squared error was used, and for the ELP, the item-level RTs were used as dependent variables.
@@ -930,27 +932,35 @@ multi %>%
   filter(!is.na(elp_rt)) %>% 
   filter(epoch == EPOCH) -> tmp
 
-
-header = c('Predictor', '*r* (Mod)', '*r* (ELP)')
+corvars = c('freq', 'nsyll', 'phonlen', 'orthlen', 'orth_lev', 'phon_lev')
+header = c('Predictor', '*r* (Model)', '*r* (ELP)')
 tabledata = data.frame(matrix(nrow = length(predictors), ncol = length(header)))
 names(tabledata) = header
 tabledata$Predictor = predictors
 
-corvars = c('freq', 'nsyll', 'phonlen', 'orthlen', 'orth_lev', 'phon_lev')
-tabledata$`*r* (Mod)` = sig_level(cortests(tmp, 'mse', corvars, 'estimate'), cortests(tmp, 'mse', corvars, 'p.value'))
+tabledata$`*r* (Model)` = sig_level(cortests(tmp, 'mse', corvars, 'estimate'), cortests(tmp, 'mse', corvars, 'p.value'))
 tabledata$`*r* (ELP)` = sig_level(cortests(tmp, 'elp_rt', corvars, 'estimate'), cortests(tmp, 'elp_rt', corvars, 'p.value'))
 
 
-apa_table(tabledata, caption = 'Correlations between Word Variables and Processing Difficulty (MSE for Model and RT for Behavioral Data)', note = "Correlations provided as Pearson's *r*. Bolded coefficients are significant at *p* < .001.")
+apa_table(tabledata, caption = 'Correlations between Word Variables and Processing Difficulty (MSE for Model and RT for Behavioral Data)', note = "Correlations provided as Pearson's *r*. Bolded coefficients are significant at *p* < .001.", digits = 3, format = 'pandoc', align = 'l', landscape = T)
 
 ```
 
+While the correlations among word variables and processing difficulty among the model and ELP datasets are comparable, let's look more closely at two of the variables: number of syllables and phonological length. These two word characteristics are of particular interest in the computational model for different reasons. First, considering the number of syllables. In the model proposed, syllables aren't explicitly represented in the model architecture or input representations. There is a debate in the word recognition literature about whether something like _syllabic processing_ is a necessary component of word recognition with, of course, particular attention paid to longer (multisyllabic) words in determining this level of representation in the reading system. @Jared1990 posited that the processing of multisyllabic words can't be reduced to a syllable-by-syllable process. Their data from Experiment 4 show that when words are delivered one syllable at a time, the magnitude of the effect of inconsistency on naming increases, demonstrating that the context facilitates their processing. This is expected in a theory where the processing of syllables is simply part of a broader processing system that associates speech from print by exploiting the statistical (contextual) dependencies in orthography (i.e., a connectionist theory). If syllables were "assembled", you would expect to see left-to-right syllabic processing without regard to the (orthographic context of) the subsequent syllable in experimentation.
+
+
+The phonological length of a word is a potentially important characteristic because of the nature of the architecture. Given that the way this model is configured it relies heavily on the phonological processing of words throughout the learning process, it is worthwhile to consider the possibility that the architecure overrepresents phonology during processing; phonology might play too strong a role in the architecture relative to human performance.
+
+
+```{r, echo=FALSE}
+
+```
 
 ## Jared & Seidenberg (1990)
 @Jared1990 sought to extend the findings of @Glushko1979 to multisyllabic words. Their first experiment examined the effect of consistency on naming using a very similar paradigm to @Glushko1979 (and @Taraban1987) with stimuli where the consistency varied systematically across syllables (specifically either the first syllable or last syllable of a set of multisyllabic words). Because previous implementations 
 
 
-
+## Chateau & Jared (2003)
 
 
 
