@@ -981,8 +981,123 @@ Similar to the results of the model of monosyllabic words, the more important te
 
 There is a debate in the word recognition literature about whether something like _syllabic processing_ is a necessary component of word recognition with, of course, particular attention paid to longer (multisyllabic) words in determining this level of representation in the reading system. @Jared1990 posited that the processing of multisyllabic words can't be reduced to a syllable-by-syllable process. Their data from Experiment 4 show that when words are delivered one syllable at a time, the magnitude of the effect of inconsistency on naming increases, demonstrating that the context (across syllable boundaries) facilitates their processing. This is expected in a theory where the processing of syllables is simply part of a broader system that associates speech from print by exploiting the statistical (contextual) dependencies in orthography (i.e., a connectionist theory). If syllables were "assembled", you would expect to see left-to-right syllabic processing without regard to the (orthographic context of) the subsequent syllable in experimentation. @Chateau2003 extended the work in @Jared1990 with experimental results that showed that orthographic segments that extended across traditionally understood orthographic "syllable boundaries"` (i.e., intervocalic prosodic contours characterized by a dramatic reduction and shift in amplitude).
 
+Taking error data from the end of training (using testmode data) we see a similar pattern of means, shown in Figure XX.
+
+```{r}
+
+multi_testmode %>%
+  filter(!is.na(js1990_rt)) %>%
+  mutate(condition = case_when(js1990_condition == 'reg_inconsistent' ~ 'Inconsistent',
+                               js1990_condition == 'exception' ~ 'Inconsistent',
+                               js1990_condition == 'regular' ~ 'Consistent'),
+         syllable = case_when(js1990_syll == 'first' ~ 'First',
+                              js1990_syll == 'last' ~ 'Last')) %>% 
+  group_by(condition, syllable) %>%
+  summarise(M = mean(phonemes_sum),
+            SD = sd(phonemes_sum),
+            SEM = SD/sqrt(N),
+            condition = first(condition), 
+            syllable = first(syllable)) %>% 
+  ggplot(aes(syllable, M, fill = condition)) +
+  geom_bar(stat = 'summary', position = position_dodge(), color = 'black') +
+  geom_errorbar(width = .2, color = 'grey25', aes(ymin = M-SEM, ymax = M+SEM), position = position_dodge(.9)) +
+  scale_fill_manual(values = COLORS_jared) +
+  labs(x = 'Syllabic position', y = 'Phonemewise distance (avg)') +
+  theme_apa() +
+  theme(legend.title = element_blank())
+
+```
+
+
+## Chateau & Jared (2003)
+The experiments in @Chateau2003 sought to investigate consistency and frequency effects in naming tasks with word-level manipulations. Extending the consistency constructs used in @Jared1990 and @Taft1992. The idea of consistency articulated in this work concerns a portion of the printed word that the authors call the "basic orthographic syllabic structure" (or "BOSS" for short). The idea behind this unit of representation is that it is the portion of the printed form that includes the first orthographic vowel plus all the orthographic consonants that lead up to the second orthographic vowel of the word, provided those orthographic consonants occur in word-ending positions in other (monosyllabic) words in English^[This terminology is based in the description of the "basis orthographic syllabic structure" in @Taft1992. It should be noted that the concepts "orthographic vowel" and "orthographic consonant" are problematic in that it assumes some fundamental homology between sounds and letters that runs against the ideas behind the connectionist theory of learning presented here. These terms are used for convenience.]. The orthographic "body" they define is the sequence of letters that span from the first orthographic vowel to last orthographic consonant defined in this way. Take the word `r scaps('blemish')`. Using this heuristic, the basic orthographic syllabic structure would be defined as `r scaps('blem')`, and its body would be `r scaps('em')`. Note that, importantly, this definition avoids the issue of where the "syllable boundary" is with respect to the orthography of the word and thus allows for a calculation of the neighborhood statistic (consistency) over such a unit with respect to the phonemes associated with the orthographic form because we can assume that such an orthographic sequence would be pronounced `r scaps('B-L-EH-M')``, despite it not being a word one would regularly encounter.
+
+It should be noted that there is a theoretical assumption that underlies this orthographic segment as described in @Taft1992 that runs contrary to ideas about learning espoused in this dissertation. @Taft1992 articulates ideas about syllabic structure in orthography, which doesn't square with the theoretical assumption that orthographic units aren't processed in syllabic segments. It also assumes that orthography contains homologous structure to that of spoken language syllabic structure. The computational model developed here and the theory of cross-modal perceptual processing conveys a different assumption: that printed words are processed in a continuous fashion (over some grain size) and not syllable by syllable, just like spoken language. The ideas about the syllabic structure of orthography in @Taft1992 are indeed contested [@Chateau1990; @Jared1990], and the empirical findings about the nature of the basic orthographic syllabic structure have been challenged experimentally [@Seidenberg1997]. More generally, the extent to which syllables (like other subcomponents of words) function independently in as perceptual subcomponents has been debated as well [@Seidenberg1987].
+
+Nonetheless, the experiments in @Chateau2003 are useful because their stimuli account for the fact that orthographic segments can be associated with spoken language segments at grain sizes larger than what traditionally might be considered a syllable boundary in orthography and that quasi-regularity [@Plaut1996] can be conceptualized at a level of grain that can in words longer than one syllable. The findings here 
+
+The patterns of means in all experiments in @Chateau2003 are seen in the model data here. Figure XX shows the data from the three experiments on top (acquired via personal communication with Debra Jared) and the corresponding data from the computational model on bottom using error data during training as the outcome variable.
+
+```{r, cj2003expsCombined, echo=FALSE}
+
+```
+
+
+## Variable effects over time
+It should be noted again that effects of expected word-level characteristics on error shift over time in the computational model's performance. This variability isn't typically reported in analogous computation work related to reading development, but it bears a bit of observation and discussion here. Here are the patterns of means for the interaction between consistency and frequency across training using the @Chateau2003 data (Experiment 3).
+
+```{r, cj2003AcrossTraining, echo=FALSE}
+
+multi %>% 
+  left_join(tmp) %>% 
+  filter(!is.na(chateauB_consistency)) %>% 
+  filter(epoch %in% c(45, 54, 63, 72, 81, 90, 99)) %>% 
+  mutate(consistency = case_when(chateauB_consistency == 'high' ~ 'High',
+                                 chateauB_consistency == 'low' ~ 'Low'),
+         frequency = case_when(chateauB_frequency == 'high' ~ 'High',
+                               chateauB_frequency == 'low' ~ 'Low')) %>% 
+  ggplot(aes(frequency, mse, fill = consistency)) +
+  geom_bar(stat = 'summary', position = position_dodge()) +
+  facet_grid(~epoch) +
+  scale_fill_manual(values = COLORS) +
+  labs(x = 'Frequency', y = 'Mean squared error', fill = 'Consistency') +
+  theme_apa()
+
+```
+
+However, if we standardize for our outcome variable (mean squared error here) within each training cycle, and average across them you see the expected pattern emerge (Figure XX).
+
+```{r}
+N = multi %>% filter(epoch == 45) %>% filter(!is.na(chateauB_consistency)) %>% nrow()
+
+
+tmp = multi %>% 
+  filter(!is.na(chateauB_consistency)) %>% 
+  mutate(consistency = case_when(chateauB_consistency == 'low' ~ -.5,
+                                 chateauB_consistency == 'high' ~ .5),
+         frequency = case_when(chateauB_frequency == 'low' ~ -.5,
+                               chateauB_frequency == 'high' ~ .5)) %>% 
+  group_by(epoch) %>% 
+  summarise(SD = sd(mse),
+            M = mean(mse))
+
+
+  
+
+
+multi %>% 
+  left_join(tmp) %>% 
+  filter(!is.na(chateauB_consistency)) %>% 
+  mutate(consistency = case_when(chateauB_consistency == 'low' ~ 'Low',
+                                 chateauB_consistency == 'high' ~ 'High'),
+         frequency = case_when(chateauB_frequency == 'low' ~ 'Low',
+                               chateauB_frequency == 'high' ~ 'High')) %>% 
+  filter(epoch %in% c(45, 54, 63, 72, 81, 90, 99)) %>% 
+  group_by(epoch, word) %>% 
+  summarise(Z = (mse-M)/SD,
+            consistency = first(consistency),
+            frequency = first(frequency)) %>%
+  ungroup() %>% 
+  group_by(frequency, consistency) %>% 
+  summarise(Z = mean(Z),
+            frequency = first(frequency), 
+            consistency = first(consistency)) %>% 
+  ggplot(aes(factor(frequency), Z, color = factor(consistency), group = consistency)) +
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = COLORS) +
+  labs(x = 'Frequency', y = 'Mean squared error (standardized)', color = 'Consistency') +
+  theme_apa()
+
+```
+
+
+This
+
 ## Jared & Seidenberg (1990)
-@Jared1990 sought to extend the findings of @Glushko1979 to multisyllabic words. Their first experiment examined the effect of consistency on naming using a very similar paradigm to @Glushko1979 (and @Taraban1987). Prior to their study, the concept of "consistency" hadn't been applied to words greater than one syllable. They operationalized it as variability in the pronunciation of an orthographically identical syllable, with the syllable identified in the American Heritage Dictionary of the English Language. The minimal pairs provided in their description of the stimuli are `r scaps('rigor')` versus `r scaps('rigid')` (with the first syllable in each being consistent) and `r scaps('divine')` versus `r scaps('ravine')` (with the second syllable in each being inconsistent). The pairs were eligible for inclusion if they contained the same stress pattern. They varied the consistency of stimuli either in the first or the last syllable of the word. The target pattern from their study pertaining to the manipulation of consistency across first and last syllable identified words is in Figure XX.
+It should be noted that the consistency effects from @Jared1990 weren't successfully replicated by the model.
+
+@Jared1990 sought to extend the findings of @Glushko1979 to multisyllabic words, and their study predated @Chateau2003 using consistency categories over multisyllabic words which were more preliminary than those used in @Chateau2003 given that it was the first study of its kind for multisyllabic words. Their first experiment examined the effect of consistency on naming using a very similar paradigm to @Glushko1979 (and @Taraban1987). Prior to their study, the concept of "consistency" hadn't been applied to words greater than one syllable. They operationalized it as variability in the pronunciation of an orthographically identical syllable, with the syllable identified in the American Heritage Dictionary of the English Language. The minimal pairs provided in their description of the stimuli are `r scaps('rigor')` versus `r scaps('rigid')` (with the first syllable in each being consistent) and `r scaps('divine')` versus `r scaps('ravine')` (with the second syllable in each being inconsistent). The pairs were eligible for inclusion if they contained the same stress pattern. They varied the consistency of stimuli either in the first or the last syllable of the word. The target pattern from their study pertaining to the manipulation of consistency across first and last syllable identified words is in Figure XX.
 
 
 ```{r, js1990ModelData, echo=FALSE, fig.align='center', fig.height=3, fig.width=5}
@@ -1018,36 +1133,6 @@ multi_testmode %>%
 
 
 ```
-
-Taking error data from the end of training (using testmode data) we see a similar pattern of means, shown in Figure XX.
-
-```{r}
-
-multi_testmode %>%
-  filter(!is.na(js1990_rt)) %>%
-  mutate(condition = case_when(js1990_condition == 'reg_inconsistent' ~ 'Inconsistent',
-                               js1990_condition == 'exception' ~ 'Inconsistent',
-                               js1990_condition == 'regular' ~ 'Consistent'),
-         syllable = case_when(js1990_syll == 'first' ~ 'First',
-                              js1990_syll == 'last' ~ 'Last')) %>% 
-  group_by(condition, syllable) %>%
-  summarise(M = mean(phonemes_sum),
-            SD = sd(phonemes_sum),
-            SEM = SD/sqrt(N),
-            condition = first(condition), 
-            syllable = first(syllable)) %>% 
-  ggplot(aes(syllable, M, fill = condition)) +
-  geom_bar(stat = 'summary', position = position_dodge(), color = 'black') +
-  geom_errorbar(width = .2, color = 'grey25', aes(ymin = M-SEM, ymax = M+SEM), position = position_dodge(.9)) +
-  scale_fill_manual(values = COLORS_jared) +
-  labs(x = 'Syllabic position', y = 'Phonemewise distance (avg)') +
-  theme_apa() +
-  theme(legend.title = element_blank())
-
-```
-
-
-## Chateau & Jared (2003)
 
 
 
