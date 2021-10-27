@@ -29,6 +29,10 @@ syllabics = read_csv('../inputs/js1990/syllabics.csv') %>%
   mutate(phonlen = phonlen(phon),
          orthlen = str_length(word))
 
+# Jared et al. (1990)
+js1990 = read_csv('../inputs/raw/jared_etal_1990_e1.csv') %>% 
+  select(word, js1990_coding = original, js1990_syll = syllable, js1990_condition = condition, js1990_rt = rt, js1990_group = group_id)
+
 # reconcile with chateau experiments
 ca = read_csv('../inputs/raw/chateau_etal_2003_a.csv') %>% 
   rename(chateauA = condition,
@@ -56,6 +60,7 @@ multi_testmode = read_csv('../outputs/js1990/generalization-epoch99.csv') %>%
   select(-c(train_test, freq)) %>% 
   mutate(epoch = as.factor(epoch)) %>% 
   left_join(syllabics) %>% 
+  left_join(js1990) %>% 
   left_join(frequency) %>% 
   left_join(elp) %>% 
   left_join(ca) %>% 
@@ -67,6 +72,7 @@ multi = trd %>%
   select(-c(cycle, phonlength)) %>% 
   mutate(epoch = as.factor(epoch)) %>% 
   left_join(syllabics) %>% 
+  left_join(js1990) %>% 
   left_join(frequency) %>% 
   left_join(elp) %>% 
   left_join(ca) %>% 
@@ -75,6 +81,14 @@ multi = trd %>%
 
 
 js1990_means = read_csv('data/jared_etal_1990_e1_means.csv')
+
+cj2003_means = read_csv('data/chateau_etal_2003_means.csv') %>% 
+  rename(word = Word, rt = Latency, errors_tot = `# errors`, errors_perc = `% error`) %>% 
+  left_join(ca) %>% 
+  left_join(cb) %>% 
+  left_join(cc)
+  
+
 
 rm(syllabics, ca, cb, cc, PATH, FNAME, trd, tmp, cols_, trainwords, testwords, frequency)
 
