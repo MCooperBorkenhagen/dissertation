@@ -814,6 +814,7 @@ multi %>%
             SEM = SD/sqrt(N)) %>% 
   mutate(train_test = case_when(train_test == 'train' ~ 'Train',
                                 train_test == 'test' ~ 'Test')) %>% 
+  filter(epoch %in% c(9, 18, 27, 36, 45, 54, 63, 72, 81, 90)) %>% 
   ggplot(aes(epoch, M, group = train_test, color = train_test)) +
   geom_line() +
   geom_errorbar(aes(ymin=M-SEM, ymax=M+SEM), width=.1) +
@@ -825,7 +826,7 @@ multi %>%
 
 ```
 
-Words with more syllables are associated with greater errors at the end of training, both using training mode (with phonological inputs provided during the calculation of loss) and in test mode, where only the start of word representation is provided to initiate an output.
+Words with more syllables are associated with greater errors at the end of training, both using training mode (with phonological inputs provided during the calculation of loss) and in test mode.
 
 ```{r, trainmodeErrorsBySyllable, echo=FALSE}
 
@@ -834,7 +835,11 @@ multi %>%
   group_by(nsyll) %>% 
   summarise(M = mean(mse),
             SD = sd(mse)) %>% 
-  rename(Syllables = nsyll) %>% 
+  round(digits = 6) %>% 
+  mutate(Syllables = as.character(nsyll),
+         M = as.character(M),
+         SD = as.character(SD)) %>% 
+  select(Syllables, M, SD) %>% 
   apa_table()
 
   
@@ -983,7 +988,7 @@ There is a debate in the word recognition literature about whether something lik
 
 Taking error data from the end of training (using testmode data) we see a similar pattern of means, shown in Figure XX.
 
-```{r}
+```{r, jared1990a, echo=FALSE}
 
 multi_testmode %>%
   filter(!is.na(js1990_rt)) %>%
@@ -1024,30 +1029,9 @@ The patterns of means in all experiments in @Chateau2003 are seen in the model d
 
 
 ## Variable effects over time
-It should be noted again that effects of expected word-level characteristics on error shift over time in the computational model's performance. This variability isn't typically reported in analogous computation work related to reading development, but it bears a bit of observation and discussion here. Here are the patterns of means for the interaction between consistency and frequency across training using the @Chateau2003 data (Experiment 3).
+It should be noted again that effects of expected word-level characteristics on error shift over time in the computational model's performance. This variability isn't typically reported in analogous computation work related to reading development, but it bears mention here. Figure XX shows the patterns of means for the interaction between consistency and frequency for a range of timepoints across training using the @Chateau2003 experimental stimuli (their Experiment 3).
 
-```{r, cj2003AcrossTraining, echo=FALSE}
-
-multi %>% 
-  left_join(tmp) %>% 
-  filter(!is.na(chateauB_consistency)) %>% 
-  filter(epoch %in% c(45, 54, 63, 72, 81, 90, 99)) %>% 
-  mutate(consistency = case_when(chateauB_consistency == 'high' ~ 'High',
-                                 chateauB_consistency == 'low' ~ 'Low'),
-         frequency = case_when(chateauB_frequency == 'high' ~ 'High',
-                               chateauB_frequency == 'low' ~ 'Low')) %>% 
-  ggplot(aes(frequency, mse, fill = consistency)) +
-  geom_bar(stat = 'summary', position = position_dodge()) +
-  facet_grid(~epoch) +
-  scale_fill_manual(values = COLORS) +
-  labs(x = 'Frequency', y = 'Mean squared error', fill = 'Consistency') +
-  theme_apa()
-
-```
-
-However, if we standardize for our outcome variable (mean squared error here) within each training cycle, and average across them you see the expected pattern emerge (Figure XX).
-
-```{r}
+```{r, cj2003AcrossTraining, echo=FALSE, fig.cap='The interaction between frequency and consistency for a range of timepoints across training. Mean squared error has been standardized within each epoch in order to put barplots on a common scale (i.e., in terms of standard deviations of MSE).' }
 N = multi %>% filter(epoch == 45) %>% filter(!is.na(chateauB_consistency)) %>% nrow()
 
 
@@ -1062,7 +1046,39 @@ tmp = multi %>%
             M = mean(mse))
 
 
-  
+multi %>% 
+  left_join(tmp) %>% 
+  filter(!is.na(chateauB_consistency)) %>% 
+  filter(epoch %in% c(45, 54, 63, 72, 81, 90, 99)) %>% 
+  mutate(consistency = case_when(chateauB_consistency == 'high' ~ 'High',
+                                 chateauB_consistency == 'low' ~ 'Low'),
+         frequency = case_when(chateauB_frequency == 'high' ~ 'High',
+                               chateauB_frequency == 'low' ~ 'Low')) %>% 
+  group_by(epoch, word) %>% 
+  summarise(Z = (mse-M)/SD,
+            consistency = first(consistency),
+            frequency = first(frequency)) %>%
+  ungroup() %>% 
+  ggplot(aes(frequency, Z, fill = consistency)) +
+  geom_bar(stat = 'summary', position = position_dodge()) +
+  facet_grid(~epoch) +
+  scale_fill_manual(values = COLORS) +
+  labs(x = 'Frequency', y = 'Mean squared error', fill = 'Consistency') +
+  theme_apa()
+
+```
+
+However, using the standardized outcome variable (mean squared error here) within each training cycle and averaging across training epochs you see the expected pattern emerge (Figure XX). This can be thought of as averaging across a (nonindependent) sample of model states to observe the relationship between consistency (defined in a certain way here for multisyllabic words) and frequency on error during training. This is the expected trend, but future work could be done to capture more precise characteristics of these dynamics especially as they relate to the behavior of cognitive computational systems like this one and the analogous behavior in humans.
+
+```{r, cj2003AveragedAcrossTraining, echo=FALSE, fig.cap='The interaction between frequency and consistency', fig.height=3, fig.width=5}
+
+
+tmp = multi %>% 
+  filter(!is.na(chateauB_consistency)) %>%
+  group_by(epoch) %>% 
+  summarise(SD = sd(mse),
+            M = mean(mse))
+
 
 
 multi %>% 
@@ -1072,7 +1088,7 @@ multi %>%
                                  chateauB_consistency == 'high' ~ 'High'),
          frequency = case_when(chateauB_frequency == 'low' ~ 'Low',
                                chateauB_frequency == 'high' ~ 'High')) %>% 
-  filter(epoch %in% c(45, 54, 63, 72, 81, 90, 99)) %>% 
+  filter(epoch %in% c(45, 54, 63, 72, 81, 90)) %>% 
   group_by(epoch, word) %>% 
   summarise(Z = (mse-M)/SD,
             consistency = first(consistency),
@@ -1091,83 +1107,3 @@ multi %>%
 
 ```
 
-
-This
-
-## Jared & Seidenberg (1990)
-It should be noted that the consistency effects from @Jared1990 weren't successfully replicated by the model.
-
-@Jared1990 sought to extend the findings of @Glushko1979 to multisyllabic words, and their study predated @Chateau2003 using consistency categories over multisyllabic words which were more preliminary than those used in @Chateau2003 given that it was the first study of its kind for multisyllabic words. Their first experiment examined the effect of consistency on naming using a very similar paradigm to @Glushko1979 (and @Taraban1987). Prior to their study, the concept of "consistency" hadn't been applied to words greater than one syllable. They operationalized it as variability in the pronunciation of an orthographically identical syllable, with the syllable identified in the American Heritage Dictionary of the English Language. The minimal pairs provided in their description of the stimuli are `r scaps('rigor')` versus `r scaps('rigid')` (with the first syllable in each being consistent) and `r scaps('divine')` versus `r scaps('ravine')` (with the second syllable in each being inconsistent). The pairs were eligible for inclusion if they contained the same stress pattern. They varied the consistency of stimuli either in the first or the last syllable of the word. The target pattern from their study pertaining to the manipulation of consistency across first and last syllable identified words is in Figure XX.
-
-
-```{r, js1990ModelData, echo=FALSE, fig.align='center', fig.height=3, fig.width=5}
-
-N = multi_testmode %>%
-  filter(!is.na(js1990_rt)) %>% 
-  nrow()
-
-
-
-multi_testmode %>%
-  filter(!is.na(js1990_rt)) %>% 
-  mutate(condition = case_when(js1990_condition == 'reg_inconsistent' ~ 'Inconsistent',
-                               js1990_condition == 'exception' ~ 'Inconsistent',
-                               js1990_condition == 'regular' ~ 'Consistent'),
-         syllable = case_when(js1990_syll == 'first' ~ 'First',
-                              js1990_syll == 'last' ~ 'Last')) %>% 
-  group_by(condition, syllable) %>% 
-  summarise(M = mean(js1990_rt),
-            SD = sd(js1990_rt),
-            SEM = SD/sqrt(N),
-            condition = first(condition), 
-            syllable = first(syllable)) %>% 
-  ungroup() %>% 
-  ggplot(aes(syllable, M, fill = condition)) +
-  geom_bar(stat = 'summary', position = position_dodge(), color = 'black') +
-  geom_errorbar(width = .2, color = 'grey25', aes(ymin = M-SEM, ymax = M+SEM), position = position_dodge(.9)) +
-  scale_fill_manual(values = COLORS_jared) +
-  labs(x = 'Syllabic position', y = 'RT') +
-  theme_apa() +
-  theme(legend.title = element_blank()) +
-  coord_cartesian(ylim=c(500, 650))
-
-
-```
-
-
-
-## Dispersion
-Sequential approaches to orthography-to-phonology conversion solve this problem by processing discrete speech segments from discrete print segments in a left-to-right, segment-by-segment manner. These solutions always involve some form of justification (sometimes called "alignment" in the literature), though the alignment procedure differs across sequential implementations. For example, @Sejnowski1987 provided orthographic input strings as sequences of letters and mapped them to equal-length sequences of phonemes. This allowed their network to implement a kind of temporal processing over visual and its corresponding spoken pattern, but required architectural specifications that deviate from assumptions about processing in other connectionist networks. Their procedure required inserting null elements in slots where a phoneme wasn't present for the corresponding input letter (or grapheme) given that the input and output sequences were always equal length. So, for the input pattern `r scaps('late')` the corresponding output would be `L - EY - T - __`, with the final phoneme segment `__` being the null one given the word-final silent `r scaps('a')` in `r scaps('late')`. This avoids the type of dispersion found in feedforward networks, where knowledge about letters and their corresponding sounds is localized to weighted connections associated with specific slots given the way that input and output patterns are specified during learning, but introduces a different type of knowledge localization that is undesirable: that letters on the input layer become associated too narrowly with phonemic segments on the output given the segment-by-segment processing mechanism (i.e., they lose the context sensitive nature of processing due to the segment-by-segment way that print and speech are associated in the network).
-
-Dual-route models use an assembly method, where a letter or letter segment (e.g., grapheme) is associated with a phonemic segment by assembly rule, where "assembly" in this literature refers to the association of phonological segments to its corresponding orthographic segment. Processing speech from print involves assembling the phonology from the pre-specified letter-sound rules, which are derived via an analytic technique that resides outside the scope of the computational architecture itself (i.e, specified by the experimenter). The assembly process happens alongside a lexical lookup procedure, which has its own separate timecourse. The relative timecourse of these processes determine whether a word is produced via assembly rules or as a structured lexical object. This is the extreme end of the spectrum of methods that result in knowledge dispersion. Here knowledge about the relationship between visual and spoken elements is dispersed across the symbolic rules that operate over the crossmodal assembly that takes place during learning and performance. This form of knowledge dispersion is different implementationally but related conceptually in that what is known about similar elements in the domain becomes dissociated based on the structure of the architecture, which of course has implications on the learning that takes place given that architecture.
-
-Other approaches handle input strings with the use of slots, but in a different way than in @Sejnowski1987. Commonly in connectionist feedforward implementations input patterns are justified in a vowel-centered way (see @Plaut1996 for a discussion). A similar solution exists in hybrid connectionist/ dual route architectures like @Perry2010. Here the input patterns are fit into a template defined by structure in terms of orthography across syllables, which is specified by the limits of the structure of the training set. So, for example the template used for the two syllable template in @Perry2010 involves fitting orthographic inputs into a `CCCVCCCC` pattern on each of the two (possible) syllables via a "graphemic buffer". This is the mechanism that defines the "slots" on the visual input to which any given input pattern are aligned to the available phonemes.
-
-In the present computational system there is no alignment, justification, or slots. However, an important question concerns whether or not knowledge is dispersed in a model specified in this way. The most direct comparison is to models that contain weighted connections between input and output units, and intermediary hidden ones too. The issue of dispersion is investigated in the present architecture in two ways. First, we present data about the extent to which identical input patterns in different (orthographic) contexts are associated with different units in the network and, second, the extent to which the overall pattern of representation of identical input patterns are similar to each other.
-
-A further piece of supporting data concerns a manipulation to the masking mechanism used in the model. Masking introduces a kind of justification, but one where masked segments should never be realized in the knowledge of the learner.
-
-
-
-
-
-
-## Benchmarks
-*jared1990: latencies increase with number of syllables, but is moderated by frequency (Experiment)
-*jared1990: exceptional and regular inconsistent words exhibit longer latencies as compared to regular words, but only for low frequency words (see yap2009, top right of p. 503 for discussion of the effect)
-*position of irregularity effects
-
-
-kawamoto1998 showed that words with less predictable pronunciations of the vowel exhibit longer latencies for the consonant in the onset, rather than simply longer overall naming latency of the entire word. This is due to the fact that the vowel pronunciations that are less predictable require more processing time, and this processing manifests in the system dwelling on pre-vocalic consonants, rather than being distributed throughout the naming process for the entire word. Their studies were performed using monosyllabic stimuli that were quite simple, though well established in the word reading literature related to naming and related phenomena.
-
-## Canonical naming effects
-### Frequency
-### Regularity
-### Frequency by Regularity
-
-## Latency
-Given that computational processing times on a GPU haven't been validated as an analogous method for naming latency in humans, similar to Sibley et al. (2010) a measure of model confidence for processing an orthographic word was designed to measure the latency for reading that word. 
-
-
-## Overall results
-*Provide an overall summary of results here before going into the piecemeal results. See Seidenberg & McClelland (1989) pages 531-532 for examples
