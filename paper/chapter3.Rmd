@@ -11,7 +11,7 @@ source('plot-specs.R')
 ```
 
 # Chapter 3: Experimentation
-The purpose of the model developed here is to read printed words aloud. A number of results are presented based on results from behavioral research, features of the cognitive model the architecture represents, and comparisons to similarly oriented models of word reading from elsewhere in the literature. The purpose of this experimentation is twofold: to present results that convey important features of the architecture as it relates to cognition and development and to make comparisons to experimentation elsewhere of similar phenomena, both from work in computational models of reading and human behavior.
+The purpose of the model developed here is to read printed words aloud. A number of results are presented based on results from behavioral research, features of the cognitive model the architecture represents, and comparisons to similarly oriented models of word reading from elsewhere in the literature. The purpose of this experimentation is twofold: to present results that convey important features of the architecture as it relates to cognition and development and to make comparisons to experimentation elsewhere of similar phenomena, both from work in computational models of reading and human behavior. The organization of this chapter is as follows. The first half is devoted to the study of the behavior of the model learning words with one syllable. The second half concerns words that are multisyllabic. For each section there is an account of the basic performance of the model, comparisons to human data using a megastudy of word naming [@Balota2007], and comparisons to controlled experiments that manipulate the properties of words and examine the associated naming behavior of the model (and correspondingly, humans in the behavioral data). First, some preliminaries of the implemented model are discussed in order to properly frame the results and corresponding discussion of the model behavior in the chapter.
 
 ## Accuracy
 Results of the model's ability to correctly produce a spoken form of a word can be based on a number of different measures. The most common measure of the model's ability is an accuracy score, which itself can be structured in a few different ways - similar to that of a human reader. Given that the goal of the model is to take a sequence of letters and recode them in the form of a sequence of speech sounds, individual sounds can be inspected for their accuracy along with the entire sequence of sounds - that is, the entire word. Both the phoneme-wise and the word-wise accuracy metrics are used in reporting, depending on the purpose of the result shown. They are of course correlated given that a word that is produced correctly is one in which all the phonemes are produced correctly (or at least each phoneme produced is closer to the correct phoneme than all other possible phonemes).
@@ -882,6 +882,8 @@ multi_testmode %>%
 
 ```
 
+
+## Mistakes
 The types of mistakes made by the model vary, with `r nrow(multi_mistakes)` words out of `r nrow(multi_testmode)` (or `r nrow(multi_mistakes)/nrow(multi_testmode)`% of all words) pronounced incorrectly. Table XX shows a sample of the mistakes made for words of different lengths. A table of all errors can be found at the following online repository: XX^[Note that a segment coded as "XX" conveys that the segment was a tie with another phoneme and one coded as "_" means that the model produced a null phoneme (where units are rounded to the nearest whole).].
 
 
@@ -1019,13 +1021,12 @@ The experiments in @Chateau2003 sought to investigate consistency and frequency 
 
 It should be noted that there is a theoretical assumption that underlies this orthographic segment as described in @Taft1992 that runs contrary to ideas about learning espoused in this dissertation. @Taft1992 articulates ideas about syllabic structure in orthography, which doesn't square with the theoretical assumption that orthographic units aren't processed in syllabic segments. It also assumes that orthography contains homologous structure to that of spoken language syllabic structure. The computational model developed here and the theory of cross-modal perceptual processing conveys a different assumption: that printed words are processed in a continuous fashion (over some grain size) and not syllable by syllable, just like spoken language. The ideas about the syllabic structure of orthography in @Taft1992 are indeed contested [@Chateau1990; @Jared1990], and the empirical findings about the nature of the basic orthographic syllabic structure have been challenged experimentally [@Seidenberg1997]. More generally, the extent to which syllables (like other subcomponents of words) function independently in as perceptual subcomponents has been debated as well [@Seidenberg1987].
 
-Nonetheless, the experiments in @Chateau2003 are useful because their stimuli account for the fact that orthographic segments can be associated with spoken language segments at grain sizes larger than what traditionally might be considered a syllable boundary in orthography and that quasi-regularity [@Plaut1996] can be conceptualized at a level of grain that can in words longer than one syllable. The findings here 
+Nonetheless, the experiments in @Chateau2003 are useful because their stimuli account for the fact that orthographic patterns can be associated with spoken language segments at a variety of orthographic grain-sizes. They found that consistency measures across a variety of grain sizes impacted naming latencies, including at levels of orthographic grain that suggest that printed words aren't decomposed syllable by syllable during reading (similar to the finding of @Jared1990). Like @Jared1990, they show that processing difficulty is moderated by word frequency, but show that even high frequency multisyllabic words show an effect of neighborhood consistency. This finding is consistent with the analogous study of monosyllabic words [@Jared1997].
 
-The patterns of means in all experiments in @Chateau2003 are seen in the model data here. Figure XX shows the data from the three experiments on top (acquired via personal communication with Debra Jared) and the corresponding data from the computational model on bottom using error data during training as the outcome variable.
+The patterns of means in experiments 3 and 4 in @Chateau2003 are seen in the model data here. Figure XX shows the data from the two experiments on top and the corresponding data from the computational model on bottom using error data during training as the outcome variable.
 
-```{r, cj2003expsCombined, echo=FALSE}
+![Model (top) and analagous behavioral (bottom) data from experiments 3 and 4 of Chateau & Jared (2003). Errorbars are given as standard error of the mean.]("img/chateau_figure.png")
 
-```
 
 
 ## Variable effects over time
