@@ -23,6 +23,15 @@ testwords = read_csv('../models/data/js1990/test.csv', col_names = F) %>%
          freq_scaled = NA)
 
 frequency = rbind(trainwords, testwords)
+fq_cutpoints = quantile(trainwords$freq_scaled)
+frequency_quartiles = trainwords %>% 
+  mutate(freq_quartile = case_when(freq_scaled <= fq_cutpoints[2] ~ 1,
+                                   freq_scaled > fq_cutpoints[2] & freq_scaled <= fq_cutpoints[3] ~ 2,
+                                   freq_scaled > fq_cutpoints[3] & freq_scaled <= fq_cutpoints[4] ~ 3,
+                                   freq_scaled > fq_cutpoints[4] ~ 4)) %>% 
+  select(word, freq_quartile, freq_scaled)
+
+
 
 # data to merge:
 syllabics = read_csv('../inputs/js1990/syllabics.csv') %>% 
@@ -45,6 +54,12 @@ cb = read_csv('../inputs/raw/chateau_etal_2003_b.csv') %>%
 cc = read_csv('../inputs/raw/chateau_etal_2003_c.csv') %>% 
   rename(chateauC_consistency = consistency)
 
+# consistency from chateau data
+cj2003_worddata = read_xls('data/chateau_worddata.xls') %>% 
+  select(word = Condition, bob = BOB) %>% 
+  filter(!is.na(bob))
+
+
 # elp data
 elp = read_csv('../inputs/raw/elp_5.27.16.csv') %>% 
   mutate(word = tolower(Word)) %>% 
@@ -54,18 +69,18 @@ elp = read_csv('../inputs/raw/elp_5.27.16.csv') %>%
   mutate(elp_rt = as.numeric(elp_rt), orth_lev = as.numeric(orth_lev), phon_lev = as.numeric(phon_lev))
 
 
-
-
 multi_testmode = read_csv('../outputs/js1990/generalization-epoch99.csv') %>% 
   select(-c(train_test, freq)) %>% 
   mutate(epoch = as.factor(epoch)) %>% 
   left_join(syllabics) %>% 
   left_join(js1990) %>% 
-  left_join(frequency) %>% 
+  left_join(frequency) %>%
+  left_join(frequency_quartiles) %>% 
   left_join(elp) %>% 
   left_join(ca) %>% 
   left_join(cb) %>% 
-  left_join(cc)
+  left_join(cc) %>% 
+  left_join(cj2003_worddata)
 
 
 multi = trd %>% 
@@ -74,13 +89,16 @@ multi = trd %>%
   left_join(syllabics) %>% 
   left_join(js1990) %>% 
   left_join(frequency) %>% 
+  left_join(frequency_quartiles) %>% 
   left_join(elp) %>% 
   left_join(ca) %>% 
   left_join(cb) %>% 
-  left_join(cc)
+  left_join(cc) %>% 
+  left_join(cj2003_worddata)
 
 
 js1990_means = read_csv('data/jared_etal_1990_e1_means.csv')
+
 
 cj2003_means = read_csv('data/chateau_etal_2003_means.csv') %>% 
   rename(word = Word, rt = Latency, errors_tot = `# errors`, errors_perc = `% error`) %>% 
@@ -88,6 +106,8 @@ cj2003_means = read_csv('data/chateau_etal_2003_means.csv') %>%
   left_join(cb) %>% 
   left_join(cc)
   
+
+
 
 
 rm(syllabics, ca, cb, cc, PATH, FNAME, trd, tmp, cols_, trainwords, testwords, frequency)
