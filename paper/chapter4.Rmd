@@ -4,16 +4,94 @@ output: html_document
 ---
 
 
+```{r, echo=FALSE}
+source('freezephon.R')
+source('nullphon.R')
+```
+
+
 # Chapter 5: General Discussion
 Reading processes given the perceptual processes that underlie it are time-dependent. Vision operates over patterns of fixation over letters, audition occurs over temporally distributed processes where sounds are received by the auditory system, and oral naming occurs when spoken language is produced over time by virtue of the articulatory system. Historically these processes have been avoided in models of word recognition in naming in service of more primary aspects of the reading system: the nature of the more fundamental computations that participate in producing a spoken form of a word from the printed code.
 
 The model presented here is an attempt to push theories of reading and the computational models that implement them to account for time-dependent processes in a way that builds on top of previous connectionist approaches.
 
 ## Phonology is important, but it isn't everything
-Phonological knowledge always predates the onset of learning to read, in the sense of learning how print relates to speech. It is for this reason that so many theories (though to varying degrees) emphasize the primacy of phonological development in service of learning to read. It is established that a robust knowledge of the sound structure of the language is essential to skilled reading [], and that the act of reading involves a division of labor across orthographic, phonological, and semantic cognitive processes [@Harm2004]. However, the nature and timecourse of phonological learning as it relates to speech and print is still not well understood aside from the general truism that phonological knowledge is a sine qua non of reading development.
+Phonological knowledge always predates the onset of learning how print relates to speech. It is for this reason that so many theories (though to varying degrees) emphasize the primacy of phonological development in service of learning to read. It is established that a robust knowledge of the sound structure of the language is essential to skilled reading [@Melby-Lervag2012; @Harm2004; @Seidenberg2017; @Share1995; @Wagner1987], and that the act of reading involves a division of labor among phonological, and other cognitive processes [@Harm2004].
 
-The computational model described here overrelies on phonology over the course of developing knowledge about the relationship between print and speech. This results from the temporal demands of the architecture during training; phonological inputs are always present when mapping orthography to phonology. Furthermore, the phonological portion of the models is always learning as the model trains. This creates two different but related flaws in the architecture
+The computational model described here relies heavily on phonology over the course of developing knowledge about the relationship between print and speech. This results from the temporal demands of the architecture during training; phonological inputs are present when mapping orthography to phonology. The results using the offline test mode of the model indicate that producing a phonological output from orthographic input without an explicit temporal signal governing phonology on its input (i.e., with a sequence of input segments representing the number of timesteps over which to produce a phonological output) operates in a very similar way to the training and test method that uses phonological inputs to control the temporal flow of the output signal.
 
+Nonetheless, when we read, we don't always hear the spoken forms of the words that we are reading. Learning involving phonological input while processing orthography 
+
+```{r, echo=FALSE, warning=FALSE, fig.cap='The effects of stopping weight updates to different portions of the phonologocal network during training is shown. Shaded regions represent the period of training in which no phonological learning is taking place. The left column shows the effects of halting weight updates to all phonological portions of the network, and the right column shows the effects when halting updates to the phonological LSTM layer only (the portion that tunes to statistical properties across phonological segments of the word). Rows represent the time (epochs are noted) during training when updates to the given portion of the phonological network were stopped. The top row shows behavior in a network where no updates were ever provided and the bottom row showing behavior for a network whose phonological weights were never affected.'}
+
+WHENS = c('Always', 'Epoch 18', 'Epoch 36', 'Epoch 54', 'Never')
+
+
+COLORS = c('always'='tomato3', 'early'='purple', 'middle'='springgreen4', 'late'='blue', 'never'='turquoise',
+           'Always'='tomato3', 'Epoch 18'='purple', 'Epoch 36'='springgreen4', 'Epoch 54'='blue', 'Never'='turquoise')
+
+
+
+SHADED = data.frame(cbind(WHENS,
+                          c(9, 18, 36, 54, NA),
+                          c(63, 63, 63, 63, NA))) %>% 
+  rename(condition = WHENS,
+         xmin = V2,
+         xmax = V3) %>% 
+  mutate(condition = as.factor(condition),
+         xmin = as.numeric(xmin),
+         xmax = as.numeric(xmax))
+
+EPOCHS = c(9, 18, 27, 36, 45, 54, 63)
+PROPS = c(.90, .95, 1.00)
+
+freezephon %>% 
+  filter(epoch %in% EPOCHS) %>% 
+  #mutate(period = case_when(when_freeze == 'always' ~ 'frozen',
+  #                          when_freeze == 'early' & epoch >= 18 ~ 'frozen',
+  #                          when_freeze == 'middle' & epoch >= 36 ~ 'frozen',
+  #                          when_freeze == 'late' & epoch >= 54 ~ 'frozen',
+  #                          TRUE ~ 'learning')) %>% 
+  group_by(which_freeze, when_freeze, epoch) %>% 
+  summarize(error_m = mean(mse),
+            error_sd = sd(mse),
+            error_sem = error_sd/sqrt(N),
+            accuracy_m = mean(binary_acc),
+            accuracy_sd = sd(binary_acc),
+            accuracy_sem = accuracy_sd/sqrt(N)) %>% 
+  mutate(which_freeze = case_when(which_freeze == 'all' ~ 'Stopped all phonology',
+                                  which_freeze == 'lstm' ~ 'Stopped phon LSTM only'),
+         condition = case_when(when_freeze == 'always' ~ WHENS[1],
+                               when_freeze == 'early' ~ WHENS[2],
+                               when_freeze == 'middle' ~ WHENS[3],
+                               when_freeze == 'late' ~ WHENS[4],
+                               when_freeze == 'never' ~ WHENS[5])) %>% 
+  left_join(SHADED) %>% 
+  mutate(condition = as.factor(condition),
+         condition = fct_relevel(condition, WHENS)) %>% 
+  ggplot(aes(epoch, accuracy_m, group = condition)) +
+  geom_rect(aes(x = NULL, y = NULL, xmin = xmin, xmax = xmax, ymin = .90, ymax = 1), fill = 'grey90', color = 'transparent', alpha = .09) +
+  geom_point() +
+  geom_line() + 
+  scale_color_manual(values=COLORS) +
+  geom_errorbar(aes(ymin = accuracy_m-accuracy_sem, ymax = accuracy_m+accuracy_sem), width = .1) +
+  facet_grid(rows = vars(condition), cols = vars(which_freeze)) +
+  labs(x = 'Epoch', y = 'Accuracy (proportion)', color = 'Removal of phon learning\n(time of removal)') +
+  theme_apa() +
+  theme(legend.title.align = .5,
+        axis.text.x = element_text(size = 8),
+        strip.text.x = element_text(size = 12),
+        strip.text.y = element_text(size = 8),
+        legend.position = 'none') +
+  scale_x_continuous(breaks = EPOCHS) +
+  scale_y_continuous(breaks = round(PROPS, digits = 2))# +
+  #guides(color = guide_legend(nrow = 2))
+
+  
+
+
+
+```
 
 
 ## Future work
