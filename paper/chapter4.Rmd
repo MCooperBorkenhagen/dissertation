@@ -18,9 +18,12 @@ The model presented here is an attempt to push theories of reading and the compu
 ## Phonology is important, but it isn't everything
 Phonological knowledge always predates the onset of learning how print relates to speech. It is for this reason that so many theories (though to varying degrees) emphasize the primacy of phonological development in service of learning to read. It is established that a robust knowledge of the sound structure of the language is essential to skilled reading [@Melby-Lervag2012; @Harm2004; @Seidenberg2017; @Share1995; @Wagner1987], and that the act of reading involves a division of labor among phonological, and other cognitive processes [@Harm2004].
 
-The computational model described here relies heavily on phonology over the course of developing knowledge about the relationship between print and speech. This results from the temporal demands of the architecture during training; phonological inputs are present when mapping orthography to phonology. The results using the offline test mode of the model indicate that producing a phonological output from orthographic input without an explicit temporal signal governing phonology on its input (i.e., with a sequence of input segments representing the number of timesteps over which to produce a phonological output) operates in a very similar way to the training and test method that uses phonological inputs to control the temporal flow of the output signal.
+The computational model described here relies heavily on phonology over the course of developing knowledge about the relationship between print and speech. This results from the phonological demands of the architecture during training; phonological inputs are present when mapping orthography to phonology. This aspect of learning has a temporal component (the phonological LSTM) and a feedforward component (the dense phonological layer that projects to the phonological outputs that define output phonemes). The results using the offline test mode of the model indicate that producing a phonological output from orthographic input without an explicit temporal signal governing phonology on its input (i.e., with a sequence of input segments representing the number of timesteps over which to produce a phonological output) operates in a very similar way to the training and test method that uses phonological inputs to control the temporal flow of the output signal.
 
-Nonetheless, when we read, we don't always hear the spoken forms of the words that we are reading. Learning involving phonological input while processing orthography 
+When we read, we most often don't hear the spoken forms of the words that we are reading. However, the training process in this architecture involves this kind of "reading while listening" training paradigm. This form of training corresponds to a relatively common form of learning in educational settings [@Reitsma1988; @Snow1998], though its effectiveness is questionable in children [@Reitsma1988; @Wim1991].
+
+As an alternative, the network developed here has the capacity to learn only from orthography, though high levels of performance rely on learning taking place in the phonological portions of the architecture. As a demonstration, weights for phonological layers of the network were frozen at different points throughout training (either to the phonological LSTM or both the phononological LSTM and the feedforward phonological output layer). The results of this procedure are shown in Figure XX.
+
 
 ```{r, echo=FALSE, warning=FALSE, fig.cap='The effects of stopping weight updates to different portions of the phonologocal network during training is shown. Shaded regions represent the period of training in which no phonological learning is taking place. The left column shows the effects of halting weight updates to all phonological portions of the network, and the right column shows the effects when halting updates to the phonological LSTM layer only (the portion that tunes to statistical properties across phonological segments of the word). Rows represent the time (epochs are noted) during training when updates to the given portion of the phonological network were stopped. The top row shows behavior in a network where no updates were ever provided and the bottom row showing behavior for a network whose phonological weights were never affected.'}
 
@@ -30,14 +33,13 @@ WHENS = c('Always', 'Epoch 18', 'Epoch 36', 'Epoch 54', 'Never')
 COLORS = c('always'='tomato3', 'early'='purple', 'middle'='springgreen4', 'late'='blue', 'never'='turquoise',
            'Always'='tomato3', 'Epoch 18'='purple', 'Epoch 36'='springgreen4', 'Epoch 54'='blue', 'Never'='turquoise')
 
+MIN = c(9, 18, 36, 54, NA)
+MAX = c(63, 63, 63, 63, NA)
 
-
-SHADED = data.frame(cbind(WHENS,
-                          c(9, 18, 36, 54, NA),
-                          c(63, 63, 63, 63, NA))) %>% 
+SHADED = data.frame(cbind(WHENS, MIN, MAX)) %>% 
   rename(condition = WHENS,
-         xmin = V2,
-         xmax = V3) %>% 
+         xmin = MIN,
+         xmax = MAX) %>% 
   mutate(condition = as.factor(condition),
          xmin = as.numeric(xmin),
          xmax = as.numeric(xmax))
@@ -87,11 +89,72 @@ freezephon %>%
   scale_y_continuous(breaks = round(PROPS, digits = 2))# +
   #guides(color = guide_legend(nrow = 2))
 
+# possibly useful later if you want to calculate error over epoch as a functin of freeze time:
+CUTOFFS = data.frame(unique(freezephon$when_freeze), MIN, MAX) %>% 
+  rename(when_freeze = unique.freezephon.when_freeze.) %>% 
+  replace_na(list(MIN = 0, MAX = 0)) %>% 
+  mutate(SPAN = MAX - MIN)
+  
+descriptives = freezephon %>% 
+  group_by(which_freeze, when_freeze) %>% 
+  summarise(accuracy_m = mean(binary_acc),
+            accuracy_sd = sd(binary_acc))
+
+rounD <- function(x) sprintf("%.4f", x)
+
+freezephon %>% 
+  left_join(CUTOFFS) %>% 
+  mutate(when_freeze_num = case_when(when_freeze == 'never' ~ 63,
+                                     when_freeze == 'early' ~ 18,
+                                     when_freeze == 'middle' ~ 36,
+                                     when_freeze == 'late' ~ 54,
+                                     when_freeze == 'always' ~ 9)) %>% 
+  mutate(phon_frozen = case_when(SPAN == 0 ~ FALSE,
+                                 epoch < when_freeze_num ~ FALSE,
+                                 epoch >= when_freeze_num ~ TRUE)) %>% 
+  filter(phon_frozen == TRUE) %>% 
+  filter(epoch == MIN | epoch == MAX) %>% 
+  left_join(descriptives) %>% 
+  group_by(which_freeze, when_freeze, epoch) %>% 
+  summarise(MIN = first(MIN),
+            MAX = first(MAX),
+            how_long_frozen = first(SPAN), 
+            accuracy_m = first(accuracy_m),
+            accuracy_sd = first(accuracy_sd),
+            accuracy = mean(binary_acc),
+            accuracy_z = (accuracy-accuracy_m)/accuracy_sd) %>% 
+  ungroup() %>% 
+  group_by(which_freeze, when_freeze) %>% 
+  arrange(desc(accuracy)) %>% 
+  summarise(how_long_frozen = first(how_long_frozen),
+            accuracy_increase = difference(accuracy_z)) %>% 
+  ungroup() %>% 
+  group_by(which_freeze, when_freeze) %>% 
+  summarize(growth_per_epoch = accuracy_increase/how_long_frozen) %>% 
+  mutate(which_freeze = case_when(which_freeze == 'all' ~ 'Stopped all phonology',
+                                  which_freeze == 'lstm' ~ 'Stopped phon LSTM only'),
+         condition = case_when(when_freeze == 'always' ~ WHENS[1],
+                               when_freeze == 'early' ~ WHENS[2],
+                               when_freeze == 'middle' ~ WHENS[3],
+                               when_freeze == 'late' ~ WHENS[4],
+                               when_freeze == 'never' ~ WHENS[5])) %>% 
+  ggplot(aes(condition, growth_per_epoch)) +
+  geom_bar(stat = 'identity', fill = 'grey29', color = 'black') +
+  facet_grid(~which_freeze) +
+  scale_y_continuous(labels = comma) +
+  labs(x = 'Period of training when learning stops',
+       y = 'Accuracy growth per epoch after stop (standardized)') +
+  theme(legend.position = 'none') +
+  theme_apa()
   
 
-
-
 ```
+
+It is clear that weight layers dedicated to phonology are critical to support high levels of orthography-phonology knowledge. The top row of the figure shows the dramatic effect of having no phonological layers receiving weight updates, with the left column ("stopped all phonology" column) showing the most dramatic effect; this translates into very low levels of performance throughout training, with only modest increases in accuracy at the end of learning as compared to the start. It is clear that both the phonological LSTM and the feedforward phonological (output) layer contribute substantially given that the simulations where only the phonological LSTM affected show a significant advantage over those where all phonological layers are affected. This difference is most clear in the top row of the figure with the learning curve on the righthand pane showing greater increases than that in the left.
+
+So, clearly phonology is a critical aspect of the architecture - as it should be given that reading across levels of expertise relies on phonological knowledge [@VanOrden1987]. This model can then be easily extended in order to investigate issues related to the relative importance of phonology and orthography, and temporal aspects of each, in developing knowledge involved in word naming.
+
+Nonetheless, the implemented model is capable of achieving high levels of knowledge by learning without explicit phonological inputs during training (i.e., learning over orthographic inputs and phonological outputs) if an explicit temporal signal is provided to the phonological network on input. This implementation is very similar to the process in 
 
 
 ## Future work
