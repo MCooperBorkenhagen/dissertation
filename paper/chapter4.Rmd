@@ -89,73 +89,56 @@ freezephon %>%
   scale_y_continuous(breaks = round(PROPS, digits = 2))# +
   #guides(color = guide_legend(nrow = 2))
 
-# possibly useful later if you want to calculate error over epoch as a functin of freeze time:
-CUTOFFS = data.frame(unique(freezephon$when_freeze), MIN, MAX) %>% 
-  rename(when_freeze = unique.freezephon.when_freeze.) %>% 
-  replace_na(list(MIN = 0, MAX = 0)) %>% 
-  mutate(SPAN = MAX - MIN)
-  
-descriptives = freezephon %>% 
-  group_by(which_freeze, when_freeze) %>% 
-  summarise(accuracy_m = mean(binary_acc),
-            accuracy_sd = sd(binary_acc))
-
-rounD <- function(x) sprintf("%.4f", x)
-
-freezephon %>% 
-  left_join(CUTOFFS) %>% 
-  mutate(when_freeze_num = case_when(when_freeze == 'never' ~ 63,
-                                     when_freeze == 'early' ~ 18,
-                                     when_freeze == 'middle' ~ 36,
-                                     when_freeze == 'late' ~ 54,
-                                     when_freeze == 'always' ~ 9)) %>% 
-  mutate(phon_frozen = case_when(SPAN == 0 ~ FALSE,
-                                 epoch < when_freeze_num ~ FALSE,
-                                 epoch >= when_freeze_num ~ TRUE)) %>% 
-  filter(phon_frozen == TRUE) %>% 
-  filter(epoch == MIN | epoch == MAX) %>% 
-  left_join(descriptives) %>% 
-  group_by(which_freeze, when_freeze, epoch) %>% 
-  summarise(MIN = first(MIN),
-            MAX = first(MAX),
-            how_long_frozen = first(SPAN), 
-            accuracy_m = first(accuracy_m),
-            accuracy_sd = first(accuracy_sd),
-            accuracy = mean(binary_acc),
-            accuracy_z = (accuracy-accuracy_m)/accuracy_sd) %>% 
-  ungroup() %>% 
-  group_by(which_freeze, when_freeze) %>% 
-  arrange(desc(accuracy)) %>% 
-  summarise(how_long_frozen = first(how_long_frozen),
-            accuracy_increase = difference(accuracy_z)) %>% 
-  ungroup() %>% 
-  group_by(which_freeze, when_freeze) %>% 
-  summarize(growth_per_epoch = accuracy_increase/how_long_frozen) %>% 
-  mutate(which_freeze = case_when(which_freeze == 'all' ~ 'Stopped all phonology',
-                                  which_freeze == 'lstm' ~ 'Stopped phon LSTM only'),
-         condition = case_when(when_freeze == 'always' ~ WHENS[1],
-                               when_freeze == 'early' ~ WHENS[2],
-                               when_freeze == 'middle' ~ WHENS[3],
-                               when_freeze == 'late' ~ WHENS[4],
-                               when_freeze == 'never' ~ WHENS[5])) %>% 
-  ggplot(aes(condition, growth_per_epoch)) +
-  geom_bar(stat = 'identity', fill = 'grey29', color = 'black') +
-  facet_grid(~which_freeze) +
-  scale_y_continuous(labels = comma) +
-  labs(x = 'Period of training when learning stops',
-       y = 'Accuracy growth per epoch after stop (standardized)') +
-  theme(legend.position = 'none') +
-  theme_apa()
-  
 
 ```
 
-It is clear that weight layers dedicated to phonology are critical to support high levels of orthography-phonology knowledge. The top row of the figure shows the dramatic effect of having no phonological layers receiving weight updates, with the left column ("stopped all phonology" column) showing the most dramatic effect; this translates into very low levels of performance throughout training, with only modest increases in accuracy at the end of learning as compared to the start. It is clear that both the phonological LSTM and the feedforward phonological (output) layer contribute substantially given that the simulations where only the phonological LSTM affected show a significant advantage over those where all phonological layers are affected. This difference is most clear in the top row of the figure with the learning curve on the righthand pane showing greater increases than that in the left.
+It is clear that layers dedicated to phonology are critical to support high levels of orthography-phonology knowledge. The top row of the figure shows the dramatic effect of having no phonological layers receiving weight updates, with the left column ("stopped all phonology" column) showing the most dramatic effect; this translates into very low levels of performance throughout training, with only modest increases in accuracy by the end of the learning period. It is clear that both the phonological LSTM and the feedforward phonological (output) layer contribute substantially given that the simulations where only the phonological LSTM affected show a significant advantage over those where all phonological layers are affected. This difference is most clear in the top row of the figure with the learning curve on the righthand pane showing greater increases than that in the left.
 
-So, clearly phonology is a critical aspect of the architecture - as it should be given that reading across levels of expertise relies on phonological knowledge [@VanOrden1987]. This model can then be easily extended in order to investigate issues related to the relative importance of phonology and orthography, and temporal aspects of each, in developing knowledge involved in word naming.
+Clearly phonology is a critical aspect of the architecture - as it should be given that reading across levels of expertise relies on phonological knowledge [@VanOrden1987]. However the orthographic portion of the network also contributes to learning, where relevant subsequent work would concern relative importance of phonology and orthography, and temporal aspects of each, on the way to developing knowledge about long words and their properties.
 
-Nonetheless, the implemented model is capable of achieving high levels of knowledge by learning without explicit phonological inputs during training (i.e., learning over orthographic inputs and phonological outputs) if an explicit temporal signal is provided to the phonological network on input. This implementation is very similar to the process in 
+Additionally, the implemented model is capable of achieving high levels of knowledge by learning without explicit phonological inputs during training (i.e., learning over orthographic inputs and phonological outputs) if an explicit temporal signal is provided to the phonological network on input. To demonstrate, as similar procedure to the previous simulations (data shown in Figure XX) was conducted, instead training with null phonological inputs (e.g., `r scaps('# _ _ _ _')` for the phonological form of `r scaps(went)`/ `r scaps('W-EH-N-T')`, or `r scaps(# _ _ _ _)` for `r scaps(water)`/ `r scaps('W-A0-T-ER0')`). These null inputs were introduced at different points in training (the same scheme as those in Figure XX). Note that this implementation is similar to the process involved in production mode, where only the start of word segment is provided in order to generate an offline production, with the difference being that all segments after the start of word segment are provided as inputs, just with all units set to zero. This is equivalent to guiding the model through an explicit temporal sequence, but giving it no specific phoneme on input to reproduce on output during learning.
 
+The results from this implementation make it clear that orthographic input along with error feedback on phonology are enough to drive training to high levels of accuracy. While a model that trains without any null phonological inputs (rightmost panel)
+
+```{r, nullphon, echo=FALSE, fig.cap='Learning curves for models trained with null phonological inputs starting at different points in training are shown. Panels correspond to the different points in training where null phonological inputs were introduced. The "Always" condition corresponds to training in which phonological inputs were always null, and the "Never" condition corresponds to training in which phonological inputs were always provided (i.e., they were phonemic segments).'}
+
+PROPS = c(.94, .95, .96, .97, .98, .99, 1.00)
+
+nullphon %>% 
+  filter(epoch %in% EPOCHS) %>% 
+  group_by(when_null, epoch) %>% 
+  summarize(error_m = mean(mse),
+            error_sd = sd(mse),
+            error_sem = error_sd/sqrt(N),
+            accuracy_m = mean(binary_acc),
+            accuracy_sd = sd(binary_acc),
+            accuracy_sem = accuracy_sd/sqrt(N)) %>% 
+  mutate(condition = case_when(when_null == 'always' ~ WHENS[1],
+                               when_null == 'early' ~ WHENS[2],
+                               when_null == 'middle' ~ WHENS[3],
+                               when_null == 'late' ~ WHENS[4],
+                               when_null == 'never' ~ WHENS[5])) %>% 
+  left_join(SHADED) %>% 
+  mutate(condition = as.factor(condition),
+         condition = fct_relevel(condition, WHENS)) %>% 
+  ggplot(aes(epoch, accuracy_m, group = condition)) +
+  geom_rect(aes(x = NULL, y = NULL, xmin = xmin, xmax = xmax, ymin = .90, ymax = 1), fill = 'grey90', color = 'transparent', alpha = .09) +
+  geom_point() +
+  geom_line() + 
+  scale_color_manual(values=COLORS) +
+  geom_errorbar(aes(ymin = accuracy_m-accuracy_sem, ymax = accuracy_m+accuracy_sem), width = .1) +
+  facet_grid(cols = vars(condition)) +
+  labs(x = 'Epoch', y = 'Accuracy (proportion)', color = 'Removal of phon learning\n(time of removal)') +
+  theme_apa() +
+  theme(legend.title.align = .5,
+        axis.text.x = element_text(size = 12),
+        strip.text.x = element_text(size = 12),
+        legend.position = 'none') +
+  coord_cartesian(ylim = c(.94, 1.00)) +
+  scale_x_continuous(breaks = EPOCHS) +
+  scale_y_continuous(breaks = round(PROPS, digits = 2))
+  
+```
 
 ## Future work
 This model architecture could be extended easily, in some cases trivially, to account for representational assumptions that would more realistically approximate spoken language.
