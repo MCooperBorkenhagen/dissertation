@@ -1,6 +1,6 @@
 ---
-title             : "Time for time: In search of a veridical model of time-varying processes in word reading"
-shorttitle        : "A time-varying model of word reading"
+title             : "Time for time: A time-varying computational model of naming"
+shorttitle        : "A time-varying model of naming"
 
 author:  
   - name          : "Matt Cooper Borkenhagen"
@@ -14,7 +14,7 @@ affiliation:
     institution   : "Department of Psychology, University of Wisconsin, Madison"
 
 abstract: |
-  Dissertation
+  A computational model of word naming (pronunciation) is described.
   
 keywords          : "reading, language development"
 wordcount         : "XXX"
@@ -27,8 +27,13 @@ tablelist         : yes
 footnotelist      : no
 lineno            : no
 lang              : "en-US"
-output            : papaja::apa6_pdf
+#geometry          : left=3cm, right=3cm, top=3cm, bottom=3cm
+output            :
+  papaja::apa6_pdf :
+    toc               : true
+    toc_depth         : 2
 header-includes:
+  - \geometry{left=3cm, right=3cm, top=3cm, bottom=3cm}
   - \usepackage{booktabs}
   - \usepackage{longtable}
   - \usepackage{array}
@@ -41,6 +46,7 @@ header-includes:
   - \usepackage{tabu}
   - \usepackage{threeparttable}
   - \usepackage[normalem]{ulem}
+  - \interfootnotelinepenalty=10000
   #- \usepackage{tikz}
 ---
 
