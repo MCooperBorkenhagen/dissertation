@@ -235,7 +235,7 @@ get_bs = function(model, intercept=F){
 
 
 
-cortests = function(df, dv, vars, value, digits=2){
+cortests = function(df, dv, vars, value, digits=2, process_freq = T){
   
   #' @param df Data containing dv and vars for application of cor.test
   #' @param dv Dependent measure for comparison across all vars supplied
@@ -245,8 +245,8 @@ cortests = function(df, dv, vars, value, digits=2){
   
   out = c()
   for (var in vars){
-    
-    cr = cor.test(df[[dv]], df[[var]])[[value]]
+    if (process_freq){cr = cor.test(df[[dv]], log(df[[var]]))[[value]]}
+    else {cr = cor.test(df[[dv]], df[[var]])[[value]]}
     if (value == 'conf.int'){
       cr = paste('[', paste(round(cr, digits=digits), collapse = ', '), ']', sep = '')
       

@@ -87,3 +87,8 @@ taraban_crossval %>%
 
 
 
+
+## Batches
+One potential limitation of the learning approach developed here concerns the type of batch learning used. Batches constitute the learning trials over which weight updates occur and therefore likely play a role in the dynamics of how well aspects of structure are learned and the timecourse for such learning. These dynamics may be quite complex, with larger implications for the nature of knowledge development in the long term developmental process of the model and a reader that it is designed to simulate. This is no doubt an area of potentially valuable future research, though a few things can be noted here.
+
+The assembly of minibatches in this approach is designed for reasons more related to the engineering of the computational system provided rather than a direct hypothesis about the nature of human learning in this learning domain. This specification of the architecture allows for the use of words without alignment of any kind - a feature thought to be a virtue of the approach given the potential learning challenges imposed by including empty slots in input and output representations. However, this may not be an unrelated issue to human learning. For example, the minibatch approach taken here can be implemented over batches of only one learning trial, which is termed "stochastic gradient descent" in the literature on artificial neural networks. One possibility is that human learning occurs over such minimal number of learning experiences. If so, the architecture implemented here represents a viable one for experimenting with such a possibility, which is afforded by the ability to learn without slots and alignment.

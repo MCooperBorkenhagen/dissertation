@@ -1,0 +1,19 @@
+---
+title       : 'Table of contents'
+shorttitle  : ''
+output      : papaja::apa6_pdf
+---
+
+
+\tableofcontents
+\newpage
+
+\section{Section}
+
+Blah
+
+\subsection{Subsection}
+
+Blah blah
+
+\end{document}

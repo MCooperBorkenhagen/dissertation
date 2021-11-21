@@ -1,0 +1,16 @@
+
+
+
+
+# Taraban & McClelland () stimuli
+Here is the model data for the words in the Taraban & McClelland studies.
+
+# Chateau & Jared (2003)
+
+These results generally look good, but the statistical models don't pan out. They examined consistency and frequency in a 
+
+
+```{r}
+
+
+```

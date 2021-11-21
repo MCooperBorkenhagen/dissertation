@@ -1,8 +1,3 @@
----
-title: "discussion"
-output: html_document
----
-
 
 ```{r, echo=FALSE}
 source('freezephon.R')
@@ -30,7 +25,7 @@ Phonological knowledge always predates the onset of learning how print relates t
 
 The computational model described here relies heavily on phonology over the course of developing knowledge about the relationship between print and speech. This results from the phonological demands of the architecture during training; phonological inputs are present when mapping orthography to phonology. This aspect of learning has a temporal component (the phonological LSTM) and a feedforward component (the dense phonological layer that projects to the phonological outputs that define output phonemes). The results using the offline test mode of the model indicate that producing a phonological output from orthographic input without an explicit temporal signal governing phonology on its input (i.e., with a sequence of input segments representing the number of timesteps over which to produce a phonological output) operates in a very similar way to the training and test method that uses phonological inputs to control the temporal flow of the output signal.
 
-When we read, we most often don't hear the spoken forms of the words that we are reading. However, the training process in this architecture involves this kind of "reading while listening" training paradigm. This form of training corresponds to a relatively common form of learning in educational settings [@Reitsma1988; @Snow1998], though its effectiveness is questionable in children [@Reitsma1988; @Wim1991].
+When we read, we most often don't hear the spoken forms of the words that we are reading. However, the training process in this architecture involves this kind of "reading while listening" training paradigm. This form of training corresponds to a relatively common form of learning in educational settings [@Reitsma1988; @Snow1998], though its effectiveness is questionable in children [@Reitsma1988; @VanBon1991].
 
 As an alternative, the network developed here has the capacity to learn only from orthography, though high levels of performance rely on learning taking place in the phonological portions of the architecture. As a demonstration, weights for phonological layers of the network were frozen at different points throughout training (either to the phonological LSTM or both the phononological LSTM and the feedforward phonological output layer). The results of this procedure are shown in Figure XX.
 
@@ -167,3 +162,6 @@ The implemented model makes a processing assumption about the window of time (an
 Computational models have been influential in developing a scientific understanding of basic properties that underlie development and performance in a range of reading processes in humans [@Harm2004; @Plaut1996; @Rastle2010; @Seidenberg2017; @Seidenberg1989]. Debates about the computations that matter in development and performance have been plentiful, and have stalled in part due to architectural limitations of the computational systems recruited for theory building of this sort. This is mostly due to challenges with simulating learning over longer words given the additional cognitive and perceptual processes that are relevant to their information processing. These challenges have given rise to few approaches to the problem, with little consensus about well-principled architectures that should be used for understanding the computational bases of learning and performance for words of this type.
 
 This dissertation extends previous connectionist approaches to understanding the development of word reading abilities, including initial attempts to apply connectionist architectures to reading multisyllabic words [@Sibley2008; @Sibley2010]. This is made possible by simulating temporal processes over orthography and phonology and allowing for those processes to interact in their computations. Furthermore, these processing assumptions operate over orthography and phonology by using representations that more closely resemble those that function in human learners. The assumptions that went into this model are based in more general principles -- statistical learning, distributed representations, dynamical systems -- that apply to learning and other phenomena and build on top of cognitive and computational work relevant to understanding human learning. As a result, this work fits within a broader theoretical framework and applies these principles to temporal aspects of word reading in an effort to extent our understanding of the computations involved in reading beyond the simplest words in the language.
+
+  
+\newpage

@@ -15,4 +15,5 @@ tidyverse
 car
 scapr
 heplots
+readxl
 

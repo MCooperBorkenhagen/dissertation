@@ -27,7 +27,6 @@ tablelist         : yes
 footnotelist      : no
 lineno            : no
 lang              : "en-US"
-#geometry          : left=3cm, right=3cm, top=3cm, bottom=3cm
 output            :
   papaja::apa6_pdf :
     toc               : true

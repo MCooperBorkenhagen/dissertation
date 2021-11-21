@@ -15,3 +15,30 @@ Psych review copyright policies: https://www.apa.org/about/contact/copyright
 Peer review coordinator contact: https://www.apa.org/pubs/authors/permissions-alert.pdf
 
 Psych review copyright system: https://marketplace.copyright.com/rs-ui-web/mp/details/journal/122798352?articleId=192780844&pubDate=1996
+
+
+
+
+
+
+-----
+OTHER
+-----
+
+
+
+## Benchmarks
+*jared1990: latencies increase with number of syllables, but is moderated by frequency (Experiment)
+*jared1990: exceptional and regular inconsistent words exhibit longer latencies as compared to regular words, but only for low frequency words (see yap2009, top right of p. 503 for discussion of the effect)
+*position of irregularity effects
+
+
+kawamoto1998 showed that words with less predictable pronunciations of the vowel exhibit longer latencies for the consonant in the onset, rather than simply longer overall naming latency of the entire word. This is due to the fact that the vowel pronunciations that are less predictable require more processing time, and this processing manifests in the system dwelling on pre-vocalic consonants, rather than being distributed throughout the naming process for the entire word. Their studies were performed using monosyllabic stimuli that were quite simple, though well established in the word reading literature related to naming and related phenomena.
+
+
+## Latency
+Given that computational processing times on a GPU haven't been validated as an analogous method for naming latency in humans, similar to Sibley et al. (2010) a measure of model confidence for processing an orthographic word was designed to measure the latency for reading that word. 
+
+
+## Overall results
+*Provide an overall summary of results here before going into the piecemeal results. See Seidenberg & McClelland (1989) pages 531-532 for examples

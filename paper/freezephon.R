@@ -1,7 +1,7 @@
 
 
 # all frozen phon weights:
-cols_ = c(names(read_csv('../outputs/freezephon-all/0/item-data--9.csv')), 'epoch', 'dir')
+cols_ = c(names(read_csv('../outputs/freezephon-all/0/item-data-freezephon-all-9.csv')), 'epoch', 'dir')
 df = data.frame(matrix(nrow = 0, ncol = length(cols_)))
 colnames(df) = cols_
 
