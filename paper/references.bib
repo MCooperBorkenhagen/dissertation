@@ -13,6 +13,21 @@ volume = {44},
 year = {2012}
 }
 
+@article{Williams1989,
+abstract = {The exact form of a gradient-following learning algorithm for completely recurrent networks running in continually sampled time is derived and used as the basis for practical algorithms for temporal supervised learning tasks. These algorithms have (1) the advantage that they do not require a precisely defined training interval, operating while the network runs; and (2) the disadvantage that they require nonlocal communication in the network being trained and are computationally expensive. These algorithms allow networks having recurrent connections to learn complex tasks that require the retention of information over time periods having either fixed or indefinite length.},
+author = {Williams, Ronald J. and Zipser, David},
+doi = {10.1162/neco.1989.1.2.270},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Williams, Zipser - 1989 - A Learning Algorithm for Continually Running Fully Recurrent Neural Networks.pdf:pdf},
+issn = {0899-7667},
+journal = {Neural Computation},
+number = {2},
+pages = {270--280},
+title = {{A Learning Algorithm for Continually Running Fully Recurrent Neural Networks}},
+volume = {1},
+year = {1989}
+}
+
+
 @misc{chollet2015keras,
   title={Keras},
   author={Chollet, Fran\c{c}ois and others},
@@ -97,6 +112,51 @@ volume = {111},
 year = {2004}
 }
 
+@article{Rumelhart1986,
+abstract = {We describe a new learning procedure, back-propagation, for networks of neurone-like units. The procedure repeatedly adjusts the weights of the connections in the network so as to minimize a measure of the difference between the actual output vector of the net and the desired output vector. As a result of the weight adjustments, internal 'hidden' units which are not part of the input or output come to represent important features of the task domain, and the regularities in the task are captured by the interactions of these units. The ability to create useful new features distinguishes back-propagation from earlier, simpler methods such as the perceptron-convergence procedure 1. {\textcopyright} 1986 Nature Publishing Group.},
+author = {Rumelhart, David E. and Hinton, Geoffrey E. and Williams, Ronald J.},
+doi = {10.1038/323533a0},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Rumelhart, Hinton, Williams - 1986 - Learning representations by back-propagating errors.pdf:pdf},
+journal = {Nature},
+number = {9},
+pages = {533--536},
+title = {{Learning representations by back-propagating errors}},
+volume = {323},
+year = {1986}
+}
+
+@article{Sutskever2014,
+abstract = {Deep Neural Networks (DNNs) are powerful models that have achieved excellent performance on difficult learning tasks. Although DNNs work well whenever large labeled training sets are available, they cannot be used to map sequences to sequences. In this paper, we present a general end-to-end approach to sequence learning that makes minimal assumptions on the sequence structure. Our method uses a multilayered Long Short-Term Memory (LSTM) to map the input sequence to a vector of a fixed dimensionality, and then another deep LSTM to decode the target sequence from the vector. Our main result is that on an English to French translation task from the WMT'14 dataset, the translations produced by the LSTM achieve a BLEU score of 34.8 on the entire test set, where the LSTM's BLEU score was penalized on out-of-vocabulary words. Additionally, the LSTM did not have difficulty on long sentences. For comparison, a phrase-based SMT system achieves a BLEU score of 33.3 on the same dataset. When we used the LSTM to rerank the 1000 hypotheses produced by the aforementioned SMT system, its BLEU score increases to 36.5, which is close to the previous best result on this task. The LSTM also learned sensible phrase and sentence representations that are sensitive to word order and are relatively invariant to the active and the passive voice. Finally, we found that reversing the order of the words in all source sentences (but not target sentences) improved the LSTM's performance markedly, because doing so introduced many short term dependencies between the source and the target sentence which made the optimization problem easier.},
+archivePrefix = {arXiv},
+arxivId = {1409.3215},
+author = {Sutskever, Ilya and Vinyals, Oriol and Le, Quoc V.},
+eprint = {1409.3215},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Sutskever, Vinyals, Le - 2014 - Sequence to sequence learning with neural networks.pdf:pdf},
+journal = {Advances in Neural Information Processing Systems},
+number = {January},
+pages = {3104--3112},
+title = {{Sequence to sequence learning with neural networks}},
+volume = {4},
+year = {2014}
+}
+
+
+@article{Chang2019,
+abstract = {Diversity of vocabulary knowledge and quantity of language exposure prior to literacy are key predictors of reading development. However, diversity and quantity of exposure are difficult to distinguish in behavioural studies, and so the causal relations with literacy are not well known. We tested these relations by training a connectionist triangle model of reading that learned to map between semantic; phonological; and, later, orthographic forms of words. The model first learned to map between phonology and semantics, where we manipulated the quantity and diversity of this preliterate language experience. Then the model learned to read. Both diversity and quantity of exposure had unique effects on reading performance, with larger effects for written word comprehension than for reading fluency. The results further showed that quantity of preliteracy language exposure was beneficial only when this was to a varied vocabulary and could be an impediment when exposed to a limited vocabulary. [ABSTRACT FROM AUTHOR]},
+author = {Chang, Ya-Ning and Monaghan, Padraic},
+doi = {10.1080/10888438.2018.1529177},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Chang, Monaghan - 2019 - Quantity and Diversity of Preliteracy Language Exposure Both Affect Literacy Development Evidence from a Comput.pdf:pdf},
+journal = {Scientific Studies of Reading},
+number = {3},
+pages = {235--253},
+publisher = {Routledge},
+title = {{Quantity and Diversity of Preliteracy Language Exposure Both Affect Literacy Development: Evidence from a Computational Model of Reading}},
+url = {https://doi.org/10.1080/10888438.2018.1529177},
+volume = {23},
+year = {2019}
+}
+
+
 @article{Sibley2008,
 abstract = {The forms of words as they appear in text and speech are central to theories and models of lexical processing. Nonetheless, current methods for simulating their learning and representation fail to approach the scale and heterogeneity of real wordform lexicons. A connectionist architecture termed the sequence encoder is used to learn nearly 75,000 wordform representations through exposure to strings of stress-marked phonemes or letters. First, the mechanisms and efficacy of the sequence encoder are demonstrated and shown to overcome problems with traditional slot-based codes. Then, two large-scale simulations are reported that learned to represent lexicons of either phonological or orthographic wordforms. In doing so, the models learned the statistics of their lexicons as shown by better processing of well-formed pseudowords as opposed to ill-formed (scrambled) pseudowords, and by accounting for variance in well-formedness ratings. It is discussed how the sequence encoder may be integrated into broader models of lexical processing.},
 author = {Sibley, Daragh E. and Kello, Christopher T. and Plaut, David C. and Elman, Jeffrey L.},
@@ -140,6 +200,72 @@ title = {{Finding structure in time}},
 volume = {14},
 year = {1990}
 }
+
+@article{Sundermeyer2015,
+abstract = {Language models have traditionally been estimated based on relative frequencies, using count statistics that can be extracted from huge amounts of text data. More recently, it has been found that neural networks are particularly powerful at estimating probability distributions over word sequences, giving substantial improvements over state-of-the-art count models. However, the performance of neural network language models strongly depends on their architectural structure. This paper compares count models to feedforward, recurrent, and long short-term memory (LSTM) neural network variants on two large-vocabulary speech recognition tasks. We evaluate the models in terms of perplexity and word error rate, experimentally validating the strong correlation of the two quantities, which we find to hold regardless of the underlying type of the language model. Furthermore, neural networks incur an increased computational complexity compared to count models, and they differently model context dependences, often exceeding the number of words that are taken into account by count based approaches. These differences require efficient search methods for neural networks, and we analyze the potential improvements that can be obtained when applying advanced algorithms to the rescoring of word lattices on large-scale setups.},
+author = {Sundermeyer, Martin and Ney, Hermann and Schluter, Ralf},
+doi = {10.1109/TASLP.2015.2400218},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Sundermeyer, Ney, Schluter - 2015 - From feedforward to recurrent LSTM neural networks for language modeling.pdf:pdf},
+issn = {15587916},
+journal = {IEEE Transactions on Audio, Speech and Language Processing},
+keywords = {Feedforward neural network,Kneser-Ney smoothing,language modeling,long short-term memory (LSTM),recurrent neural network (RNN)},
+number = {3},
+pages = {517--529},
+title = {{From feedforward to recurrent LSTM neural networks for language modeling}},
+volume = {23},
+year = {2015}
+}
+
+@article{Greff2017,
+abstract = {Several variants of the long short-term memory (LSTM) architecture for recurrent neural networks have been proposed since its inception in 1995. In recent years, these networks have become the state-of-the-art models for a variety of machine learning problems. This has led to a renewed interest in understanding the role and utility of various computational components of typical LSTM variants. In this paper, we present the first large-scale analysis of eight LSTM variants on three representative tasks: Speech recognition, handwriting recognition, and polyphonic music modeling. The hyperparameters of all LSTM variants for each task were optimized separately using random search, and their importance was assessed using the powerful functional ANalysis Of VAriance framework. In total, we summarize the results of 5400 experimental runs ≈15 years of CPU time), which makes our study the largest of its kind on LSTM networks. Our results show that none of the variants can improve upon the standard LSTM architecture significantly, and demonstrate the forget gate and the output activation function to be its most critical components. We further observe that the studied hyperparameters are virtually independent and derive guidelines for their efficient adjustment.},
+archivePrefix = {arXiv},
+arxivId = {1503.04069},
+author = {Greff, Klaus and Srivastava, Rupesh K. and Koutnik, Jan and Steunebrink, Bas R. and Schmidhuber, Jurgen},
+doi = {10.1109/TNNLS.2016.2582924},
+eprint = {1503.04069},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Greff et al. - 2017 - LSTM A Search Space Odyssey.pdf:pdf},
+issn = {21622388},
+journal = {IEEE Transactions on Neural Networks and Learning Systems},
+keywords = {Functional ANalysis Of VAriance (fANOVA),long short-term memory (LSTM),random search,recurrent neural networks,sequence learning},
+number = {10},
+pages = {2222--2232},
+pmid = {27411231},
+title = {{LSTM: A Search Space Odyssey}},
+volume = {28},
+year = {2017}
+}
+
+@article{Hochreiter1998,
+abstract = {Recurrent nets are in principle capable to store past inputs to produce the currently desired output. Because of this property recurrent nets are used in time series prediction and process control. Practical applications involve temporal dependencies spanning many time steps, e.g. between relevant inputs and desired outputs. In this case, however, gradient based learning methods take too much time. The extremely increased learning time arises because the error vanishes as it gets propagated back. In this article the decaying error flow is theoretically analyzed. Then methods trying to overcome vanishing gradients are briefly discussed. Finally, experiments comparing conventional algorithms and alternative methods are presented. With advanced methods long time lag problems can be solved in reasonable time.},
+author = {Hochreiter, Sepp},
+doi = {10.1142/S0218488598000094},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Hochreiter - 1998 - The vanishing gradient problem during learning recurrent neural nets and problem solutions.pdf:pdf},
+issn = {02184885},
+journal = {International Journal of Uncertainty, Fuzziness and Knowlege-Based Systems},
+keywords = {Long Short-Term Memory,Long-term dependencies,Recurrent neural nets,Vanishing gradient},
+number = {2},
+pages = {107--116},
+title = {{The vanishing gradient problem during learning recurrent neural nets and problem solutions}},
+volume = {6},
+year = {1998}
+}
+
+
+@article{Graves2005,
+abstract = {In this paper, we present bidirectional Long Short Term Memory (LSTM) networks, and a modified, full gradient version of the LSTM learning algorithm. We evaluate Bidirectional LSTM (BLSTM) and several other network architectures on the benchmark task of framewise phoneme classification, using the TIMIT database. Our main findings are that bidirectional networks outperform unidirectional ones, and Long Short Term Memory (LSTM) is much faster and also more accurate than both standard Recurrent Neural Nets (RNNs) and time-windowed Multilayer Perceptrons (MLPs). Our results support the view that contextual information is crucial to speech processing, and suggest that BLSTM is an effective architecture with which to exploit it. {\textcopyright} 2005 Elsevier Ltd. All rights reserved.},
+author = {Graves, Alex and Schmidhuber, J{\"{u}}rgen},
+doi = {10.1016/j.neunet.2005.06.042},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Graves, Schmidhuber - 2005 - Framewise phoneme classification with bidirectional LSTM and other neural network architectures.pdf:pdf},
+issn = {08936080},
+journal = {Neural Networks},
+number = {5-6},
+pages = {602--610},
+pmid = {16112549},
+title = {{Framewise phoneme classification with bidirectional LSTM and other neural network architectures}},
+volume = {18},
+year = {2005}
+}
+
 
 @article{Hochreiter1997a,
 abstract = {Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient-based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O(1). Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.},
@@ -193,6 +319,28 @@ keywords = {Computational modeling,efficient learning,generalization,human and m
 pages = {1566--1571},
 title = {{Efficiency of learning in experience-limited domains: Generalization beyond the WUG test}},
 year = {2019}
+}
+
+@article{Harm1999,
+abstract = {The development of reading skill and bases of developmental dyslexia were explored using connectionist models. Four issues were examined: the acquisition of phonological knowledge prior to reading, how this knowledge facilitates learning to read, phonological and nonphonological bases of dyslexia, and effects of literacy on phonological representation. Compared with simple feedforward networks, representing phonological knowledge in an attractor network yielded improved learning and generalization. Phonological and surface forms of developmental dyslexia, which are usually attributed to impairments in distinct lexical and nonlexical processing "routes," were derived from different types of damage to the network. The results provide a computationally explicit account of many aspects of reading acquisition using connectionist principles.},
+author = {Harm, Michael W. and Seidenberg, Mark S.},
+doi = {10.1037/0033-295X.106.3.491},
+file = {:home/mcb/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Harm, Seidenberg - 1999 - Phonology, reading acquisition, and dyslexia Insights from connectionist models.pdf:pdf},
+journal = {Psychological Review},
+number = {3},
+pages = {491--528},
+pmid = {10467896},
+title = {{Phonology, reading acquisition, and dyslexia: Insights from connectionist models}},
+volume = {106},
+year = {1999}
+}
+
+@book{Fudge2015,
+address = {London},
+author = {Fudge, Erik},
+publisher = {Routledge},
+title = {{English word-stress}},
+year = {2015}
 }
 
 
