@@ -38,11 +38,11 @@ In order to link model behavior to that of humans, a standard approach was taken
 The time-varying model was trained to 72 epochs, and achieved asymptotic performance at that point. Accuracy data were generated using testing mode halfway through training (at epoch 36) in order to examine the effect of the frequency manipulation on learning. A comparison feedforward model was trained over the same set of training items, also to asymptote (300 epochs) using all the same specifications as the model reported in @Cox2019. The same gradient-based frequency manipulation was used in the feedforward model as with the time-varying model.
 
 ## Frequency
-More experience with a word leads to more robust representation of the word, which in turn enhances the ability to act on it in some form. The most common proxy for experience in the reading literature is the frequency of a word's occurrence in a set of texts. Words that are more frequently encountered tend to be easier to read, resulting in general in faster reading times and fewer errors [@Balota2004; @Forster1973; @Stanovich1978]. Connectionist models of reading aloud have established the effect of experience in a number of studies, where experience is implemented by proxy as a frequency-influenced procedure during learning [@Plaut1997; @Sibley2010]. Word frequencies were used in order to scale gradients during training for the time-varying model reported on here. One issue is whether the time-varying architecture is sensitive to experience implemented in this way, and whether or not this sensitivity resembles that of other computational architectures and human behavioral data.
+More experience with a word leads to more robust representation of the word, which in turn enhances the ability to act on it in some form. The most common proxy for experience in the reading literature is the frequency of a word's occurrence in a set of texts. Words that are more frequently encountered tend to be easier to read, resulting in general in faster reading times and fewer errors [@Balota2004; @Forster1973; @Stanovich1978]. Connectionist models of reading aloud have established the effect of experience in a number of studies, where experience is implemented by proxy as a frequency-influenced procedure during learning [@Sibley2010; @Plaut1996]. Word frequencies were used in order to scale gradients during training for the time-varying model. One issue is whether the time-varying architecture is sensitive to experience implemented in this way, and whether or not this sensitivity resembles that of other computational architectures and human behavioral data.
 
 In order to examine the effect of frequency on accuracy, mean squared error for the time-varying and feedforward models were generated halfway through training. These are reported alongside both latency and accuracy values for the training pool items taken from @Balota2007. All values were standardized in order to share a y-axis, this involved arranging the accuracy scores such that increases in the values represented increases in processing difficulty (i.e., mirroring the distribution of response times). As a result, these values can be interpreted as "processing difficulty". Also, frequencies have been log transformed. Increases in word frequency are associated with a reduction in processing difficulty, as shown in Figure 4. This relationship is lower in both computational models than in the data from @Balota2007, but in all four we see a common pattern.
 
-```{r, freqeffectHumanComp, echo=FALSE, warning=FALSE, fig.cap="The relationship between word frequency (scaled) and word-level processing difficulty is shown for human behavioral data (panel A shows naming accuracy and panel B shows naming latency), a feedforward network architecture (C), and the time-varying/ LSTM architecture (D). For computational models (C-D) error is calculated as mean squared error. In all cases, an increase in frequency is associated with an increase in processing difficulty. Points are individual words that participated in training. In the case of human accuracy (A) errors are computed as accuracy of naming the word in a megastudy of word reading [@Balota2007] where the accuracy value of a word has the sign reversed. Human RTs are msecs standardized. Model errors are mean squared error, calculated unitwise on the phonological output layer of the network (over differences between the produced output for a unit and the target output). Error metrics are standardized across the three panels so that points (words) could share a common y-axis."}
+```{r, freqeffectHumanComp, echo=FALSE, warning=FALSE, fig.height=3, fig.cap="The relationship between word frequency (scaled) and word-level processing difficulty is shown for human behavioral data (panel A shows naming accuracy and panel B shows naming latency), a feedforward network architecture (C), and the time-varying/ LSTM architecture (D). Points are individual words that participated in training. In the case of human accuracy (A) errors are computed as accuracy of naming the word in a megastudy of word reading [@Balota2007] where the accuracy value of a word has the sign reversed. Human RTs are standardized milliseconds. Model errors (C-D) are mean squared error, calculated unitwise on the phonological output layer of the network (over differences between the produced output for a unit and the target output). All metrics are standardized so that points (words) could share a common y-axis."}
 
 STAGE = 'Middle'
 
@@ -123,13 +123,14 @@ mono %>%
   facet_grid(~model) +
   labs(x = 'Frequency (log)', y = 'Processing difficulty') +
   theme_apa() +
-  theme(legend.position = 'none', strip.text = element_text(size = 5)) +
+  theme(legend.position = 'none', strip.text = element_text(size = 5.25)) +
   ylim(c(-1, 5))
 ```
 
-Furthermore, the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. With enough experience, challenges (errors) associated with processing are minimized due to familiarity. In table XX we see this in the relationship between raw error (as mean square error) plotted at two points in training: once early on (at 27 epochs) and again late in training (at 63 epochs). Errors become low even for the least frequent words.
+\newpage
+Furthermore, as with the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. With enough experience, processing difficulty is minimized. In table 5 we see this in the relationship between raw error (as mean square error) plotted at two points in training: once early on (at 36 epochs) and again late in training (at 72 epochs). Errors become low even for the least frequent words.
 
-```{r, freqeffectEarlyLate, echo=FALSE, fig.cap= 'The effect of word frequency early and late in training on the time-varying network differs such that with ample experience errors on infrequent words are minimized and the overall effect of frequency on error is reduced. Raw errors are plotted for words (points) using mean squared error.' }
+```{r, freqeffectEarlyLate, echo=FALSE, fig.height=3, fig.cap= 'The effect of word frequency early and late in training on the time-varying network differs such that with ample experience errors on infrequent words are minimized and the overall effect of frequency on error is reduced. Raw errors are plotted for words (points) using mean squared error.' }
 
 mono %>% 
   filter(stage == c('Middle', 'Late')) %>% 
@@ -137,13 +138,13 @@ mono %>%
   filter(train_test == 'train') %>% 
   mutate(trainstage = case_when(stage == 'Middle' ~ 'Early in training',
                                 stage == 'Late' ~ 'Late in training')) %>% 
-  ggplot(aes(freq_scaled, accuracy)) +
+  ggplot(aes(log(freq), accuracy)) +
   geom_point(size = .5, color = 'firebrick') +
   geom_smooth(method = 'lm', color = 'grey32') +
   scale_color_manual(values = COLORS) +
   facet_grid(~trainstage) +
-  labs(x = 'Frequency (scaled)', y = 'Mean Squared Error') +
-  theme_bw() +
+  labs(x = 'Frequency (log)', y = 'Mean Squared Error') +
+  theme_apa() +
   theme(legend.position = 'none')
 ```
 
