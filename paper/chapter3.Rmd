@@ -37,10 +37,10 @@ In order to link model behavior to that of humans, a standard approach was taken
 
 The time-varying model was trained to 72 epochs, and achieved asymptotic performance at that point. Accuracy data were generated using testing mode halfway through training (at epoch 36) in order to examine the effect of the frequency manipulation on learning. A comparison feedforward model was trained over the same set of training items, also to asymptote (300 epochs) using all the same specifications as the model reported in @Cox2019. The same gradient-based frequency manipulation was used in the feedforward model as with the time-varying model.
 
-## Frequency
-More experience with a word leads to more robust representation of the word, which in turn enhances the ability to act on it in some form. The most common proxy for experience in the reading literature is the frequency of a word's occurrence in a set of texts. Words that are more frequently encountered tend to be easier to read, resulting in general in faster reading times and fewer errors [@Balota2004; @Forster1973; @Stanovich1978]. Connectionist models of reading aloud have established the effect of experience in a number of studies, where experience is implemented by proxy as a frequency-influenced procedure during learning [@Sibley2010; @Plaut1996]. Word frequencies were used in order to scale gradients during training for the time-varying model. One issue is whether the time-varying architecture is sensitive to experience implemented in this way, and whether or not this sensitivity resembles that of other computational architectures and human behavioral data.
+## Frequency effects
+More experience with a word leads to more robust representation of the word, which in turn enhances the ability to act on it in some form. The most common proxy for experience in the reading literature is the frequency of a word's occurrence in a set of texts. Words that are more frequently encountered tend to be easier to read, resulting in general in faster reading times and fewer errors [@Balota2004; @Forster1973; @Stanovich1978]. Models of reading aloud have simulated the effect of experience in a number of studies, where experience is sometimes implemented by proxy as a frequency-influenced procedure during learning [@Sibley2010; @Plaut1996]. Similar to other models word frequencies were used here in order to scale gradients during training for the time-varying and feedforward models. One issue is whether the time-varying architecture is sensitive to experience implemented in this way, and concerns whether or not this sensitivity resembles that of other computational architectures and human behavioral data.
 
-In order to examine the effect of frequency on accuracy, mean squared error for the time-varying and feedforward models were generated halfway through training. These are reported alongside both latency and accuracy values for the training pool items taken from @Balota2007. All values were standardized in order to share a y-axis, this involved arranging the accuracy scores such that increases in the values represented increases in processing difficulty (i.e., mirroring the distribution of response times). As a result, these values can be interpreted as "processing difficulty". Also, frequencies have been log transformed. Increases in word frequency are associated with a reduction in processing difficulty, as shown in Figure 4. This relationship is lower in both computational models than in the data from @Balota2007, but in all four we see a common pattern.
+In order to examine the effect of frequency on accuracy, mean squared error for the time-varying and feedforward models were generated halfway through training. These are reported alongside both latency and accuracy values taken from @Balota2007. All values were standardized in order to share a y-axis. This involved arranging the accuracy scores such that increases in the values represented increases in processing difficulty (i.e., mirroring the distribution of response times). Figure 4 shows the relationship for the two computational models alongside behavioral data from the ELP. Frequencies have been log transformed. Increases in word frequency are associated with a reduction in processing difficulty. This trend is reduced in both computational models relative to the data from @Balota2007, but in all four we see a common pattern.
 
 ```{r, freqeffectHumanComp, echo=FALSE, warning=FALSE, fig.height=3, fig.cap="The relationship between word frequency (scaled) and word-level processing difficulty is shown for human behavioral data (panel A shows naming accuracy and panel B shows naming latency), a feedforward network architecture (C), and the time-varying/ LSTM architecture (D). Points are individual words that participated in training. In the case of human accuracy (A) errors are computed as accuracy of naming the word in a megastudy of word reading [@Balota2007] where the accuracy value of a word has the sign reversed. Human RTs are standardized milliseconds. Model errors (C-D) are mean squared error, calculated unitwise on the phonological output layer of the network (over differences between the produced output for a unit and the target output). All metrics are standardized so that points (words) could share a common y-axis."}
 
@@ -118,7 +118,7 @@ mono %>%
                            TRUE ~ model)) %>% 
   ggplot(aes(log(freq), acc, color = model)) +
   geom_point(size = .2) +
-  geom_smooth(method = 'lm', color = 'grey32', span = 1/3) +
+  geom_smooth(method = 'lm', color = 'grey32', span = 1/3, fill = 'grey48') +
   scale_color_manual(values = COLORS) +
   facet_grid(~model) +
   labs(x = 'Frequency (log)', y = 'Processing difficulty') +
@@ -128,9 +128,9 @@ mono %>%
 ```
 
 \newpage
-Furthermore, as with the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. With enough experience, processing difficulty is minimized. In table 5 we see this in the relationship between raw error (as mean square error) plotted at two points in training: once early on (at 36 epochs) and again late in training (at 72 epochs). Errors become low even for the least frequent words.
+Furthermore, the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. With enough experience, processing difficulty is minimized even for the most infrequent words. In table 5 we see this in the cumulative error scores at two points in training the time-varying network: once early on (at 36 epochs) and again late in training (at 72 epochs). Errors become low even for the least frequent words.
 
-```{r, freqeffectEarlyLate, echo=FALSE, fig.height=3, fig.cap= 'The effect of word frequency early and late in training on the time-varying network differs such that with ample experience errors on infrequent words are minimized and the overall effect of frequency on error is reduced. Raw errors are plotted for words (points) using mean squared error.' }
+```{r, freqeffectEarlyLate, echo=FALSE, fig.height=3.5, fig.cap= 'The effect of word frequency early and late in training on the time-varying network differs such that with ample experience errors on infrequent words are minimized and the overall effect of frequency on error is reduced. Raw errors are plotted for words (points) using mean squared error.' }
 
 mono %>% 
   filter(stage == c('Middle', 'Late')) %>% 
@@ -140,7 +140,7 @@ mono %>%
                                 stage == 'Late' ~ 'Late in training')) %>% 
   ggplot(aes(log(freq), accuracy)) +
   geom_point(size = .5, color = 'firebrick') +
-  geom_smooth(method = 'lm', color = 'grey32') +
+  geom_smooth(method = 'lm', color = 'grey32', fill = 'grey48') +
   scale_color_manual(values = COLORS) +
   facet_grid(~trainstage) +
   labs(x = 'Frequency (log)', y = 'Mean Squared Error') +
@@ -149,16 +149,17 @@ mono %>%
 ```
 
 
-## Consistency
-Another important aspect of learning to read and reading behavior concerns how structural complexity affects reading performance. Readers are sensitive to the degree of coherent covariation among the mappings between printed and spoken words; the less covariation that exists between letters and sounds, the slower and more error prone performance is. Debates about how readers deal with this complexity and the role of experience in development and performance have been important for understanding the cognitive system that underlies reading development and performance, with different theoretical frameworks approaching the computations (and associated measurement) in different ways.
+## Consistency effects
+Another important aspect of learning to read 
+concerns how structural complexity affects reading performance. Readers are sensitive to the degree of coherent covariation among the mappings between printed and spoken words; the less covariation that exists between letters and sounds, the slower and more error prone performance is. Debates about how readers deal with this complexity and the role of experience in development and performance have been important for understanding the cognitive system that underlies reading development and performance, with different theoretical frameworks approaching the computations (and associated measurement) in different ways [see @Seidenberg2022 for a thorough review].
 
-Parallel distributed processing theories of reading and lexical processing, like the model reported in @Seidenberg1989 and extended in @Plaut1996, hold that complexity leads to more burdensome processing (i.e., longer naming latencies), which can be overcome with experience. Networks that implement the theory encode information about the mappings between perceptual modalities in neuron-like processing units, with a single architecturally homogenous process accounting for words learned and read. In a model that learns to map print to speech over the course of experience (perception, action) these units (weights) encode the relationships between printed and spoken words with increasing robustness. This robustness is affected by the amount of experience the reader (or computational model) has in learning the words during training and the reliability with which the mappings across modalities occur across those words.
+Parallel distributed processing theories of reading and lexical processing [@Plaut1996; @Seidenberg1989], have established that complexity of this kind leads to more burdensome processing (e.g., longer naming latencies, higher error) which can be overcome with sufficient experience. Connectionist models encode information about the mappings between perceptual modalities in neuron-like processing units, which come to encode the relationships between printed and spoken words with increasing robustness. This robustness is affected by the amount of experience the reader (or computational model) has in learning the words during training and the reliability with which the mappings across modalities occur across those words.
 
-In connectionist models of reading, the complexity of the mappings between print and speech is described in terms of _consistency_: the extent to which the pronunciation of a word is similar other similarly spelled words. Defining consistency in a measurable way is important for understanding the behavior of the network. The approach here is similar to @Plaut1996, where the consistency of a word is defined by the orthographic body with respect to the phonological rime. Here _body_ refers to the portion of the word consisting of the first orthographic vowel and the orthographic structure that follows it (e.g., the _umbling_ in _fumbling_), and rime refers to the first vowel phoneme and everything that follows it (i.e, `r scaps('AH1-M-B-L-IH0-NG')` portion of the spoken form). A highly consistent word is one where words with this same body also have a similar pronunciation for this portion of the syllabic structure. We use a proportion for our purposes here, using the total number of words with a given body as the denominator, with the numerator as the number of words that share the rime present in that word. The result is that highly consistent words have values that tend towards one (i.e., all words with a given body share the rime) and inconsistent words have a value that tend towards zero.
+The complexity of the mappings between print and speech is defined in terms of _consistency_: the extent to which the pronunciation of a word is similar other similarly spelled words^[While different theoretical approaches define this structural properties in different ways, it is outside the scope of the current work to adjudicate between different approaches. This issue is discussed thoroughly elsewhere [@Seidenberg2022] and would be worthwhile for consideration in future modeling exercises using the architecture reported here.]. Defining consistency in a measurable way is important for understanding the behavior of the network and corresponding reading behavior in humans. The approach taken here is similar to @Plaut1996, where the consistency of a word is defined by the orthographic body with respect to the phonological rime (for monosyllabic words). Here _body_ refers to the portion of the word consisting of the first orthographic vowel and the orthographic structure that follows it (e.g., the `r scaps('umbling')` in `r scaps('fumbling')`, and rime refers to the first vowel phoneme and everything that follows it (i.e, `r scaps('ah1-m-b-l-ih0-ng')` portion of the spoken form). A highly consistent word is one where words with this same body also have a similar pronunciation for this portion of the syllabic structure. We use a proportion for our purposes here, using the total number of words with a given body as the denominator, with the numerator as the number of words that share the rime present in that word [see @Siegelman2020 for other related methods of measurement]. The result is that highly consistent words have values that tend towards one (i.e., all words with a given body share the rime) and inconsistent words have a value that tend towards zero.
 
-The time-varying network shows a similar effect of consistency on accuracy as both the traditional feedforward networks of word reading as well as human naming data. As consistency increases, we see lower error scores. Consistent words are, in general, easier to read than less consistent words, and this effect is present across both human (left pane) and model data (middle and right panes).
+The time-varying network shows a similar effect of consistency on accuracy as both the feedforward network as well as human naming data (Figure 6). As consistency increases, we see lower error scores. Consistent words are, in general, easier to read than less consistent words, and this effect is present across both human (left pane) and model data (middle and right panes).
 
-```{r, consistencyHumanComp, echo=FALSE, fig.cap="The relationship between monosyllabic word consistency and error is shown for computational models (feedforward and time-varying) and human naming tasks. In all three there is a relationship between consistency and error such that increases in consistency (across words) are associated with lower error on average. Here errors for human and model data are processed as previously described, standardizing so that data can share the same y-axis."}
+```{r, consistencyHumanComp, echo=FALSE, fig.height=3.5, fig.cap="The relationship between monosyllabic word consistency and error is shown for computational models (feedforward and time-varying) and human naming tasks. In all three there is a relationship between consistency and error such that increases in consistency (across words) are associated with lower error on average. Here errors for human and model data are calculated as previously described with human behavioral data reported as accuracy only, standardizing so that data can share the same y-axis."}
 
 COLORS = c('(C) Time-varying' = 'firebrick', '(B) Feedforward' = 'goldenrod', '(A) Human - Naming Accuracy' = 'Black')
 
@@ -175,18 +176,19 @@ mono %>%
                            TRUE ~ model)) %>% 
   ggplot(aes(consistency, acc, color = model)) +
   geom_point(size = .6) +
-  geom_smooth(method = 'lm', color = 'grey32') +
+  geom_smooth(method = 'lm', color = 'grey32', fill = 'grey48') +
   scale_color_manual(values = COLORS) +
   facet_grid(~model) +
-  labs(x = 'Consistency', y = 'Error') +
-  theme_bw() +
-  theme(legend.position = 'none')
+  labs(x = 'Consistency (standardized)', y = 'Error') +
+  theme_apa() +
+  theme(legend.position = 'none',
+        strip.text = element_text(size = 7))
 
 ```
 
-Like the effect of word frequency on accuracy, the effect of consistency diminishes over time. Processing difficulty associated with the consistency of an item can be overcome by having enough experience with the item. This can be seen when examining the relationship between consistency and error at two stages of the learning process. Table XX shows the relationship between consistency and error early in training and late in training, with the correlation decreasing over time as the learner develops experience with words in the training set.
+Like the effect of word frequency on accuracy, the effect of consistency diminishes over time. Processing difficulty associated with the consistency of an item can be overcome by having enough experience with it. This can be seen when examining the relationship between consistency and error at two stages of the learning process. Table 7 shows the relationship between consistency and error early in training and late in training, with the correlation decreasing over time as the learner develops experience with words in the training set.
 
-```{r, consistencyEarlyLate, echo=FALSE, fig.cap='The relationship between word consistency and error at two different points in training is shown. With experience, the effect of consistency on errors is reduced.'}
+```{r, consistencyEarlyLate, echo=FALSE, fig.height=3.5, fig.cap='The relationship between word consistency and error at two different points in training is shown. With experience, the effect of consistency on errors is reduced.'}
 
 mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
@@ -195,30 +197,28 @@ mono %>%
                                 stage == 'Late' ~ 'Late in Training')) %>% 
   ggplot(aes(consistency, accuracy)) +
   geom_point(size = .6, color = 'firebrick') +
-  geom_smooth(method = 'lm', color = 'grey32') +
+  geom_smooth(method = 'lm', color = 'grey32', fill = 'grey48') +
   scale_color_manual(values = COLORS) +
   facet_grid(~trainstage) +
   labs(x = 'Consistency (body-rime)', y = 'Mean Squared Error') +
-  theme_bw() +
+  theme_apa() +
   theme(legend.position = 'none')
 
 ```
 
-## Consistency effects in generalization
-These effects can also be seen in errors collected using the offline generalization mode of the network. The network was tested on a set of words held out during training (test items) using the offline method. The results are similar to those of the other accuracy tests reported earlier. The higher the consistency of a given word is, the less error you see on average at the time of test. Generalization results produced from the offline testing method are important because they demonstrate the capacity of the network in absence of phonological input at the time of test. These test trials are completed by providing the orthographic state (cell and hidden) to the phonological portion of the network along with the word-initial segment. A phonological wordform is then produced, one segment at a time. Those segments (vectors) are then combined and compared against the corresponding vector for the entire target word ^[Both the produced vector and the target vectors are all zero padded on the right side for this calculation to account for the fact that it is possible to produce a sequence of phonemes that is a different length than the target sequence. This padding does not affect the calculation of L2 distance, it only allows the calculation for vectors that are not of equal length]. 
+### Consistency effects in production mode
+These effects can also be seen in accuracy data from production mode of the time-varying network (Figure 8). At the end of training, items from the train and test set were tested for their accuracy, calculated using Euclidean distance between the produced word and the target word. Test items (7% of the corpus held out for test) show the relationship more strongly than train items, but in both sets we see that increases in body-rime consistency are associated with lower error (distance).
 
-```{r, consistencyGeneralization, echo=FALSE, fig.cap='The relationship between (body-rime) consistency and errors in offline generalization mode are shown, with the left panel showing errors for held out test items and the right panel showing errors on training items. Here error is calculated as the distance between the produced output and the target output for the entire word, a measure that is mathematically different from but very highly correlated with mean square error and other standard error metrics associated with these networks.'}
+```{r, consistencyGeneralization, echo=FALSE, fig.height=3.5, fig.cap='The relationship between (body-rime) consistency and error in production mode are shown, where error is defined in terms of the Euclidean distance between the produced form and its target (higher distance means greater error). This measure is mathematically different from but very highly correlated with mean squared error and other standard error metrics associated with these networks. The left panel shows the trend for test items and the right panel shows training items.'}
 mono_lstm_testmode %>% 
-  #filter(train_test == 'test') %>% 
-#  filter(consistency < 1) %>% 
   mutate(train_test = case_when(train_test == 'train' ~ 'Training items',
                                 train_test == 'test' ~ 'Test items')) %>% 
   ggplot(aes(consistency, wordwise_dist)) +
   facet_grid(~train_test) +
   geom_point(color = 'firebrick') +
-  geom_smooth(method = 'lm', color = 'grey32') +
+  geom_smooth(method = 'lm', color = 'grey32', fill = 'grey48') +
   labs(x = 'Consistency (body-rime)',
-       y = 'Error') +
+       y = 'Euclidean distance (error)') +
   theme_apa()
 
 ```
@@ -230,7 +230,7 @@ The consistency of a word and the frequency with which it appears during learnin
 This also applies to other aspects of structure, including structure possessed by words that are greater than one syllable, even though single syllable words are the focus here. For example, the words `r scaps('print')`, `r scaps('sprint')`, and `r scaps('prim')` will benefit from weight updates that result from learning the word `r scaps('prince')` even though this neighborhood of words is defined in a different way than how consistency was defined for the analyses here. Nonetheless, there is reason to believe that it is beneficial to define neighborhoods of monosyllabic words in terms of body-rime units rather than some other portion of syllabic structure due to the reliability of this structure relative to alternatives. For example, @Treiman1995 demonstrated that rime structure is more stable for short monosyllabic words, and that this stability is associated with more explained variance in naming latencies and errors than other syllabic structure.
 
 
-```{r, frequencyByConsistency, echo=FALSE, fig.cap='The relationship between word consistency and errors at two levels of word frequency. Words were binned for frequency based on a mean-split only for purposes of visualization. Early in training the effect of consistency is most prevalent in low frequency words, and this effect is reduced late in training. Also, the overall effect of consistency is attenuated by the end of training, and the effect of frequency becomes less differentiated across levels of frequency.'}
+```{r, frequencyByConsistency, echo=FALSE, fig.height=3.5, fig.cap='The relationship between word consistency and errors at two levels of word frequency. Words were binned for frequency based on a mean-split only for purposes of visualization. Early in training the effect of consistency is most prevalent in low frequency words, and this effect is reduced late in training. Also, the overall effect of consistency is attenuated by the end of training, and the effect of frequency becomes less differentiated across levels of frequency.'}
 descriptives = mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>% 
   group_by(stage) %>% 
