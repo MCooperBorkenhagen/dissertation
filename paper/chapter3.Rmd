@@ -210,7 +210,7 @@ mono %>%
 ### Consistency effects in production mode
 These effects can also be seen in accuracy data from production mode of the time-varying network (Figure 8). At the end of training, items from the train and test set were tested for their accuracy, calculated using Euclidean distance between the produced word and the target word. Test items (7% of the corpus held out for test) show the relationship more strongly than train items, but in both sets we see that increases in body-rime consistency are associated with lower error (distance).
 
-```{r, consistencyGeneralization, echo=FALSE, fig.height=3.5, fig.cap='The relationship between (body-rime) consistency and error in production mode are shown, where error is defined in terms of the Euclidean distance between the produced form and its target (higher distance means greater error). This measure is mathematically different from but very highly correlated with mean squared error and other standard error metrics associated with these networks. The left panel shows the trend for test items and the right panel shows training items.'}
+```{r, consistencyGeneralization, echo=FALSE, fig.height=3.5, fig.cap='The relationship between (body-rime) consistency and error in production mode are shown, where error is defined in terms of the Euclidean distance between the produced form and its target (higher distance means greater error). This measure is mathematically different from but very similar to mean squared error and other standard error metrics associated with these networks. The left panel shows the trend for test items and the right panel shows training items.'}
 mono_lstm_testmode %>% 
   mutate(train_test = case_when(train_test == 'train' ~ 'Training items',
                                 train_test == 'test' ~ 'Test items')) %>% 
@@ -231,7 +231,7 @@ Keep in mind this also applies to other aspects of structure, including structur
 
 The effect of frequency of exposure to a word will have a similar result to consistency in that the weights in the network encode properties of frequent words more strongly than infrequent ones. As the frequency of occurrence increases, performance will improve - even for infrequent forms (as in Figure 5). Likewise, as experience increases with words that exhibit atypical structure, performance will improve (Figure 7). These two aspects of learning should be understood as interrelated given their join reliance on experience. Figure 9 shows the relationship between frequency and consistency across training. At advanced levels of training (bottom two panels) the effect of consistency is diminished, and performance on infrequent words is improved with sufficient experience.
 
-```{r, frequencyByConsistency, echo=FALSE, fig.height=3.5, fig.cap='The relationship between word consistency and errors at two levels of word frequency. Words were binned for frequency based on a mean-split only for purposes of visualization. Early in training the effect of consistency is most prevalent in low frequency words, and this effect is reduced late in training. Also, the overall effect of consistency is attenuated by the end of training, and the effect of frequency becomes less differentiated across levels of frequency.'}
+```{r, frequencyByConsistency, echo=FALSE, fig.height=4, fig.cap='The relationship between word consistency and errors at two levels of word frequency. Words were binned for frequency based on a mean-split only for purposes of visualization. Early in training the effect of consistency is most prevalent in low frequency words, and this effect is reduced late in training. Also, the overall effect of consistency is attenuated by the end of training, and the effect of frequency becomes less differentiated across levels of frequency.'}
 descriptives = mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>% 
   group_by(stage) %>% 
@@ -255,8 +255,9 @@ mono %>%
 
 ```
 
-These differences in performance between learning stage, frequency, and consistency are seen more precisely in a statistical model of error. Mean squared error was regressed on the interaction of learning stage, frequency, and consistency (all centered on the mean), yielding significant effects for all predictors and interactions, shown in Table XX.
+\newpage
 
+These differences in performance between learning stage, frequency, and consistency are seen more precisely in a statistical model of error generated from testing mode. Mean squared error was regressed on the interaction of learning stage, frequency, and consistency (all centered on the mean), yielding significant effects for all predictors and interactions, shown in Table 1.
 
 ```{r, stageFrequencyConsistencyModel, echo=FALSE}
 descriptives = mono %>% 
@@ -289,20 +290,18 @@ tabledata$Predictor = c('Intercept', 'Learning stage', 'Consistency', 'Frequency
 
 rownames(tabledata) = NULL
 ```
-
-
-  
-  
 \newpage
+\ Table 1
 
 ```{r, stageFrequencyConsistencyModelRender, echo=FALSE} 
 
 HEADER = c('*b*', '*SE*', '*t*', '*p*', '95% CI', 'Predictor')
 names(tabledata) = HEADER
 
-tabledata %>% 
-  select(Predictor, everything()) %>% 
-  apa_table(digits = 3, format = 'pandoc', align = 'l', landscape = T,
+tabledata = tabledata %>% 
+  select(Predictor, everything())
+
+apa_table(tabledata, digits = 3, format = 'pandoc', escape = F, align = 'l', landscape = T,
             note = 'Model estimated using lm() in R with confidence intervals estimated using confint(), both methods from the native R stats package [@R2021]. Bold parameter estimates indicate significant *p*-values below the alpha threshold of .05.',
             caption = 'Regression Model of the Interaction Between Learning Stage, Word (Body-Rime) Consistency, and Word Frequency on Mean Squared Error')
 
@@ -310,10 +309,10 @@ tabledata %>%
 ```
 
 
-## Graded effects of consistency and frequency: replicating previous experimental findings
-An additional simulation was conducted in order to replicate the graded effects of consistency and the interaction with frequency. This section reports data with the words from the @Taraban1987, @Plaut1996, and @Jared1997 word lists included during training, both of which investigated these phenomena in monosyllabic words. These additional simulations were very similar to those reported in the previous sections but with the training environments including all the words from the experiments reported in these papers, with the exception of words that were too short phonologically (less than two phonemes). This exclusion was made due to the relative few very short words in the training corpus and the possible idiosyncrasies that such words have in time-varying models of phonological processing, rather than deeper theoretical reasons. In the corpus of monosyllabic words assembled, only 19 eligible words were two phonemes or fewer, and were thus excluded (just as words that were one letter or fewer were excluded). The model reported on here is entirely capable of learning and processing such words successfully.
+## Reproducing previous experimental findings
+Effects of frequency and consistency have also been established in experiments that manipulate these properties factorially. Results that convey the relationship between a given word property and error of some kind over all words in the training pool are useful insofar as they are suggestive of a given effect, but reproducing effects of such properties from a carefully controlled experiment serves as a more compelling result. In order to do this for the present model, words from several relevant studies were included the training pool, namely @Taraban1987 [also used in @Plaut1996] and @Jared1997. These studies were aimed at examining the graded effects of consistency and the interaction with frequency, all of which focused on these phenomena using monosyllabic words. In the corpus of monosyllabic words assembled, only 19 words from these lists were too short (two phonemes or fewer), and were thus excluded (just as words that were one letter or fewer were excluded). Therefore, the vast majority of the words from these stimuli sets were able to be included for simulations using the time-varying model (`r nrow(filter(taraban_testmode, !is.na(freq_jaredA) | !is.na(freq_taraban)))-19` words total across the two sets).
 
-These experimental lists were designed in order to vary the level of orthography-to-phonology consistency using a set of categorical distinctions across consistency in order to investigate the trade-offs on reading performance as a function of consistency and frequency.This distinction is important because connectionist networks show the ability to generate phonology from orthography despite the fact that such systems do not operate by way of rules that map from segments of one perceptual modality to segments of the other, as computational models using dual-route mechanisms do. If the time-varying model proposed here operates in a similar fashion to the connectionist architectures developed using feedforward architectures then results should replicate for previous experiments with such architectures. Specifically, the graded effects of consistency on error (or loss) should be observed, in addition to their interaction with frequency.
+All of these experimental lists were designed to vary the level of orthography-to-phonology consistency using a set of categorical distinctions in order to investigate the trade-offs on reading performance as a function of consistency and frequency. This distinction is important because connectionist networks show the ability to generate phonology from orthography despite the fact that such systems do not operate by way of rules that map from segments of one perceptual modality to segments of the other, as computational models using dual-route mechanisms do. If the time-varying model proposed here operates in a similar fashion to the connectionist architectures developed using feedforward architectures then results should replicate for previous experiments with such architectures. Specifically, the graded effects of consistency on error (or loss) should be observed, in addition to their interaction with frequency.
 
 @Taraban1987 (Experiment 1a) was a simple naming experiment where participants read aloud words that were either exceptional (words with no neighbors, like `r scaps('done')`) or regular but inconsistent (like `r scaps('catch')`). Additionally, words were either high frequency or low frequency. Participants also read a set of control words that had many neighbors. Each control was matched with a test word for the starting letter and phoneme, frequency, and bigram frequency. There were 24 words in each group (so with controls equals 24 x 4 x 2 = 192 words). The study found that exception words exhibited slower, more error prone responses than inconsistent but regular words. Low frequency words showed this difference more dramatically than high frequency words.
 
