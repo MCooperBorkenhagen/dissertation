@@ -317,7 +317,7 @@ All of these experimental lists were designed to vary the level of orthography-t
 The time-varying architecture proposed here is structured in a similar way, using learning principles like other connectionist networks and should therefore reproduce effects similar to other similar models. Likewise, behavioral effects from controlled experiments with human readers should also be reproducible if the time-varying model is a psychologically valid one. The sections that follow report on several such experiments (some computational, some behavioral) that examine the graded effects of consistency on naming and its interaction with word frequency. Because these stimuli sets are small, in order to avoid results that hinged on a single run of the model^[Keep in mind that some amound of randomness is present in the training process due to (i) random weight initilizations, (ii) randomness due to the batch assembly procedure, and (iii) the particular set of words that are selected for training and hold out sets from the full pool of items.] the model was trained 50 times over with results pooled for a given experimental set.
 
 ### @Taraban1987
-Experiment 1a from @Taraban1987 was a simple naming study where participants read aloud words that were either exceptional (words with no neighbors; and example is `r scaps('done')`) or regular but inconsistent (like `r scaps('catch')`). Words that are "regular but inconsistent" are those that can be characterized by grapheme-phoneme rules but have at least one orthographic neighbor which differs in terms of pronunciation. For example, take the word `r scaps('catch')`. This word is regular in that it consists of grapheme-phoneme patterns seen in other words, but is inconsistent because of its orthographic neighbor `r scaps('watch')` with which it differs in pronunciation (specifically in terms of its rime pattern). Additionally, words in the experiment were either high frequency or low frequency. Participants also read a set of control words that had many neighbors. Each control was matched with a test word for the starting letter and phoneme, frequency, and bigram frequency. The study reproduced effects from @Glusko1979 and @Seidenberg1984, but implemented more precise controls for the target words and their corresponding control items than in @Seidenberg1984 (generating pairs that shared a word-initial phoneme). There were 24 words in each group (so with controls, stimuli totaled 24 x 4 x 2 = 192 words). The study found that exception words exhibited slower and more inaccurate responses than inconsistent but regular words. Low frequency words showed this difference more dramatically than high frequency words. The results from the original study can be seen in Figure 10.
+Experiment 1a from @Taraban1987 was a simple naming study where participants read aloud words that were either exceptional (words with no neighbors; and example is `r scaps('done')`) or regular but inconsistent (like `r scaps('catch')`). Words that are "regular but inconsistent" are those that can be characterized by grapheme-phoneme rules but have at least one orthographic neighbor which differs in terms of pronunciation. For example, take the word `r scaps('catch')`. This word is regular in that it consists of grapheme-phoneme patterns seen in other words, but is inconsistent because of its orthographic neighbor `r scaps('watch')` with which it differs in pronunciation (specifically in terms of its rime pattern). Additionally, words in the experiment were either high frequency or low frequency. Participants also read a set of control words that had many neighbors. Each control was matched with a test word for the starting letter and phoneme, frequency, and bigram frequency. The study reproduced effects from @Glushko1979 and @Seidenberg1984, but implemented more precise controls for the target words and their corresponding control items than in @Seidenberg1984 (generating pairs that shared a word-initial phoneme). There were 24 words in each group (so with controls, stimuli totaled 24 x 4 x 2 = 192 words). The study found that exception words exhibited slower and more inaccurate responses than inconsistent but regular words. Low frequency words showed this difference more dramatically than high frequency words. The results from the original study can be seen in Figure 10.
 
 ```{r, tarabanFig2, echo=FALSE, out.width='250px', fig.align='center', fig.cap='Results for the stimuli from Experiment 1 of Taraban et al. (1987) are shown. Results were calculated over item-level differences in accuracy between experimental words and their controls. This figure is generated from means reported in the original study and does not appear in original study except as a table, but has been included here for a direct comparison to computational model results.'}
 
@@ -394,42 +394,17 @@ taraban_crossval %>%
 
 ```
 
-## @Plaut1996 words
-@Plaut1996 took the word lists from @Taraban1987 and extended them to include _ambiguous_ words, which are words that have approximately equal numbers of friends an enemies, therefore resting between highly consistent words and very low consistency exception words. This resulted in the same conditions as those in @Taraban1987 but labeling the controls as "regular consistent", with the new "ambiguous" words, all separated among high and low frequency sets. In Figure X you we see the cross entropy (the value used as the loss function during training) for each of the four regularity conditions from @Taraban1987 and in the high and low frequency conditions taken from performance data early on in training (27 epochs). The trend observed closely resembles that of the computational results from @Plaut1996 and follows the expected pattern based on graded effects of consistency as they interact with frequency.
+### @Plaut1996
+@Plaut1996 took the word lists from @Taraban1987 and extended them to include _ambiguous_ words, which are words that have approximately equal numbers of friends an enemies, therefore resting in terms of consistency between highly consistent words and (low consistency) exception words. This resulted in the same conditions as those in @Taraban1987 but labeling the controls as "regular consistent", with the new "ambiguous" words, all separated among high and low frequency sets. Their study was a computational one following on from @Seidenberg1989 but using novel representations for phonology in order to mitigate problems associated with slot-based representations. The experiment with stimuli adapted from @Taraban1987 examined the extent to which a feedforward architecture demonstrated the graded effect of consistency in a way that was analogous to skilled readers. Figure 13 shows the cross entropy (the value used as the loss function during training) for each of the four regularity conditions from @Plaut1996 and in the high and low frequency conditions taken from performance half way through training. Cross entropy is used in order to directly compare with the results provided in the original @Plaut1996 study, and is highly correlated with mean squared error (the metric most often used for computational results here).
 
-```{r, figPlaut1, echo=FALSE}
+
+```{r plautModelFigure, echo=FALSE, out.width='250px', fig.align='center', fig.cap='Time-varying model results across four consistency conditions from Plaut et al. (1996) are shown for both high frequency and low frequency words. Results are averaged across 50 runs of the model.'}
+
 # shapes:
 # 0 = ambiguous (square)
 # 1 = exception (circle)
 # 2 = regular consistent (triangle)
 # 5 = regular inconsistent (diamond)
-taraban %>% 
-  filter(!is.na(freq_plaut)) %>% 
-  filter(epoch == 27) %>% 
-  filter(plaut != 'nonword') %>%
-  mutate(plaut = case_when(plaut == 'ambiguous' ~ 'Ambiguous',
-                             plaut == 'exception' ~ 'Exception',
-                             plaut == 'reg_consistent' ~ 'Regular consistent',
-                             plaut == 'reg_inconsistent' ~ 'Regular inconsistent'),
-         freq_plaut = case_when(freq_plaut == 'low' ~ 'Low',
-                                  freq_plaut =='high' ~ 'High'),
-         freq_plaut = fct_relevel(freq_plaut, c('Low', 'High')),
-         plaut = fct_relevel(plaut, c('Exception', 'Ambiguous', 'Regular inconsistent', 'Regular consistent'))) %>% 
-  group_by(freq_plaut, plaut) %>% 
-  summarise(loss = mean(loss)) %>% 
-  ggplot(aes(freq_plaut, loss, shape = plaut, group = plaut)) +
-  geom_line() +
-  geom_point(size = 3) +
-  scale_shape_manual(values = c(0, 1, 2, 5)) +
-  labs(x = 'Frequency', y = 'Cross entropy') +
-  theme_apa() +
-  theme(legend.title = element_blank())
-```
-
-In order to avoid results that rely on a single, perhaps idiosyncratic simulation, the simulation was conducted 50 times over and the same trend results when examining performance relatively early in training. The figure below shows these results averaging across runs of the model at an early stage of learning (here epoch 27).
-
-```{r,  echo=FALSE}
-
 taraban_crossval %>% 
   filter(!is.na(freq_plaut)) %>% 
   filter(epoch == 27) %>% 
@@ -454,123 +429,48 @@ taraban_crossval %>%
 
 ```
 
+The trend seen in the computational results using the time-varying model closely resembles those from @Plaut1996 and follows the expected pattern based on graded effects of consistency as they interact with frequency. Exception words are associated with higher loss (and error) than ambiguous words, which are associated with higher loss than regular words. Among regular words, regular inconsistent words are associated with higher loss than regular consistent words. Additionally, the high frequency group of each consistency category exhibits lower loss than their lower frequency counterparts. The data from the original study is shown in Figure 14.
 
+```{r plautFigureOriginal, echo=FALSE, out.width='200px', fig.align='center', fig.cap='Original results from Plaut et al. (1996) analogous to Figure 13 are provided, taken from the original study. The figure is reproduced by permission from Psychological Review.'}
+knitr::include_graphics('img/plaut5.png')
 
-```{r, echo=FALSE}
-taraban_crossval %>% 
-  filter(!is.na(freq_plaut)) %>% 
-  filter(epoch == 27) %>% 
-  filter(plaut != 'nonword') %>%
-  mutate(plaut = case_when(plaut == 'ambiguous' ~ 'Ambiguous',
-                             plaut == 'exception' ~ 'Exception',
-                             plaut == 'reg_consistent' ~ 'Regular consistent',
-                             plaut == 'reg_inconsistent' ~ 'Regular inconsistent'),
-         freq_plaut = case_when(freq_plaut == 'low' ~ -.5,
-                                  freq_plaut =='high' ~ .5),
-         plaut = fct_relevel(plaut, c('Exception', 'Ambiguous', 'Regular inconsistent', 'Regular consistent')),
-         plaut_num = as.numeric(plaut)) %>%
-  mutate(plaut_c = plaut_num-mean(c(1, 2, 3, 4))) %>% 
-  lmer(loss ~ plaut_c*freq_plaut + (1|word) + (1|run_id), data = .) -> m_plaut1
-
-#save(m_plaut1, file = 'data/m_plaut1.Rda')
-
-load(file = 'data/m_plaut1.Rda')
-
-
-
-# recompute confints:
-#m_plaut1_confint = confint(m_plaut1)
-#save(m_plaut1_confint, file = 'data/m_plaut1_confint.Rda')
-
-load('data/m_plaut1_confint.Rda')
-
-#m_plaut1_summary = summary(m_plaut1)
-#save(m_plaut1_summary, file = 'data/m_plaut1_summary.Rda')
-load(file = 'data/m_plaut1_summary.Rda')
-
-m_plaut1_confint
-
-# runtime is about 25 minutes:
-#m_plaut1_anova = car::Anova(m_plaut1, type = 3, test = 'F')
-# note that the anova table reflects the following usage:
-# Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df)
-#save(m_plaut1_anova, 'data/m_plaut1_anova.Rda')
-load(file = 'data/m_plaut1_anova.Rda')
-m_plaut1_anova
 ```
 
 
-Furthermore the effect is similar though not identical to those observed in @Plaut1996, as demonstrated in a statistical model of consistency condition (expressed as a linearly decreasing set of conditions in the following order: exception, ambiguous, regular inconsistent, and regular consistent) with frequency (high versus low). Using a linear mixed effects model estimated in R [@R2021] in the lme4 package [@Bates2015] with confidence intervals estimated in the stats library [@R2021] and p-values computed using the Anova() method in the car package [@Fox2019]. This model includes by item random intercepts as well as random intercepts for each run (each simulation). Here an increase in condition is, on average, associated with a `.01` decrease in loss (*b* = -.01, *SE* = .003, 95%CI = [-.01, -.005]), with the effect of frequency associated with a decrease in loss of .01 units. The interaction, unlike what was reported in @Plaut1996, is not significant (*b* = .003, *SE* = .003, *F*(1, 172) = 1.55, *p* = .22, 95%CI = [-.002, .008]). This pattern resembles the effects described earlier looking at frequency and consistency as quantitative predictors (derived from the structure of words in the corpus directly) but differs in the specification of the interaction (because they are defined across conditions rather than as observed). Words of increasing consistency demonstrate lower levels of error, and high frequency words are less error prone than lower frequency words.
+
+
+```{r, echo=FALSE, warning=FALSE}
+#####
+# only run all this if you want to rerun - estimates were hard coded in manuscript
+#####
+# runtime is about 25 minutes
+# source('m_plaut1.R')
+```
+
+
+In order to examine the effect more closely, a statistical model was estimated for the interaction between consistency (four levels) and frequency (two levels) on loss halfway through training. The results demonstrate that the effect is similar though not identical to the one observed in @Plaut1996. In this model consistency was expressed as a linearly decreasing set of conditions in the following order: exception, ambiguous, regular inconsistent, and regular consistent. Frequency is coded as either high or low. Using a linear mixed effects model estimated in R [@R2021] in the lme4 package [@Bates2015] with confidence intervals estimated in the stats library [@R2021] and p-values computed using the Anova() method in the car package [@Fox2019] using Kenward-Roger approximation for estimating degrees of freedom with that same package. This model includes by item random intercepts as well as random intercepts for each run (each simulation).
+
+An increase in condition is, on average, associated with a .01 decrease in loss (*b* = -.01, *SE* = .003, *p* < .001, *F*(1, 172) = 43.31, 95%CI = [-.01, -.005]), with the effect of frequency associated with a decrease in loss of .01 units (*b* = -.01, *SE* = .003, *p* < .001, F(1, 172) = 11.64, 95%CI = [-.014, -.004]). The interaction, unlike what was reported in @Plaut1996, is not significant (*b* = .003, *SE* = .003, *F*(1, 172) = 1.55, *p* = .22, 95%CI = [-.002, .008]). This pattern resembles the effects described earlier looking at frequency and consistency as quantitative predictors (derived from the structure of words in the corpus directly) but differs in the specification of the interaction (because they are defined across conditions rather than as observed). In summary, words of increasing consistency demonstrate lower levels of error, and high frequency words are less error prone than lower frequency words.
 
 ```{r,  echo=FALSE, warning=FALSE}
+#####
+# only run all this if you want to rerun - estimates were hard coded in manuscript
+#####
 
-
-taraban_crossval %>% 
-  filter(!is.na(freq_plaut)) %>% 
-  filter(epoch == 27) %>% 
-  filter(plaut != 'nonword') %>%
-  mutate(plaut_c = case_when(plaut == 'exception' ~ -.5,
-                               plaut == 'reg_inconsistent' ~ .5,
-                             plaut == 'reg_consistent' ~ .5),
-         freq_plaut = case_when(freq_plaut == 'low' ~ -.5,
-                                  freq_plaut =='high' ~ .5)) %>%
-  lmer(loss ~ plaut_c*freq_plaut + (1|word) + (1|run_id), data = .) -> m_plaut2
-
-summary(m_plaut2)
-
-# runtime is about 25 minutes:
-#m_plaut2_anova = car::Anova(m_plaut2, type = 3, test = 'F')
-#save(m_plaut2_anova, file = 'data/m_plaut2_anova.Rmd')
-
-load(file = 'data/m_plaut2_anova.Rmd')
+# runtime is about 25 minutes
+#source('m_plaut2.R')
 
 ```
-@Plaut1996 included a number of statistical tests that aren't central to the demonstration here. Though one is worth considering both because it adds additional precision to the previous results and is important to note for theoretical reasons. In a model of the interaction between word regularity (regular versus exception - as was defined in @Plaut1996) amd frequency (low versus high), regular words are reliably produced with lower errors than exception words (*b* = -.02, *SE* = .003, *F*(1, 85) = 35.35, ). The effect of frequency maintains as in the previous model reported, as does the non-significance of the interaction term. This indicates that the LSTM network picks up more narrowly on the difference in complexity between words that can be characterized as regular (both consistent regulars and inconsistent regulars) and those that are exceptional (those that both can't be described via simple rules and those that have no neighbors).
 
-The absence of a significant interaction between consistency and frequency here would require further experimentation, which would require analyses of loss and other relevant model behavior across training. @Plaut1996 included a range of experiments examining the variability in effects of including frequency manipulations of different kinds during training, showing that using condensed frequencies when training the network also condenses the effects related to those frequencies. It is quite possible that by expanding the frequency values used to scale gradients during training here would make the effects of frequency (whether raw or categorical) more dramatic. While this additional experimentation is outside the scope of the demonstration of the architecture here, it is worthy of future investigation in subsequent work.
+@Plaut1996 included a number of statistical tests that aren't central to the demonstration here. Though one is worth considering both because it adds additional precision to the previous results and is important to note for theoretical reasons. In a model of the interaction between regularity (regular versus exception - as was defined in @Plaut1996) and frequency (low versus high), regular words are produced with lower errors than exception words (*b* = -.02, *SE* = .003, *F*(1, 85) = 55.05, *p* < .001, 95%CI = [-.028, -.017]). The effect of frequency maintains as in the previous model reported (*b* = -.009, *SE* = .003, *F*(1, 85) = 8.34, *p* < .01, 95%CI = [-.015, -.003]), as does the non-significance of the interaction term (*b* = .006, *SE* = .006,  *F*(1, 85) = 1.07, *p* = .30, 95%CI = [-.005, .018]). Nonetheless, the test indicates that the time-varying network picks up more narrowly on the difference in processing difficulty between words that can be characterized as regular (both consistent regulars and inconsistent regulars) and those that are exceptional (those that both can't be described via simple rules and those that have no neighbors).
 
-In sum, the general trends relating consistency and frequency appear in data from the time-varying network architecture being proposed here. In statistical models of the experimental effects of words that vary systematically in terms of frequency and consistency, the results are mixed despite the appearance of very similar trends across the two variables from a descriptive account.
+The absence of a significant interaction between consistency and frequency here would require further experimentation to diagnose. @Plaut1996 included a range of experiments examining the variability in effects of including frequency manipulations of different kinds during training, showing that using condensed frequencies when training the network also condenses the effects related to those frequencies. It is quite possible that by expanding the frequency values used to scale gradients during training here would make the effects of frequency (whether raw or categorical) more dramatic. While this additional experimentation is outside the scope of the demonstration of the architecture here, it is worthy of investigation in subsequent work.
 
-## Nonword reading
-Looking at performance at the end of training, the network did quite well in pronouncing nonwords (taken from @Taraban1987; though see the footnote on @Plaut1996 p.62 for a discussion of the shortcomings of these stimuli). This is taken as a good measure of performance of models in the history of such work due to the fact that the words (should) bear a meaningful resemblance to real words and that in connectionist networks, where there are no "stored" entries of words, the ability to perform on such words evidences the ability of a rule-less system to generate reasonable pronunciations due to generalization from other similar forms.
-
-```{r, plaut_nonwords, echo=FALSE}
-taraban_testmode %>% 
-  filter(plaut == 'nonword') %>%
-  filter(phonemes_proportion < 1) %>% 
-  select(word, phon_read)  %>% 
-  filter(word != 'boad') %>% 
-  pull(word) -> nonwords_pronounced_wrong
-
-nonwords = taraban_testmode %>% 
-  filter(word %in% nonwords_pronounced_wrong) %>% 
-  select(Nonword = word,
-         Correct = phon,
-         Response = phon_read) 
+In summary, the general trends relating consistency and frequency appear in data from the time-varying network. In statistical models of the experimental effects of words that vary systematically in terms of frequency and consistency, the results are mixed given the absence of a significant interaction between frequency and consistency.
 
 
-apa_table(nonwords)
-
-  
-```
-
-Of the `r length(nonwords)` from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords)/length(nonwords_pronounced_wrong)`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from a similar list in @Plaut1996, but using a much simpler computational system). Like the errors on nonwords in @Plaut1996, the errors here are all reasonable attempts at a sequence of phonemes given the input orthographic pattern. These errors are shown in Table X \footnote{Note that the phonological coding for the nonword `r scaps('boad')` was incorrect and has been removed from this table}.
-
-While performance on made up words will be discussed further in the subsequent section devoted to producing multisyllabic words, we can say a few things here about the performance on this set of words in a model of monosyllabic words. These errors, like those in @Plaut1996 are realistic in the sense that the phones produced approximate what you would expect for the orthographic input, but don't perfectly match the true sequence. For example, vowels are produced in the vowel position and consonants in the consonant positions. Additionally, the incorrect vowels and consonants produced are quite close to the proper segments in terms of their phonological similarity to the target segment. The responses for `r scaps('nowl')` involved a vowel with a postvocalic glide (`r  scaps('OW1')`), but ot the correct one. Likewise, `r scaps('dase')` and `r scaps('boose')` were incorrect because they produced incorrect voicing on the word-final fricative (either `r scaps('Z')` for `r scaps('S')` or vice versa).
-
-All of the mistakes can be tied to the neighborhood characteristics of the words as well given that all nonwords here contain ambiguous orthography-to-phonology structure (i.e., their consistency is less than `1`). In this sense the responses can be seen as overgeneralization based on similar forms. Of the mistakes here, only `r scaps('dase')` and `r scaps('foth')` are surprising given the raw consistency counts (as body-rime calculations) of the neighborhoods involved. Most of the orthographic neighbors of `r scaps('dase')` are not associated with the rime produced here. `.67` of words with `r scaps('ase')` are associated with the rime `r scaps('EY - Z')`. Likewise, most of `r scaps('foth')`'s orthographic neighbors exhibit the lower unrounded vowel `r scaps('AA')` rather than the vowel produced by mistake (`r scaps('OW')`). This last error can be seen as an effect of an important aspect of the system, though, given that `r scaps('foth')` has a influential high frequency neighbor `r scaps('both')`.
-
-Nonetheless, and consistent with the discussion in @Plaut1996, both humans and computational models produce "incorrect" phonological codes from orthography - though the notion of "correct" pronunciation for novel strings is not straightforward. Behavioral data have shown that reader's responses to nonwords often deviate from the expected production, notwithstanding questions about the proper production for a nonword is. For example, @Glushko1979 found that nonwords with inconsistent neighborhood structure often resulted in pronunciations that were different than the expected pronunciation based on grapheme-phoneme rules while being consistent with the pronunciation for that orthographic body in some other word (see @Plaut1996 for discussion). The issue of nonword naming will be returned to later in the discussion of a model that learns multisyllabic words.
-
-# Glushko1979 nonwords
-As an additional comparison the nonwords from @Glushko1979 were submitted for testing after training. That study was important for showing that words that appear to be pronouncable "by rule" (i.e, they are regular) that nonetheless have few if any neighbors, behave like other words that have sparse neighborhood structure, even when the word is a nonword. This was early evidence that a theory of reading that depends on rules of "phonological assembly" [@Rastle2010] and storage of exceptions isn't feasible given that nonwords can't be "retrieved" via a lexical storage procedure. Nonwords that appear to be regular (regardless of neighborhood structure) should behave similar to other regular words based on the rule-based ("assembly") account, but they do not. They behave in a way that is predictable based their neighborhood structure.
-
-In experiments 1 and 2, @Glushko1979 organized the nonwords into two groups, which were labeled "regular" (e.g., `r scaps('bink')` and `r scaps('gobe')`) or "exception" (e.g., `r scaps('pild')` and `r scaps('tost')`).  The second experiment controlled for the possibility that real-word stimuli in the first experiment may have primed participants to read nonwords in a way that inappropriately conformed to the real words in the task, so a second naming experiment was run using exclusively nonwords. For our purposes here, words are collapsed across tasks, with accuracies reported for all nonwords across the study.
-
-GLUSHKO NONWORD DATA HERE
-
-# Jared (1997)
-Behavioral results conveying the tradeoffs between frequency and consistency hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and with inconsistent words being more difficult than consistent ones. This is a complementary study to the replications reported previously, focusing specifically on experiment 1 in @Jared1997 - a naming task. In that experiment participants read aloud sets of words (40 words to a list over two separate visits to the lab) that belonged to one of four categories. Words were either low frequency or high frequency and were consistent (all neighbors had the same rime) or inconsistent (neighbors displayed different rimes). For example, the words `r scaps('paid')`, `r scaps('said')`, and `r scaps('plaid')` are inconsistent words used in the experiment. As in other data reported here, these neighborhood characteristics were tested in the corpus of words used for these simulations and the characteristics were confirmed. Additionally, frequencies were set to high and low prior to training given the possibility that the frequencies used for gradient scaling differed from those consulted for the experiments in @Jared1997.
+### Jared (1997)
+Behavioral results conveying the tradeoffs between frequency and consistency hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and with inconsistent words being more difficult than consistent ones. This is a complementary study to the replications reported previously, and we will focus on Experiment 1 of @Jared1997 here - a naming task. The task was similar to that of @Taraban1987. In the experiment participants read aloud sets of words (40 words to a list over two separate visits to the lab) that belonged to one of four categories. Words were either low frequency or high frequency and were consistent (all neighbors had the same rime) or inconsistent (neighbors displayed different rimes). For example, the words `r scaps('paid')`, `r scaps('said')`, and `r scaps('plaid')` are inconsistent words used in the experiment given the variability in pronunciation of the portion of the word associated with the letters `r scaps('aid')`.
 
 ```{r, echo=FALSE}
 
@@ -591,10 +491,11 @@ jaredA_consistency = taraban_crossval %>%
 
 ```
 
-As in the behavioral data in the original paper, the model data support the tradeoffs between consistency and frequency. Taking data from 50 runs of the paradigm and using mean squared error as the metric (again early in training) ^[Note that the use of mean squared error rather than loss never affects the outcome; the effects in one always carry over to the other], low frequency words (mse = `r pull(filter(jaredA_freq, condition == 'low'), mse)`) are produced with greater error than high frequency words (mse = `r pull(filter(jaredA_freq, condition == 'high'), mse)`), and inconsistent words are higher in mse (`r pull(filter(jaredA_consistency, condition == 'inconsistent'), mse)`) than their consistent counterparts (`r pull(filter(jaredA_consistency, condition == 'consistent'), mse)`).
+As in the behavioral data in the original study, the model data exhibit the tradeoffs between consistency and frequency. The stimuli were included in the same repeated model runs described previously, where results here are calculated across 50 runs using mean squared error as the metric (again midway through training to examine the frequency effect using testing mode) ^[Note that the use of mean squared error rather than loss never affects the outcome; the effects in one always carry over to the other]. Results can be summarized as follows: low frequency words (*M* = `r as.character(round(pull(filter(jaredA_freq, condition == 'low'), mse), digits = 3))`) are produced with greater error than high frequency words (*M* = `r as.character(round(pull(filter(jaredA_freq, condition == 'high'), mse), digits = 3))`), and inconsistent words are higher in mean squared error (*M* = `r as.character(round(pull(filter(jaredA_consistency, condition == 'inconsistent'), mse), digits = 3))`) than their consistent counterparts (`r as.character(round(pull(filter(jaredA_consistency, condition == 'consistent'), mse), digits = 3))`).
 
 
-```{r, echo=FALSE, fig.cap=''}
+```{r, echo=FALSE, out.width='250px', fig.align='center', fig.cap='Time-varying model results for items from @Jarey1997 are shown.'}
+
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
 
 taraban_crossval %>% 
@@ -608,7 +509,7 @@ taraban_crossval %>%
   ggplot(aes(freq, loss, fill=condition)) +
   geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
   scale_fill_manual(values = COLORS_jared) +
-  theme_bw() +
+  theme_apa() +
   labs(x = 'Frequency', y = 'Mean Squared Error') +
   theme(legend.title = element_blank())
   
@@ -672,8 +573,6 @@ load(file = 'data/m_jared2_anova.Rda')
 load(file = 'data/m_jared2_confint.Rda')
 #summary(m_jared2)
 ```
-
-
 
 ## Variable effects
 It should be noted that effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at several different training stages: 9, 18, 27, 36, 45, and 54, 63, and 72 epochs. The interaction looks stable across training for the most part (and is on average when collapsing across epochs), but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
@@ -775,6 +674,39 @@ taraban_crossval %>%
   theme(legend.title = element_blank())
 
 ```
+
+
+## Nonword reading
+Looking at performance at the end of training using production mode, the network did quite well in pronouncing monosyllabic nonwords taken from @Plaut1996, which were adapted from @Taraban1987^[Though, see the footnote on Plaut et al., (1996) p. 62 for a discussion of the shortcomings of these stimuli.]. This is taken as a valuable measure of performance of computational models that name words in their capacity to generalize to novel forms [see @Cox2019 for discussion of this point]. Given that in connectionist networks, where there are no "stored" entries of words, the ability to perform on such words evidences the ability of the system to generate reasonable pronunciations via generalization from other similar forms.
+
+```{r, plaut_nonwords, echo=FALSE}
+taraban_testmode %>% 
+  filter(plaut == 'nonword') %>%
+  filter(phonemes_proportion < 1) %>% 
+  select(word, phon_read)  %>% 
+  filter(word != 'boad') %>% 
+  pull(word) -> nonwords_pronounced_wrong
+
+nonwords = taraban_testmode %>% 
+  filter(word %in% nonwords_pronounced_wrong) %>% 
+  select(Nonword = word,
+         Correct = phon,
+         Response = phon_read) 
+
+
+apa_table(nonwords, caption = '')
+
+  
+```
+
+Of the 45 from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords_pronounced_wrong)/45`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from @Plaut1996). Like the errors on nonwords in @Plaut1996, the errors here are all reasonable attempts at a sequence of phonemes given the input orthographic pattern. These errors are shown in Table 2^[Note that the phonological coding (target) for the nonword `r scaps('boad')` was incorrect when the model was trained and has been removed from this table.].
+
+These errors, like those in @Plaut1996 are realistic in the sense that the phones produced approximate what you would expect for the orthographic input, but don't perfectly match the true sequence of phonemes. For example, vowels are produced in the vowel position and consonants in the consonant positions. Additionally, the incorrect vowels and consonants produced are quite close to the proper segments in terms of their phonological similarity to the target segment. The responses for `r scaps('nowl')` involved a vowel with a postvocalic glide (`r  scaps('ow1')`), just not the correct one. Likewise, `r scaps('dase')` and `r scaps('boose')` were incorrect because they produced incorrect voicing on the word-final fricative (either `r scaps('z')` for `r scaps('')` or vice versa).
+
+All of the mistakes can be tied to the neighborhood characteristics of the words as well given that all nonwords here contain ambiguous orthography-to-phonology structure (i.e., their consistency is less than 1 in that they have at least one orthographic neighbor that differs in pronunciation. In this sense the responses can be seen as overgeneralizations based on similar forms. Of the mistakes here, only `r scaps('dase')` and `r scaps('foth')` are surprising given the raw consistency counts (as body-rime calculations) of the neighborhoods involved. Most of the orthographic neighbors of `r scaps('dase')` are not associated with the rime produced here. 67% of words with `r scaps('ase')` are associated with the rime `r scaps('ey-z')`. Likewise, most of `r scaps('foth')`'s orthographic neighbors exhibit the lower unrounded vowel `r scaps('aa')` (like in the words `r scaps('odd')` and `r scaps('lot')`) rather than the vowel produced by mistake (`r scaps('ow')`). This last error can be seen as an effect of an important aspect of the system, though, given that `r scaps('foth')` has a influential high frequency neighbor `r scaps('both')`.
+
+Nonetheless, and consistent with the discussion in @Plaut1996, both humans and computational models produce "incorrect" phonological codes from orthography - though the notion of "correct" pronunciation for novel strings is not straightforward. Behavioral data have shown that reader's responses to nonwords often deviate from the expected production, notwithstanding questions about what the proper production for a nonword is. For example, @Glushko1979 found that nonwords with inconsistent neighborhood structure often resulted in pronunciations that were different than the expected pronunciation based on grapheme-phoneme rules while being consistent with the pronunciation for that orthographic body in some other word [see @Plaut1996 for discussion].
+
 
 
 # Multisyllabic words
