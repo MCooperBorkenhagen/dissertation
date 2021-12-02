@@ -432,7 +432,7 @@ taraban_crossval %>%
 The trend seen in the computational results using the time-varying model closely resembles those from @Plaut1996 and follows the expected pattern based on graded effects of consistency as they interact with frequency. Exception words are associated with higher loss (and error) than ambiguous words, which are associated with higher loss than regular words. Among regular words, regular inconsistent words are associated with higher loss than regular consistent words. Additionally, the high frequency group of each consistency category exhibits lower loss than their lower frequency counterparts. The data from the original study is shown in Figure 14.
 
 ```{r plautFigureOriginal, echo=FALSE, out.width='200px', fig.align='center', fig.cap='Original results from Plaut et al. (1996) analogous to Figure 13 are provided, taken from the original study. The figure is reproduced by permission from Psychological Review.'}
-knitr::include_graphics('img/plaut5.png')
+include_graphics('img/plaut5.png')
 
 ```
 
@@ -448,7 +448,7 @@ knitr::include_graphics('img/plaut5.png')
 ```
 
 
-In order to examine the effect more closely, a statistical model was estimated for the interaction between consistency (four levels) and frequency (two levels) on loss halfway through training. The results demonstrate that the effect is similar though not identical to the one observed in @Plaut1996. In this model consistency was expressed as a linearly decreasing set of conditions in the following order: exception, ambiguous, regular inconsistent, and regular consistent. Frequency is coded as either high or low. Using a linear mixed effects model estimated in R [@R2021] in the lme4 package [@Bates2015] with confidence intervals estimated in the stats library [@R2021] and p-values computed using the Anova() method in the car package [@Fox2019] using Kenward-Roger approximation for estimating degrees of freedom with that same package. This model includes by item random intercepts as well as random intercepts for each run (each simulation).
+In order to examine the effect more closely, a statistical model was estimated for the interaction between consistency (four levels) and frequency (two levels) on loss halfway through training. The results demonstrate that the effect is similar though not identical to the one observed in @Plaut1996. In this model consistency was expressed as a linearly decreasing set of conditions in the following order: exception, ambiguous, regular inconsistent, and regular consistent. Frequency is coded as either high or low. Using a linear mixed effects model estimated in R [@R2021] in the lme4 package [@Bates2015] with confidence intervals estimated in the stats library [@R2021] and p-values computed using the Anova() method in the car package [@Fox2019] using Kenward-Roger approximation for estimating degrees of freedom with that same package. This model includes by item random intercepts for each run (each simulation).
 
 An increase in condition is, on average, associated with a .01 decrease in loss (*b* = -.01, *SE* = .003, *p* < .001, *F*(1, 172) = 43.31, 95%CI = [-.01, -.005]), with the effect of frequency associated with a decrease in loss of .01 units (*b* = -.01, *SE* = .003, *p* < .001, F(1, 172) = 11.64, 95%CI = [-.014, -.004]). The interaction, unlike what was reported in @Plaut1996, is not significant (*b* = .003, *SE* = .003, *F*(1, 172) = 1.55, *p* = .22, 95%CI = [-.002, .008]). This pattern resembles the effects described earlier looking at frequency and consistency as quantitative predictors (derived from the structure of words in the corpus directly) but differs in the specification of the interaction (because they are defined across conditions rather than as observed). In summary, words of increasing consistency demonstrate lower levels of error, and high frequency words are less error prone than lower frequency words.
 
@@ -491,10 +491,10 @@ jaredA_consistency = taraban_crossval %>%
 
 ```
 
-As in the behavioral data in the original study, the model data exhibit the tradeoffs between consistency and frequency. The stimuli were included in the same repeated model runs described previously, where results here are calculated across 50 runs using mean squared error as the metric (again midway through training to examine the frequency effect using testing mode) ^[Note that the use of mean squared error rather than loss never affects the outcome; the effects in one always carry over to the other]. Results can be summarized as follows: low frequency words (*M* = `r as.character(round(pull(filter(jaredA_freq, condition == 'low'), mse), digits = 3))`) are produced with greater error than high frequency words (*M* = `r as.character(round(pull(filter(jaredA_freq, condition == 'high'), mse), digits = 3))`), and inconsistent words are higher in mean squared error (*M* = `r as.character(round(pull(filter(jaredA_consistency, condition == 'inconsistent'), mse), digits = 3))`) than their consistent counterparts (`r as.character(round(pull(filter(jaredA_consistency, condition == 'consistent'), mse), digits = 3))`).
+As in the behavioral data in the original study, the model data exhibit the tradeoffs between consistency and frequency. The stimuli were included in the same repeated model runs described previously, where results here are calculated across 50 runs using mean squared error as the metric (again midway through training to examine the frequency effect using testing mode) ^[Note that the use of mean squared error rather than loss never affects the outcome; the effects in one always carry over to the other]. Results can be summarized as follows: low frequency words (*M* = `r as.character(round(pull(filter(jaredA_freq, condition == 'low'), mse), digits = 3))`) are produced with greater error than high frequency words (*M* = `r as.character(round(pull(filter(jaredA_freq, condition == 'high'), mse), digits = 3))`), and inconsistent words are higher in mean squared error (*M* = `r as.character(round(pull(filter(jaredA_consistency, condition == 'inconsistent'), mse), digits = 3))`) than their consistent counterparts (`r as.character(round(pull(filter(jaredA_consistency, condition == 'consistent'), mse), digits = 3))`). Figure 15 shows the pattern in data from the time-varying model, and Figure 16 shows the corresponding data from the original study.
 
 
-```{r, echo=FALSE, out.width='250px', fig.align='center', fig.cap='Time-varying model results for items from @Jarey1997 are shown.'}
+```{r, echo=FALSE, out.width='250px', fig.align='center', fig.cap='Time-varying model results for items from Jared (1997) are shown.'}
 
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
 
@@ -517,9 +517,13 @@ taraban_crossval %>%
 ```
 
 
-The comparable figure reproduced from @Jared1997 is shown in Figure XX![Figure 1 from Jared (1997) with frequency on the x-axis, latency is displayed on the y-axis (with accuracy above each bar) and level of consistency shown with color across grouped bars.](img/jared1.png)
+```{r jared1997Original, echo=FALSE, out.width='200px', fig.align='center', fig.cap='Results for Experiment 1 from Jared (1997) are shown. Naming latency is displayed on the y-axis (with corresponding accuracy above each bar). The figure is reproduced with permission from the Journal of Memory and Language.'}
+include_graphics('img/jared1.png')
+```
 
+However, a statistical model of the interaction between frequency and consistency on mean squared error show that the effects from the computational data are comparable but not identical to those from the original study. Using a linear mixed effects model with random slopes for words and simulations (again using data from 50 separate runs of the model and the same specifications as previous linear mixed effects models reported), we see a significant effect of frequency and consistency, with no significant effect for the interaction. This is analogous to the results from the stimuli from @Plaut1996, which showed significant main effects but a non-significant interaction.
 
+\ Table 2
 ```{r, echo=FALSE}
 taraban_crossval %>% 
   filter(epoch == 36) %>% 
@@ -543,13 +547,11 @@ x_names = c('Intercept', 'Frequency', 'Consistency', 'Frequency*Consistency')
 
 cap = 'Mixed Effects Model Output for MSE Predicted by Consistency, Frequency, and its Interaction'
 
-t_jared = model_to_table(m_jared, x_names, m_jared_confint, m_jared_anova, caption = cap, include_R_notes = TRUE)
+t_jared = model_to_table(m_jared, x_names, m_jared_confint, m_jared_anova, caption = cap, include_R_notes = F, notes = 'Model estimated using a linear mixed effects model in R (R Core Team, 2021) in the lme4 package (Bates et al., 2015) with confidence intervals estimated in the native stats library. The p-values were computed using the Anova() method from the car package (Fox & Weisberg, 2019) using Kenward-Roger approximation for estimating degrees of freedom with that same package. This model includes by item random intercepts for each run')
 
 t_jared
 
 ```
-
-The effects found in the computational data are comparable but not identical to those from the original study. Using a linear mixed effects model with random slopes for words and simulations (because models were run for 50 separate train/test splits in order to avoid an idiosyncratic result from a single simulation), we see a significant effect of frequency and consistency, with no significant effect for the interaction (p-value calculated using the Anova method from the car library in R; @R2021).
 
 When examining the effect of consistency at the level of high frequency words, as in @Jared1997 we see that high frequency consistent words show lower error than their low consistent counterparts, mirroring the earlier analagous effect in naming latency.
 
@@ -699,7 +701,7 @@ apa_table(nonwords, caption = '')
   
 ```
 
-Of the 45 from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords_pronounced_wrong)/45`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from @Plaut1996). Like the errors on nonwords in @Plaut1996, the errors here are all reasonable attempts at a sequence of phonemes given the input orthographic pattern. These errors are shown in Table 2^[Note that the phonological coding (target) for the nonword `r scaps('boad')` was incorrect when the model was trained and has been removed from this table.].
+Of the 45 from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords_pronounced_wrong)/45`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from @Plaut1996). Like the errors on nonwords in @Plaut1996, the errors here are all reasonable attempts at a sequence of phonemes given the input orthographic pattern. These errors are shown in Table 3^[Note that the phonological coding (target) for the nonword `r scaps('boad')` was incorrect when the model was trained and has been removed from this table.].
 
 These errors, like those in @Plaut1996 are realistic in the sense that the phones produced approximate what you would expect for the orthographic input, but don't perfectly match the true sequence of phonemes. For example, vowels are produced in the vowel position and consonants in the consonant positions. Additionally, the incorrect vowels and consonants produced are quite close to the proper segments in terms of their phonological similarity to the target segment. The responses for `r scaps('nowl')` involved a vowel with a postvocalic glide (`r  scaps('ow1')`), just not the correct one. Likewise, `r scaps('dase')` and `r scaps('boose')` were incorrect because they produced incorrect voicing on the word-final fricative (either `r scaps('z')` for `r scaps('')` or vice versa).
 
