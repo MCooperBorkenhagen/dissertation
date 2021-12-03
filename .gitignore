@@ -15,7 +15,7 @@ models/monosyllabic-model-pre
 models/monosyllabic-model-advanced
 outputs/mono/lstm/monosyllabic-model-advanced
 outputs/mono/lstm/monosyllabic-model-pre
-
+paper/data/multisyllabic_model_mistakes.csv
 
 #filetypes
 *.pyc
