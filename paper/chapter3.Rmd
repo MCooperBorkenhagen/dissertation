@@ -494,7 +494,7 @@ jaredA_consistency = taraban_crossval %>%
 As in the behavioral data in the original study, the model data exhibit the tradeoffs between consistency and frequency. The stimuli were included in the same repeated model runs described previously, where results here are calculated across 50 runs using mean squared error as the metric (again midway through training to examine the frequency effect using testing mode) ^[Note that the use of mean squared error rather than loss never affects the outcome; the effects in one always carry over to the other]. Results can be summarized as follows: low frequency words (*M* = `r as.character(round(pull(filter(jaredA_freq, condition == 'low'), mse), digits = 3))`) are produced with greater error than high frequency words (*M* = `r as.character(round(pull(filter(jaredA_freq, condition == 'high'), mse), digits = 3))`), and inconsistent words are higher in mean squared error (*M* = `r as.character(round(pull(filter(jaredA_consistency, condition == 'inconsistent'), mse), digits = 3))`) than their consistent counterparts (`r as.character(round(pull(filter(jaredA_consistency, condition == 'consistent'), mse), digits = 3))`). Figure 15 shows the pattern in data from the time-varying model, and Figure 16 shows the corresponding data from the original study.
 
 
-```{r, echo=FALSE, out.width='250px', fig.align='center', fig.cap='Time-varying model results for items from Jared (1997) are shown.'}
+```{r, echo=FALSE, out.width='250px', fig.align='center', fig.cap='Time-varying model results for items from Jared (1997). Like other data concerning a frequency manipulation, the results shown here are taken halfway through training.'}
 
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
 
@@ -547,13 +547,13 @@ x_names = c('Intercept', 'Frequency', 'Consistency', 'Frequency*Consistency')
 
 cap = 'Mixed Effects Model Output for MSE Predicted by Consistency, Frequency, and its Interaction'
 
-t_jared = model_to_table(m_jared, x_names, m_jared_confint, m_jared_anova, caption = cap, include_R_notes = F, notes = 'Model estimated using a linear mixed effects model in R (R Core Team, 2021) in the lme4 package (Bates et al., 2015) with confidence intervals estimated in the native stats library. The p-values were computed using the Anova() method from the car package (Fox & Weisberg, 2019) using Kenward-Roger approximation for estimating degrees of freedom with that same package. This model includes by item random intercepts for each run')
+t_jared = model_to_table(m_jared, x_names, m_jared_confint, m_jared_anova, caption = cap, include_R_notes = F, notes = 'Model estimated using a linear mixed effects model in R (R Core Team, 2021) in the lme4 package (Bates et al., 2015) with confidence intervals estimated in the native stats library. The p-values were computed using the Anova() method from the car package (Fox & Weisberg, 2019) using Kenward-Roger approximation for estimating degrees of freedom with that same package. This model includes by item random intercepts for each run.')
 
 t_jared
 
 ```
 
-When examining the effect of consistency at the level of high frequency words, as in @Jared1997 we see that high frequency consistent words show lower error than their low consistent counterparts, mirroring the earlier analagous effect in naming latency.
+When examining the effect of consistency at the level of high frequency words, as in @Jared1997 we see that high frequency consistent words show lower error than their low consistent counterparts, mirroring the earlier analogous effect in naming latency.
 
 ```{r, echo=FALSE}
 taraban_crossval %>% 
@@ -576,107 +576,31 @@ load(file = 'data/m_jared2_confint.Rda')
 #summary(m_jared2)
 ```
 
-## Variable effects
-It should be noted that effects are subjected to variability throughout training. For example, the plot below shows the interaction between consistency and frequency at several different training stages: 9, 18, 27, 36, 45, and 54, 63, and 72 epochs. The interaction looks stable across training for the most part (and is on average when collapsing across epochs), but at certain points in the development of expertise in the domain the effect may shift. For example, in epoch 54 error on consistent words is on average higher than on inconsistent words, though the trend for frequency at that point is similar to other epochs.
+### Variability of effects across training
+It should be noted that effects are subjected to variability throughout training. For example, Figure 17 plots consistency and frequency at several different training stages: 27, 36, 45, and 54, 63, and 72 epochs. The pattern for mean squared error looks stable for many points throughout training (and is on average when collapsing across epochs), but at certain points in the learning process the effect may shift. This is clearest in epoch 54 where the pattern shifts completely. Across all training stages, consistent words are on average higher in error than inconsistent words and high frequency words are associated with lower error than their less frequent counterparts - just as in the focal effect described previously and exhibited in behavioral data in Jared (1997). Nonetheless, trajectories in error across learning are clearly subject to variability. While this type of variability isn't commonly described in learning models similar to this one, investigation about its nature and impacts on performance would be worthwhile especially as it compares to analogous behavioral phenomena. A similar result is reported in the final section on multisyllabic words later in this chapter.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.cap= 'Error for words from Experiment 1 of Jared (1997) by condition are shown at various points across training for the time-varying model. Data were generated from averaging across 50 runs of the model as in previous results.'}
 COLORS_jared = c('Consistent'='grey86', 'Inconsistent'='black')
 
 
 taraban_crossval %>% 
   filter(!is.na(jaredA)) %>%
-  mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
-                          freq_jaredA == 'low' ~ 'Low'),
-         condition = case_when(jaredA == 'consistent' ~ 'Consistent',
-                               jaredA == 'inconsistent' ~ 'Inconsistent'),
-         condition = fct_relevel(condition, c('Inconsistent', 'Consistent'))) %>% 
-  ggplot(aes(freq, mse, fill=condition)) +
-  geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
-  scale_fill_manual(values = COLORS_jared) +
-  labs(x = 'Frequency', y = 'Mean Squared Error') +
-  theme(legend.title = element_blank()) +
-  facet_grid(~epoch) +
-  theme_apa()
-
-```
-
-It is expected that the process of acquiring knowledge that is subject to constraints like those that operate on the stimuli here, you will see stochastic variability throughout learning, but with overall trends emerging when averaging across individuals or, in the case of the simulation here, across time.
-
-As an alternative method of assessing model production, additional information about performance can be observed using the network's offline test mode. This method is dictated by a different sort of recurrent process that settles into a final state through and internally dictated mechanism rather than by the number of timesteps provided at the phonological input (see the previous section on the method for details). Summing the accuracy across phonological segments using this testing mechanism yields separate converging evidence about processing difficulty at a finer grain than that offered through mean squared error. Figure X shows the cumulative (sum) phoneme-wise distances for the @Jared1997 stimuli using production mode at the end of training, the trend of which is very similar to that seen in the previous analyses of these items.
-
-```{r, echo=FALSE, warning=FALSE}
-
-
-taraban_testmode %>% 
-  filter(!is.na(jaredA)) %>% 
-  mutate(freq = case_when(freq_jaredA == 'high' ~ 'High',
-                          freq_jaredA == 'low' ~ 'Low'),
-         condition = case_when(jaredA == 'consistent' ~ 'Consistent',
-                               jaredA == 'inconsistent' ~ 'Inconsistent'),
-         condition = fct_relevel(condition, c('Inconsistent', 'Consistent'))) %>% 
-  ggplot(aes(freq, phonemes_sum, fill=condition)) +
-  geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
-  scale_fill_manual(values = COLORS_jared) +
-  labs(x = 'Frequency', y = 'Sum of phoneme-wise distance') +
-  theme_apa() +
-  theme(legend.title = element_blank())
-
-```
-
-
-
-```{r, echo=FALSE, warning=FALSE}
-taraban_crossval %>% 
-  filter(!is.na(jaredA)) %>% 
+  filter(epoch %nin% c(9, 18)) %>% 
   mutate(freq = case_when(freq_jaredA == 'high' ~ 'H',
                           freq_jaredA == 'low' ~ 'L'),
          condition = case_when(jaredA == 'consistent' ~ 'Consistent',
                                jaredA == 'inconsistent' ~ 'Inconsistent'),
          condition = fct_relevel(condition, c('Inconsistent', 'Consistent'))) %>% 
-  group_by(epoch, freq, condition) %>% 
-  summarise(mse = mean(mse),
-            freq = first(freq),
-            condition = first(condition)) %>% 
   ggplot(aes(freq, mse, fill=condition)) +
   geom_bar(stat= 'summary', position = position_dodge(), color = 'black') +
-  facet_grid(~epoch) +
   scale_fill_manual(values = COLORS_jared) +
-  labs(x = 'Frequency', y = 'Mean squared error') +
-  theme_apa() +
-  theme(legend.title = element_blank())
-
-
-
-```
-
-
-```{r, echo=FALSE, warning=FALSE}
-taraban_crossval %>% 
-  filter(!is.na(freq_plaut)) %>% 
-  #filter(epoch %nin% c(9, 18)) %>% 
-  filter(epoch == 54) %>% 
-  filter(plaut != 'nonword') %>%
-  mutate(plaut = case_when(plaut == 'ambiguous' ~ 'Ambiguous',
-                             plaut == 'exception' ~ 'Exception',
-                             plaut == 'reg_consistent' ~ 'Regular consistent',
-                             plaut == 'reg_inconsistent' ~ 'Regular inconsistent'),
-         freq_plaut = case_when(freq_plaut == 'low' ~ 'Low',
-                                  freq_plaut =='high' ~ 'High'),
-         freq_plaut = fct_relevel(freq_plaut, c('Low', 'High')),
-         plaut = fct_relevel(plaut, c('Exception', 'Ambiguous', 'Regular inconsistent', 'Regular consistent'))) %>% 
-  group_by(epoch, freq_plaut, plaut) %>% 
-  summarise(loss = mean(loss)) %>% 
-  ggplot(aes(freq_plaut, loss, shape = plaut, group = plaut)) +
-  geom_line() +
-  geom_point(size = 3) +
-  scale_shape_manual(values = c(0, 1, 2, 5)) +
-  labs(x = 'Frequency', y = 'Cross entropy') +
+  labs(x = 'Frequency', y = 'Mean Squared Error', fill = 'Consistency', title = 'Epoch') +
   facet_grid(~epoch) +
   theme_apa() +
-  theme(legend.title = element_blank())
+  theme(legend.title = element_blank(), plot.title = element_text(hjust = .5, size = 12)) 
+  
 
 ```
-
 
 ## Nonword reading
 Looking at performance at the end of training using production mode, the network did quite well in pronouncing monosyllabic nonwords taken from @Plaut1996, which were adapted from @Taraban1987^[Though, see the footnote on Plaut et al., (1996) p. 62 for a discussion of the shortcomings of these stimuli.]. This is taken as a valuable measure of performance of computational models that name words in their capacity to generalize to novel forms [see @Cox2019 for discussion of this point]. Given that in connectionist networks, where there are no "stored" entries of words, the ability to perform on such words evidences the ability of the system to generate reasonable pronunciations via generalization from other similar forms.
@@ -709,7 +633,14 @@ All of the mistakes can be tied to the neighborhood characteristics of the words
 
 Nonetheless, and consistent with the discussion in @Plaut1996, both humans and computational models produce "incorrect" phonological codes from orthography - though the notion of "correct" pronunciation for novel strings is not straightforward. Behavioral data have shown that reader's responses to nonwords often deviate from the expected production, notwithstanding questions about what the proper production for a nonword is. For example, @Glushko1979 found that nonwords with inconsistent neighborhood structure often resulted in pronunciations that were different than the expected pronunciation based on grapheme-phoneme rules while being consistent with the pronunciation for that orthographic body in some other word [see @Plaut1996 for discussion].
 
+## Discussion
+Computational models that learn to name words - the production of a phonological code from an orthographic one - have several established effects that are seen in the time-varying model proposed in this dissertation. The results reported up until this point in the chapter concern several important effects concerning monosyllabic words. These effects are (1) words that are more common are associated with less processing difficulty than less common forms, (2) words that possess uncommon structure (e.g., inconsistent words, exception words, etc.) are more error prone than their typical counterparts, (3) atypical structure can be overcome with ample experience, and (4) generalization to novel forms is possible in a model that learns the mappings of distributed codes of orthography to phonology, and the memorization of such forms isn't necessary to achieve a high level of performance on such words.
 
+The demonstration for monosyllabic words is important given that such words are common in English, and and that monosyllables have been the focus in the dominant theorizing on reading development and its associated phenomena [@Yap2009]. Even though the theory and associated computational model reported on in this dissertation is geared towards accounting for temporal dynamics that play out most dramatically in longer words (e.g., prosody and other syllabic structure), the results reported in the first half of this chapter are important in establishing what have been considered the more basic properties of reading behavior that concern shorter words in the language. Accounting for monosyllabic effects also allows us to draw upon effects that have been well-established through decades of experimentation and theorizing in the learning literature.
+
+Behavioral effects of the interaction of frequency and consistency didn't appear statistically in the results on the time-varying model [those from @Jared1997 and @Taraban1987], while the corresponding main effects did. However, the analysis using data from @Balota2004 did exhibit the standard frequency by consistency interaction, likely capitalizing on the increase in statistical power that comes from using the large sample from that megastudy. Subsequent experimentation with this new architecture will be useful in identifying this interaction, likely additional attention will need to be paid to creating a larger training environment given the additional complexity of the architecture as compared to its simpler, feed-forward counterparts. We take these mixed results to be due to technical aspects of the implementation here rather than the general approach. Similarly, the variability in effects of word structure and frequency across training points to the possibility of follow up work examining the timecourse (across learning) of such effects, and how the properties of computational models in that regard differ to that of human readers.
+
+To summarize, a range of phenomena arising from the computational model reported on this this dissertation reproduce effects seen in other simpler computational models that learn to name words, and (more importantly) effects found in behavioral data from skilled readers. Experimentation with learning monosyllabic words suggests that the architecture here is consistent with models reported elsewhere and inspires confidence in its ability to capture several critical behavioral phenomena. The next section of this chapter extends these findings to longer words that contain more than a single syllable.
 
 # Multisyllabic words
 The process through which the model was trained on multisyllabic words did not differ from the one used with monosyllabic words, and the architecture is the same for both processes. All that differs is the training corpus. For this purpose, a corpus of `r nrow(multi_testmode)` words was assembled for training and testing. It is important to note that even though this model processes multisyllabic words, syllables are not explicitly marked as segments during processing. Stress is marked on vowels, and there are no perceptual markings in the representations (inputs or outputs) that divide any two syllables. Therefore the model, like humans, is required to learn about prosodic structure over sequences of sounds without feedback about what constitutes a syllable. In addition to the words already described for the multisyllabic corpus, words from @Chateau2003 were included in order to investigate experimental effects of frequency and consistency in multisyllabic words. The model was trained to 100 epochs with training and test data written out across the training process.
