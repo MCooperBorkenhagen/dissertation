@@ -643,16 +643,21 @@ Behavioral effects of the interaction of frequency and consistency didn't appear
 To summarize, a range of phenomena arising from the computational model reported on this this dissertation reproduce effects seen in other simpler computational models that learn to name words, and (more importantly) effects found in behavioral data from skilled readers. Experimentation with learning monosyllabic words suggests that the architecture here is consistent with models reported elsewhere and inspires confidence in its ability to capture several critical behavioral phenomena. The next section of this chapter extends these findings to longer words that contain more than a single syllable.
 
 # Multisyllabic words
-The process through which the model was trained on multisyllabic words did not differ from the one used with monosyllabic words, and the architecture is the same for both processes. All that differs is the training corpus. For this purpose, a corpus of `r nrow(multi_testmode)` words was assembled for training and testing. It is important to note that even though this model processes multisyllabic words, syllables are not explicitly marked as segments during processing. Stress is marked on vowels, and there are no perceptual markings in the representations (inputs or outputs) that divide any two syllables. Therefore the model, like humans, is required to learn about prosodic structure over sequences of sounds without feedback about what constitutes a syllable. In addition to the words already described for the multisyllabic corpus, words from @Chateau2003 were included in order to investigate experimental effects of frequency and consistency in multisyllabic words. The model was trained to 100 epochs with training and test data written out across the training process.
+The process through which the model was trained on multisyllabic words did not differ from the one used with monosyllabic words, and the architecture is the same for both processes. All that differs is the training corpus. For this purpose, a corpus of 11,103 words was assembled for training and testing in the manner described in Chapter 2. It is important to remember that even though this model processes multisyllabic words and its behavior is often described in subsequent sections in terms of syllabic effects, syllables are not explicitly marked as segments during processing. Stress is marked on vowels, and there are no boundaries in the representations (inputs or outputs) that divide any two syllables. Therefore the model, like humans, is required to learn about prosodic structure over sequences of sounds without feedback about what constitutes a syllable. In addition to the words already described for the multisyllabic corpus, words from @Chateau2003 were included in order to investigate experimental effects of frequency and consistency in multisyllabic words. The model was trained to 100 epochs with training and test data written out across the training process. Prior to examining a range of results comparing the model to behavioral data, a basic characterization of the learning process and associated performance is provided, as in the section of this chapter concerning monosyllabic words. However, in the case of this section more attention is paid to how the model performs on words of varying syllables.
 
-In general, the learning process mirrors that of monosyllabic words, with error decreasing across training, eventually setting into a stable state.
+### Basic description of model behavior
+In general, the learning process mirrors that of monosyllabic words, with error decreasing monotonically across training (accuracy monotonically increasing), eventually setting into a stable, asymptotic state. This is seen in Figure 18 with both accuracy and mean squared error plotted at different points across training.
 
-```{r, multiErrorAcrossTraining, echo=FALSE, fig.cap='Cumulative error (as MSE) across training for train and test set of multisyllabic words. Bars (barely visible) are calculated as the standard error of the mean.'}
+
+
+
+
+```{r, multiErrorAcrossTraining, echo=FALSE, fig.height=3, fig.cap='Accuracy (left pane) and error (right pane) across training for train and test set of multisyllabic words. Accuracy is calculated as binary accuracy (whether or not a given unit is on the right side of .5) and error is shown as mean squared error. Bars (barely visible) are calculated as the standard error of the mean.'}
 N = length(unique(multi$word))
 
-COLORS_tt = c('Train' = 'darkorchid', 'Test' = 'orangered3')
+#COLORS_tt = c('Train' = 'darkorchid', 'Test' = 'orangered3')
 
-multi %>% 
+mse = multi %>% 
   group_by(epoch, train_test) %>% 
   summarise(M = mean(mse),
             SD = sd(mse),
@@ -660,18 +665,37 @@ multi %>%
   mutate(train_test = case_when(train_test == 'train' ~ 'Train',
                                 train_test == 'test' ~ 'Test')) %>% 
   filter(epoch %in% c(9, 18, 27, 36, 45, 54, 63, 72, 81, 90)) %>% 
-  ggplot(aes(epoch, M, group = train_test, color = train_test)) +
-  geom_line() +
+  ggplot(aes(epoch, M, group = train_test)) +
+  geom_line(aes(linetype = train_test)) +
   geom_errorbar(aes(ymin=M-SEM, ymax=M+SEM), width=.1) +
-  scale_color_manual(values = COLORS_tt) +
-  labs(x = 'Epoch', y = 'Mean squared error', color = 'Train / Test') +
+  #scale_color_manual(values = COLORS_tt) +
+  scale_linetype_manual(values = c('Train' = 'solid', 'Test' = 'dashed')) +
+  labs(x = 'Epoch', y = 'Mean squared error', linetype = 'Train / Test') +
   theme_apa() +
-  theme(legend.background = element_rect(color = 'black'))
+  theme(legend.background = element_rect(color = 'black'), legend.position = c(.75, .78))
 
+acc = multi %>% 
+  group_by(epoch, train_test) %>% 
+  summarise(M = mean(binary_acc),
+            SD = sd(binary_acc),
+            SEM = SD/sqrt(N)) %>% 
+  mutate(train_test = case_when(train_test == 'train' ~ 'Train',
+                                train_test == 'test' ~ 'Test')) %>% 
+  filter(epoch %in% c(9, 18, 27, 36, 45, 54, 63, 72, 81, 90)) %>% 
+  ggplot(aes(epoch, M, group = train_test)) +
+  geom_line(aes(linetype = train_test)) +
+  geom_errorbar(aes(ymin=M-SEM, ymax=M+SEM), width=.1) +
+  #scale_color_manual(values = COLORS_tt) +
+  scale_linetype_manual(values = c('Train' = 'solid', 'Test' = 'dashed')) +
+  labs(x = 'Epoch', y = 'Accuracy', linetype = 'Train / Test') +
+  theme_apa() +
+  theme(legend.position = 'none')
+
+grid.arrange(acc, mse, ncol = 2)
 
 ```
 
-Words with more syllables are associated with greater errors at the end of training, both using training mode (with phonological inputs provided during the calculation of loss) and in test mode.
+Words with more syllables are associated with greater errors at the end of training. This can be observed using mean squared error as the metric (i.e., using training mode; Table 4) and also by calculating phonemewise errors using production mode. The phonemewise measure provides a different and less graded measure of error, but useful still. Here, if the pattern that the network produces is closer to the correct phoneme than any other, it is considered correct. Once this prediction is made for the entire word, phoneme by phoneme, the calculation is made as the number of phonemes correct divided by the total phonemes in the word. Table 5 shows the accuracy associated with syllable count across all words in the training corpus.
 
 ```{r, trainmodeErrorsBySyllable, echo=FALSE}
 
@@ -685,12 +709,12 @@ multi %>%
          M = as.character(M),
          SD = as.character(SD)) %>% 
   select(Syllables, M, SD) %>% 
-  apa_table()
+  apa_table(caption = 'Test Error by Number of Syllables', note = 'Error is calculated as mean squared error at the end of training (using test mode).')
 
   
 ```
 
-The same trend comes out when looking at phonemewise errors across the word broken out by the number of syllables in each word. This measure provides a different and less graded measure of error, but useful still. Here, if the pattern that the network produces is closer to the correct phoneme than any other, it is considered correct. Once this prediction is made for the entire word, phoneme by phoneme, the calculation is made as the number of phonemes correct divided by the total phonemes in the word. Table XX shows the accuracy associated with syllable count across all words in the training corpus.
+
 
 ```{r, testmodeErrorsBySyllable, echo=FALSE}
 
@@ -717,7 +741,11 @@ multi_testmode %>%
   summarise(M = mean(phonemes_proportion),
             SD = sd(phonemes_proportion)) %>% 
   rename(Syllables = nsyll) %>% 
-  left_join(multi_mistakes_by_syllable) %>% 
+  left_join(multi_mistakes_by_syllable) %>%
+  mutate(Syllables = as.character(Syllables),
+         M = as.character(round(M, digits = 3)),
+         SD = as.character(round(SD, digits = 3)),
+         Proportion = as.character(round(Proportion, digits = 3))) %>% 
   apa_table(caption = 'Descriptive Statistics of Errors for Number of Syllables in Each Word in Corpus', note = '"Mistakes" corresponds to the total number of mistakes made for words with that number of syllables, and "Proportion" expresses that number as a proportion of all words with that number of syllables. ')
 
 multi_testmode %>% 
@@ -728,8 +756,8 @@ multi_testmode %>%
 ```
 
 
-## Mistakes
-The types of mistakes made by the model vary, with `r nrow(multi_mistakes)` words out of `r nrow(multi_testmode)` (or `r nrow(multi_mistakes)/nrow(multi_testmode)`% of all words) pronounced incorrectly. Table XX shows a sample of the mistakes made for words of different lengths. A table of all errors can be found at the following online repository: XX^[Note that a segment coded as "XX" conveys that the segment was a tie with another phoneme and one coded as "_" means that the model produced a null phoneme (where units are rounded to the nearest whole).].
+## Examining the model's mistakes
+The types of mistakes made by the model vary, with `r nrow(multi_mistakes)` words out of 11,103 (or `r nrow(multi_mistakes)/nrow(multi_testmode)`% of all words) pronounced incorrectly. A table of all errors can be found at [this online repository](https://github.com/MCooperBorkenhagen/dissertation/blob/master/paper/data/multisyllabic_model_mistakes.csv)^[Note that a segment coded as "XX" conveys that the segment was a tie with another phoneme and one coded as "_" means that the model produced a null phoneme (where units are rounded to the nearest whole, in this case being 0).].
 
 
 ```{r, sampleMultiMistakes, echo=FALSE}
@@ -747,7 +775,7 @@ mistakes_with_null_phone = multi_testmode %>%
 ```
 
 
-Some words are shortened with syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('S-N-AA1-R-AH0-L-D')`, but which produced the single syllable alternative `r scaps('S-N-AA1-R-L-D')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps('F-L-AE1-T-B-EH0-D')`), which doesn't differ from the target in principle and out of context of reading connected text ^[Note that the stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress should be thought of as "unstressed", and whether or not an unstressed syllable/ vowel is distinct from a syllable/ vowel with secondary stress is not a clear distinction in this case.]. Therefore the pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('EH0')` include `r scaps('T-R-AW1-W-EH0-L')` and `r scaps('P-R-IH1-N-S-EH0-S')` can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('EH0')`), but the extent to which the vowel is distinct from `r scaps('EH2')` (the version displaying secondary stress) is subtle, if not negligible.
+Some words are shortened with syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('S-N-AA1-R-AH0-L-D')`, but which produced the single syllable alternative `r scaps('S-N-AA1-R-L-D')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps('F-L-AE1-T-B-EH0-D')`), which doesn't differ from the target in principle and out of context of reading connected text ^[The stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress should be thought of as "unstressed", and whether or not an unstressed syllable/ vowel is distinct from a syllable/ vowel with secondary stress is not a clear distinction in this case.]. Therefore the pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('EH0')` include `r scaps('T-R-AW1-W-EH0-L')` and `r scaps('P-R-IH1-N-S-EH0-S')` can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('EH0')`), but the extent to which the vowel is distinct from `r scaps('EH2')` (the version displaying secondary stress) is subtle, if not negligible.
 
 A number of mistakes arise from the model either being uncertain about a phoneme (resulting in a tie among phonemes produced; `r mistakes_with_uncertain_phone` total mistakes, or `r mistakes_with_uncertain_phone/nrow(multi_mistakes)`% of mistakes) or producing a null phoneme (i.e., a segment whose nearest phoneme is the null `_` segment, consisting of all units set to zero), which was `r mistakes_with_null_phone`, or `r mistakes_with_null_phone/nrow(multi_mistakes)` of all mistakes. While a full accounting of this type of error is outside the scope of what will be described here, the error data can be found in this repository (XX). The conditions under which mistakes of this type could be avoided is a matter of future research, but it likely could be avoided through some combination of an expanded training corpus and enhanced training for complex words. Remember that training can proceed with a batch size equal to one, which likely would ameliorate such errors.
 
