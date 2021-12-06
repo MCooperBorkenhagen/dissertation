@@ -717,8 +717,6 @@ multi %>%
 
 
 ```{r, testmodeErrorsBySyllable, echo=FALSE}
-
-
 multi_mistakes = multi_testmode %>% 
   filter(phonemes_proportion < 1) %>%
   select(word, phon_read, nsyll)
@@ -727,14 +725,12 @@ multi_nsylls = multi_testmode %>%
   group_by(nsyll) %>% 
   summarise(N = n())
 
-
 multi_mistakes_by_syllable = multi_mistakes %>% 
   group_by(nsyll) %>% 
   summarise(n = n()) %>% 
   left_join(multi_nsylls) %>% 
   mutate(Proportion = n/N) %>% 
   select(Syllables = nsyll, `Mistakes` = n, Proportion)
-
 
 multi_testmode %>% 
   group_by(nsyll) %>% 
@@ -757,27 +753,21 @@ multi_testmode %>%
 
 
 ## Examining the model's mistakes
-The types of mistakes made by the model vary, with `r nrow(multi_mistakes)` words out of 11,103 (or `r nrow(multi_mistakes)/nrow(multi_testmode)`% of all words) pronounced incorrectly. A table of all errors can be found at [this online repository](https://github.com/MCooperBorkenhagen/dissertation/blob/master/paper/data/multisyllabic_model_mistakes.csv)^[Note that a segment coded as "XX" conveys that the segment was a tie with another phoneme and one coded as "_" means that the model produced a null phoneme (where units are rounded to the nearest whole, in this case being 0).].
+The types of mistakes made by the model vary, with `r nrow(multi_mistakes)` words out of 11,103 (or `r nrow(multi_mistakes)/nrow(multi_testmode)`% of all words) pronounced incorrectly. A table of all errors can be found at the online repository for the project (https://github.com/MCooperBorkenhagen/dissertation/blob/master/paper/data/multisyllabic_model_mistakes.csv)^[Note that a segment coded as "XX" conveys that the segment was a tie with another phoneme and one coded as "_" means that the model produced a null phoneme (where units are rounded to the nearest whole, in this case being 0).].
 
 
 ```{r, sampleMultiMistakes, echo=FALSE}
-mistakes_to_spotlight = c()
-
-
 mistakes_with_uncertain_phone = multi_testmode %>% 
   filter(str_detect(phon_read, 'XX')) %>% nrow()
 
-
-
 mistakes_with_null_phone = multi_testmode %>% 
   filter(str_detect(phon_read, '_')) %>% nrow()
-
 ```
 
 
-Some words are shortened with syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('S-N-AA1-R-AH0-L-D')`, but which produced the single syllable alternative `r scaps('S-N-AA1-R-L-D')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps('F-L-AE1-T-B-EH0-D')`), which doesn't differ from the target in principle and out of context of reading connected text ^[The stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress should be thought of as "unstressed", and whether or not an unstressed syllable/ vowel is distinct from a syllable/ vowel with secondary stress is not a clear distinction in this case.]. Therefore the pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('EH0')` include `r scaps('T-R-AW1-W-EH0-L')` and `r scaps('P-R-IH1-N-S-EH0-S')` can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('EH0')`), but the extent to which the vowel is distinct from `r scaps('EH2')` (the version displaying secondary stress) is subtle, if not negligible.
+Some words are shortened with syllabic reduction, like the word `r scaps('snarled')`, which was trained with the target `r scaps('s-n-aa1-r-ah0-l-d')`, but which produced the single syllable alternative `r scaps('s-n-aa1-r-l-d')`. Other errors were related to stress pattern. For example, the word `r scaps('flatbed')` possesses the stress pattern 1-2 in the training data (where 1 is primary stress and 2 is secondary stress). The produced pattern of stress was 1-0 (i.e., the form `r scaps('f-l-ae1-t-b-eh0-d')`), which doesn't differ from the target in principle and out of context of reading connected text ^[The stress codings were adopted from the CMU dictionary with little change. A vowel possessing a 0 stress designation is considered "unstressed", and whether or not an unstressed vowel is distinct from a vowel with secondary stress is not a clear distinction in this case.]. The pattern produced possessed an explicit distinction between the primary stress (the first syllable) against the subordinate stress (the second syllable). That the stress pattern in this word is 1-2 is arguable. Other words in the training set that showed the 1-0 pattern with `r scaps('eh0')` include `r scaps('t-r-aw1-w-eh0-l')` (`r scaps('trowel')`) and `r scaps('p-r-ih1-n-s-eh0-s')` (`r scaps('princess')`). These words can be thought of as having a weaker ultimate syllable (the unstressed `r scaps('eh0')`), but the extent to which the vowel is distinct from `r scaps('eh2')` (the version displaying secondary stress) is subtle, if not negligible.
 
-A number of mistakes arise from the model either being uncertain about a phoneme (resulting in a tie among phonemes produced; `r mistakes_with_uncertain_phone` total mistakes, or `r mistakes_with_uncertain_phone/nrow(multi_mistakes)`% of mistakes) or producing a null phoneme (i.e., a segment whose nearest phoneme is the null `_` segment, consisting of all units set to zero), which was `r mistakes_with_null_phone`, or `r mistakes_with_null_phone/nrow(multi_mistakes)` of all mistakes. While a full accounting of this type of error is outside the scope of what will be described here, the error data can be found in this repository (XX). The conditions under which mistakes of this type could be avoided is a matter of future research, but it likely could be avoided through some combination of an expanded training corpus and enhanced training for complex words. Remember that training can proceed with a batch size equal to one, which likely would ameliorate such errors.
+A number of mistakes arise from the model either being uncertain about a phoneme (resulting in a tie among phonemes produced; `r mistakes_with_uncertain_phone` total mistakes, or `r round(mistakes_with_uncertain_phone/nrow(multi_mistakes)*100)`% of mistakes) or producing a null phoneme. A null phoneme, is one in which all features are 0^[You can think of such a segment as a vector representation of "`_`".]. This represents `r mistakes_with_null_phone` mistakes, or `r round(mistakes_with_null_phone/nrow(multi_mistakes)*100)` of all mistakes. While a full accounting of this type of error is outside the scope of what will be described here, the error data can be found in the repository referenced earlier. The conditions under which mistakes of this type could be avoided is a matter of future research, but it likely could be avoided through some combination of an expanded training corpus and enhanced training for complex words.
 
 ```{r, multiStressMistakes, echo=FALSE}
 
@@ -801,38 +791,34 @@ multi_testmode %>%
 
 ```
 
-Of the mistakes made, `r length(multi_stress_mistakes)` (or `r length(multi_stress_mistakes)/nrow(multi_testmode)`%), involved a mistake associated with the stress pattern. Some stress mistakes relate back to the fact that the model sometimes produces indeterminate phoneme segments (ties between phonemes, or the undetermined '_' segment). `r length(multi_stress_indeterminate_pronunciations)` (`r length(multi_stress_indeterminate_pronunciations)/length(multi_stress_mistakes)` of all stress errors) can be attributed to such errors. Of those remaining, some mistakes can be attributed to an improper assignment of stress despite the proper approximate contour being present (for example, the stress assigned to `r scaps('reindeer')` incorrectly supplied no stress to the second vowel but in training secondary stress was present). The remaining mistakes involved the wrong stress (e.g., a stressed second syllable present when the first syllable should have been stressed, like in `r scaps('JH-AE1-P-AH0-N')` for `r scaps('Japan')` and `r scaps('	SH-AE1-M-P-UW0-Z')` for `r scaps('shampoos')`) or the number of vowels being incorrect (e.g, `rscaps('F-AH1-N-IH0-S-T')` instead of `rscaps('F-AH1-N-IY0-AH0-S-T')` for `r scaps('funniest')`). Although, such mistakes account for `r nrow(filter(filter(multi_testmode, word %nin% multi_stress_indeterminate_pronunciations), stress <1))` words in the corpus and only `r nrow(filter(filter(multi_testmode, word %nin% multi_stress_indeterminate_pronunciations), stress <1))/length(multi_stress_mistakes)`% of total stress mistakes.
+Of the mistakes made, `r length(multi_stress_mistakes)` (or `r round(length(multi_stress_mistakes)/nrow(multi_testmode)*100)`%) involved a mistake associated with the stress pattern. Some stress mistakes relate back to the fact that the model sometimes produces indeterminate phoneme segments (ties between phonemes, or the undetermined "`_`" segment). `r length(multi_stress_indeterminate_pronunciations)` (`r round(length(multi_stress_indeterminate_pronunciations)/length(multi_stress_mistakes)*100)` of all stress errors) can be attributed to such errors. Of those remaining, some mistakes can be attributed to an improper assignment of stress despite the proper approximate contour being present (for example, the stress assigned to `r scaps('reindeer')` incorrectly supplied no stress to the second vowel but in training secondary stress was present). The remaining mistakes involved the wrong stress (e.g., a stressed second syllable present when the first syllable should have been stressed, like in `r scaps('jh-ae1-p-ah0-n')` for `r scaps('Japan')` and `r scaps('sh-ae1-m-p-uw0-z')` for `r scaps('shampoos')`) or the number of vowels being incorrect (e.g, `rscaps('F-AH1-N-IH0-S-T')` instead of `r scaps('f-ah1-n-iy0-ah0-s-t')` for `r scaps('funniest')`). Although, such mistakes only account for `r nrow(filter(filter(multi_testmode, word %nin% multi_stress_indeterminate_pronunciations), stress <1))` words in the corpus and only `r nrow(filter(filter(multi_testmode, word %nin% multi_stress_indeterminate_pronunciations), stress <1))/length(multi_stress_mistakes)`% of total stress mistakes.
 
+### Comparisons to other datasets
+Two types of analyses are presented in order to validate the model of multisyllabic word naming, in a similar fashion to the results for the monosyllabic model. First, a set of relevant predictors are examined for performance over all words in the corpus. These predictors are taken from analyses of ELP data, reported in @Yap2009. Then, experiments that examine the effects of consistency in multisyllabic words are reproduced, namely those from @Chateau2003 and @Jared1990.
 
-## Comparisons to other datasets
-In order to validate the model using words with more than one syllable, two analyses are presented. First, a set of relevant predictors taken from @Yap2009 are examined. Then, experiments that examine the effects of consistency in multisyllabic words are reported, namely those from @Chateau2003 and @Jared1990.
+## Item level predictors from the ELP
+Data from the English Lexicon Project [@Balota2007; @Yap2009] were taken and merged with the items from the data from the simulations involving multisyllabic words. A set of standard variables were identified for their applicability to examining the effects of orthography-to-phonology structure on naming: word frequency, orthographic length (number of letters), phonological length (number of phonemes), number of syllables, orthographic neighborhood size, and phonological neighborhood size. The set of words common to both the ELP naming data and the data from the multisyllabic simulations conducted here were subset for the purposes of examining these word-level variables. This yielded data for `r length(elp_model_words)` words in the model corpus (or `r length(elp_model_words)/length(unique(multi$word))`% of words included in the training pool).  The descriptive characteristics of the predictors for this subset of words are shown in Table 6.
 
-
-## Item level predictors from the ELP [@Balota2007; @Yap2009]
-Data from the English Lexicon Project were taken and merged with the items from the data from the simulations involving multisyllabic words. A set of standard variables were identified for their applicability to examining the effects of orthography-to-phonology structure on naming: word frequency, orthographic length (number of letters), phonological length (number of phonemes), number of syllables, orthographic neighborhood size, and phonological neighborhood size. The set of words common to both the ELP naming data and the data from the multisyllabic simulations conducted here were subset for the purposes of examining these word-level variables. The descriptive characteristics of the predictors are shown in Table XX.
-
+\ Table 6
 ```{r, multiWordPredictorsDescriptives, echo=FALSE}
-
-
 tmp = multi %>% 
   filter(epoch == 99)
 
 predictors =  c('Frequency', 'N syllables', 'Phon length', 'Orth length', 'Orth Lev.', 'Phon Lev.')
 
-tabledata = summarows(tmp, c('freq', 'nsyll',  'phonlen', 'orthlen', 'orth_lev', 'phon_lev'), newnames = predictors, na.rm = T, manuscript = T, notes = 'Frequency values provided from HAL, which is one of the frequency sources native to the ELP data. Levenshtein distances (orth lev. and phon lev.) were taken from the ELP. Levenshtein distance is calculated as the minimum number of character changes in the sequence that are needed in order to generate a new word (orthographic form for OLD and phonological form for PLD) from the existing one.')
-
+tabledata = summarows(tmp, c('freq', 'nsyll',  'phonlen', 'orthlen', 'orth_lev', 'phon_lev'), newnames = predictors, na.rm = T, manuscript = T, notes = 'Frequency values provided from HAL (Lund et al., 1996), which is one of the frequency sources native to the ELP data. Levenshtein distances (orth lev. and phon lev.) were taken from the ELP. Levenshtein distance is calculated as the minimum number of character changes in the sequence that are needed in order to generate a new word from the existing one.')
 
 elp_model_words = multi %>% 
-  filter(epoch == 99) %>% 
+  filter(epoch == 99) %>% # epoch is arbitrary here, values don't change across epochs
   filter(!is.na(elp_rt)) %>% 
   pull(word)
-
 
 tabledata
 ```
 
-In order to obtain an estimate of the relationship between word variables and a relevant performance measure for behavior (from ELP) and the computational model the data were subset to include all words present in both the model corpus and the data from the ELP. This yielded data for `r length(elp_model_words)` words in the model corpus (or `r length(elp_model_words)/length(unique(multi$word))`% of words included in the training pool). These variables were each correlated with the relevant outcome variable from the model and in the ELP. For the model data the mean squared error was used, and for the ELP, the item-level RTs.
+These variables were each correlated with the relevant outcome variable from the model and in the ELP. For the model data the mean squared error was used, and for the ELP, the item-level RTs. These correlations (reported as Pearson's product-moment correlation, _r_) appear in Table 7.
 
+\ Table 7
 ```{r, corsMultiELP, echo=FALSE}
 
 EPOCH = 45
@@ -851,43 +837,17 @@ tabledata$`*r* (Model)` = sig_level(cortests(tmp, 'mse', corvars, 'estimate'), c
 tabledata$`*r* (ELP)` = sig_level(cortests(tmp, 'elp_rt', corvars, 'estimate'), cortests(tmp, 'elp_rt', corvars, 'p.value'))
 
 
-apa_table(tabledata, caption = 'Correlations between Word Variables and Processing Difficulty (MSE for Model and RT for Behavioral Data)', note = "Correlations provided as Pearson's *r*. Bolded coefficients are significant at *p* < .001.", digits = 3, format = 'pandoc', align = 'l', landscape = T)
+apa_table(tabledata, caption = 'Correlations between Word Variables and Processing Difficulty (MSE for Model and RT for Behavioral Data)', note = "Correlations calculated over the set of words common to both the ELP data and the corpus of words used for training the multisyllabic model. Correlations provided as Pearson's *r*. Bolded coefficients are significant at *p* < .001.", digits = 3, format = 'pandoc', align = 'l', landscape = T)
 
 ```
 
 The bivariate relationships presented above, and their direction, are all expected and they are approximately consistent across the model and behavioral data. An increase in frequency is associated with a decrease in processing difficulty (error in the model, latency in humans). The remaining word variables are all positively correlated with processing difficulty: number of syllables, number of phonemes, number of letters, orthographic Levenshtein distance, and phonological Levenshtein distance.
 
-Similar to the results of the model of monosyllabic words, the more important test of the model's performance concerns the effect of syllabic characteristics on naming in experiments that examine such characteristics in a more controlled manner.
+### Results from experimental wordlists for multisyllabic model
+Similar to the results of the model of monosyllabic words, an additional important test of the model's performance concerns the effect of word characteristics on naming in experiments that examine such characteristics in a more controlled manner.
 
-There is a debate in the word recognition literature about whether something like _syllabic processing_ is a necessary component of word recognition with, of course, particular attention paid to longer (multisyllabic) words in determining this level of representation in the reading system. @Jared1990 posited that the processing of multisyllabic words can't be reduced to a syllable-by-syllable process. Their data from Experiment 4 show that when words are delivered one syllable at a time, the magnitude of the effect of inconsistency on naming increases, demonstrating that the context (across syllable boundaries) facilitates their processing. This is expected in a theory where the processing of syllables is simply part of a broader system that associates speech from print by exploiting the statistical (contextual) dependencies in orthography (i.e., a connectionist theory). If syllables were "assembled", you would expect to see left-to-right syllabic processing without regard to the (orthographic context of) the subsequent syllable in experimentation. @Chateau2003 extended the work in @Jared1990 with experimental results that showed that orthographic segments that extended across traditionally understood orthographic "syllable boundaries"` (i.e., intervocalic prosodic contours characterized by a dramatic reduction and shift in amplitude).
-
-Taking error data from the end of training (using testmode data) we see a similar pattern of means, shown in Figure XX.
-
-```{r, jared1990a, echo=FALSE}
-
-multi_testmode %>%
-  filter(!is.na(js1990_rt)) %>%
-  mutate(condition = case_when(js1990_condition == 'reg_inconsistent' ~ 'Inconsistent',
-                               js1990_condition == 'exception' ~ 'Inconsistent',
-                               js1990_condition == 'regular' ~ 'Consistent'),
-         syllable = case_when(js1990_syll == 'first' ~ 'First',
-                              js1990_syll == 'last' ~ 'Last')) %>% 
-  group_by(condition, syllable) %>%
-  summarise(M = mean(phonemes_sum),
-            SD = sd(phonemes_sum),
-            SEM = SD/sqrt(N),
-            condition = first(condition), 
-            syllable = first(syllable)) %>% 
-  ggplot(aes(syllable, M, fill = condition)) +
-  geom_bar(stat = 'summary', position = position_dodge(), color = 'black') +
-  geom_errorbar(width = .2, color = 'grey25', aes(ymin = M-SEM, ymax = M+SEM), position = position_dodge(.9)) +
-  scale_fill_manual(values = COLORS_jared) +
-  labs(x = 'Syllabic position', y = 'Phonemewise distance (avg)') +
-  theme_apa() +
-  theme(legend.title = element_blank())
-
-```
-
+### Jared & Seidenberg (1990)
+There is a debate in the word recognition literature about whether syllabic processing is a necessary component of word recognition. Experimentation considering this level of representation in the reading system of course focuses on the processing of multisyllabic words. @Jared1990 posited that the processing of multisyllabic words can't be reduced to a syllable-by-syllable process and that their pronunciation is conditioned by the broader orthographic context in which they appear. Results from Experiment 4 from @Jared1990 demonstrate this point. There they showed that when words are delivered one syllable at a time, the magnitude of the effect of inconsistency on naming increases, demonstrating that the context (across syllable boundaries) facilitates their processing. This is expected in a theory where the processing of syllables is simply part of a broader system that associates speech from print by exploiting the statistical (contextual) dependencies in orthography (i.e., a connectionist theory). If syllables were "assembled", you would expect to see left-to-right syllabic processing without regard to the (orthographic context of) the subsequent syllable in the task. @Chateau2003 extended the work in @Jared1990 with experimental results that showed that orthographic segments that extended across traditionally understood orthographic "syllable boundaries"` (i.e., intervocalic prosodic contours characterized by a dramatic reduction and shift in amplitude).
 
 ## Chateau & Jared (2003)
 The experiments in @Chateau2003 sought to investigate consistency and frequency effects in naming tasks with word-level manipulations. Extending the consistency constructs used in @Jared1990 and @Taft1992. The idea of consistency articulated in this work concerns a portion of the printed word that the authors call the "basic orthographic syllabic structure" (or "BOSS" for short). The idea behind this unit of representation is that it is the portion of the printed form that includes the first orthographic vowel plus all the orthographic consonants that lead up to the second orthographic vowel of the word, provided those orthographic consonants occur in word-ending positions in other (monosyllabic) words in English^[This terminology is based in the description of the "basis orthographic syllabic structure" in @Taft1992. It should be noted that the concepts "orthographic vowel" and "orthographic consonant" are problematic in that it assumes some fundamental homology between sounds and letters that runs against the ideas behind the connectionist theory of learning presented here. These terms are used for convenience.]. The orthographic "body" they define is the sequence of letters that span from the first orthographic vowel to last orthographic consonant defined in this way. Take the word `r scaps('blemish')`. Using this heuristic, the basic orthographic syllabic structure would be defined as `r scaps('blem')`, and its body would be `r scaps('em')`. Note that, importantly, this definition avoids the issue of where the "syllable boundary" is with respect to the orthography of the word and thus allows for a calculation of the neighborhood statistic (consistency) over such a unit with respect to the phonemes associated with the orthographic form because we can assume that such an orthographic sequence would be pronounced `r scaps('B-L-EH-M')``, despite it not being a word one would regularly encounter.
