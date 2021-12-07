@@ -862,23 +862,22 @@ More specifically, the concept of consistency articulated in this work concerns 
 
 As an example, consider the word `r scaps('blemish')`. Using the heuristic described, the basic orthographic syllabic structure would be defined as `r scaps('blem')`, and its body would be `r scaps('em')`. Note that, importantly, this definition avoids the issue of where the syllable boundary is with respect to the orthography of the word. This allows for a calculation of the neighborhood statistic (consistency) over such a unit with respect to the phonemes associated with the orthographic form because we can assume that such an orthographic sequence would be pronounced `r scaps('b-l-eh-m')`, despite the fact that `r scaps('blem')` is not a word one would regularly encounter yet has the appearance, at some level, of an orthotactically legal sequence of letters in English.
 
-There is a theoretical assumption that underlies the psychological validity of this orthographic segment as described in @Taft1992 that runs contrary to ideas about learning proposed in this dissertation, including how phonology and orthography are represented and processed in the time-varying model. In essence, @Taft1992 articulates a theory about syllabic structure in orthography. This doesn't square with the theoretical assumption that orthographic units aren't processed in syllabic segments. It also assumes that orthography contains homologous structure to that of spoken language syllabic structure. The computational model developed here and the theory of cross-modal perceptual processing conveys a different assumption: that printed words are processed in a continuous fashion (over some grain size) and not syllable by syllable, just like spoken language. These ideas about the syllabic structure of orthography and its processing in @Taft1992 are indeed contested [@Chateau2003; @Jared1990], and the empirical findings about the nature of the basic orthographic syllabic structure have been challenged experimentally [@Seidenberg1987]. More generally, the extent to which syllables (like other subcomponents of words) function independently in as perceptual subcomponents has been debated as well [@Seidenberg1987].
+The assumption that underlies the psychological validity of this orthographic segment as described in @Taft1992 runs contrary to ideas about learning proposed in this dissertation, including how phonology and orthography are represented and processed in the time-varying model. In essence, @Taft1992 articulates a theory about syllabic structure in orthography. This doesn't square with the theoretical assumption that orthographic units aren't processed in syllabic segments. It also assumes that orthography contains homologous structure to that of spoken language syllabic structure. The computational model developed here and the theory of cross-modal perceptual processing conveys a different assumption: that printed words are processed in a continuous fashion (over some grain size) and not syllable by syllable, just like spoken language. These ideas about the syllabic structure of orthography and its processing in @Taft1992 are indeed contested [@Chateau2003; @Jared1990], and the empirical findings about the nature of the basic orthographic syllabic structure have been challenged experimentally [@Seidenberg1987]. More generally, the extent to which syllables (like other subcomponents of words) function independently in as perceptual subcomponents has been debated as well [@Seidenberg1987].
 
-Nonetheless, the experiments in @Chateau2003 are important because their manipulations account for the fact that orthographic patterns can be associated with spoken language segments at a variety of orthographic grain-sizes including structure in the latter part of the word, namely in the second syllable of a two-syllable word (experiment 4). Experiment 3 manipulated the basic orthographic syllabic structure unit factorially across high and low frequency words, finding the familiar consistency by frequency interaction. Common words were processed more easily (lower response times) than uncommon ones, and words with more consistent basic orthographic syllabic structure associated with faster RTs than their low consistency counterparts. Similar to the result for @Jared1990 experiment 4, the result for consistency at this level of orthographic grain suggests that printed words aren't decomposed syllable by syllable during reading given . Like @Jared1990, they show that processing difficulty is moderated by word frequency, and that even high frequency multisyllabic words show an effect of neighborhood consistency.
+Nonetheless, the experiments in @Chateau2003 are important because their manipulations account for the fact that orthographic patterns can be associated with spoken language segments at a variety of orthographic grain-sizes including structure in the latter part of the word, namely in the second syllable of a two-syllable word (experiment 4). This is theoretically important because it can only be predicted by a model of reading where these visual segments condition pronunciation, which isn't possible if phonology is "assembled" in a left-to-right fashion as in the dual-route procedure. Experiment 3 in @Chateau2003 manipulated the basic orthographic syllabic structure unit factorially across high and low frequency words, finding the familiar consistency by frequency interaction. Common words were processed more easily (lower response times) than uncommon ones, and words with more consistent basic orthographic syllabic structure associated with faster RTs than their low consistency counterparts. Similar to the result for @Jared1990 experiment 4, the result for consistency at this level of orthographic grain suggests that printed words aren't decomposed syllable by syllable during reading given . Like @Jared1990, they show that processing difficulty is moderated by word frequency. In their experiment, even high frequency multisyllabic words show a (simple) effect of neighborhood consistency, similar to the effects for monosyllabic words from @Jared1997. Expleriment 4 in @Chateau2003 showed that the consistency of the vowel in the second syllable (high versus low) of two syllable words predicted meaningful differences in reaction times in a naming task.
 
-The patterns of means in experiments 3 and 4 in @Chateau2003 are seen in the model data here taken halfway through training (epoch 45). Figure 19 shows the data from behavioral data from @Chateau2003 on the top row and the corresponding data from the computational model on the bottom row.
+The patterns of means in experiments 3 and 4 in @Chateau2003 are reproduced in the model data here (taken halfway through training; epoch 45). Figure 19 shows the data from behavioral data from @Chateau2003 on the top row and the corresponding data from the computational model on the bottom row.
 
-```{r Jared2003Figure, out.width='500px', fig.align='left', fig.cap='Processing difficulty (mean squared error for computational model; RT for behavioral data) for stimuli from Chateau et al. (2003) experiments 3 and 4 are shown. Points are individual words and bars are calculated as the standard error of the mean.'}
-
-knitr::include_graphics('img/chateau_figure.png')
+```{r Jared2003Figure, echo=FALSE, out.width='500px', fig.align='left', fig.cap='Processing difficulty (mean squared error for computational model; RT for behavioral data) for stimuli from Chateau et al. (2003) experiments 3 and 4 are shown. Points are individual words and bars are calculated as the standard error of the mean.'}
+include_graphics('img/figure19.png')
 ```
 
-In both experiments, we see the frequency effect, where high frequency words are associated with lower error than low frequency words. Experiment 3 manipulated consistency as well as frequency, where consistency was defined  
+In both experiments, we see a consistency effect, where high frequency words are associated with lower error than low frequency words. Experiment 3 manipulated consistency as well as frequency, where consistency was defined  
 
 ## Variable effects over time
 Similar to the variability found across training for the stimuli from @Jared1997 the pattern for the stimuli from @Chateau2003 also shift over time in the computational data. This variability isn't typically reported in analogous computation work related to reading development, but it bears mention here. Figure 17 shows the patterns of means for the interaction between consistency and frequency for a range of timepoints across training using the @Chateau2003 experimental stimuli (their Experiment 3).
 
-```{r cj2003AcrossTraining, echo=FALSE, fig.cap='The interaction between frequency and consistency for a range of timepoints across training. Mean squared error has been standardized within each epoch in order to put barplots on a common scale (i.e., in terms of standard deviations of MSE).'}
+```{r cj2003AcrossTraining, echo=FALSE, fig.height=2.5, fig.cap='The interaction between frequency and consistency for a range of timepoints across training. Mean squared error has been standardized within each epoch in order to put barplots on a common scale (i.e., in terms of standard deviations of MSE).'}
 N = multi %>% filter(epoch == 45) %>% filter(!is.na(chateauB_consistency)) %>% nrow()
 
 COLORS_chateau = c('H' = 'grey49', 'L' = 'black', 'High' = 'grey49', 'Low' = 'black')
@@ -907,28 +906,6 @@ multi %>%
             consistency = first(consistency),
             frequency = first(frequency)) %>%
   ungroup() %>% 
-  ggplot(aes(frequency, Z, fill = consistency)) +
-  geom_bar(stat = 'summary', position = position_dodge()) +
-  facet_grid(~epoch) +
-  scale_fill_manual(values = COLORS_chateau) +
-  labs(x = 'Frequency', y = 'Mean squared error', fill = 'Consistency') +
-  theme_apa()
-
-
-
-multi %>% 
-  left_join(tmp) %>% 
-  filter(!is.na(chateauB_consistency)) %>% 
-  filter(epoch %in% c(45, 54, 63, 72, 81, 90, 99)) %>% 
-  mutate(consistency = case_when(chateauB_consistency == 'high' ~ 'High',
-                                 chateauB_consistency == 'low' ~ 'Low'),
-         frequency = case_when(chateauB_frequency == 'high' ~ 'H',
-                               chateauB_frequency == 'low' ~ 'L')) %>% 
-  group_by(epoch, word) %>% 
-  summarise(Z = (mse-M)/SD,
-            consistency = first(consistency),
-            frequency = first(frequency)) %>%
-  ungroup() %>% 
   group_by(epoch, consistency, frequency) %>% 
   summarize(Z = mean(Z)) %>% 
   ggplot(aes(factor(frequency), Z, color = factor(consistency), group = consistency)) +
@@ -936,22 +913,23 @@ multi %>%
   geom_line() +
   facet_grid(~epoch) +
   scale_color_manual(values = COLORS_chateau) +
-  labs(x = 'Frequency', y = 'MSE (standardized)', fill = 'Consistency') +
+  labs(x = 'Frequency', y = 'MSE (standardized)', color = 'Consistency') +
   theme_apa()
 
 
 ```
 
-However, using the standardized outcome variable (mean squared error here) within each training cycle and averaging across training epochs you see the expected pattern emerge (Figure XX). This can be thought of as averaging across a (nonindependent) sample of model states to observe the relationship between consistency (defined in a certain way here for multisyllabic words) and frequency on error during training. This is the expected trend, but future work could be done to capture more precise characteristics of these dynamics especially as they relate to the behavior of cognitive computational systems like this one and the analogous behavior in humans.
+However, using the standardized outcome variable (mean squared error here) within each training cycle and averaging across training epochs you see the expected pattern emerge (Figure 20). This can be thought of as averaging across a (nonindependent) sample of model states to observe the relationship between consistency (defined in a certain way here for multisyllabic words) and frequency on error during training. This is the expected trend, but future work could be done to capture more precise characteristics of these dynamics especially as they relate to the behavior of cognitive computational systems like this one and the analogous behavior in humans.
 
-```{r, cj2003AveragedAcrossTraining, echo=FALSE, fig.cap='The interaction between frequency and consistency', fig.height=3, fig.width=5}
+```{r, cj2003AveragedAcrossTraining, echo=FALSE, warning=FALSE, fig.cap='Error plotted against frequency and consistency for the Chateau et al. (2003) stimuli standardized and collapsed across epochs for the time-varying model.', fig.height=3, fig.width=5}
 
 
 tmp = multi %>% 
   filter(!is.na(chateauB_consistency)) %>%
   group_by(epoch) %>% 
   summarise(SD = sd(mse),
-            M = mean(mse))
+            M = mean(mse),
+            SEM = SD/sqrt(N))
 
 
 
