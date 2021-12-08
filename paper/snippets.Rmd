@@ -92,3 +92,74 @@ taraban_crossval %>%
 One potential limitation of the learning approach developed here concerns the type of batch learning used. Batches constitute the learning trials over which weight updates occur and therefore likely play a role in the dynamics of how well aspects of structure are learned and the timecourse for such learning. These dynamics may be quite complex, with larger implications for the nature of knowledge development in the long term developmental process of the model and a reader that it is designed to simulate. This is no doubt an area of potentially valuable future research, though a few things can be noted here.
 
 The assembly of minibatches in this approach is designed for reasons more related to the engineering of the computational system provided rather than a direct hypothesis about the nature of human learning in this learning domain. This specification of the architecture allows for the use of words without alignment of any kind - a feature thought to be a virtue of the approach given the potential learning challenges imposed by including empty slots in input and output representations. However, this may not be an unrelated issue to human learning. For example, the minibatch approach taken here can be implemented over batches of only one learning trial, which is termed "stochastic gradient descent" in the literature on artificial neural networks. One possibility is that human learning occurs over such minimal number of learning experiences. If so, the architecture implemented here represents a viable one for experimenting with such a possibility, which is afforded by the ability to learn without slots and alignment.
+
+
+
+
+
+
+## Possibilities in the timecourse of visual and phonological processing
+The timecourse of phonological activation of orthographic input is a debated topic, but little is known about how such processes operate for long words. This issue has primarily been dealt with in the literature using hybrid computational architectures, containing both connectionist and structured, symbolic components of the computational system [@Perry2010, @Perry2019]. Though some purely connectionist architetures have been proposed [@Sibley2010]. While outside the scope of previous modeling and theorizing, it is likely that a dynamic process where orthographic inputs propagate information to activate phonology, initiating a response, which is modulated by subsequent visual input. Consider, for example, reading the word _architecture_. Phonological activation could well be taking place over the initial visual portion of the word, such that the _...ture_ portion isn't processed until after the phonology of the root (`AA - R - K - AH - T - EH - K - T`) is initiated. While the dynamics of such processes are interesting and important for developing a model of word reading that accounts for how long words are read, such cases are outside of what is dealt with here. A simpler corpus has been developed for the purposes of this work, built on with assumptions based on perceptual span (some results are provided that demonstrate the ability of the model to produce output for words longer than this span, demonstrating the broader capacity of the model and architecture). A virtue of the architecture developed in this dissertation is that such dynamics are possible given the nature of the computational learner developed, though these dynamics are not accounted for in service of accounting for simpler and more fundamental processes in word reading.
+
+
+# null phonological or orthographic inputs
+
+Not surprisingly, a learner trained on simultaneously provided orthographic and phonological input (with an error signal back propagated to orthographic and phonological layers from a phonological output layer) will not become independent in its ability to produce phonology from orthography alone. In such a case, the network comes to rely to heavily on the phonological input given its identity with the word's phonological output (i.e., these mappings are much easier and reliable than those between print and speech). This is what we would expect also for children learning to read. If, during learning, the child isn't required to produce speech from print alone, and if she or he can rely on the paired spoken language input, the task becomes one of repetition rather than the production of speech from print (alone). As a result, an alternative training process is required in a time-varying system like the one proposed here in order to avoid this problem.
+
+Given the dual nature of the input system in the architecture, learning can take place by providing inputs on either input layer, or both. The orthographic part of the network is connected to phonology through the passing of state vectors rather than the traditional information flow associated with feedforward and other canonical model architectures. Feedforward networks implement spatially defined inputs and outputs, and when an architecture implements temporal dynamics, it is typically with respect to these spatially defined inputs and outputs. In an LSTM, other network time-varying input and output sequences, training that involves mapping an orthographic input directly to a phonological output (without an explicit phonological input) requires an alternative specification of the inputs on phonology in order to initiate production of a spoken word from a print input.
+
+When learning to produce phonological output from orthography without phonological input present, the phonological input layer receives an empty sequence, but with the start segment (`#`) provided as the first timestep (for notation purposes, the symbol `#` is used to denote this segment even though the representation itself is a binary vector, as described previously). The timesteps following the start segment are then empty phonological representations where all units are off (`0`), where the input proceeds through as many phonemes (timesteps) as there are present on the target output pattern. The result is that the empty input and the target output pattern have the same dimensions, which is always the number of phonemes plus one (to accommodate the terminal segments, either the start segment on input or the end input on output). 
+
+The timespan of the phonological input sequence when training in this way is determined by setting some set number of empty timesteps as the null phonological input. This serves as the temporal signal that allows the phonological LSTM to function given its temporal nature. In the architecture used here, the number of empty timesteps is defined as the number of phonemes in the word. For example, in such a training trial using the word `r scaps('breath')`, the phonological input pattern would be `r scaps('# _ _ _ _ ')`, with the same output pattern as before, `r scaps('b-r-eh-th-%')`.  As in other training trials, even when provided with an empty phonological input, the produced phonological output is compared to the target phonological pattern, with error backpropagated to weights within the phonological and orthographic portions of the network. The output pattern is generated by virtue of combining the learned weights in the phonological LSTM, the state vectors (context) passed from the orthographic LSTM, and the temporal dynamics afforded by the null phonological input.
+
+This specification relates to the fact that the network uses no justification (i.e., "padding"), and that a temporal signal is required to drive the dynamics of the time-varying learning over parameters of the LSTM layer. An alternative method could be used that provided more timesteps than those provided strictly by the length of the phonological form itself (e.g., defined by the longest phonological form in the entire training corpus), but such a process requires padding on the output layer given that the time distribution of the input would then be greater than the number of phonemes in the word (plus the word-edge representation). In fact, a training process like this is adopted in most other machine translation endeavors taken up in the engineering and NLP literatures (see ref. and ref. for examples), but is avoided here due to the fact that "justification" of inputs and outputs deviates from the sort of veridical representations this work takes as fundamental to developing a more psychologically plausible architecture of time-distributed word recognition processes. An alternative training method is possible, where null segments (after the start of word segment) are passed to the phonological input one at a time, with a corresponding phonological being generated one segment at a time (rather than the gradual build up of input signal over an entire null input). In such a case the spoken form would need to be terminated somehow, presumably initiated once the end of the phonological sequence is reached as indicated by the computation of error with respect to the target pattern. The implementation here avoids this by 
+
+Alternatively, the phonological portion of the network can be trained independent of orthography. This can happen in an analogous way to the method described previously, but with empty orthographic inputs. It can also happen by training the phonological LSTM completely independently from the orthographic LSTM, as in during pre-training when weights are developed to approximate the type of early phonological learning that occurs in children prior to the onset of learning about print. In this case the orthographic portion of the network is simply removed from training alltogether. For our purposes here, the latter is always used, as in pre-training. When this occurs, the phonological network is used, essentially, as an autoencoder that maps speech to speech (except that the terminal segments are used). This process is described more fully in the section on pre-trainingXX. Nonetheless, the technical difference between these two implementations isn't important or psychologically interesting. The method adopted here is computationally straightforward and fits the cognitive model of learning espoused in this work.
+
+# old equation example:
+$$
+f_t = \sigma(W_fx_t + U_fh_{t-1} + b_f)
+$$
+
+### frequency and consistency
+@Seidenberg1984 showed that words with atypical structure only affect reading aloud when they are infrequent, and that words that are frequent are read equally rapidly even when they contain atypical structure.
+
+
+
+```{r, figPlaut1, echo=FALSE, out.width='250px'}
+# shapes:
+# 0 = ambiguous (square)
+# 1 = exception (circle)
+# 2 = regular consistent (triangle)
+# 5 = regular inconsistent (diamond)
+taraban %>% 
+  filter(!is.na(freq_plaut)) %>% 
+  filter(epoch == 27) %>% 
+  filter(plaut != 'nonword') %>%
+  mutate(plaut = case_when(plaut == 'ambiguous' ~ 'Ambiguous',
+                             plaut == 'exception' ~ 'Exception',
+                             plaut == 'reg_consistent' ~ 'Regular consistent',
+                             plaut == 'reg_inconsistent' ~ 'Regular inconsistent'),
+         freq_plaut = case_when(freq_plaut == 'low' ~ 'Low',
+                                  freq_plaut =='high' ~ 'High'),
+         freq_plaut = fct_relevel(freq_plaut, c('Low', 'High')),
+         plaut = fct_relevel(plaut, c('Exception', 'Ambiguous', 'Regular inconsistent', 'Regular consistent'))) %>% 
+  group_by(freq_plaut, plaut) %>% 
+  summarise(loss = mean(loss)) %>% 
+  ggplot(aes(freq_plaut, loss, shape = plaut, group = plaut)) +
+  geom_line() +
+  geom_point(size = 3) +
+  scale_shape_manual(values = c(0, 1, 2, 5)) +
+  labs(x = 'Frequency', y = 'Cross entropy') +
+  theme_apa() +
+  theme(legend.title = element_blank())
+```
+
+
+
+# Glushko1979 nonwords
+As an additional comparison the nonwords from @Glushko1979 were submitted for testing after training. That study was important for showing that words that appear to be pronouncable "by rule" (i.e, they are regular) that nonetheless have few if any neighbors, behave like other words that have sparse neighborhood structure, even when the word is a nonword. This was early evidence that a theory of reading that depends on rules of "phonological assembly" [@Rastle2010] and storage of exceptions isn't feasible given that nonwords can't be "retrieved" via a lexical storage procedure. Nonwords that appear to be regular (regardless of neighborhood structure) should behave similar to other regular words based on the rule-based ("assembly") account, but they do not. They behave in a way that is predictable based their neighborhood structure.
+
+In experiments 1 and 2, @Glushko1979 organized the nonwords into two groups, which were labeled "regular" (e.g., `r scaps('bink')` and `r scaps('gobe')`) or "exception" (e.g., `r scaps('pild')` and `r scaps('tost')`).  The second experiment controlled for the possibility that real-word stimuli in the first experiment may have primed participants to read nonwords in a way that inappropriately conformed to the real words in the task, so a second naming experiment was run using exclusively nonwords. For our purposes here, words are collapsed across tasks, with accuracies reported for all nonwords across the study.
+
+GLUSHKO NONWORD DATA HERE

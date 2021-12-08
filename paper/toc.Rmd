@@ -18,3 +18,18 @@ Chapter 2 \ \ \ .............................................. XX
 Chapter 3 \ \ \ .............................................. XX  
 Chapter 4 \ \ \ .............................................. XX  
 References \ \ \  ............................................ \ 10  
+
+\newpage
+
+# TESTS
+
+
+\begin{equation}
+f_t = \sigma(W_fx_t + U_fh_{t-1} + b_f)
+\end{equation}
+
+\newpage
+
+\begin{equation}
+H(x) = -\sum {i=1}ˆn p(x i) \log 2 p(x i)
+\end{equation}

@@ -1,4 +1,0 @@
-
-Anything marked with XX needs to be fixed or updated.
-
-- Appendix XX, with CMU representations of phonemes

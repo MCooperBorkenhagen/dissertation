@@ -13,7 +13,7 @@ papaja
 glue
 tidyverse
 car
-scapr
 heplots
 readxl
+gridExtra
 
