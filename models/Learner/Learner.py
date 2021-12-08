@@ -92,7 +92,7 @@ def nearest_phoneme(a, phonreps, round=True, ties='stop', return_array=False):
 
 class Learner():
 
-    def __init__(self, orth_features, phon_features, orthreps=None, phonreps=None, traindata=None, testdata=None, mask_phon=False, phon_weights=None, output_weights=None, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=400, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", seed=886, devices=True, memory_growth=True):
+    def __init__(self, orth_features, phon_features, orthreps=None, phonreps=None, traindata=None, testdata=None, mask_phon=False, phon_weights=None, output_weights=None, freeze_orth=False, freeze_phon=False, modelname='EncoderDecoder3', verbose=True, op_names=True, hidden=400, transfer_function='sigmoid', optimizer='rmsprop', loss="categorical_crossentropy", seed=886, devices=True, memory_growth=True):
         
         """Initialize your Learner() with some values and methods.
 
@@ -158,10 +158,8 @@ class Learner():
 
 
         decoder_lstm = LSTM(hidden, return_sequences=True, return_state=True)
-        
-        if freeze_phon:
-            decoder_lstm.trainable = False
-        
+
+
         if phon_weights is not None:
             decoder_lstm.set_weights(phon_weights)
         
@@ -172,6 +170,13 @@ class Learner():
     
         decoder_dense = Dense(phon_features, activation=transfer_function, name=output_name)
         
+        if freeze_orth:
+            encoder.trainable = False
+
+        if freeze_phon:
+            decoder_lstm.trainable = False
+            decoder_dense.trainable = False
+
         if output_weights is not None:
             decoder_dense.set_weights(output_weights)
         
@@ -202,7 +207,7 @@ class Learner():
             self.model.summary()
 
 
-    def fitcycle(self, traindata=None, testdata=None, probs=None, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False, outpath='.'):
+    def fitcycle(self, traindata=None, testdata=None, probs=None, null_phon=False, return_histories=False, cycles=1, cycle_id='0', batch_size=25, epochs=1, train_proportion=1, verbose=True, K=None, evaluate=False, outpath='.'):
 
         """Cycle through key, value pairs in traindata and apply fit() at each cycle.
 
@@ -217,6 +222,9 @@ class Learner():
             examples that start with the (phonetically) shortest words, moving to the longer
             words as you go. (Default is None)
 
+        null_phon : bool
+            If True, the phonological input only has the start of word feature present. All
+            other units are set to zero. (Default is False)
 
         """
         if traindata is None:
@@ -255,6 +263,10 @@ class Learner():
                 Xo = traindata[length]['orth']
                 Xp = traindata[length]['phonSOS']
                 Y = traindata[length]['phonEOS']
+
+                if null_phon:
+                    Xp[:, 1:, :] = 0
+
                 t1 = time.time()
                 if K is not None:
                     sample_weights = scale(traindata[length]['frequency'], K)

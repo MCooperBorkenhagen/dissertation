@@ -526,3 +526,38 @@ def read_weights(PATH, run_id, epochs, layer, combine=True):
             return [weights, biases]
         else:
             return weights, biases
+
+
+
+def test_model(model, traindata, testdata=None, null_phon=False, outpath='.', modelname='--', id='--'):
+
+    # set up file for item data if evaluate set to True
+    itemdata = open(os.path.join(outpath, 'item-data'+ '-' + modelname + '-' + id + '.csv'), 'w')
+    itemdata.write("cycle, word, train_test, phonlength, binary_acc, mse, loss\n")
+
+
+    for length in traindata.keys():
+        Xo = traindata[length]['orth']
+        Xp = traindata[length]['phonSOS']
+        Y = traindata[length]['phonEOS']
+        if null_phon:
+            Xp[:, 1:, :] = 0
+
+        for i, word in enumerate(traindata[length]['wordlist']):
+            loss, binary_acc, mse = model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
+            itemdata.write("{}, {}, {}, {}, {}, {}, {}\n".format(id, word, 'train', length, binary_acc, mse, loss))
+
+    if testdata is not None:
+        for length in testdata.keys():
+            Xo = testdata[length]['orth']
+            Xp = testdata[length]['phonSOS']
+            Y = testdata[length]['phonEOS']
+
+            if null_phon:
+                Xp[:, 1:, :] = 0
+
+            for i, word in enumerate(testdata[length]['wordlist']):
+                loss, binary_acc, mse = model.evaluate([reshape(Xo[i]), reshape(Xp[i])], reshape(Y[i]), verbose=False)
+                itemdata.write("{}, {}, {}, {}, {}, {}, {}\n".format(id, word, 'test', length, binary_acc, mse, loss))
+
+    itemdata.close()
