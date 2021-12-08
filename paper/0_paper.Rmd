@@ -1,5 +1,5 @@
 ---
-title             : "Time for time: A time-varying computational model of naming"
+title             : "A time-varying computational model of naming"
 shorttitle        : "A time-varying model of naming"
 
 author:  
@@ -46,6 +46,8 @@ header-includes:
   - \usepackage{threeparttable}
   - \usepackage[normalem]{ulem}
   - \interfootnotelinepenalty=10000
+  #- \usepackage{setspace}
+  #- \captionsetup[figure]{font={stretch=2, scriptsize}}
   #- \usepackage{tikz}
 ---
 
@@ -64,9 +66,12 @@ options(scipen = 1000)
 ```
 
 
-```{r}
+```{r loads, echo=FALSE, warning=FALSE}
 source('requirements.R')
 source('utilities.R')
+# we reference some ch3 data here in chapter 2 so we will compile all data here
+# note that source scripts are in ./data/
+source('data.R')
 ```
 
 

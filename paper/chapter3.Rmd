@@ -23,7 +23,7 @@ The states of the orthographic layer are passed to phonology to generate the pho
 
 Once the first phonemic pattern is produced it is saved for subsequent phonemes to be appended to it in order to form a full sequence of phonemes that constitutes a phonological output. While the weights in the network are frozen at this stage prior to testing, the states of the phonological LSTM is updated at each timestep following the same processing flow as described in the architecture section. Once a phoneme is output at each timestep, it is fed back to the input of the phonological layer to support the prediction of the subsequent phoneme. This differs in process from training trials but is the same conceptually given that in training, the entire phonological sequence is processed one segment at a time without the feedback process from the output layer back to the input. Because the output for a given phoneme is very unlikely to be specified as a perfect binary pattern (because predictions almost always have until that approach zero or one, but aren't actually those values), any phoneme output is compared to all possible phoneme outputs using an L2 norm and the nearest phoneme is selected and recorded as the produced phoneme (both the symbol representing the phoneme and the activity pattern are saved). The production trial progresses until the phonological output layer produces the stop producing segment (`%`) or exhausts the total possible number of segments given the longest words included in training. At this point the word produced is recorded for analysis.
 
-The produced pattern (in array form) is a time-distributed series of vectors representing patterns of activation over phonological features. These patterns can be thought of as a pattern that might pre-specify a motor command to be passed to an articulatory mechanism during production (see @Seidenberg1989 for more of a discussion on the process). Measures of phoneme accuracy are reported either using Euclidean distance or using the symbolic, string representation of the phoneme produced (using the Euclidean measure).
+The produced pattern (in array form) is a time-distributed series of vectors representing patterns of activation over phonological features. These patterns can be thought of as a pattern that might pre-specify a motor command to be passed to an articulatory mechanism during production (see SM89 for more of a discussion on the process). Measures of phoneme accuracy are reported either using Euclidean distance or using the symbolic, string representation of the phoneme produced (using the Euclidean measure).
 
 ### Comparisons to naming latency
 Most often, accuracy measures (whether from production or testing mode) are compared to naming latency taking from behavioral data, as in other similar reporting on computational models [@Sibley2010]. This is a proxy measurement, rather than one that conveys true temporal dynamics of the computational model. The concept of time in terms of computational latency in this architecture not clear, especially given the novelty of application of LSTM architectures to understanding human cognitive processes related to reading and speech. This is a topic for further research, and is likely to be fruitful given the temporal nature of such a computational system. Nonetheless, the graded measures of accuracy described above are used here as an approximate analogue to naming latency in comparisons to behavioral data, with further technical discussion relative to a given result were applicable.
@@ -395,10 +395,10 @@ taraban_crossval %>%
 ```
 
 ### @Plaut1996
-@Plaut1996 took the word lists from @Taraban1987 and extended them to include _ambiguous_ words, which are words that have approximately equal numbers of friends an enemies, therefore resting in terms of consistency between highly consistent words and (low consistency) exception words. This resulted in the same conditions as those in @Taraban1987 but labeling the controls as "regular consistent", with the new "ambiguous" words, all separated among high and low frequency sets. Their study was a computational one following on from @Seidenberg1989 but using novel representations for phonology in order to mitigate problems associated with slot-based representations. The experiment with stimuli adapted from @Taraban1987 examined the extent to which a feedforward architecture demonstrated the graded effect of consistency in a way that was analogous to skilled readers. Figure 13 shows the cross entropy (the value used as the loss function during training) for each of the four regularity conditions from @Plaut1996 and in the high and low frequency conditions taken from performance half way through training. Cross entropy is used in order to directly compare with the results provided in the original @Plaut1996 study, and is highly correlated with mean squared error (the metric most often used for computational results here).
+@Plaut1996 took the word lists from @Taraban1987 and extended them to include _ambiguous_ words, which are words that have approximately equal numbers of friends an enemies, therefore resting in terms of consistency between highly consistent words and (low consistency) exception words. This resulted in the same conditions as those in @Taraban1987 but labeling the controls as "regular consistent", with the new "ambiguous" words, all separated among high and low frequency sets. Their study was a computational one following on from SM89 but using novel representations for phonology in order to mitigate problems associated with slot-based representations. The experiment with stimuli adapted from @Taraban1987 examined the extent to which a feedforward architecture demonstrated the graded effect of consistency in a way that was analogous to skilled readers. Figure 13 shows the cross entropy (the value used as the loss function during training) for each of the four regularity conditions from @Plaut1996 and in the high and low frequency conditions taken from performance half way through training. Cross entropy is used in order to directly compare with the results provided in the original @Plaut1996 study, and is highly correlated with mean squared error (the metric most often used for computational results here).
 
 
-```{r plautModelFigure, echo=FALSE, out.width='250px', fig.align='center', fig.cap='Time-varying model results across four consistency conditions from Plaut et al. (1996) are shown for both high frequency and low frequency words. Results are averaged across 50 runs of the model.'}
+```{r plautModelFigure, echo=FALSE, fig.height=3, fig.width=6, fig.cap='Time-varying model results across four consistency conditions from Plaut et al. (1996) are shown for both high frequency and low frequency words. Results are averaged across 50 runs of the model.'}
 
 # shapes:
 # 0 = ambiguous (square)
@@ -422,7 +422,7 @@ taraban_crossval %>%
   ggplot(aes(freq_plaut, loss, shape = plaut, group = plaut)) +
   geom_line() +
   geom_point(size = 3) +
-  scale_shape_manual(values = c(0, 1, 2, 5)) +
+  scale_shape_manual(values = c(1, 0, 5, 2)) + #old: 0, 1, 2, 5
   labs(x = 'Frequency', y = 'Cross entropy') +
   theme_apa() +
   theme(legend.title = element_blank())
@@ -604,8 +604,10 @@ taraban_crossval %>%
 
 ## Nonword reading
 Looking at performance at the end of training using production mode, the network did quite well in pronouncing monosyllabic nonwords taken from @Plaut1996, which were adapted from @Taraban1987^[Though, see the footnote on Plaut et al., (1996) p. 62 for a discussion of the shortcomings of these stimuli.]. This is taken as a valuable measure of performance of computational models that name words in their capacity to generalize to novel forms [see @Cox2019 for discussion of this point]. Given that in connectionist networks, where there are no "stored" entries of words, the ability to perform on such words evidences the ability of the system to generate reasonable pronunciations via generalization from other similar forms.
+\newpage
+\ Table 3
 
-```{r, plaut_nonwords, echo=FALSE}
+```{r plautNonwords, echo=FALSE}
 taraban_testmode %>% 
   filter(plaut == 'nonword') %>%
   filter(phonemes_proportion < 1) %>% 
@@ -613,16 +615,17 @@ taraban_testmode %>%
   filter(word != 'boad') %>% 
   pull(word) -> nonwords_pronounced_wrong
 
-nonwords = taraban_testmode %>% 
+tabledata = taraban_testmode %>% 
   filter(word %in% nonwords_pronounced_wrong) %>% 
   select(Nonword = word,
          Correct = phon,
-         Response = phon_read) 
+         Response = phon_read) %>% 
+  mutate(Correct = scaps(tolower(Correct)),
+         Response = scaps(tolower(Response)))
 
 
-apa_table(nonwords, caption = '')
+apa_table(tabledata, caption = 'Errors by Time-Varying Model on Nonwords from Taraban et al. (1987) Study', note = 'See appendix for key to phoneme pronunciations.', format = 'pandoc')
 
-  
 ```
 
 Of the 45 from the @Taraban1987 set, `r length(nonwords_pronounced_wrong)` were pronounced incorrectly (i.e., produced something other than the target sequence of phonemes). This amounts to `r length(nonwords_pronounced_wrong)/45`% of words being pronounced incorrectly from this list (compare to `r 13/43`% incorrect from @Plaut1996). Like the errors on nonwords in @Plaut1996, the errors here are all reasonable attempts at a sequence of phonemes given the input orthographic pattern. These errors are shown in Table 3^[Note that the phonological coding (target) for the nonword `r scaps('boad')` was incorrect when the model was trained and has been removed from this table.].
@@ -808,7 +811,7 @@ elp_model_words = multi %>%
 Data from the English Lexicon Project [@Balota2007; @Yap2009] were taken and merged with the items from the data from the simulations involving multisyllabic words. A set of standard variables were identified for their applicability to examining the effects of orthography-to-phonology structure on naming: word frequency, orthographic length (number of letters), phonological length (number of phonemes), number of syllables, orthographic neighborhood size, and phonological neighborhood size. The set of words common to both the ELP naming data and the data from the multisyllabic simulations conducted here were subset for the purposes of examining these word-level variables. This yielded data for `r length(elp_model_words)` words in the model corpus (or `r length(elp_model_words)/length(unique(multi$word))`% of words included in the training pool).  The descriptive characteristics of the predictors for this subset of words are shown in Table 6.
 
 \ Table 6
-```{r, multiWordPredictorsDescriptives, echo=FALSE}
+```{r multiWordPredictorsDescriptives, echo=FALSE}
 tmp = multi %>% 
   filter(epoch == 99)
 

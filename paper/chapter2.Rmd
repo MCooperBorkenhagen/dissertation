@@ -1,12 +1,5 @@
 
 
-```{r ch3_src, include=FALSE}
-# we reference some ch3 data here in chapter 2 so we will compile data here
-source('chapter3_data.R')
-source('chapter3_taraban_data.R')
-source('chapter3_multisyllabic_data.R')
-source('plot-specs.R')
-```
 
 
 # Chapter 2: Architecture and implementational details
@@ -60,7 +53,7 @@ Figure 1 shows a depiction of the architecture, which we will call a "T" network
 
 
 ```{r TNetworkFigure, echo=FALSE, out.width='300px', fig.align='center', fig.cap='A conceptual depiction of the model reported is shown. Each arm of the T corresponds to a domain of perception and in the case of the horizontal arm corresponding to spoken language processing, of perception and action. Arrows denote the direction of processing.'}
-knitr::include_graphics('img/T_network.png')
+include_graphics('img/T_network.png')
 ```
 
 This depiction is intended be a simplified depiction of the architecture, and to emphasize a higher level generalization of the information processing at play, namely the way that time-distributed orthographic and phonological signals mix in order to produce an output. See the section below (*Depiction of full architecture*) for a more detailed schematic of the entire architecture. 
@@ -163,7 +156,7 @@ Readers can process, correctly or not, letter strings of any length. Any model a
 ### The justification for no justification
 A number of alternative architectural and representational schemes have been entertained in other models of word naming. The most common approach involves specifying the orthographic and phonological representations using vowel centered representations [@Chang2019; @Cox2019]. For models of reading that deal in monosyllabic words this approach captures something appropriate about vision, given that an entire printed word can be taken in on a single fixation if the word is short. Granting this assumption, learning that the centered pattern `r scaps('\\_\\_breath\\_\\_')` maps onto `r scaps('\\_\\_b-r-eh-th\\_\\_')` is a defensible simplifying assumption.
 
-However, procedures like that require justification of some kind, typically in the center with both left and right pads, introduce a computational problem: perceptual segments come to occupy slots in their representational domains. For example, the letter `r scaps('b')` from `r scaps('breath')` comes to be represented in a different way than that same letter in other positions (e.g., `r scaps('cob')`, or `r scaps('curb')`). Some computational architectures have tried had to work around this issue one way or another, usually by abstracting away from positions to higher order linguistic units. For example, @Plaut1996 represented input and output patterns based on the syllabic structure which a given segment is commonly associated. Their method was developed in the wake of other procedures designed to encode just enough of the relative structure of segments in words to be suitable for modeling monosyllabic words. For example, see the discussion in @Seidenberg1989 and their use of orthographic and phonological "triples" [@Wickelgren1969] to work around this problem. These are accepted as a plausible alternative given that such representations build in contextual information that helps the model abstract away from position-specific representations in the input and output layers.
+However, procedures like that require justification of some kind, typically in the center with both left and right pads, introduce a computational problem: perceptual segments come to occupy slots in their representational domains. For example, the letter `r scaps('b')` from `r scaps('breath')` comes to be represented in a different way than that same letter in other positions (e.g., `r scaps('cob')`, or `r scaps('curb')`). Some computational architectures have tried had to work around this issue one way or another, usually by abstracting away from positions to higher order linguistic units. For example, @Plaut1996 represented input and output patterns based on the syllabic structure which a given segment is commonly associated. Their method was developed in the wake of other procedures designed to encode just enough of the relative structure of segments in words to be suitable for modeling monosyllabic words. For example, see the discussion in SM89 and their use of orthographic and phonological "triples" [@Wickelgren1969] to work around this problem. These are accepted as a plausible alternative given that such representations build in contextual information that helps the model abstract away from position-specific representations in the input and output layers.
 
 The architecture reported here avoids these issues due to the sequential processing afforded by the recurrent LSTM layers used in orthography and phonology. Recall that timesteps are only processed if they are present as perceptual inputs. That is, the orthographic input layer operates over as many letters as there are in the word, and the phonological one operates over as many phonemes as there are in the word (plus the "start of word" symbol).
 
@@ -175,12 +168,12 @@ An alternative training batch assembly process would be the selection of one tra
 ### Word frequency
 The role of experience in the development of reading skill is an essential one to the reading process [@Seidenberg2018]. More experience with a word facilitates knowledge about that word and the ability to use the word in production and naming. The simplest and most common way that experience effects in word reading have been investigated has been in terms of word frequency as estimated from corpora of text or speech. Word frequency can be implemented in computational models of reading in different ways. Implementations have included the selection of words for training in a probabilistic fashion with the probability of selection determined by the word's frequency of occurrence [e.g., @Seidenberg1989] and the scaling of the learning signal during training proportional to the frequency of that word. The latter was used here for computational efficiency given the type of batch training that was used, where the gradients calculated for a learning trial were scaled proportional to the frequency of that word in a large corpus of text [see @Sibley2010 for a similar implementation]. Frequencies from the Hyperspace Analogue to Language (HAL) were used [@Lund1996], accessed through the data provided by the English Lexicon Project [@Balota2007]. These frequency calculations were utilized to facilitate a comparison to the behavioral data also provided in the ELP. In order to avoid frequencies of zero, two was added to every frequency value in the set.
 
-Because word frequencies exhibit a dramatic range, a scaling operation was used to both capture the distribution and translate the value into a proportion (where a value of one would cause the full gradient for that word to participate in the weight update, and a value of zero would mean throwing that gradient away). To accomplish this, the formula from @Seidenberg1989 (p. 530) was used to calculate $p$, the proportion applied to the gradient update for the word being learned.
+Because word frequencies exhibit a dramatic range, a scaling operation was used to both capture the distribution and translate the value into a proportion (where a value of one would cause the full gradient for that word to participate in the weight update, and a value of zero would mean throwing that gradient away). To accomplish this, the formula from SM89 (p. 530) was used to calculate $p$, the proportion applied to the gradient update for the word being learned.
 
 $$
 p = K \cdot log(frequency + 2)
 $$
-This results in a distribution of proportions for each word that is monotonically related to the raw frequencies of those words. The value of the constant $K$ was selected such that the highest value for $p$ was .93 for the most frequent word [just as in @Seidenberg1989] - the word `r scaps('and')` (raw frequency of `r prettyNum(freq_for_word(mono, 'and'), big.mark=',')`). For the monosyllabic corpus this resulted in $K$ being equal to `r round(monosyllabic_k, 3)`. A plot of the distribution of values for $p$ against raw values for frequency are shown in Figure 3.
+This results in a distribution of proportions for each word that is monotonically related to the raw frequencies of those words. The value of the constant $K$ was selected such that the highest value for $p$ was .93 for the most frequent word [just as in SM89] - the word `r scaps('and')` (raw frequency of `r prettyNum(freq_for_word(mono, 'and'), big.mark=',')`). For the monosyllabic corpus this resulted in $K$ being equal to `r round(monosyllabic_k, 3)`. A plot of the distribution of values for $p$ against raw values for frequency are shown in Figure 3.
 
 ```{r monopbyraw, echo=FALSE, message=FALSE, warning=FALSE, fig.height=3, fig.width=3, fig.cap='Scaled word frequency by raw frequency for words included for training in the time-varying monosyllabic model implemented. For reference, the most frequent word, "and", can be seen in the upper right hand corner.', fig.align='center'}
 
@@ -200,7 +193,7 @@ mono %>%
 The full architecture is depicted in Figure 2. This schematic shows at a higher level of detail the T network depiction shown earlier, where the junction of the two networks takes place in the phonological LSTM by virtue of the state passing process from the orthographic LSTM, which constitutes the orthographic context for temporal phonological processing to take place. The network shown represents that network used in all of the time-distributed simulations reported in Chapters 3 and 4.
 
 ```{r architectureFigure, echo=FALSE, out.width='300px', fig.align='center', fig.cap='A schematic depiction of the model architecture is shown. Portions labeled as "time-distributed" correspond to LSTM networks. Boxes that are empty correspond to hidden units employed for that layer.'}
-knitr::include_graphics('img/architecture.png')
+include_graphics('img/architecture.png')
 ```
 
 
