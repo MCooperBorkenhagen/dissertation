@@ -864,20 +864,83 @@ As an example, consider the word `r scaps('blemish')`. Using the heuristic descr
 
 The assumption that underlies the psychological validity of this orthographic segment as described in @Taft1992 runs contrary to ideas about learning proposed in this dissertation, including how phonology and orthography are represented and processed in the time-varying model. In essence, @Taft1992 articulates a theory about syllabic structure in orthography. This doesn't square with the theoretical assumption that orthographic units aren't processed in syllabic segments. It also assumes that orthography contains homologous structure to that of spoken language syllabic structure. The computational model developed here and the theory of cross-modal perceptual processing conveys a different assumption: that printed words are processed in a continuous fashion (over some grain size) and not syllable by syllable, just like spoken language. These ideas about the syllabic structure of orthography and its processing in @Taft1992 are indeed contested [@Chateau2003; @Jared1990], and the empirical findings about the nature of the basic orthographic syllabic structure have been challenged experimentally [@Seidenberg1987]. More generally, the extent to which syllables (like other subcomponents of words) function independently in as perceptual subcomponents has been debated as well [@Seidenberg1987].
 
-Nonetheless, the experiments in @Chateau2003 are important because their manipulations account for the fact that orthographic patterns can be associated with spoken language segments at a variety of orthographic grain-sizes including structure in the latter part of the word, namely in the second syllable of a two-syllable word (experiment 4). This is theoretically important because it can only be predicted by a model of reading where these visual segments condition pronunciation, which isn't possible if phonology is "assembled" in a left-to-right fashion as in the dual-route procedure. Experiment 3 in @Chateau2003 manipulated the basic orthographic syllabic structure unit factorially across high and low frequency words, finding the familiar consistency by frequency interaction. Common words were processed more easily (lower response times) than uncommon ones, and words with more consistent basic orthographic syllabic structure associated with faster RTs than their low consistency counterparts. Similar to the result for @Jared1990 experiment 4, the result for consistency at this level of orthographic grain suggests that printed words aren't decomposed syllable by syllable during reading given . Like @Jared1990, they show that processing difficulty is moderated by word frequency. In their experiment, even high frequency multisyllabic words show a (simple) effect of neighborhood consistency, similar to the effects for monosyllabic words from @Jared1997. Expleriment 4 in @Chateau2003 showed that the consistency of the vowel in the second syllable (high versus low) of two syllable words predicted meaningful differences in reaction times in a naming task.
+Nonetheless, the experiments in @Chateau2003 are important because they account for the fact that atypical structure at several orthographic grain-sizes predicts processing difficulty in words with more than one syllable. This includes structure in the latter part of a multisyllbic word, namely in the second syllable of a two-syllable word (experiment 4). This is theoretically important because it can only be predicted by a model of reading where these visual segments condition the onset of pronunciation, which isn't possible if phonology is "assembled" in a left-to-right fashion as in the dual-route procedure.
 
-The patterns of means in experiments 3 and 4 in @Chateau2003 are reproduced in the model data here (taken halfway through training; epoch 45). Figure 19 shows the data from behavioral data from @Chateau2003 on the top row and the corresponding data from the computational model on the bottom row.
+Experiment 3 in @Chateau2003 manipulated the basic orthographic syllabic structure unit factorially across high and low frequency words. Common words were processed more easily (lower response times) than uncommon ones, and words with more consistent basic orthographic syllabic structure were associated with faster RTs than their low consistency counterparts with stimuli across groups being matched for other properties. Similar to the result for @Jared1990 experiment 4, the result for consistency at this level of orthographic grain suggests that printed words aren't decomposed syllable by syllable during reading given that the orthographic segment manipulated spans what would considered to be a syllabic boundary (if orthographic segments were processed syllable-by-syllable in terms of their spoken syllabic segments). In their experiment, even high frequency multisyllabic words show a (simple) effect of neighborhood consistency, similar to the effects for monosyllabic words from @Jared1997.
+
+Experiment 4 in @Chateau2003 showed that the consistency of the orthographic vowel in the second syllable (high versus low) of two syllable words predicted meaningful differences in reaction times in a naming task. For example, the `r scaps('e')` in `r scaps('funnel')` is associated with a more predictable pronunciation (higher in consistency) than the `r scaps('o')` in `r scaps('fathom')` (lower in consistency). The results (data and means plotted in bottom right of Figure 19) show that RTs differ as a function of the consistency of the pronunciation of the orthographic vowel in the latter part of the word.
+
+The patterns of means and datapoints for stimuli from experiments 3 and 4 from @Chateau2003 for the model (taken halfway through training; epoch 45) are depicted in Figure 19 (bottom row). The figure also shows the behavioral data the original experiment on the top row. Graphical depiction appears to show differences in consistency (both experiments 3 and 4) and frequency (experiment 3).
 
 ```{r Jared2003Figure, echo=FALSE, out.width='500px', fig.align='left', fig.cap='Processing difficulty (mean squared error for computational model; RT for behavioral data) for stimuli from Chateau et al. (2003) experiments 3 and 4 are shown. Points are individual words and bars are calculated as the standard error of the mean.'}
 include_graphics('img/figure19.png')
 ```
 
-In both experiments, we see a consistency effect, where high frequency words are associated with lower error than low frequency words. Experiment 3 manipulated consistency as well as frequency, where consistency was defined  
+```{r ChateauModels, echo=FALSE}
 
-## Variable effects over time
-Similar to the variability found across training for the stimuli from @Jared1997 the pattern for the stimuli from @Chateau2003 also shift over time in the computational data. This variability isn't typically reported in analogous computation work related to reading development, but it bears mention here. Figure 17 shows the patterns of means for the interaction between consistency and frequency for a range of timepoints across training using the @Chateau2003 experimental stimuli (their Experiment 3).
+m_chateau3 = multi %>% 
+  filter(epoch == 45) %>% 
+  filter(!is.na(chateauB_consistency)) %>%
+  mutate(consistency = case_when(chateauB_consistency == 'high' ~ .5,
+                                 chateauB_consistency == 'low' ~ -.5),
+         frequency = case_when(chateauB_frequency == 'high' ~ .5,
+                               chateauB_frequency == 'low' ~ -.5)) %>% 
+  lm(log(mse) ~ consistency*frequency, data = .)
 
-```{r cj2003AcrossTraining, echo=FALSE, fig.height=2.5, fig.cap='The interaction between frequency and consistency for a range of timepoints across training. Mean squared error has been standardized within each epoch in order to put barplots on a common scale (i.e., in terms of standard deviations of MSE).'}
+
+
+m_chateau4 = multi %>% 
+  filter(epoch == 45) %>% 
+  filter(!is.na(chateauC_consistency)) %>%
+  lm(log(mse) ~ chateauC_consistency, data = .)
+
+```
+
+Only the consistency effects from experiment 4 hold up to a statistical model, however. A model was estimated predicting mean squared error (log transformed to adjust skew) from consistency condition (low versus high). The difference in error between the low and high consistency conditions in the model data from that experiment are associated with a difference of 2.61 (log transformed) units (*b* = 2.61, *SE* = 1.25, *F*(1, 48) = 4.34, *p* < .05, 95%CI = [.09, 5.12]). None of the conditions, including the interaction term, for experiment 3 are significant in the model data. These can be found in Table 8.
+
+\ Table 8
+
+```{r, ChateauExp3Table, echo=FALSE} 
+modelCI = confint(m_chateau3)
+modeldata = summary(m_chateau3)
+
+tabledata = data.frame(modeldata$coefficients)
+
+tabledata$Estimate = round(tabledata$Estimate, digits = 2)
+tabledata$Std..Error = round(tabledata$Std..Error, digits = 2)
+tabledata$t.value = round(tabledata$t.value, digits = 2)
+
+tabledata = tabledata %>% 
+  mutate(Estimate = sig_level(Estimate, Pr...t..),
+         Pr...t.. = presentp(Pr...t..))
+
+tabledata$CI = squarebracket(round(modelCI[,1], digits = 2), round(modelCI[,2], digits = 2))
+
+tabledata$Predictor = c('Intercept', 'Consistency', 'Frequency', 'Consistency x frequency')
+
+rownames(tabledata) = NULL
+
+HEADER = c('*b*', '*SE*', '*t*', '*p*', '95% CI', 'Predictor')
+names(tabledata) = HEADER
+
+tabledata = tabledata %>% 
+  select(Predictor, everything())
+
+apa_table(tabledata, digits = 3, format = 'pandoc', escape = F, align = 'l', landscape = T,
+            note = 'Model estimated using lm() in R with confidence intervals estimated using confint(), both methods from the native R stats package [@R2021]. Bold parameter estimates indicate significant *p*-values below the alpha threshold of .05.',
+            caption = 'Regression Model of the Interaction Between Consistency Word Frequency on Mean Squared Error (Log Transformed)')
+
+
+```
+
+Follow up experimentation will need to be done in order to examine the the role of frequency and consistency as implemented in @Chateau2003 and why the results don't hold up in the computational data. One simple issue is statistical power. The design from their study yields 16 words per condition (64 words total across two levels of frequency and two levels of consistency). A study could be devised that extends the paradigm to include more words. The effects in the original study were significant fir their RT data for frequency and consistency in their analyses by participant, but were marginal by items. They also found no significant interaction between the two variables. The model results come from a single run of the model and therefore can't capitalize on variance across "subjects" (i.e., runs of the model, as was done in the simpler monosyllabic simulations). Additionally, the skewed outcome variable may be a contributing factor. Even after log transforming mean squared error, the data aren't normally distributed, likely biasing the model results. The finding from the simulation data using stimuli from experiment 4 are suggestive that effects from the behavioral tasks from @Chateau2003 carry over to the time-varying computational model, and that the model exhibits consistency effects even for orthographic segments in the latter portion of words. Further experimentation with the architecture will investigate the role of atypical print-to-speech structure on producing a phonological code, and characterize more precisely how the location of atypical structure affects such production.
+
+Finally, simulations should be run on a larger set of words, which may yield more reliable effects in general. @Sibley2010 and @Sibley2008 sought to simulate at a level that approached the "scale of real wordform lexicons" [@Sibley2010]. Their simulations included training corpora of approximately 75,000 and 28,000 words respectively - vastly more than the approximately 11,000 words used in training the time-varying model. It may well be that a limitation of the results on the model reported here concerns the size of the training set, and enhancing this aspect of the architecture and its training is a worthwhile future direction.
+
+### Variable effects over time
+Similar to the variability found across training for the stimuli from @Jared1997 the pattern for the stimuli from @Chateau2003 also shift over time in the computational data. This variability isn't typically reported in analogous computation work related to reading development, but it bears mention here. Figure 17 shows the patterns of means for the consistency and frequency for a range of timepoints across training using the @Chateau2003 experimental stimuli (their Experiment 3).
+
+```{r cj2003AcrossTraining, echo=FALSE, warning=FALSE, fig.height=3, fig.cap='Error as a function of frequency and consistency for a range of timepoints across time-varyig model training. Mean squared error has been standardized within each epoch in order to put barplots on a common scale (i.e., in terms of standard deviations of MSE).'}
 N = multi %>% filter(epoch == 45) %>% filter(!is.na(chateauB_consistency)) %>% nrow()
 
 COLORS_chateau = c('H' = 'grey49', 'L' = 'black', 'High' = 'grey49', 'Low' = 'black')
@@ -914,12 +977,14 @@ multi %>%
   facet_grid(~epoch) +
   scale_color_manual(values = COLORS_chateau) +
   labs(x = 'Frequency', y = 'MSE (standardized)', color = 'Consistency') +
-  theme_apa()
-
+  theme_apa() +
+  theme(legend.position = 'top',
+        legend.title = element_text(size = 12),
+        legend.text = element_text(size = 12))
 
 ```
 
-However, using the standardized outcome variable (mean squared error here) within each training cycle and averaging across training epochs you see the expected pattern emerge (Figure 20). This can be thought of as averaging across a (nonindependent) sample of model states to observe the relationship between consistency (defined in a certain way here for multisyllabic words) and frequency on error during training. This is the expected trend, but future work could be done to capture more precise characteristics of these dynamics especially as they relate to the behavior of cognitive computational systems like this one and the analogous behavior in humans.
+However, using the standardized outcome variable (mean squared error here) within each training cycle and averaging across training epochs you see the expected pattern emerge (Figure 20). Calculating error in this way captures a (nonindependent) sample of model states, and allows us to observe the relationship between consistency (defined over the basic orthographic syllabic structure) and frequency on error during training. This captures the expected trend, with lower error for high frequency and high consistency words, and is even suggestive of an interaction between the two variables. Aggregating model performance in this way may in fact accomplish they type of sampling that could facilitate estimating more reliable effects of word properties on processing difficulty in the computational model, and thus avoid problems of having too little data in estimating effects of model behavior. Future work could be done to capture more precise characteristics of these dynamics especially as they relate to the behavior of cognitive computational systems like this one and the analogous behavior in humans.
 
 ```{r, cj2003AveragedAcrossTraining, echo=FALSE, warning=FALSE, fig.cap='Error plotted against frequency and consistency for the Chateau et al. (2003) stimuli standardized and collapsed across epochs for the time-varying model.', fig.height=3, fig.width=5}
 
@@ -960,6 +1025,10 @@ multi %>%
 ```
 
 ## Discussion
+The aim of this section was to examine aspects of the time-varying model's behavior with respect to how it processes multisyllabic words. This was done through several different types of analyses: by examining the type of phonological codes (including errors) it produces at the end of training using the model's production mode, examining nonword production using data from the English Lexicon Project [@Balota2004], and comparing performance to other behavioral studies concerning multisyllabic words. Results were surveyed at a relatively high level given the novelty of the architecure and the fact that there are a range of phenomena left to analyze and explain relevant to behavioral aspects of reading long words aloud.
 
+The results reported here are mixed. In general, a range of effects are suggestive of processing taking place in computational model in an analogous way to skilled readers. This includes the ways in which processing is sensitive to atypical structure and other word variables that have been demonstrated to impact performance in naming for skilled readers. Importantly, the phonological codes produced at the end of training to a high level of skill (and inspected using output from the model's production mode) are realistic in a number of ways. The productions associated with nonwords and the segmental mistakes made by the model can easily be understood in terms of patterns of generalization from other words in the language. While production of indeterminate segments remains relatively common, there are a range of possibilities that could enhance production and improve generalization. Several have been mentioned previously. The most obvious, discussed in the previous section, is to grow the training environment beyond the relatively limited corpus that was used for training in the simulations included in this report.
+
+The failure to reproduce the effect from expriment 3 in @Chateau2003 is a concern, especially given the importance in reading aloud as a function of experience (word frequency as a proxy) and the processing atypical spelling-sound structure [operationalized as consistency in the way described by @Taft1992]. Possible ways in which that effect may be investigated more fully were discussed in the section devoted to those experiments. However, it is important to note that those effects have been reported in other analyses here, namely in the results for multisyllabic words for words included in the ELP megastudy [@Balota2004; @Yap2009] and replicating the effect from experiment 4 from @Chateau2003. It should also be considered, that experimentation concerning neighborhood effects in multisyllabic words is still relatively young. Analyses concerning monosyllabic words have the benefit of drawing from decades of research on the myriad effects that are relevant for understanding the reading system, especially nuanced and graded effects of spelling-sound structure. Research and experimentation on longer words is less mature; far less attention has been paid to models of learning and performance concerning multisyllabic words.
 
 \newpage
