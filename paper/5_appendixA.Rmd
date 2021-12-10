@@ -1,0 +1,95 @@
+---
+title             : 'Appendix A: Phonological representations'
+shorttitle        : 'Appendix A'
+output            : papaja::apa6_pdf
+#classoption       : "man, donotrepeattitle"
+
+header-includes:
+  - \usepackage{setspace}
+  - \AtBeginEnvironment{tabular}{\singlespacing}
+  - \AtBeginEnvironment{lltable}{\singlespacing}
+  - \AtBeginEnvironment{tablenotes}{\singlespacing}
+  - \captionsetup[table]{font={stretch=1.5}}
+  - \captionsetup[figure]{font={stretch=1.5}}
+#  - \pagenumbering{gobble}
+  - \setcounter{page}{126}
+#  - \AtBeginDocument{\let\maketitle\relax}
+---
+
+
+```{r echo=FALSE}
+require(tidyverse)
+require(papaja)
+options(knitr.kable.NA = ' ')
+```
+
+Appendix A contains information about the phonological representations used for training the computational models described in this work. The features used were primarily taken from those in Harm & Seidenberg (1999) and Harm & Seidenberg (2004). Nodes were added for stress, where in the tables the columns "1ary" refers to primary stress and "2ary" refers to secondary stress. A phoneme that has both of those units set to zero would be unstressed, as is the case with unstressed vowels and consonants. There are also units for "start" and "end", which are only used by the start and end of (phonological) word segments. For those segments all units are zero and either of these two units is set to on. In tables where phonological features are provided in addition to the features listed, consonants (and vowels) are also represented with all the vowel (and consonant) features. In any given table only the relevant features are shown in order to allow the tables to fit on the page. Any feature not shown for a particular phoneme should be assumed to be set to zero. Table 7 shows the special representations for the null segment ("_"), start of word segment ("#"), and the end of word segment ("%"), all of which have special purposes in training and testing. Note, however, that the null segment is never used in training, though it is sometimes produced in testing and is referred to as an "indeterminate segment" when described in Chapter 3.
+
+A key for abbreviations used in these tables (especially those that provide phonological features) can be found in Table 8 of this appendix.
+
+\newpage
+
+```{r CMUPhonKeyConsonants, echo=FALSE, results='asis'}
+read_csv('data/phonreps_cmu_key_consonants.csv', col_names = F) %>% 
+  mutate(C1 = str_c(X1, ' - ', X2),
+         C2 = str_c(X3, ' - ', X4),
+         C3 = str_c(X5, ' - ', X6),
+         C4 = str_c(X7, ' - ', X8),
+         C5 = str_c(X9, ' - ', X10)) %>% 
+  select(C1, C2, C3, C4, C5) %>% 
+  apa_table(caption = 'Symbolic Representations for Consonants', note = 'Symbolic depiction for consonants appear with an example provided for that consonant after the dash. All phonemes appear as the onset of the example provided (i.e., the first phoneme) unless marked with an asterisk (*). For examples marked with *, the phoneme appears as the coda in with word given.', small = TRUE, longtable = TRUE, col.names = c('Phone - word', '', '', '', ''))
+
+
+```
+\newpage
+```{r CMUPhonKeyVowels, echo=FALSE, warning=FALSE}
+
+read_csv('data/phonreps_cmu_key_vowels.csv', col_names = F) %>% 
+  mutate(V1 = str_c(X1, ' - ', X2),
+         V2 = str_c(X3, ' - ', X4),
+         V3 = str_c(X5, ' - ', X6)) %>% 
+  select(V1, V2, V3) %>% 
+  apa_table(caption = 'Symbolic Representations for Vowels', note = 'Symbolic depiction for vowels appear with an example provided for the vowel after the dash. When indicating stress, 0 indicates no stress, 1 indicates primary stress, and 2 indicates secondary stress. See discussion in Chapter 3 for the nominal distinction between non-stress and secondary stress in some prosodic contexts. All example words provided have the vowel shown in their first syllable, unless marked with "*", in which case the vowel appears in the second syllable of the word provided as an example.', small = TRUE, longtable = TRUE, col.names = c('Unstressed', 'Primary stress', 'Secondary stress'))
+
+
+```
+
+```{r UnstressedVowels, echo=FALSE}
+read_csv('data/phonreps_vowels1.csv') %>% 
+  mutate_if(is.numeric, as.character) %>% 
+  filter(Phon %nin% c('_', '#', '%')) %>% 
+  apa_table(caption = 'Phonological Representations for Vowels Recieving No Stress', note = 'See Table 8 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE)
+```
+
+```{r PrimaryStressedVowels, echo=FALSE}
+read_csv('data/phonreps_vowels2.csv') %>% 
+  mutate_if(is.numeric, as.character) %>% 
+  apa_table(caption = 'Phonological Representations for Vowels Recieving Primary Stress', note = 'See Table 8 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE, longtable = TRUE)
+```
+
+```{r SecondaryStressedVowels, echo=FALSE}
+read_csv('data/phonreps_vowels2.csv') %>% 
+  mutate_if(is.numeric, as.character) %>% 
+  apa_table(caption = 'Phonological Representations for Vowels Recieving Secondary Stress', note = 'See Table 8 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE, longtable = TRUE)
+```
+
+
+```{r consonants, echo=FALSE}
+read_csv('data/phonreps_consonants.csv') %>% 
+  mutate_if(is.numeric, as.character) %>% 
+  filter(Phon %nin% c('DX', 'NX', 'Q', '_', '#', '%')) %>% 
+  apa_table(caption = 'Phonological Representations for Consonants', landscape = TRUE, small = TRUE, placement = 'H')
+```
+
+```{r SpecialSegments, echo=FALSE}
+read_csv('data/phonreps_vowels1.csv') %>% 
+  mutate_if(is.numeric, as.character) %>% 
+  filter(Phon %in% c('_', '#', '%')) %>% 
+  apa_table(caption = 'Phonological Representations for Special Segments', note = 'The features "start" and "end" are used only for identifying the special segments "#" (start of word) and "%" (end of word) respectively. Note that the null "_" segment has all units set to off, but is never used in training except for the feedforward models reported. See Table 8 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE, longtable = TRUE)
+```
+
+```{r PhonrepsAbbrKey, echo=FALSE}
+read_csv('data/phonological_abbreviations.csv') %>% 
+  apa_table(caption = 'Key to Abbreviations for Phonological Features', note = 'These abbreviations are useful for interpreting the abbreviated phonological features provided in this appendix.', col.names = c('Abbrv.', 'Full'))
+
+```

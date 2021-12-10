@@ -1,0 +1,79 @@
+---
+title             : 'Appendix B: Experimental stimuli'
+shorttitle        : 'Appendix B'
+output            : papaja::apa6_pdf
+#classoption       : "man, donotrepeattitle"
+
+header-includes:
+  - \usepackage{setspace}
+  - \AtBeginEnvironment{tabular}{\singlespacing}
+  - \AtBeginEnvironment{lltable}{\singlespacing}
+  - \AtBeginEnvironment{tablenotes}{\singlespacing}
+  - \captionsetup[table]{font={stretch=1.5}}
+  - \captionsetup[figure]{font={stretch=1.5}}
+#  - \pagenumbering{gobble}
+  - \setcounter{page}{135}
+#  - \AtBeginDocument{\let\maketitle\relax}
+---
+```{r echo=FALSE}
+require(tidyverse)
+require(papaja)
+options(knitr.kable.NA = ' ')
+```
+
+Appendix B contains experimental stimuli for results reported. Each table provided in this appendix reports set of stimuli taken from another study and corresponds to an analysis or set of analyses conducted in the dissertation. Sets are presented in the order in which they appear in the results provided in Chapter 3.
+
+```{r TMwords, echo=FALSE}
+
+exception = read_csv('data/exp_words_taraban_etal_1987_exception.csv') %>% 
+  mutate(HF = str_c(TARGET_HF, ' (', CONTROL_HF, ')'),
+         LF = str_c(TARGET_LF, ' (', CONTROL_LF, ')')) %>% 
+  select(HF, LF) 
+
+read_csv('data/exp_words_taraban_etal_1987_regular-inconsistent.csv') %>% 
+  mutate(HF_ = str_c(TARGET_HF, ' (', CONTROL_HF, ')'),
+         LF_ = str_c(TARGET_LF, ' (', CONTROL_LF, ')')) %>% 
+  select(HF_, LF_) %>%
+  cbind(exception) %>% 
+  apa_table(caption = 'Taraban & McClelland (1987) Regular Inconsistent Words', note = 'Words from Experiment 1a of that study. Control words shown in parentheses alongside its matched target. The control words are "regular consistent words". These words were also used in the Plaut et al. (1996) study with some changes, noted in Chapter 3 and in the corresponding table in this appendix.', col.names = c('High frequency', 'Low frequency', 'High frequency', 'Low frequency'), col_spanners = list('Consistent' = c(1, 2), 'Inconsistent' = c(3, 4)))
+
+```
+
+
+
+```{r PlautAmbiguousWords, echo=FALSE}
+
+read_csv('data/exp_words_plaut_etal_1996_ambiguous.csv') %>% 
+  apa_table(caption = 'Ambiguous Words from Plaut et al. (1996)', note = 'These words were added to the conditions from Taraban & McClelland (1987), which can be found in Tables 1 and 2 of this Appendix.', col.names = c('High frequency', 'Low frequency'))
+
+```
+
+
+
+```{r PlautNonwords, echo=FALSE}
+
+read_csv('data/exp_words_plaut_etal_1996_nonwords.csv', col_names = F) %>% 
+  apa_table(caption = 'Nonwords from Plaut et al. (1996)', note = 'Taken from Taraban et al. (1987).', col.names = c('Nonword', ''))
+
+```
+
+```{r Jared1997Words, echo=FALSE}
+read_csv('data/exp_words_jared_1997.csv') %>% 
+  apa_table(caption = 'Jared (1997) Words', 'These words were taken from Experiment 1 from the Jared (1997) study. "HF" indicates high frequency, and "LF" indicates low frequency, with words matched across frequency condition for each consistency condition.', col.names = c('HF', 'LF', 'HF', 'LF'),
+            col_spanners = list('Consistent' = c(1, 2), 'Inconsistent' = c(3, 4)))
+
+```
+
+```{r Chateau2003Exp3Words, echo=FALSE}
+read_csv('data/exp_words_chateau_etal_2003_experiment3.csv') %>% 
+  select(CONSISTENT_HF, CONSISTENT_LF, INCONSISTENT_HF, INCONSISTENT_LF) %>% 
+  apa_table(caption = 'Chateau & Jared (2003) Words - Exp. 3', note = 'Consistency defined with respect to the body of the orthographic syllabic structure (see Chapter 3 for a description and discussion of this segment). "HF" indicates high frequency, and "LF" indicates low frequency', col.names = c('HF', 'LF', 'HF', 'LF'), col_spanners = list('Consistent' = c(1, 2), 'Inconsistent' = c(3, 4)))
+```
+
+
+
+```{r Chateau2003Exp4Words, echo=FALSE}
+read_csv('data/exp_words_chateau_etal_2003_experiment4.csv') %>% 
+  select(CONSISTENT, INCONSISTENT) %>% 
+  apa_table(caption = 'Chateau & Jared (2003) Words - Exp. 4', note = 'Consistency defined with respect to V2 in these stimuli. See Chapter 3 for a description.', col.names = c('Consistent', 'Inconsistent'))
+```

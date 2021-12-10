@@ -1,0 +1,30 @@
+---
+title             : ""
+shorttitle        : ""
+output            :
+  papaja::apa6_pdf :
+    toc               : false
+header-includes:
+  - \setcounter{page}{0}
+  - \setlength\parindent{12pt}
+  - \usepackage{setspace}
+  - \pagenumbering{roman}
+  - \usepackage{fancyhdr}
+  - \fancyhead[R]{\thepage}
+---
+
+\thispagestyle{empty}
+Filler page: leave blank
+\newpage
+\section{Acknowledgements}
+There are a handful of people in my life who have really given me a shot at something at times when they certainly didn't have to. First, and most importantly, my wife, Kristen. She has supported me every step of the way, even when it really wasn't convenient to do so. I will do something one of these days, I promise. Next, I have to acknowledge Georgianna Bunker, who hired me for my first teaching job and then taught me how to do it. She was very patient with me and she really went out on a limb in taking me on. It changed the course of my life in an important way for me - and I will always be grateful about that. Lastly, to my adviser Mark Seidenberg, who gave me the opportunity to have an education that is quite rare and extraordinary for an elementary school teacher.
+
+Thank you to the Language and Cognitive Neuroscience Laboratory for the years of conversation that supported my development through graduate school, namely Mark Koranda, Martin Zettersten, Molly Lewis, Tianlin Wang, Steve Schwering, Elise Hopman, Arella Gussow, Misty Kabasa, and research assistants Lauren Schilling and Kaycie Barron who helped me with this work. My gratitude also goes to Maryellen MacDonald whose thoughtful and deliberate brand of scientific inquiry was more instructive than she likely realizes (and thanks for making the trains run on time too). I'd especially like to acknowledge the patient guidance and friendship that Christopher Cox has provided me over the years. Basically, everything useful I know how to do can be traced directly back to something Chris taught me.
+
+I'd like to thank the Interdisciplinary Training Program in Education Sciences at UW - Madison and the Institute of Education Sciences (US Dept. of Education) for funding and training these last six years, and to Martha Alibali for the opportunity to join that program. Lastly, I'd like to acknowledge my committee: Mark Seidenberg, Martha Alibali, Maryellen MacDonald, Rob Nowak, and Tim Rogers. To recieve guidance from such an incredible group of people (and all at once) is something quite special.
+\newpage
+\section{Abstract}
+Computational models of naming words -- producing a phonological code from an orthographic one -- have been essential for understanding aspects of learning and performance related to reading and the bases of knowledge related to its development. Historically, computational models, and the theoretical models from which they derive, have focused on aspects of word reading that are relevant to the simplest words in English: those with one syllable. This has afforded vast and successful inquiry and debate relevant to understanding the various aspects of cognition and development relating to reading, including its educational implications. These models are limited, however, do to their narrow focus on the simplest words in the language. This dissertation aims to extend beyond these more limited scientific models in order to understand the time-contingent processes that contribute to the development of skilled reading. This is accomplished through the articulation of a time-varying model of naming printed words, made possible by specifying computational processes that take place over essential temporal aspects of learning and performance related to the act of reading words aloud -- namely those associated with audition and vision. In addition to reporting on a novel computational learning system that learns to read words aloud, this model is tested through a range of experiments that validate its legitimacy as a viable theoretical model of reading aloud and point to a number of new directions for experimentation and theorizing.
+
+*Keywords*: reading aloud, learning, computational models, connectionism 
+Word count: 29,047

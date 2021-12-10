@@ -1,23 +1,23 @@
 ---
-title             : "A time-varying computational model of naming"
-shorttitle        : "A time-varying model of naming"
+title             : "A Time-varying Computational Model of Learning to Read Printed Words Aloud"
+shorttitle        : "A Time-varying Model of Reading Aloud"
 
-author:  
-  - name          : "Matt Cooper Borkenhagen"
-    affiliation   : "1"
-    corresponding : yes
-    email         : "cooperborken@wisc.edu"
-    address       : "1202 West Johnson Street, Madison, WI 53705"
+#author:  
+#  - name          : "Matt Cooper Borkenhagen"
+#    affiliation   : "1"
+#    corresponding : yes
+#    email         : "cooperborken@wisc.edu"
+#    address       : "1202 West Johnson Street, Madison, WI 53705"
 
-affiliation:
-  - id            : "1"
-    institution   : "Department of Psychology, University of Wisconsin, Madison"
+#affiliation:
+#  - id            : "1"
+#    institution   : "Department of Psychology, University of Wisconsin, Madison"
 
-abstract: |
-  A computational model of word naming (pronunciation) is described.
+#abstract: |
+#  A computational model of word naming (pronunciation) is described.
   
-keywords          : "reading, language development"
-wordcount         : "XXX"
+#keywords          : "reading, language development"
+#wordcount         : "XXX"
 bibliography      : ["references.bib"]
 documentclass     : "apa6"
 #class             : "man"
@@ -30,7 +30,8 @@ lang              : "en-US"
 output            :
   papaja::apa6_pdf :
     toc               : true
-    toc_depth         : 2
+    toc_depth         : 3
+
 header-includes:
   - \geometry{left=3cm, right=3cm, top=3cm, bottom=3cm}
   - \usepackage{booktabs}
@@ -45,13 +46,17 @@ header-includes:
   - \usepackage{tabu}
   - \usepackage{threeparttable}
   - \usepackage[normalem]{ulem}
+  - \usepackage{pdfpages}
   - \interfootnotelinepenalty=10000
+  - \setcounter{page}{0}
+  #- \usepackage{fancyhdr}
+  #- \fancyhead[R]{\thepage}
   #- \usepackage{setspace}
   #- \captionsetup[figure]{font={stretch=2, scriptsize}}
   #- \usepackage{tikz}
 ---
 
-```{r global_options, include = FALSE, eval = F}
+```{r global_options, include = FALSE, eval = F, echo=FALSE}
 knitr::opts_chunk$set(warning = FALSE, 
                       message = FALSE, 
                       cache = FALSE,
@@ -66,30 +71,29 @@ options(scipen = 1000)
 ```
 
 
-```{r loads, echo=FALSE, warning=FALSE}
-source('requirements.R')
-source('utilities.R')
+```{r loads, echo=FALSE, warning=FALSE, include=FALSE}
+
+# requirements
+packages = read.csv('requirements.txt', stringsAsFactors = F)[[1]]
+lapply(packages, require, ch = T)
+
+source('scripts/utilities.R')
 # we reference some ch3 data here in chapter 2 so we will compile all data here
 # note that source scripts are in ./data/
-source('data.R')
+source('scripts/data.R')
 ```
 
-
-
-```{r child='chapter1.Rmd'}
-
+```{r child='1_chapter.Rmd'}
 ```
 
-```{r child='chapter2.Rmd'}
-
+```{r child='2_chapter.Rmd'}
 ```
 
-```{r child='chapter3.Rmd'}
-
+```{r child='3_chapter.Rmd'}
 ```
 
-
-```{r child='chapter4.Rmd'}
-
+```{r child='4_chapter.Rmd'}
 ```
+# References
+
 

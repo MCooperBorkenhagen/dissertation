@@ -1,0 +1,289 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:TMwords}Taraban \& McClelland (1987) Regular Inconsistent Words}
+
+\begin{tabular}{llll}
+\toprule
+ \multicolumn{2}{c}{Consistent} & \multicolumn{2}{c}{Inconsistent} \\
+\cmidrule(r){1-2} \cmidrule(r){3-4}
+High frequency & Low frequency & High frequency & Low frequency\\
+\midrule
+base (bird) & brood (brisk) & are (out) & bowl (bus)\\
+bone (bag) & cook (code) & both (big) & broad (broke)\\
+but (by) & cord (cane) & break (best) & bush (beam)\\
+catch (clean) & cove (cope) & choose (class) & deaf (deed)\\
+cool (corn) & cramp (clang) & come (came) & doll (dots)\\
+days (draw) & dare (dime) & do (did) & flood (float)\\
+dear (dust) & fowl (fawn) & does (tell) & gross (grape)\\
+five (fast) & gull (gong) & done (dark) & lose (lunch)\\
+flat (fine) & harm (hide) & foot (fact) & pear (peel)\\
+flew (fish) & hoe (hike) & give (got) & phase (fade)\\
+form (feet) & lash (loom) & great (group) & pint (pitch)\\
+go (get) & leaf (leg) & have (him) & plow (pump)\\
+goes (girl) & loss (luck) & move (main) & rouse (ripe)\\
+grow (gold) & mad (mix) & put (place) & sew (slip)\\
+here (help) & moose (mole) & pull (page) & shoe (sank)\\
+home (high) & moth (mist) & said (see) & spook (slam)\\
+meat (mile) & mouse (moist) & says (stop) & swamp (stunt)\\
+paid (plate) & mush (math) & shall (soon) & swarm (swore)\\
+plant (piece) & pork (pail) & want (which) & touch (trunk)\\
+roll (rod) & pose (peep) & watch (week) & wad (wit)\\
+root (rice) & pouch (peach) & were (with) & wand (weld)\\
+sand (sent) & rave (reef) & what (when) & wash (wax)\\
+small (such) & tint (taps) & word (write) & wool (wing)\\
+speak (skin) & toad (tend) & work (will) & worm (wake)\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Words from Experiment 1a of that study. Control words shown in parentheses alongside its matched target. The control words are "regular consistent words". These words were also used in the Plaut et al. (1996) study with some changes, noted in Chapter 3 and in the corresponding table in this appendix.}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:PlautAmbiguousWords}Ambiguous Words from Plaut et al. (1996)}
+
+\begin{tabular}{ll}
+\toprule
+High frequency & Low frequency\\
+\midrule
+brown & blown\\
+clear & brow\\
+dead & cone\\
+down & crown\\
+four & dive\\
+gone & dread\\
+good & flour\\
+head & gear\\
+how & glove\\
+know & glow\\
+known & gown\\
+love & groove\\
+low & hood\\
+near & lone\\
+now & plead\\
+one & pour\\
+our & prone\\
+own & shone\\
+show & spear\\
+shown & stove\\
+stood & strive\\
+town & swear\\
+year & thread\\
+your & zone\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} These words were added to the conditions from Taraban \& McClelland (1987), which can be found in Tables 1 and 2 of this Appendix.}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:PlautNonwords}Nonwords from Plaut et al. (1996)}
+
+\begin{tabular}{ll}
+\toprule
+Nonword & \\
+\midrule
+lare & nowl\\
+foth & boad\\
+deak & fush\\
+boose & meaf\\
+pome & foll\\
+mo & bood\\
+poes & tross\\
+rone & mose\\
+poot & lear\\
+mive & dase\\
+reat & phint\\
+mave & clow\\
+bove & nouse\\
+rull & tew\\
+sut & choe\\
+haid & stook\\
+tays & dramp\\
+nall & starm\\
+bant & mouch\\
+natch & nad\\
+lere & mand\\
+dat & tash\\
+tord & bool\\
+bork & gorm\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Taken from Taraban et al. (1987).}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:Jared1997Words}Jared (1997) Words}
+
+\begin{tabular}{llll}
+\toprule
+ \multicolumn{2}{c}{Consistent} & \multicolumn{2}{c}{Inconsistent} \\
+\cmidrule(r){1-2} \cmidrule(r){3-4}
+HF & LF & HF & LF\\
+\midrule
+paid & raid & paint & taint\\
+rare & scare & rang & bang\\
+slave & crave & seek & creek\\
+break & steak & beer & peer\\
+treat & pleat & trend & rend\\
+goes & foes & gain & stain\\
+home & dome & held & weld\\
+son & ton & seem & deem\\
+food & brood & fish & dish\\
+tooth & booth & turn & burn\\
+lose & dose & large & barge\\
+cloth & broth & clerk & perk\\
+though & dough & throat & bloat\\
+four & pour & fact & pact\\
+drove & wove & dance & stance\\
+dull & hull & dirt & flirt\\
+push & bush & plane & pane\\
+poor & moor & park & hark\\
+wear & pear & wild & mild\\
+stone & prone & sense & dense\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} These words were taken from Experiment 1 from the Jared (1997) study. "HF" indicates high frequency, and "LF" indicates low frequency, with words matched across frequency condition for each consistency condition.}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:Chateau2003Exp3Words}Chateau \& Jared (2003) Words - Exp. 3}
+
+\begin{tabular}{llll}
+\toprule
+ \multicolumn{2}{c}{Consistent} & \multicolumn{2}{c}{Inconsistent} \\
+\cmidrule(r){1-2} \cmidrule(r){3-4}
+HF & LF & HF & LF\\
+\midrule
+coffee & cosmos & common & column\\
+corner & corpus & couple & corset\\
+dinner & dazzle & danger & dangle\\
+doctor & dimple & damage & dither\\
+finger & filter & figure & fiscal\\
+former & format & fellow & foster\\
+happen & hamper & heaven & hazard\\
+market & marvel & modest & margin\\
+matter & mingle & master & mildew\\
+middle & motive & modern & mangle\\
+pardon & pillar & palace & picnic\\
+sector & spider & season & spiral\\
+seldom & stable & second & staple\\
+simple & sandal & social & savage\\
+terror & tendon & target & tether\\
+winter & wombat & window & wobble\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Consistency defined with respect to the body of the orthographic syllabic structure (see Chapter 3 for a description and discussion of this segment). "HF" indicates high frequency, and "LF" indicates low frequency}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:Chateau2003Exp4Words}Chateau \& Jared (2003) Words - Exp. 4}
+
+\begin{tabular}{ll}
+\toprule
+Consistent & Inconsistent\\
+\midrule
+bovine & bishop\\
+burden & burlap\\
+cancel & cannon\\
+cellar & census\\
+cherry & chili\\
+corset & cortex\\
+decade & damage\\
+forest & famine\\
+funnel & fathom\\
+fabric & fungus\\
+hermit & herpes\\
+hostel & horror\\
+liquor & liquid\\
+magnet & mascot\\
+motion & menace\\
+muster & mutton\\
+pamper & pastor\\
+potent & proton\\
+rustle & rumpus\\
+tandem & talcum\\
+tartan & tarmac\\
+vermin & vertex\\
+volley & volume\\
+wallet & walrus\\
+zenith & zircon\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} Consistency defined with respect to V2 in these stimuli. See Chapter 3 for a description.}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
