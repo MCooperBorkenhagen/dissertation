@@ -1,15 +1,7 @@
 
-# Acknowledgements
 
-Mark Seidenberg gave an elementary school teacher an opportunity to get a very special kind of education. Thank you, Mark, this teacher won't forget it.
-
-My wife, Kristen, has gracefully supported my ongoing education despite the incredible inconvenience it has caused in our lives. She's worked as much as I have to make my education happen.
-
-Anything useful I know can be traced directly back to something Chris has taught me.
-
-Any success I've had is far more due to the work and support of those around me than anything I've done. 
-
-
-
-
-
+\newpage
+\vfil
+\section{Dedication}
+This work is dedicated to learning. It really is something quite extraordinary. It is taking place all the time for us humans, but when we want it most it can be quite difficult. On that note, my work is also dedicated to my wife and kids, who keep teaching me new things every day.
+\vfil

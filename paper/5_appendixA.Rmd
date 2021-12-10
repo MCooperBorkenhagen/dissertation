@@ -12,7 +12,7 @@ header-includes:
   - \captionsetup[table]{font={stretch=1.5}}
   - \captionsetup[figure]{font={stretch=1.5}}
 #  - \pagenumbering{gobble}
-  - \setcounter{page}{126}
+  - \setcounter{page}{127}
 #  - \AtBeginDocument{\let\maketitle\relax}
 ---
 

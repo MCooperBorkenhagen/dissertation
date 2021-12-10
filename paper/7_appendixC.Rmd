@@ -1,5 +1,5 @@
 ---
-title             : 'Appendix C: Errors Made by Multisyllabic Model'
+title             : 'Appendix C: Errors made by multisyllabic model'
 shorttitle        : 'Appendix C'
 output            : papaja::apa6_pdf
 header-includes:
