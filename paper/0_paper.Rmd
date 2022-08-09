@@ -1,6 +1,6 @@
 ---
 title             : "A Time-varying Computational Model of Learning to Read Printed Words Aloud"
-shorttitle        : "A Time-varying Model of Reading Aloud"
+#shorttitle        : "A Time-varying Model of Reading Aloud"
 
 #author:  
 #  - name          : "Matt Cooper Borkenhagen"
@@ -20,7 +20,6 @@ shorttitle        : "A Time-varying Model of Reading Aloud"
 #wordcount         : "XXX"
 bibliography      : ["references.bib"]
 documentclass     : "apa6"
-#class             : "man"
 figsintext        : yes
 figurelist        : no
 tablelist         : yes
@@ -29,7 +28,7 @@ lineno            : no
 lang              : "en-US"
 output            :
   papaja::apa6_pdf :
-    toc               : true
+    toc               : false
     toc_depth         : 3
 
 header-includes:
@@ -48,13 +47,77 @@ header-includes:
   - \usepackage[normalem]{ulem}
   - \usepackage{pdfpages}
   - \interfootnotelinepenalty=10000
-  - \setcounter{page}{0}
+  - \setcounter{page}{-2}
+  - \AtBeginDocument{\let\maketitle\relax}
+  - \pagestyle{plain}
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancyhf{}
+  - \fancyhead[R]{\thepage}
+  # for title page:
+  - \usepackage{setspace}
   #- \usepackage{fancyhdr}
   #- \fancyhead[R]{\thepage}
   #- \usepackage{setspace}
   #- \captionsetup[figure]{font={stretch=2, scriptsize}}
   #- \usepackage{tikz}
 ---
+
+\thispagestyle{empty}
+\newpage
+
+\begin{center}
+\thispagestyle{empty}
+\vspace{5cm}
+A Time-varying Computational Model of Learning to Read Printed Words Aloud \\
+\vfil
+by \\  
+Matthew James Cooper Borkenhagen \\
+\vfil
+A dissertation submitted in partial fulfillment of \\
+the requirements for the degree of \\
+\vfil
+Doctor of Philosophy \\
+(Psychology) \\
+\vfil
+at the \\
+\textsc{University of Wisconsin - Madison} \\
+2023 \\
+\vfil
+
+\vfil
+\end{center}
+\begin{singlespace}
+\noindent Date of final oral examination: January 21st, 2022 \newline
+The dissertation is approved by the following members of the Final Oral Committee: \newline
+\indent Mark S. Seidenberg, Professor, Psychology \newline
+\indent Martha Alibali, Professor, Psychology \newline
+\indent Maryellen MacDonald, Professor, Psychology \newline
+\indent Robert Nowak, Professor, Electrical and Computer Engineering \newline
+\indent Timothy T. Rogers, Professor, Psychology
+\end{singlespace} 
+\clearpage
+
+\newpage
+\thispagestyle{empty}
+
+\vspace*{\fill}
+
+\centerline{\copyright \; Copyright by Matthew J. Cooper Borkenhagen   2023}
+\centerline{All Rights Reserved}
+
+\newpage
+
+
+\pagenumbering{roman}
+
+\newpage
+
+\centering
+\raggedright
+\newpage
+\tableofcontents
+
 
 ```{r global_options, include = FALSE, eval = F, echo=FALSE}
 knitr::opts_chunk$set(warning = FALSE, 
@@ -83,6 +146,14 @@ source('scripts/utilities.R')
 source('scripts/data.R')
 ```
 
+
+\newpage
+
+```{r acknowledgements, child='acknowledgements.Rmd'}
+```
+
+\newpage
+\pagenumbering{arabic}
 ```{r child='1_chapter.Rmd'}
 ```
 
