@@ -1,25 +1,12 @@
----
-title             : 'Appendix B: Experimental stimuli'
-shorttitle        : 'Appendix B'
-output            : papaja::apa6_pdf
-#classoption       : "man, donotrepeattitle"
+\pagenumbering{arabic}
+\setcounter{page}{125}
 
-header-includes:
-  - \usepackage{setspace}
-  - \AtBeginEnvironment{tabular}{\singlespacing}
-  - \AtBeginEnvironment{lltable}{\singlespacing}
-  - \AtBeginEnvironment{tablenotes}{\singlespacing}
-  - \captionsetup[table]{font={stretch=1.5}}
-  - \captionsetup[figure]{font={stretch=1.5}}
-#  - \pagenumbering{gobble}
-  - \setcounter{page}{135}
-#  - \AtBeginDocument{\let\maketitle\relax}
----
 ```{r echo=FALSE}
 require(tidyverse)
 require(papaja)
 options(knitr.kable.NA = ' ')
 ```
+# Appendix B: Experimental stimuli
 
 Appendix B contains experimental stimuli for results reported. Each table provided in this appendix reports set of stimuli taken from another study and corresponds to an analysis or set of analyses conducted in the dissertation. Sets are presented in the order in which they appear in the results provided in Chapter 3.
 
@@ -44,7 +31,7 @@ read_csv('data/exp_words_taraban_etal_1987_regular-inconsistent.csv') %>%
 ```{r PlautAmbiguousWords, echo=FALSE}
 
 read_csv('data/exp_words_plaut_etal_1996_ambiguous.csv') %>% 
-  apa_table(caption = 'Ambiguous Words from Plaut et al. (1996)', note = 'These words were added to the conditions from Taraban & McClelland (1987), which can be found in Tables 1 and 2 of this Appendix.', col.names = c('High frequency', 'Low frequency'))
+  apa_table(caption = 'Ambiguous Words from Plaut et al. (1996)', note = 'These words were added to the conditions from Taraban & McClelland (1987), which can be found in Tables 17.', col.names = c('High frequency', 'Low frequency'))
 
 ```
 
@@ -53,7 +40,7 @@ read_csv('data/exp_words_plaut_etal_1996_ambiguous.csv') %>%
 ```{r PlautNonwords, echo=FALSE}
 
 read_csv('data/exp_words_plaut_etal_1996_nonwords.csv', col_names = F) %>% 
-  apa_table(caption = 'Nonwords from Plaut et al. (1996)', note = 'Taken from Taraban et al. (1987).', col.names = c('Nonword', ''))
+  apa_table(caption = 'Nonwords from Plaut et al. (1996)', note = 'From Taraban et al. (1987).', col.names = c('Nonword', ''))
 
 ```
 
@@ -77,3 +64,13 @@ read_csv('data/exp_words_chateau_etal_2003_experiment4.csv') %>%
   select(CONSISTENT, INCONSISTENT) %>% 
   apa_table(caption = 'Chateau & Jared (2003) Words - Exp. 4', note = 'Consistency defined with respect to V2 in these stimuli. See Chapter 3 for a description.', col.names = c('Consistent', 'Inconsistent'))
 ```
+
+\newcommand\blankpage{%
+      \null
+      \thispagestyle{empty}%
+      \addtocounter{page}{-1}%
+      \newpage}
+
+\afterpage{\blankpage}
+
+

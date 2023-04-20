@@ -1,21 +1,5 @@
----
-title             : 'Appendix A: Phonological representations'
-shorttitle        : 'Appendix A'
-output            : papaja::apa6_pdf
-#classoption       : "man, donotrepeattitle"
 
-header-includes:
-  - \usepackage{setspace}
-  - \AtBeginEnvironment{tabular}{\singlespacing}
-  - \AtBeginEnvironment{lltable}{\singlespacing}
-  - \AtBeginEnvironment{tablenotes}{\singlespacing}
-  - \captionsetup[table]{font={stretch=1.5}}
-  - \captionsetup[figure]{font={stretch=1.5}}
-#  - \pagenumbering{gobble}
-  - \setcounter{page}{126}
-#  - \AtBeginDocument{\let\maketitle\relax}
----
-
+# Appendix A: Phonological representations
 
 ```{r echo=FALSE}
 require(tidyverse)
@@ -27,7 +11,13 @@ Appendix A contains information about the phonological representations used for 
 
 A key for abbreviations used in these tables (especially those that provide phonological features) can be found in Table 8 of this appendix.
 
-\newpage
+```{r PhonrepsAbbrKey, echo=FALSE}
+read_csv('data/phonological_abbreviations.csv') %>% 
+  apa_table(caption = 'Key to Abbreviations for Phonological Features', note = 'These abbreviations are useful for interpreting the abbreviated phonological features provided in this appendix.', col.names = c('Abbrv.', 'Full'))
+
+```
+
+\pagebreak
 
 ```{r CMUPhonKeyConsonants, echo=FALSE, results='asis'}
 read_csv('data/phonreps_cmu_key_consonants.csv', col_names = F) %>% 
@@ -38,9 +28,9 @@ read_csv('data/phonreps_cmu_key_consonants.csv', col_names = F) %>%
          C5 = str_c(X9, ' - ', X10)) %>% 
   select(C1, C2, C3, C4, C5) %>% 
   apa_table(caption = 'Symbolic Representations for Consonants', note = 'Symbolic depiction for consonants appear with an example provided for that consonant after the dash. All phonemes appear as the onset of the example provided (i.e., the first phoneme) unless marked with an asterisk (*). For examples marked with *, the phoneme appears as the coda in with word given.', small = TRUE, longtable = TRUE, col.names = c('Phone - word', '', '', '', ''))
-
-
 ```
+
+
 \newpage
 ```{r CMUPhonKeyVowels, echo=FALSE, warning=FALSE}
 
@@ -54,6 +44,9 @@ read_csv('data/phonreps_cmu_key_vowels.csv', col_names = F) %>%
 
 ```
 
+\newpage
+
+
 ```{r UnstressedVowels, echo=FALSE}
 read_csv('data/phonreps_vowels1.csv') %>% 
   mutate_if(is.numeric, as.character) %>% 
@@ -61,17 +54,27 @@ read_csv('data/phonreps_vowels1.csv') %>%
   apa_table(caption = 'Phonological Representations for Vowels Recieving No Stress', note = 'See Table 8 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE)
 ```
 
+
+\newpage
+
+
 ```{r PrimaryStressedVowels, echo=FALSE}
 read_csv('data/phonreps_vowels2.csv') %>% 
   mutate_if(is.numeric, as.character) %>% 
   apa_table(caption = 'Phonological Representations for Vowels Recieving Primary Stress', note = 'See Table 8 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE, longtable = TRUE)
 ```
 
+\newpage
+
+\llap{\rotatebox{90}{\thepage}}
 ```{r SecondaryStressedVowels, echo=FALSE}
 read_csv('data/phonreps_vowels2.csv') %>% 
   mutate_if(is.numeric, as.character) %>% 
-  apa_table(caption = 'Phonological Representations for Vowels Recieving Secondary Stress', note = 'See Table 8 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE, longtable = TRUE)
+  apa_table(caption = 'Phonological Representations for Vowels Recieving Secondary Stress', note = 'See Table 9 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE, longtable = TRUE)
 ```
+
+
+\newpage
 
 
 ```{r consonants, echo=FALSE}
@@ -81,15 +84,15 @@ read_csv('data/phonreps_consonants.csv') %>%
   apa_table(caption = 'Phonological Representations for Consonants', landscape = TRUE, small = TRUE, placement = 'H')
 ```
 
+\newpage
+
+
 ```{r SpecialSegments, echo=FALSE}
 read_csv('data/phonreps_vowels1.csv') %>% 
   mutate_if(is.numeric, as.character) %>% 
   filter(Phon %in% c('_', '#', '%')) %>% 
-  apa_table(caption = 'Phonological Representations for Special Segments', note = 'The features "start" and "end" are used only for identifying the special segments "#" (start of word) and "%" (end of word) respectively. Note that the null "_" segment has all units set to off, but is never used in training except for the feedforward models reported. See Table 8 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE, longtable = TRUE)
+  apa_table(caption = 'Phonological Representations for Special Segments', note = 'The features "start" and "end" are used only for identifying the special segments "#" (start of word) and "%" (end of word) respectively. Note that the null "_" segment has all units set to off, but is never used in training except for the feedforward models reported. See Table 9 in this appendix for a key to abbreviations.', landscape = TRUE, small = TRUE, longtable = TRUE)
 ```
+\newpage
 
-```{r PhonrepsAbbrKey, echo=FALSE}
-read_csv('data/phonological_abbreviations.csv') %>% 
-  apa_table(caption = 'Key to Abbreviations for Phonological Features', note = 'These abbreviations are useful for interpreting the abbreviated phonological features provided in this appendix.', col.names = c('Abbrv.', 'Full'))
 
-```

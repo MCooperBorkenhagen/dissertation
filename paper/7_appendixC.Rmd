@@ -1,23 +1,10 @@
----
-title             : 'Appendix C: Errors made by multisyllabic model'
-shorttitle        : 'Appendix C'
-output            : papaja::apa6_pdf
-header-includes:
-  - \usepackage{setspace}
-  - \AtBeginEnvironment{tabular}{\singlespacing}
-  - \AtBeginEnvironment{lltable}{\singlespacing}
-  - \AtBeginEnvironment{tablenotes}{\singlespacing}
-  - \captionsetup[table]{font={stretch=1.5}}
-  - \captionsetup[figure]{font={stretch=1.5}}
-  - \setcounter{page}{142}
----
-
 ```{r echo=FALSE}
 require(tidyverse)
 require(papaja)
 ```
+# Appendix C: Errors made by multisyllabic model
+Appendix C contains all the errors made in the model trained on multisyllabic words. These are errors as calculated using production mode. Production mistakes are any production that doesn't match the target sequence of phonemes for that word, using a phonemewise calculation (Euclidian norm). The segment "XX" indicates a tie between at least two phonemes, and the segment "**" indicates a null segment whose units are all 0. This null segment is referred to elsewhere as "_" but wasn't easily visible on this table and was replaced with the double asterisk as an alternative for clarity.
 
-Appendix C contains all the errors made in the model trained on multisyllabic words. These are errors as calculated using production mode, where each phonemic segment is determined using a nearest phoneme measure where the segment that is produced is compared against each possible phoneme from the target set at test using Euclidean distance. The nearest phoneme calculated from that distribution is selected and recorded. Production mistakes are any production that doesn't match the target sequence of phonemes for that word. The segment "XX" indicates a tie between at least two phonemes, and the segment "**" indicates a null segment whose units are all 0. This null segment is referred to elsewhere as "_" but wasn't easily visible on this table and was replaced with the double asterisk as an alternative to make those productions more visible.. 
 
 ```{r MultisyllabicModelMistakes, echo = FALSE}
 read_csv('data/multisyllabic_model_mistakes.csv') %>% 
