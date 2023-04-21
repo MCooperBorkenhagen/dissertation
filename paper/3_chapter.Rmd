@@ -124,9 +124,9 @@ mono %>%
   ylim(c(-1, 5))
 ```
 
-Furthermore, the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. With enough experience, processing difficulty is minimized even for the most infrequent words. In Figure 5 we see this in the cumulative error scores at two points in training the time-varying network: once early on (at 36 epochs) and again late in training (at 72 epochs). Errors become low even for the least frequent words.
+Furthermore, the effect of frequency fades as learning progresses; by the end of training this effect is attenuated substantially such that accuracy is consistently high among most words. With enough experience, processing difficulty is minimized even for the most infrequent words. In Figure 5 we see this in the cumulative error scores at two points in training the time-varying network: once early on (at 36 epochs) and again late in training (at 72 epochs). Errors are small even for the least frequent words.
 
-```{r, freqeffectEarlyLate, echo=FALSE, fig.height=3.5, fig.cap= 'The effect of word frequency early and late in training on the time-varying network differs such that with ample experience errors on infrequent words are minimized and the overall effect of frequency on error is reduced. Raw errors are plotted for words (points) using mean squared error.' }
+```{r, freqeffectEarlyLate, echo=FALSE, message=FALSE, fig.height=3.5, fig.cap= 'The effect of word frequency early and late in training on the time-varying network differs such that with ample experience errors on infrequent words are minimized and the overall effect of frequency on error is reduced. Raw errors are plotted for words (points) using mean squared error.' }
 
 mono %>% 
   filter(stage == c('Middle', 'Late')) %>% 
@@ -186,7 +186,7 @@ mono %>%
 
 Like the effect of word frequency on accuracy, the effect of consistency diminishes over time. Processing difficulty associated with the consistency of an item can be overcome by having enough experience with it. This can be seen when examining the relationship between consistency and error at two stages of the learning process. Table 7 shows the relationship between consistency and error early in training and late in training, with the correlation decreasing over time as the model develops experience with words in the training set.
 
-```{r, consistencyEarlyLate, echo=FALSE, fig.height=3.5, fig.cap='The relationship between word consistency and error at two different points in training is shown. With experience, the effect of consistency on errors is reduced.'}
+```{r, consistencyEarlyLate, echo=FALSE, message=FALSE, fig.height=3.5, fig.cap='The relationship between word consistency and error at two different points in training is shown. With experience, the effect of consistency on errors is reduced.'}
 
 mono %>% 
   filter(stage %in% c('Middle', 'Late') & model == 'LSTM') %>%
@@ -435,7 +435,7 @@ taraban_crossval %>%
 
 The trend seen in the computational results using the time-varying model closely resembles those from @Plaut1996 and follows the expected pattern based on graded effects of consistency as they interact with frequency. Exception words are associated with higher loss (and error) than ambiguous words, which are associated with higher loss than regular words. Among regular words, regular inconsistent words are associated with higher loss than regular consistent words. Additionally, the high frequency group of each consistency category exhibits lower loss than their lower frequency counterparts. The data from the original study is shown in Figure 14.
 
-```{r plautFigureOriginal, echo=FALSE, out.width='200px', fig.align='center', fig.cap='Original results from Plaut et al. (1996) analogous to Figure 12 are provided, taken from the original study. The figure is reproduced by permission from Psychological Review.'}
+```{r plautFigureOriginal, echo=FALSE, out.width='200px', fig.align='center', fig.cap='Original results from Plaut et al. (1996) analogous to Figure 12 are shown. The figure is reproduced with permission from The American Psychological Association.'}
 include_graphics('img/plaut5.png')
 
 ```
@@ -564,7 +564,7 @@ plot_data %>%
 ```
 
 
-```{r jared1997Original, echo=FALSE, out.width='200px', fig.align='center', fig.cap='Results for Experiment 1 from Jared (1997) are shown. Naming latency is displayed on the y-axis (with corresponding accuracy above each bar). The figure is reproduced with permission from the Journal of Memory and Language.'}
+```{r jared1997Original, echo=FALSE, out.width='200px', fig.align='center', fig.cap='Results for Experiment 1 from Jared (1997) are shown. Naming latency is displayed on the y-axis (with corresponding accuracy above each bar). The figure is reproduced with permission from Elsevier.'}
 include_graphics('img/jared1.png')
 ```
 

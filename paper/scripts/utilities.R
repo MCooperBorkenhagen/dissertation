@@ -1,6 +1,8 @@
 require(kableExtra)
 require(glue)
 
+filter = dplyr::filter
+summarize = dplyr::summarize
 
 phonlen = function(x, delimiter='-'){
   return(str_count(x, delimiter)+1)
