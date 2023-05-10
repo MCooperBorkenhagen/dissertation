@@ -1,10 +1,11 @@
-```{r echo=FALSE}
-require(tidyverse)
-require(papaja)
-```
-# Appendix C: Errors made by multisyllabic model
-Appendix C contains all the errors made in the model trained on multisyllabic words. These are errors as calculated using production mode. Production mistakes are any production that doesn't match the target sequence of phonemes for that word, using a phonemewise calculation (Euclidian norm). The segment "XX" indicates a tie between at least two phonemes, and the segment "**" indicates a null segment whose units are all 0. This null segment is referred to elsewhere as "_" but wasn't easily visible on this table and was replaced with the double asterisk as an alternative for clarity.
 
+# Appendix C: Errors made by multisyllabic model
+Appendix C contains all the errors made in the model trained on multisyllabic words. These are errors as calculated using production mode. Production mistakes are any production that doesn't match the target sequence of phonemes for that word, using a phonemewise calculation (Euclidian distance). The segment "XX" indicates a tie between at least two phonemes, and the segment "**" indicates a null segment whose units are all 0. This null segment is referred to elsewhere as "_" but wasn't easily visible on this table and was replaced with the double asterisk as an alternative for clarity.
+
+```{r echo=FALSE}
+require(papaja)
+require(tidyverse)
+```
 
 ```{r MultisyllabicModelMistakes, echo = FALSE}
 read_csv('data/multisyllabic_model_mistakes.csv') %>% 

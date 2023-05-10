@@ -1,9 +1,7 @@
 \pagenumbering{arabic}
-\setcounter{page}{125}
+\setcounter{page}{124}
 
 ```{r echo=FALSE}
-require(tidyverse)
-require(papaja)
 options(knitr.kable.NA = ' ')
 ```
 # Appendix B: Experimental stimuli
@@ -40,7 +38,7 @@ read_csv('data/exp_words_plaut_etal_1996_ambiguous.csv') %>%
 ```{r PlautNonwords, echo=FALSE}
 
 read_csv('data/exp_words_plaut_etal_1996_nonwords.csv', col_names = F) %>% 
-  apa_table(caption = 'Nonwords from Plaut et al. (1996)', note = 'From Taraban et al. (1987).', col.names = c('Nonword', ''))
+  apa_table(caption = 'Nonwords from Plaut et al. (1996)', note = 'Stimuli originally from Taraban et al. (1987).', col.names = c('Nonword', '', '', ''))
 
 ```
 
@@ -58,19 +56,12 @@ read_csv('data/exp_words_chateau_etal_2003_experiment3.csv') %>%
 ```
 
 
-
 ```{r Chateau2003Exp4Words, echo=FALSE}
 read_csv('data/exp_words_chateau_etal_2003_experiment4.csv') %>% 
   select(CONSISTENT, INCONSISTENT) %>% 
   apa_table(caption = 'Chateau & Jared (2003) Words - Exp. 4', note = 'Consistency defined with respect to V2 in these stimuli. See Chapter 3 for a description.', col.names = c('Consistent', 'Inconsistent'))
 ```
 
-\newcommand\blankpage{%
-      \null
-      \thispagestyle{empty}%
-      \addtocounter{page}{-1}%
-      \newpage}
 
-\afterpage{\blankpage}
 
 

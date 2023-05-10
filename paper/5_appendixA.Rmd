@@ -1,15 +1,11 @@
-
 # Appendix A: Phonological representations
-
-```{r echo=FALSE}
-require(tidyverse)
-require(papaja)
-options(knitr.kable.NA = ' ')
-```
-
-Appendix A contains information about the phonological representations used for training the computational models described in this work. The features used were primarily taken from those in Harm & Seidenberg (1999) and Harm & Seidenberg (2004). Nodes were added for stress, where in the tables the columns "1ary" refers to primary stress and "2ary" refers to secondary stress. A phoneme that has both of those units set to zero would be unstressed, as is the case with unstressed vowels and consonants. There are also units for "start" and "end", which are only used by the start and end of (phonological) word segments. For those segments all units are zero and either of these two units is set to on. In tables where phonological features are provided in addition to the features listed, consonants (and vowels) are also represented with all the vowel (and consonant) features. In any given table only the relevant features are shown in order to allow the tables to fit on the page. Any feature not shown for a particular phoneme should be assumed to be set to zero. Table 7 shows the special representations for the null segment ("_"), start of word segment ("#"), and the end of word segment ("%"), all of which have special purposes in training and testing. Note, however, that the null segment is never used in training, though it is sometimes produced in testing and is referred to as an "indeterminate segment" when described in Chapter 3.
+Appendix A contains information about the phonological representations used for training the computational models described in this work. The features used were primarily taken from those in Harm & Seidenberg (1999) and Harm & Seidenberg (2004). Nodes were added for stress, where in the tables the columns "1ary" refers to primary stress and "2ary" refers to secondary stress. A phoneme that has both of those units set to zero would be unstressed, as is the case with unstressed vowels and consonants. There are also units for "start" and "end", which are only used by the start and end of (phonological) word segments. For those segments all units are zero and either of these two units is set to on. In tables where phonological features are provided in addition to the features listed, consonants (and vowels) are also represented with all the vowel (and consonant) features. In any given table only the relevant features are shown in order to allow the tables to fit on the page. Any feature not shown for a particular phoneme should be assumed to be set to zero. Table 7 shows the special representations for the null segment ("_"), start of word segment ("#"), and the end of word segment ("%"), all of which have special purposes in training and testing. Note, however, that the null segment is never used in training, though it is sometimes produced in testing and is referred to as an *indeterminate segment* when described in Chapter 3.
 
 A key for abbreviations used in these tables (especially those that provide phonological features) can be found in Table 8 of this appendix.
+
+```{r echo=FALSE}
+options(knitr.kable.NA = ' ')
+```
 
 ```{r PhonrepsAbbrKey, echo=FALSE}
 read_csv('data/phonological_abbreviations.csv') %>% 
@@ -39,7 +35,7 @@ read_csv('data/phonreps_cmu_key_vowels.csv', col_names = F) %>%
          V2 = str_c(X3, ' - ', X4),
          V3 = str_c(X5, ' - ', X6)) %>% 
   select(V1, V2, V3) %>% 
-  apa_table(caption = 'Symbolic Representations for Vowels', note = 'Symbolic depiction for vowels appear with an example provided for the vowel after the dash. When indicating stress, 0 indicates no stress, 1 indicates primary stress, and 2 indicates secondary stress. See discussion in Chapter 3 for the nominal distinction between non-stress and secondary stress in some prosodic contexts. All example words provided have the vowel shown in their first syllable, unless marked with "*", in which case the vowel appears in the second syllable of the word provided as an example.', small = TRUE, longtable = TRUE, col.names = c('Unstressed', 'Primary stress', 'Secondary stress'))
+  apa_table(caption = 'Symbolic Representations for Vowels', note = 'Examples provided for each vowel after the dash. When indicating stress, 0 = no stress, 1 = primary stress, and 2 = secondary stress. All example words provided have the vowel shown in their first syllable, unless marked with "*", where the vowel appears in the second syllable of the example provided.', small = TRUE, longtable = TRUE, col.names = c('Unstressed', 'Primary stress', 'Secondary stress'))
 
 
 ```
@@ -66,7 +62,6 @@ read_csv('data/phonreps_vowels2.csv') %>%
 
 \newpage
 
-\llap{\rotatebox{90}{\thepage}}
 ```{r SecondaryStressedVowels, echo=FALSE}
 read_csv('data/phonreps_vowels2.csv') %>% 
   mutate_if(is.numeric, as.character) %>% 

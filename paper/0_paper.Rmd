@@ -15,7 +15,7 @@ output            :
     indent            : true
 
 header-includes:
-  - \usepackage{float}
+  - \usepackage{placeins}
   - \geometry{left=3cm, right=3cm, top=3cm, bottom=3cm}
   - \usepackage{booktabs}
   - \usepackage{longtable}
@@ -153,13 +153,12 @@ source('scripts/data.R')
 ```{r child='5_appendixA.Rmd'}
 ```
 
-
 \newpage
 
 ```{r child='6_appendixB.Rmd'}
 ```
 
-
+\FloatBarrier
 \newpage
 
 ```{r child='7_appendixC.Rmd'}
