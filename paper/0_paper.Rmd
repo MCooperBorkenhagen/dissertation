@@ -15,6 +15,7 @@ output            :
     indent            : true
 
 header-includes:
+  - \usepackage{float}
   - \geometry{left=3cm, right=3cm, top=3cm, bottom=3cm}
   - \usepackage{booktabs}
   - \usepackage{longtable}
@@ -88,7 +89,6 @@ The dissertation is approved by the following members of the Final Oral Committe
 \centerline{All Rights Reserved}
 
 \newpage
-
 
 \pagenumbering{roman}
 
