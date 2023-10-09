@@ -139,7 +139,7 @@ mono %>%
   ggplot(aes(log(freq), accuracy)) +
   geom_point(size = .5, color = 'firebrick') +
   geom_smooth(method = 'lm', color = 'grey32', fill = 'grey48') +
-  #geom_smooth(method = 'loess', color = 'black', linetype = 'dashed') +
+  geom_smooth(method = 'loess', color = 'black', linetype = 'dashed', se = FALSE) +
   scale_color_manual(values = COLORS) +
   facet_grid(~trainstage) +
   ylim(c(0.00, .08)) +
@@ -177,6 +177,7 @@ mono %>%
   ggplot(aes(consistency, acc, color = model)) +
   geom_point(size = .6) +
   geom_smooth(method = 'lm', color = 'grey32', fill = 'grey48') +
+  geom_smooth(method = 'loess', color = 'black', linetype = 'dashed', se = FALSE) +
   scale_color_manual(values = COLORS) +
   facet_grid(~model) +
   labs(x = 'Consistency (standardized)', y = 'Error') +
@@ -198,7 +199,7 @@ mono %>%
   ggplot(aes(consistency, accuracy)) +
   geom_point(size = .6, color = 'firebrick', alpha = .5) +
   geom_smooth(method = 'lm', color = 'grey32', fill = 'grey48') +
-  geom_smooth(method = 'loess', color = 'black', linetype = 'dashed') +
+  geom_smooth(method = 'loess', color = 'black', linetype = 'dashed', se = FALSE) +
   scale_color_manual(values = COLORS) +
   facet_grid(~trainstage) +
   labs(x = 'Consistency (body-rime)', y = 'Mean Squared Error') +
@@ -219,9 +220,11 @@ mono_lstm_testmode %>%
   facet_grid(~train_test) +
   geom_point(color = 'firebrick') +
   geom_smooth(method = 'lm', color = 'grey32', fill = 'grey48') +
+  geom_smooth(method = 'loess', color = 'black', linetype = 'dashed', se = FALSE) +
   labs(x = 'Consistency (body-rime)',
        y = 'Euclidean distance (error)') +
-  theme_apa()
+  theme_apa() +
+  ylim(c(0, 4.2))
 
 ```
 
@@ -251,8 +254,10 @@ mono %>%
   facet_grid(vars(trainstage), vars(freq_f)) +
   geom_point(size = .6, color = 'firebrick') +
   geom_smooth(method = 'lm', color = 'grey32') +
+  geom_smooth(method = 'loess', color = 'black', linetype = 'dashed', span = .78, se = FALSE) +
   labs(x = 'Consistency (body-rime)', y = 'Mean Squared Error') +
-  theme_apa()
+  theme_apa() +
+  ylim(c(0, .1))
 
 
 ```
@@ -481,7 +486,7 @@ In summary, the general trends relating consistency and frequency appear in data
 
 
 #### Jared (1997)
-Behavioral results conveying the tradeoffs between frequency and consistency hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and with inconsistent words being more difficult than consistent ones. This is a complementary study to the replications reported previously, and we will focus on Experiment 1 of @Jared1997 here - a naming task. The task was similar to that of @Taraban1987. In the experiment participants read aloud sets of words (40 words to a list over two separate visits to the lab) that belonged to one of four categories. Words were either low frequency or high frequency and were consistent (all neighbors had the same rime) or inconsistent (neighbors displayed different rimes). For example, the words `r scaps('paid')`, `r scaps('said')`, and `r scaps('plaid')` are inconsistent words used in the experiment given the variability in pronunciation of the portion of the word associated with the letters `r scaps('aid')`.
+Behavioral results conveying the tradeoffs between frequency and consistency hold up for the @Jared1997 stimuli as well, with low frequency words in general being more difficult to process than high frequency words, and inconsistent words being more difficult than consistent ones. This is a complementary study to the replications reported previously, and we will focus on Experiment 1 of @Jared1997 here (a naming task). The task was similar to that of @Taraban1987. Participants read aloud sets of words (40 words to a list, two separate visits) that belonged to one of four categories. Words were either low frequency or high frequency and were consistent (all neighbors had the same rime) or inconsistent (neighbors displayed different rimes). For example, `r scaps('paid')`, `r scaps('said')`, and `r scaps('plaid')` are inconsistent words used in the experiment given the variability in pronunciation of the portion of the word associated with the letters `r scaps('aid')`.
 
 ```{r, echo=FALSE}
 

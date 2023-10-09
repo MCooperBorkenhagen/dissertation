@@ -23,7 +23,7 @@ read_csv('data/phonreps_cmu_key_consonants.csv', col_names = F) %>%
          C4 = str_c(X7, ' - ', X8),
          C5 = str_c(X9, ' - ', X10)) %>% 
   select(C1, C2, C3, C4, C5) %>% 
-  apa_table(caption = 'Symbolic Representations for Consonants', note = 'Symbolic depiction for consonants appear with an example provided for that consonant after the dash. All phonemes appear as the onset of the example provided (i.e., the first phoneme) unless marked with an asterisk (*). For examples marked with *, the phoneme appears as the coda in with word given.', small = TRUE, longtable = TRUE, col.names = c('Phone - word', '', '', '', ''))
+  apa_table(caption = 'Symbolic Representations for Consonants', note = "Symbolic depiction for consonants appear with an example provided for that consonant after the dash. All phonemes appear as the onset of the example provided (i.e., the first phoneme) unless marked with an asterisk (*). When marked with *, the phoneme appears as the coda's nucleus in word given.", small = TRUE, longtable = TRUE, col.names = c('Phone - word', '', '', '', ''))
 ```
 
 

@@ -7,7 +7,7 @@ Thank you to the Language and Cognitive Neuroscience Laboratory for years of con
 I'd like to thank the Interdisciplinary Training Program in Education Sciences at UW - Madison and the Institute of Education Sciences for training, and to Martha Alibali for the opportunity to join that program. Lastly, thank you to my committee: Mark Seidenberg, Martha Alibali, Maryellen MacDonald, Rob Nowak, and Tim Rogers. Guidance from such an incredible group of people is something quite special.
 \newpage
 
-\centerline{Funding}
+\centerline{\textbf{Funding}}
 The research reported here was supported by the Institute of Education Sciences, U.S.
 Department of Education, through Award No.R305B150003 to the University of
 Wisconsin-Madison. The opinions expressed are those of the authors and do not
